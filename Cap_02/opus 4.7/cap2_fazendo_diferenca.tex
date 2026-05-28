@@ -1,0 +1,449 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 2 -- Introdução à Programação em C
+%  FAZENDO A DIFERENÇA (2.32 e 2.33)
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array,amsmath}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+\definecolor{ecogreen}{RGB}{0,120,50}
+\definecolor{ecolightgreen}{RGB}{210,240,220}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},
+  title={\small\color{white}Saída do programa},breakable,#1}
+\newtcolorbox{pesquisa}[1][]{colback=ecolightgreen,colframe=ecogreen,
+  fonttitle=\bfseries\small,title={Pesquisa externa realizada},breakable,#1}
+\newtcolorbox{atencao}[1][]{colback=yellow!10,colframe=deitellorange,
+  fonttitle=\bfseries\small,title={Atenção},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 2 -- Fazendo a Diferença}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue,urlcolor=ecogreen}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 2}\\[0.3cm]
+  {\Large\color{deitelblue!80}Introdução à Programação em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=ecolightgreen,colframe=ecogreen,width=0.85\linewidth]
+    \centering{\large\bfseries\color{ecogreen}Fazendo a Diferença}\\[0.3cm]
+    {\normalsize Exercícios 2.32 e 2.33\\[0.2cm]
+    Calculadora de IMC\\
+    Economia com transporte solidário}
+  \end{tcolorbox}
+  \vfill{\small Abordagem incremental Deitel}
+\end{titlepage}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 2.32 -- Calculadora de IMC}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 2.32]
+Crie uma calculadora de IMC (Índice de Massa Corporal) que leia peso (kg) e
+altura (m), calcule o IMC e exiba os intervalos de classificação do Ministério da
+Saúde:
+\begin{itemize}[noitemsep]
+  \item Abaixo do peso: < 18,5
+  \item Normal: 18,5 -- 24,9
+  \item Acima do peso: 25 -- 29,9
+  \item Obeso: $\geq 30$
+\end{itemize}
+\end{enunciadoBox}
+
+\subsection*{Pesquisa: Fórmula de IMC}
+
+\begin{pesquisa}
+A fórmula do IMC, desenvolvida por Adolphe Quetelet no século XIX, é:
+\[
+\text{IMC} = \frac{\text{peso}}{\text{altura}^2}
+\]
+onde o peso está em kg e a altura em metros. O resultado é dado em kg/m². As
+faixas de classificação são padronizadas pela OMS e adotadas pelo Ministério
+da Saúde brasileiro.
+
+\textbf{Limitações conhecidas:} o IMC não distingue entre massa muscular e gordura,
+então atletas podem ser classificados erroneamente como ``acima do peso''. Para
+crianças, idosos e gestantes, há tabelas específicas. Sempre é importante
+consultar um profissional de saúde.
+\end{pesquisa}
+
+\subsection*{Solução em C}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex2.32: imc.c
+   Calculadora de IMC -- versao com inteiros */
+#include <stdio.h>
+
+int main( void )
+{
+    int peso;       /* peso em kg */
+    int altura_cm;  /* altura em centimetros (para evitar frações) */
+    int imc;        /* IMC inteiro (resultado truncado) */
+
+    printf( "=== Calculadora de IMC ===\n" );
+    printf( "Digite o peso (kg, numero inteiro): " );
+    scanf( "%d", &peso );
+
+    printf( "Digite a altura (cm, ex: 170 para 1.70m): " );
+    scanf( "%d", &altura_cm );
+
+    /* IMC = peso / altura^2, com altura em metros.
+       Como usamos cm, multiplicamos por 10000 para
+       compensar a conversao (1m = 100cm, e elevamos ao quadrado) */
+    imc = ( peso * 10000 ) / ( altura_cm * altura_cm );
+
+    printf( "\nSeu IMC (aproximado): %d\n", imc );
+
+    printf( "\nVALORES DE IMC:\n" );
+    printf( "  Abaixo do peso: menor que 18\n" );
+    printf( "  Normal:         18 a 24\n" );
+    printf( "  Acima do peso:  25 a 29\n" );
+    printf( "  Obeso:          30 ou mais\n" );
+
+    if ( imc < 18 ) {
+        printf( "\nClassificacao: Abaixo do peso\n" );
+    }
+    if ( imc >= 18 && imc <= 24 ) {
+        printf( "\nClassificacao: Normal\n" );
+    }
+    if ( imc >= 25 && imc <= 29 ) {
+        printf( "\nClassificacao: Acima do peso\n" );
+    }
+    if ( imc >= 30 ) {
+        printf( "\nClassificacao: Obeso\n" );
+    }
+
+    printf( "\nLembre: o IMC e apenas uma estimativa.\n" );
+    printf( "Sempre consulte um profissional de saude.\n" );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Exemplo de execução:}
+\begin{saida}
+Digite o peso (kg, numero inteiro): 70\\
+Digite a altura (cm, ex: 170 para 1.70m): 175\\
+\\
+Seu IMC (aproximado): 22\\
+\\
+VALORES DE IMC:\\
+\textvisiblespace\textvisiblespace Abaixo do peso: menor que 18\\
+\textvisiblespace\textvisiblespace Normal:         18 a 24\\
+\textvisiblespace\textvisiblespace Acima do peso:  25 a 29\\
+\textvisiblespace\textvisiblespace Obeso:          30 ou mais\\
+\\
+Classificacao: Normal
+\end{saida}
+\end{respostabox}
+
+\subsection*{Análise didática}
+
+\begin{atencao}
+\textbf{Por que usamos altura em cm e o truque ``×10000''?}
+
+Como o Cap.~2 só apresenta o tipo \texttt{int}, não podemos usar valores fracionários
+diretamente. O truque é trabalhar com altura em centímetros (inteiro) e ajustar a
+fórmula:
+
+\[
+\text{IMC} = \frac{\text{peso (kg)}}{\left(\frac{\text{altura}_\text{cm}}{100}\right)^2} = \frac{\text{peso} \times 10000}{\text{altura}_\text{cm}^2}
+\]
+
+Para peso=70 kg e altura=175 cm:
+\[
+\text{IMC} = \frac{70 \times 10000}{175^2} = \frac{700000}{30625} = 22{,}86 \approx 22 \text{ (truncado)}
+\]
+
+Esta solução demonstra criatividade dentro das limitações de cada capítulo --
+abordagem fundamental da progressão Deitel.
+
+\textbf{No Capítulo~3}, com \texttt{double}, faremos:
+\begin{lstlisting}
+double peso, altura, imc;
+imc = peso / ( altura * altura );  /* simples e direto */
+\end{lstlisting}
+\end{atencao}
+
+\subsection*{Por que isso é ``fazer a diferença''?}
+
+\begin{tcolorbox}[colback=ecolightgreen,colframe=ecogreen,
+  title={\bfseries Tecnologia a serviço da saúde}]
+
+A obesidade é considerada uma epidemia global pela OMS. Calculadoras de IMC,
+embora simples, são ferramentas educativas valiosas que:
+
+\begin{itemize}[noitemsep]
+  \item Promovem \textbf{consciência sobre saúde} entre populações.
+  \item Permitem \textbf{rastreamento populacional} de tendências (epidemiologia).
+  \item Servem como \textbf{ponto de partida} para conversas com profissionais.
+  \item Fazem parte de aplicativos como MyFitnessPal, Strava, FitBit -- usados
+  por bilhões.
+\end{itemize}
+
+Você acaba de implementar, com apenas \texttt{int} e \texttt{if}, o núcleo de
+uma feature presente em incontáveis aplicações de saúde.
+\end{tcolorbox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 2.33 -- Economia com Transporte Solidário}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 2.33]
+Pesquise sobre transporte solidário (\textit{carpooling}). Crie um programa que
+calcule o gasto diário com automóvel próprio, considerando:
+\begin{itemize}[noitemsep]
+  \item Total de km dirigidos por dia
+  \item Custo por litro de combustível
+  \item Consumo médio (km/L)
+  \item Estacionamento diário
+  \item Pedágios diários
+\end{itemize}
+Exiba o total do gasto diário.
+\end{enunciadoBox}
+
+\subsection*{Pesquisa: Transporte Solidário}
+
+\begin{pesquisa}
+O transporte solidário (\textit{carpooling}) é a prática de compartilhar veículo
+entre pessoas que fazem trajetos similares, dividindo custos e reduzindo emissões.
+Benefícios incluem:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Econômico:} redução de até 50\% nos gastos diários ao dividir
+  custos com um colega.
+  \item \textbf{Ambiental:} cada carro a menos nas ruas reduz $\sim 4$ kg de
+  CO\textsubscript{2} por dia (para 30 km típicos).
+  \item \textbf{Social:} oportunidade de criar laços com colegas/vizinhos.
+  \item \textbf{Trânsito:} menos congestionamentos para todos.
+\end{itemize}
+
+Plataformas no Brasil: BlaBlaCar, Uber Pool (já descontinuado), apps corporativos
+de carona, grupos em redes sociais.
+\end{pesquisa}
+
+\subsection*{Solução em C}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex2.33: transporte_solidario.c
+   Calcula gasto diario com automovel proprio */
+#include <stdio.h>
+
+int main( void )
+{
+    int km_dia;         /* km dirigidos por dia */
+    int custo_litro;    /* em centavos (ex: 580 = R$ 5,80) */
+    int km_por_litro;   /* consumo */
+    int estacionamento; /* em centavos */
+    int pedagios;       /* em centavos */
+    int gasto_combustivel;
+    int gasto_total;
+    int gasto_dividido;  /* se dividir com mais 1 pessoa */
+
+    printf( "=== Calculadora de Gastos com Transporte ===\n\n" );
+
+    printf( "Km dirigidos por dia: " );
+    scanf( "%d", &km_dia );
+
+    printf( "Custo do litro de combustivel (em centavos, ex: 580): " );
+    scanf( "%d", &custo_litro );
+
+    printf( "Consumo medio (km/litro): " );
+    scanf( "%d", &km_por_litro );
+
+    printf( "Estacionamento diario (centavos): " );
+    scanf( "%d", &estacionamento );
+
+    printf( "Pedagios diarios (centavos): " );
+    scanf( "%d", &pedagios );
+
+    /* Calcula gastos */
+    gasto_combustivel = ( km_dia * custo_litro ) / km_por_litro;
+    gasto_total = gasto_combustivel + estacionamento + pedagios;
+    gasto_dividido = gasto_total / 2;
+
+    printf( "\n=== RELATORIO DIARIO ===\n" );
+    printf( "Combustivel: %d centavos\n", gasto_combustivel );
+    printf( "Estaciona.:  %d centavos\n", estacionamento );
+    printf( "Pedagios:    %d centavos\n", pedagios );
+    printf( "-------------------------\n" );
+    printf( "TOTAL DIARIO:        %d centavos\n", gasto_total );
+    printf( "Por mes (22 dias):   %d centavos\n", gasto_total * 22 );
+
+    printf( "\n=== COM TRANSPORTE SOLIDARIO (2 pessoas) ===\n" );
+    printf( "Gasto pessoal/dia:   %d centavos\n", gasto_dividido );
+    printf( "ECONOMIA por dia:    %d centavos\n",
+            gasto_total - gasto_dividido );
+    printf( "ECONOMIA por mes:    %d centavos\n",
+            ( gasto_total - gasto_dividido ) * 22 );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Exemplo de execução:}
+\begin{saida}
+Km dirigidos por dia: 40\\
+Custo do litro de combustivel (em centavos, ex: 580): 580\\
+Consumo medio (km/litro): 10\\
+Estacionamento diario (centavos): 1500\\
+Pedagios diarios (centavos): 500\\
+\\
+=== RELATORIO DIARIO ===\\
+Combustivel: 2320 centavos\\
+Estaciona.:  1500 centavos\\
+Pedagios:    500 centavos\\
+-------------------------\\
+TOTAL DIARIO:        4320 centavos\\
+Por mes (22 dias):   95040 centavos\\
+\\
+=== COM TRANSPORTE SOLIDARIO (2 pessoas) ===\\
+Gasto pessoal/dia:   2160 centavos\\
+ECONOMIA por dia:    2160 centavos\\
+ECONOMIA por mes:    47520 centavos
+\end{saida}
+
+(R\$ 475,20 de economia mensal -- com apenas mais uma pessoa!)
+\end{respostabox}
+
+\subsection*{Análise didática}
+
+\begin{atencao}
+\textbf{Por que tudo em centavos?}
+
+Mesma estratégia do Ex.\ 2.32: como \texttt{int} não suporta decimais, usamos a
+menor unidade monetária (centavos). Para exibir como reais, basta lembrar que
+4320 centavos = R\$ 43,20. No Cap.~3, com \texttt{double}, poderemos trabalhar
+com vírgulas diretamente.
+
+\textbf{Lições importantes:}
+\begin{itemize}[noitemsep]
+  \item \textbf{Modelagem do problema:} 5 entradas, 3 cálculos intermediários, 1 saída final.
+  \item \textbf{Reuso de cálculos:} \texttt{gasto\_total} é usado várias vezes.
+  \item \textbf{Análise comparativa:} mostrar economia explícita é mais
+  persuasivo que apenas o gasto.
+\end{itemize}
+\end{atencao}
+
+\subsection*{Por que isso é ``fazer a diferença''?}
+
+\begin{tcolorbox}[colback=ecolightgreen,colframe=ecogreen,
+  title={\bfseries Pequenas economias, grande impacto}]
+
+\textbf{Impacto econômico individual:} R\$ 475 de economia mensal correspondem
+a \textbf{R\$ 5\,700 por ano}. Em 5 anos: R\$ 28\,500 -- o suficiente para um
+carro popular usado!
+
+\textbf{Impacto ambiental coletivo:} se 10\% dos motoristas brasileiros adotassem
+carona compartilhada uma vez por semana:
+\begin{itemize}[noitemsep]
+  \item $\sim 4$ milhões de carros a menos nas ruas por dia
+  \item Redução de $\sim 16$ milhões de kg de CO\textsubscript{2} por dia
+  \item Redução significativa de congestionamentos em grandes cidades
+\end{itemize}
+
+\textbf{Programação como ferramenta de tomada de decisão:} ao quantificar custos
+e economias, ferramentas como esta ajudam pessoas a tomar decisões \textit{informadas
+e baseadas em dados}. Não dizem o que fazer -- mostram as consequências
+financeiras e ambientais de cada escolha.
+\end{tcolorbox}
+
+\newpage
+
+% ============================================================
+\section*{Reflexão Final -- Capítulo 2}
+
+\begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,
+  title={\bfseries Os primeiros programas que importam}]
+
+Pode parecer surreal: estamos no Capítulo~2, e já escrevemos programas que:
+
+\begin{itemize}[noitemsep]
+  \item Calculam estatísticas (Ex.\ 2.16, 2.19, 2.23)
+  \item Identificam padrões matemáticos (Ex.\ 2.24, 2.26)
+  \item Geram arte ASCII (Ex.\ 2.21, 2.22, 2.25, 2.27)
+  \item Manipulam dígitos (Ex.\ 2.29, 2.30)
+  \item Avaliam saúde pessoal (Ex.\ 2.32)
+  \item Estimam economias econômicas e impacto ambiental (Ex.\ 2.33)
+\end{itemize}
+
+\textbf{Com apenas:} \texttt{int}, \texttt{printf}, \texttt{scanf}, operadores
+aritméticos, \texttt{if}. Cinco ingredientes -- e já estamos resolvendo problemas
+reais.
+
+\textbf{Imagine o que faremos quando adicionarmos:}
+\begin{itemize}[noitemsep]
+  \item Cap.~3: \texttt{while}, \texttt{double}, atribuição composta
+  \item Cap.~4: \texttt{for}, \texttt{switch}, operadores lógicos
+  \item Cap.~5: funções, recursão, números aleatórios
+  \item Cap.~6: arrays e ordenação
+  \item Cap.~7: ponteiros (o poder real de C)
+  \item Cap.~8 em diante: strings, estruturas, arquivos\ldots
+\end{itemize}
+
+A jornada está apenas começando. \textbf{Cada capítulo amplia o que você pode
+expressar} -- e tudo se constrói sobre o que aprendemos aqui.
+
+\end{tcolorbox}
+
+\begin{boaprática}
+  \textbf{Dica de aprendizado:} ao concluir cada capítulo, releia os exercícios
+  ``Fazendo a Diferença'' e tente \textit{melhorá-los} com o que você acabou de
+  aprender. Por exemplo, no Cap.~3, refaça a calculadora de IMC usando
+  \texttt{double} -- ela ficará muito mais precisa e elegante. Essa prática de
+  \textit{revisitar} solidifica o aprendizado e mostra a progressão.
+\end{boaprática}
+
+\end{document}

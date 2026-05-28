@@ -1,0 +1,522 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 8 -- Caracteres e Strings em C
+%  EXERCÍCIOS DE AUTORREVISÃO (8.1 -- 8.4)
+%  Abordagem incremental: Caps. 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},title={\small\color{white}Saída do programa},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 8 -- Autorrevisão}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 8}\\[0.3cm]
+  {\Large\color{deitelblue!80}Caracteres e Strings em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios de Autorrevisão (8.1--8.4)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, abordagem incremental\\
+    Capítulos 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8}
+  \end{tcolorbox}
+\end{titlepage}
+
+\section*{Construindo sobre os Capítulos Anteriores}
+
+No Capítulo~8, aprofundamos o trabalho com texto -- ampliando os ponteiros do
+Cap.~7 para abordar caracteres e strings sistematicamente. Construindo sobre os
+Capítulos 1--7, incorporamos:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Biblioteca \texttt{<ctype.h>}} -- funções de teste e conversão de caracteres:
+    \texttt{isdigit}, \texttt{isalpha}, \texttt{isalnum}, \texttt{isxdigit},
+    \texttt{islower}, \texttt{isupper}, \texttt{isspace}, \texttt{iscntrl},
+    \texttt{isprint}, \texttt{ispunct}, \texttt{tolower}, \texttt{toupper}
+  \item \textbf{Biblioteca \texttt{<stdlib.h>}} -- conversão de strings para números:
+    \texttt{atoi}, \texttt{atof}, \texttt{atol}, \texttt{strtod}, \texttt{strtol}
+  \item \textbf{Biblioteca \texttt{<string.h>}} -- manipulação de strings:
+    \texttt{strcpy}, \texttt{strncpy}, \texttt{strcat}, \texttt{strncat},
+    \texttt{strcmp}, \texttt{strncmp}, \texttt{strlen}, \texttt{strchr},
+    \texttt{strrchr}, \texttt{strstr}, \texttt{strpbrk}, \texttt{strtok},
+    \texttt{strspn}, \texttt{strcspn}, \texttt{memcpy}, \texttt{memset},
+    \texttt{memcmp}, \texttt{memchr}
+  \item \textbf{Biblioteca \texttt{<stdio.h>}} estendida -- E/S de caracteres:
+    \texttt{getchar}, \texttt{putchar}, \texttt{puts}, \texttt{gets}/\texttt{fgets},
+    \texttt{sprintf}, \texttt{sscanf}
+\end{itemize}
+
+\begin{boaprática}
+  As bibliotecas-padrão de C oferecem dezenas de funções otimizadas para
+  caracteres e strings. \textbf{Sempre} use essas funções em vez de
+  reimplementá-las -- além de evitar bugs, você ganha décadas de otimização
+  contínua dos compiladores.
+\end{boaprática}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 8.1 -- Instruções para Tarefas Diversas}
+% ============================================================
+
+\begin{respostabox}
+Considere as variáveis:
+\begin{lstlisting}
+int c, x, y, z;
+double d, e, f;
+char *ptr;
+char s1[ 100 ], s2[ 100 ];
+\end{lstlisting}
+
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Converter \texttt{c} em maiúscula:}
+\begin{lstlisting}
+c = toupper( c );
+\end{lstlisting}
+
+\item \textbf{Verificar se \texttt{c} é dígito (operador condicional):}
+\begin{lstlisting}
+printf( "'%c'%sdigit\n", c,
+        isdigit( c ) ? " e um " : " nao e um " );
+\end{lstlisting}
+
+\item \textbf{Converter ``1234567'' em \texttt{long}:}
+\begin{lstlisting}
+printf( "%ld\n", atol( "1234567" ) );
+\end{lstlisting}
+
+\item \textbf{Verificar se \texttt{c} é caractere de controle:}
+\begin{lstlisting}
+printf( "'%c'%scaractere de controle\n", c,
+        iscntrl( c ) ? " e um " : " nao e um " );
+\end{lstlisting}
+
+\item \textbf{Ler uma linha para \texttt{s1} sem \texttt{scanf}:}
+\begin{lstlisting}
+fgets( s1, 100, stdin );
+\end{lstlisting}
+
+\item \textbf{Imprimir \texttt{s1} sem \texttt{printf}:}
+\begin{lstlisting}
+puts( s1 );
+\end{lstlisting}
+
+\item \textbf{Localizar a última ocorrência de \texttt{c} em \texttt{s1}:}
+\begin{lstlisting}
+ptr = strrchr( s1, c );
+\end{lstlisting}
+
+\item \textbf{Imprimir o valor de \texttt{c} sem \texttt{printf}:}
+\begin{lstlisting}
+putchar( c );
+\end{lstlisting}
+
+\item \textbf{Converter ``8.63582'' em \texttt{double}:}
+\begin{lstlisting}
+printf( "%f\n", atof( "8.63582" ) );
+\end{lstlisting}
+
+\item \textbf{Verificar se \texttt{c} é letra:}
+\begin{lstlisting}
+printf( "'%c'%sletra\n", c,
+        isalpha( c ) ? " e uma " : " nao e uma " );
+\end{lstlisting}
+
+\item \textbf{Ler caractere do teclado para \texttt{c}:}
+\begin{lstlisting}
+c = getchar();
+\end{lstlisting}
+
+\item \textbf{Localizar primeira ocorrência de \texttt{s2} em \texttt{s1}:}
+\begin{lstlisting}
+ptr = strstr( s1, s2 );
+\end{lstlisting}
+
+\item \textbf{Verificar se \texttt{c} é imprimível:}
+\begin{lstlisting}
+printf( "'%c'%scaractere imprimivel\n", c,
+        isprint( c ) ? " e um " : " nao e um " );
+\end{lstlisting}
+
+\item \textbf{Ler 3 \texttt{double} de uma string:}
+\begin{lstlisting}
+sscanf( "1.27 10.3 9.432", "%lf%lf%lf", &d, &e, &f );
+\end{lstlisting}
+\textit{Nota:} \texttt{\%lf} é usado para \texttt{double} no \texttt{sscanf} (não \texttt{\%f}).
+
+\item \textbf{Copiar \texttt{s2} para \texttt{s1}:}
+\begin{lstlisting}
+strcpy( s1, s2 );
+\end{lstlisting}
+
+\item \textbf{Primeira ocorrência de qualquer caractere de \texttt{s2} em \texttt{s1}:}
+\begin{lstlisting}
+ptr = strpbrk( s1, s2 );
+\end{lstlisting}
+
+\item \textbf{Comparar \texttt{s1} e \texttt{s2}:}
+\begin{lstlisting}
+printf( "strcmp( s1, s2 ) = %d\n", strcmp( s1, s2 ) );
+\end{lstlisting}
+
+\item \textbf{Primeira ocorrência de \texttt{c} em \texttt{s1}:}
+\begin{lstlisting}
+ptr = strchr( s1, c );
+\end{lstlisting}
+
+\item \textbf{Imprimir \texttt{x, y, z} em \texttt{s1} com \texttt{sprintf} e largura 7:}
+\begin{lstlisting}
+sprintf( s1, "%7d%7d%7d", x, y, z );
+\end{lstlisting}
+
+\item \textbf{Acrescentar 10 caracteres de \texttt{s2} a \texttt{s1}:}
+\begin{lstlisting}
+strncat( s1, s2, 10 );
+\end{lstlisting}
+
+\item \textbf{Comprimento de \texttt{s1}:}
+\begin{lstlisting}
+printf( "strlen(s1) = %u\n", strlen( s1 ) );
+\end{lstlisting}
+
+\item \textbf{Converter ``-21'' em \texttt{int}:}
+\begin{lstlisting}
+printf( "%d\n", atoi( "-21" ) );
+\end{lstlisting}
+
+\item \textbf{Primeiro token de \texttt{s2} (separador: vírgula):}
+\begin{lstlisting}
+ptr = strtok( s2, "," );
+\end{lstlisting}
+
+\end{enumerate}
+
+\begin{boaprática}
+  As funções de \texttt{<string.h>} e \texttt{<ctype.h>} formam o \textit{kit
+  básico} para qualquer programa que manipule texto. Memorizar pelo menos as
+  mais comuns -- \texttt{strcpy}, \texttt{strcmp}, \texttt{strlen}, \texttt{strcat},
+  \texttt{strchr}, \texttt{strstr}, \texttt{strtok} -- é fundamental.
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.2 -- Duas formas de inicializar \texttt{vogal}}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Método 1 -- Usando literal de string:}
+\begin{lstlisting}
+char vogal[] = "AEIOU";
+\end{lstlisting}
+O compilador automaticamente:
+\begin{itemize}[noitemsep]
+  \item Conta os caracteres: 5 letras.
+  \item Adiciona o terminador \texttt{'\textbackslash 0'} ao final.
+  \item Dimensiona o array com 6 elementos.
+\end{itemize}
+
+\textbf{Método 2 -- Usando lista de caracteres explícita:}
+\begin{lstlisting}
+char vogal[] = { 'A', 'E', 'I', 'O', 'U', '\0' };
+\end{lstlisting}
+Aqui devemos colocar \textbf{explicitamente} o \texttt{'\textbackslash 0'} no final --
+sem ele, a string não seria válida e funções como \texttt{strlen} ou \texttt{printf}
+com \texttt{\%s} se comportariam de modo imprevisível.
+
+\begin{erroco}
+  Esquecer o \texttt{'\textbackslash 0'} ao inicializar manualmente uma string
+  é um erro grave. Funções de \texttt{<string.h>} continuam lendo memória após
+  o fim do array até encontrar (por acidente) um byte zero -- causando saídas
+  estranhas, vazamento de informação ou falha de segmentação.
+\end{erroco}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.3 -- Análise de Instruções}
+% ============================================================
+
+\textbf{Considere:} \texttt{char s1[50] = "jack", s2[50] = " jill", s3[50], *sptr;}
+
+\subsection*{Item (a)}
+\begin{respostabox}
+\begin{lstlisting}
+printf( "%c%s", toupper( s1[ 0 ] ), &s1[ 1 ] );
+\end{lstlisting}
+
+\textbf{Análise:}
+\begin{itemize}[noitemsep]
+  \item \texttt{s1[0]} é \texttt{'j'}; \texttt{toupper('j')} retorna \texttt{'J'}.
+  \item \texttt{\&s1[1]} é o endereço do segundo caractere de \texttt{s1}, ou seja,
+  \texttt{"ack"} (porque \texttt{\&s1[1]} aponta para o \texttt{'a'}).
+\end{itemize}
+\textbf{Saída:} \texttt{Jack}
+\end{respostabox}
+
+\subsection*{Item (b)}
+\begin{respostabox}
+\begin{lstlisting}
+printf( "%s", strcpy( s3, s2 ) );
+\end{lstlisting}
+
+\textbf{Análise:} \texttt{strcpy(s3, s2)} copia \texttt{" jill"} para \texttt{s3} e
+retorna o ponteiro para o destino \texttt{s3}.
+
+\textbf{Saída:} \texttt{ jill} (note o espaço inicial)
+\end{respostabox}
+
+\subsection*{Item (c)}
+\begin{respostabox}
+\begin{lstlisting}
+printf( "%s", strcat( strcat( strcpy( s3, s1 ), " and " ), s2 ) );
+\end{lstlisting}
+
+\textbf{Análise passo a passo:}
+\begin{enumerate}[noitemsep]
+  \item \texttt{strcpy(s3, s1)} $\to$ \texttt{s3 = "jack"}, retorna \texttt{s3}.
+  \item \texttt{strcat(s3, " and ")} $\to$ \texttt{s3 = "jack and "}, retorna \texttt{s3}.
+  \item \texttt{strcat(s3, s2)} $\to$ \texttt{s3 = "jack and  jill"} (note o duplo
+  espaço, pois \texttt{s2} começa com espaço).
+\end{enumerate}
+
+\textbf{Saída:} \texttt{jack and  jill}
+
+\textit{Resposta do livro:} ``\texttt{jack e jill}'' -- assume tradução de
+``and'' $\to$ ``e'' e ignora o espaço duplo. O resultado real do código é com
+``and'' literal.
+\end{respostabox}
+
+\subsection*{Item (d)}
+\begin{respostabox}
+\begin{lstlisting}
+printf( "%u", strlen( s1 ) + strlen( s2 ) );
+\end{lstlisting}
+
+\textbf{Análise:}
+\begin{itemize}[noitemsep]
+  \item \texttt{strlen("jack") = 4}
+  \item \texttt{strlen(" jill") = 5} (5 caracteres incluindo o espaço inicial)
+  \item Soma: \texttt{4 + 5 = 9}
+\end{itemize}
+
+\textit{Resposta do livro: \texttt{8}.} Há uma pequena discrepância: a resposta do
+livro considera \texttt{strlen(" jill") = 4} (sem contar o espaço), mas o espaço
+faz parte da string e deveria ser contado. \textbf{Saída real:} \texttt{9}.
+\end{respostabox}
+
+\subsection*{Item (e)}
+\begin{respostabox}
+\begin{lstlisting}
+printf( "%u", strlen( s3 ) );
+\end{lstlisting}
+
+Após o item (c), \texttt{s3 = "jack and  jill"} (14 caracteres incluindo os 2 espaços
+entre ``and'' e ``jill'').
+
+\textbf{Saída:} \texttt{14} \quad (livro diz 13; novamente uma pequena discrepância
+sobre contagem de espaços).
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.4 -- Identificar e Corrigir Erros}
+% ============================================================
+
+\subsection*{Item (a)}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+char s[ 10 ];
+strncpy( s, "ola", 5 );
+printf( "%s\n", s );
+\end{lstlisting}
+
+\textbf{Erro:} \texttt{strncpy} \textit{não} adiciona automaticamente o terminador
+\texttt{'\textbackslash 0'} se o terceiro argumento for menor ou igual ao
+comprimento da string copiada. Quando o terceiro argumento é maior que a string
+de origem, \texttt{strncpy} preenche com zeros, então neste caso ``ola'' + 2 zeros
+extras OK. Porém, se a string fosse maior que 5, faltaria o terminador.
+
+\textbf{Cuidado clássico:} se a string for \texttt{"hello"} (5 letras) e copiamos
+exatamente 5, não há \texttt{'\textbackslash 0'}.
+
+\textbf{Correção (caso geral):} sempre adicionar manualmente o terminador após
+\texttt{strncpy}:
+\begin{lstlisting}
+strncpy( s, "ola", 5 );
+s[ 5 ] = '\0';  /* garantir terminador */
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (b)}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+printf( "%s", 'a' );
+\end{lstlisting}
+
+\textbf{Erro:} \texttt{'a'} é uma \textit{constante de caractere} (um \texttt{int}
+com valor 97 no ASCII), não uma string. Usar \texttt{\%s} espera um ponteiro para
+\texttt{char} -- usar 97 como ponteiro causa falha de segmentação.
+
+\textbf{Correções possíveis:}
+\begin{lstlisting}
+printf( "%c", 'a' );   /* %c para caractere individual    */
+printf( "%s", "a" );   /* "a" e uma string (com terminador) */
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (c)}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+char s[ 12 ];
+strcpy( s, "Bem-vindo" );
+\end{lstlisting}
+
+\textbf{Erro:} A string ``Bem-vindo'' tem 9 caracteres + \texttt{'\textbackslash 0'}
+= 10 bytes. Cabe em \texttt{s[12]}? Sim, mas se levarmos em conta que a string em
+português poderia ter caractere acentuado (codificação multi-byte em UTF-8), a
+contagem pode mudar. Em ASCII puro, está OK -- mas tradicionalmente o livro usa
+exemplos onde o array é \textit{pequeno demais}.
+
+\textit{Considerando a observação do livro:} a tradução para inglês seria ``Welcome''
+(7 + 1 = 8 bytes -- cabe). Se a string fosse ``Welcome to the show'' (20 chars +
+\texttt{'\textbackslash 0'}), não caberia em 12.
+
+\textbf{Correção:} declarar o array com tamanho suficiente:
+\begin{lstlisting}
+char s[ 50 ];   /* tamanho confortavel */
+strcpy( s, "Bem-vindo" );
+\end{lstlisting}
+
+\begin{erroco}
+  \textbf{Buffer overflow:} copiar uma string maior que o destino é uma das
+  vulnerabilidades de segurança mais exploradas em programas C. As versões
+  \texttt{strncpy} e \texttt{strncat} ajudam, mas exigem cuidado com o
+  terminador.
+\end{erroco}
+\end{respostabox}
+
+\subsection*{Item (d)}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+if ( strcmp( string1, string2 ) ) {
+    printf( "As strings sao iguais\n" );
+}
+\end{lstlisting}
+
+\textbf{Erro:} A função \texttt{strcmp} retorna \textbf{0} quando as strings são
+iguais. No \texttt{if}, 0 é falso -- então a mensagem \textit{nunca} é impressa
+quando as strings são iguais. A lógica está invertida!
+
+\textbf{Correção:} comparar explicitamente com 0:
+\begin{lstlisting}
+if ( strcmp( string1, string2 ) == 0 ) {
+    printf( "As strings sao iguais\n" );
+}
+\end{lstlisting}
+
+\begin{boaprática}
+  Sempre compare o retorno de \texttt{strcmp} com \texttt{== 0} (para igualdade),
+  \texttt{< 0} (s1 vem antes de s2) ou \texttt{> 0} (s1 vem depois de s2). Nunca
+  trate \texttt{strcmp} como um booleano direto -- é uma armadilha clássica.
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section*{Gabarito Rápido -- Capítulo 8: Autorrevisão}
+
+\begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,title={\bfseries\large Respostas Resumidas}]
+
+\textbf{8.1 -- 23 funções/operações principais com strings e caracteres:}
+\texttt{toupper}, \texttt{isdigit}, \texttt{atol}, \texttt{iscntrl}, \texttt{fgets},
+\texttt{puts}, \texttt{strrchr}, \texttt{putchar}, \texttt{atof}, \texttt{isalpha},
+\texttt{getchar}, \texttt{strstr}, \texttt{isprint}, \texttt{sscanf}, \texttt{strcpy},
+\texttt{strpbrk}, \texttt{strcmp}, \texttt{strchr}, \texttt{sprintf}, \texttt{strncat},
+\texttt{strlen}, \texttt{atoi}, \texttt{strtok}.
+
+\medskip\textbf{8.2:} Duas formas de inicializar:
+\begin{itemize}[noitemsep]
+  \item \texttt{char vogal[] = "AEIOU";} -- compilador adiciona \texttt{'\textbackslash 0'}.
+  \item \texttt{char vogal[] = \{ 'A', 'E', 'I', 'O', 'U', '\textbackslash 0' \};} -- terminador explícito.
+\end{itemize}
+
+\medskip\textbf{8.3 -- Saídas das instruções:}
+\begin{itemize}[noitemsep]
+  \item[a)] \texttt{Jack}
+  \item[b)] \texttt{ jill}
+  \item[c)] \texttt{jack and  jill}
+  \item[d)] 9 (sem ignorar espaços)
+  \item[e)] 14
+\end{itemize}
+
+\medskip\textbf{8.4 -- Erros corrigidos:}
+\begin{itemize}[noitemsep]
+  \item[a)] \texttt{strncpy} pode não adicionar \texttt{'\textbackslash 0'}; adicione manualmente.
+  \item[b)] \texttt{'a'} não é string; use \texttt{\%c} ou \texttt{"a"}.
+  \item[c)] Array pode ser pequeno demais; declare com tamanho seguro.
+  \item[d)] Inverteu lógica: \texttt{strcmp} retorna 0 quando iguais (compare \texttt{== 0}).
+\end{itemize}
+
+\end{tcolorbox}
+
+\end{document}

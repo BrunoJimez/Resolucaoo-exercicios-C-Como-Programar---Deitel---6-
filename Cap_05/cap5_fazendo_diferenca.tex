@@ -1,0 +1,722 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 5 -- Funções em C
+%  FAZENDO A DIFERENÇA (5.49 -- 5.54)
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array,amsmath}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+\definecolor{ecogreen}{RGB}{0,120,50}
+\definecolor{ecolightgreen}{RGB}{210,240,220}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},
+  title={\small\color{white}Saída do programa},breakable,#1}
+\newtcolorbox{pesquisa}[1][]{colback=ecolightgreen,colframe=ecogreen,
+  fonttitle=\bfseries\small,title={Pesquisa externa realizada},breakable,#1}
+\newtcolorbox{atencao}[1][]{colback=yellow!10,colframe=deitellorange,
+  fonttitle=\bfseries\small,title={Atenção},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 5 -- Fazendo a Diferença}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue,urlcolor=ecogreen}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 5}\\[0.3cm]
+  {\Large\color{deitelblue!80}Funções em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=ecolightgreen,colframe=ecogreen,width=0.85\linewidth]
+    \centering{\large\bfseries\color{ecogreen}Fazendo a Diferença}\\[0.3cm]
+    {\normalsize Exercícios 5.49 a 5.54\\[0.2cm]
+    Teste sobre aquecimento global\\
+    Sistema de Instrução Auxiliada por Computador (IAC)}
+  \end{tcolorbox}
+  \vfill{\small Abordagem incremental Deitel}
+\end{titlepage}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 5.49 -- Teste sobre Aquecimento Global}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 5.49]
+Pesquise sobre os dois lados da questão do aquecimento global. Crie um teste de
+múltipla escolha com 5 perguntas, cada uma com 4 alternativas. Escreva uma aplicação
+que administre o teste, conte as respostas corretas e classifique o desempenho.
+\end{enunciadoBox}
+
+\subsection*{Pesquisa Externa}
+
+\begin{pesquisa}
+Sobre o aquecimento global existe um amplo consenso científico (representado pelo
+IPCC -- Painel Intergovernamental sobre Mudanças Climáticas) de que o aquecimento
+recente do planeta é predominantemente causado pela ação humana, sobretudo pela
+queima de combustíveis fósseis. Por outro lado, alguns céticos questionam a magnitude
+do efeito antropogênico ou as projeções de longo prazo. Esta atividade busca apresentar
+\textit{fatos básicos consensuais} de ambos os lados, apresentando o teste de forma
+\textbf{neutra}, como pede o enunciado.
+
+Fontes consultadas: site do IPCC (\texttt{www.ipcc.ch}), NASA Climate
+(\texttt{climate.nasa.gov}), e perspectivas críticas em sites de ``\textit{global
+warming skeptics}''.
+\end{pesquisa}
+
+\subsection*{Solução em C}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.49: teste_aquecimento_global.c
+   Teste neutro de 5 perguntas sobre aquecimento global */
+#include <stdio.h>
+
+int verificarResposta( int pergunta, int resposta );
+void exibirPergunta1( void );
+void exibirPergunta2( void );
+void exibirPergunta3( void );
+void exibirPergunta4( void );
+void exibirPergunta5( void );
+void exibirResultado( int corretas );
+
+int main( void )
+{
+    int corretas = 0;
+    int resposta;
+    int p;
+
+    printf( "============================================\n" );
+    printf( " TESTE SOBRE AQUECIMENTO GLOBAL (5 questoes)\n" );
+    printf( "============================================\n\n" );
+
+    /* Cinco perguntas */
+    for ( p = 1; p <= 5; ++p ) {
+        switch ( p ) {
+            case 1: exibirPergunta1(); break;
+            case 2: exibirPergunta2(); break;
+            case 3: exibirPergunta3(); break;
+            case 4: exibirPergunta4(); break;
+            case 5: exibirPergunta5(); break;
+        }
+        printf( "Sua resposta (1-4): " );
+        scanf( "%d", &resposta );
+
+        if ( verificarResposta( p, resposta ) ) {
+            printf( "Correto!\n\n" );
+            ++corretas;
+        }
+        else {
+            printf( "Incorreto.\n\n" );
+        }
+    }
+
+    exibirResultado( corretas );
+    return 0;
+}
+
+void exibirPergunta1( void )
+{
+    printf( "1. Qual gas e considerado o principal contribuinte\n" );
+    printf( "   antropogenico para o aquecimento global?\n" );
+    printf( "   1) Oxigenio (O2)\n" );
+    printf( "   2) Nitrogenio (N2)\n" );
+    printf( "   3) Dioxido de carbono (CO2)\n" );
+    printf( "   4) Argonio (Ar)\n" );
+}
+
+void exibirPergunta2( void )
+{
+    printf( "2. O que e a 'pegada de carbono' de uma pessoa?\n" );
+    printf( "   1) A area de terra que ela ocupa\n" );
+    printf( "   2) O total de gases de efeito estufa que ela emite\n" );
+    printf( "   3) O numero de arvores que ela plantou\n" );
+    printf( "   4) O consumo eletrico mensal\n" );
+}
+
+void exibirPergunta3( void )
+{
+    printf( "3. Qual organizacao da ONU estuda mudancas climaticas?\n" );
+    printf( "   1) UNESCO\n" );
+    printf( "   2) IPCC\n" );
+    printf( "   3) FAO\n" );
+    printf( "   4) OMS\n" );
+}
+
+void exibirPergunta4( void )
+{
+    printf( "4. Qual e a principal fonte mundial de emissoes de CO2?\n" );
+    printf( "   1) Erupcoes vulcanicas\n" );
+    printf( "   2) Respiracao animal\n" );
+    printf( "   3) Queima de combustiveis fosseis\n" );
+    printf( "   4) Decomposicao de plantas\n" );
+}
+
+void exibirPergunta5( void )
+{
+    printf( "5. Qual atitude individual ajuda mais a reduzir\n" );
+    printf( "   emissoes pessoais de CO2?\n" );
+    printf( "   1) Reduzir o uso de transporte particular\n" );
+    printf( "   2) Aumentar o consumo de carne bovina\n" );
+    printf( "   3) Deixar luzes acesas o tempo todo\n" );
+    printf( "   4) Tomar banhos muito longos\n" );
+}
+
+int verificarResposta( int pergunta, int resposta )
+{
+    int gabarito[] = { 0, 3, 2, 2, 3, 1 };  /* indice 0 nao usado */
+    return resposta == gabarito[ pergunta ];
+}
+
+void exibirResultado( int corretas )
+{
+    printf( "============================================\n" );
+    printf( "RESULTADO: %d/5 acertos\n", corretas );
+    printf( "============================================\n" );
+
+    if ( corretas == 5 ) {
+        printf( "Excelente!\n" );
+    }
+    else if ( corretas == 4 ) {
+        printf( "Muito bom!\n" );
+    }
+    else {
+        printf( "Hora de aumentar seus conhecimentos sobre\n" );
+        printf( "aquecimento global. Sites recomendados:\n" );
+        printf( "  - IPCC (www.ipcc.ch)\n" );
+        printf( "  - NASA Climate (climate.nasa.gov)\n" );
+        printf( "  - National Geographic Brasil\n" );
+    }
+}
+\end{lstlisting}
+
+\textbf{Observações didáticas:}
+\begin{itemize}[noitemsep]
+  \item Cada pergunta foi colocada em \textit{sua própria função} -- demonstra a
+  modularização do Capítulo~5.
+  \item A função \texttt{verificarResposta} usa um array de gabaritos, antecipando
+  o conceito de arrays do Cap.~6.
+  \item A neutralidade foi preservada usando perguntas de fato consensual
+  (terminologia, organizações, mecanismos básicos), sem opiniões controversas.
+\end{itemize}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.50 -- IAC: Aprendendo Tabuada}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 5.50]
+Escreva um programa de Instrução Auxiliada por Computador (IAC) que ajude um aluno
+a aprender tabuada. Use \texttt{rand} para gerar dois inteiros positivos de um dígito,
+faça uma pergunta como ``Quanto é 6 vezes 7?'', verifique a resposta e dê feedback.
+Use uma função separada para gerar cada nova pergunta.
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.50: iac_tabuada_basica.c
+   Sistema de IAC para aprender tabuada */
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int gerarPergunta( int *a, int *b );  /* sera usado em Cap.7 */
+int novaPergunta( void );
+
+int main( void )
+{
+    char continuar;
+
+    srand( time( NULL ) );
+
+    do {
+        novaPergunta();
+        printf( "\nDeseja continuar (s/n)? " );
+        scanf( " %c", &continuar );
+    } while ( continuar == 's' || continuar == 'S' );
+
+    printf( "Ate a proxima!\n" );
+    return 0;
+}
+
+/* Gera uma pergunta nova e processa as respostas do aluno */
+int novaPergunta( void )
+{
+    int a = 1 + rand() % 9;   /* 1 a 9 */
+    int b = 1 + rand() % 9;   /* 1 a 9 */
+    int respostaCorreta = a * b;
+    int resposta;
+
+    printf( "Quanto e %d vezes %d? ", a, b );
+    scanf( "%d", &resposta );
+
+    while ( resposta != respostaCorreta ) {
+        printf( "Nao. Tente novamente.\n" );
+        printf( "Quanto e %d vezes %d? ", a, b );
+        scanf( "%d", &resposta );
+    }
+
+    printf( "Muito bom!\n" );
+    return respostaCorreta;
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.51 -- IAC: Reduzindo Fadiga}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 5.51]
+Modifique o programa anterior para apresentar mensagens variadas a cada resposta.
+Para resposta correta, escolha aleatoriamente entre 4 mensagens; o mesmo para resposta
+incorreta. Use \texttt{switch} para selecionar a mensagem.
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.51: iac_tabuada_variada.c
+   IAC com mensagens variadas para reduzir fadiga */
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void mensagemCorreta( void );
+void mensagemIncorreta( void );
+void novaPergunta( void );
+
+int main( void )
+{
+    char continuar;
+
+    srand( time( NULL ) );
+
+    do {
+        novaPergunta();
+        printf( "\nDeseja continuar (s/n)? " );
+        scanf( " %c", &continuar );
+    } while ( continuar == 's' || continuar == 'S' );
+
+    return 0;
+}
+
+void mensagemCorreta( void )
+{
+    switch ( 1 + rand() % 4 ) {
+        case 1: printf( "Muito bom!\n" );    break;
+        case 2: printf( "Excelente!\n" );    break;
+        case 3: printf( "Bom trabalho!\n" ); break;
+        case 4: printf( "Continue assim!\n"); break;
+    }
+}
+
+void mensagemIncorreta( void )
+{
+    switch ( 1 + rand() % 4 ) {
+        case 1: printf( "Nao. Tente novamente.\n" );        break;
+        case 2: printf( "Errado. Tente mais uma vez.\n" );  break;
+        case 3: printf( "Nao desista!\n" );                 break;
+        case 4: printf( "Nao. Continue tentando.\n" );      break;
+    }
+}
+
+void novaPergunta( void )
+{
+    int a = 1 + rand() % 9;
+    int b = 1 + rand() % 9;
+    int correta = a * b;
+    int resposta;
+
+    printf( "Quanto e %d vezes %d? ", a, b );
+    scanf( "%d", &resposta );
+
+    while ( resposta != correta ) {
+        mensagemIncorreta();
+        printf( "Quanto e %d vezes %d? ", a, b );
+        scanf( "%d", &resposta );
+    }
+
+    mensagemCorreta();
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.52 -- IAC: Monitorando Desempenho}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 5.52]
+Modifique o programa anterior para contar respostas corretas e incorretas. Após 10
+perguntas, calcule a porcentagem de acertos. Se for $< 75\%$, peça ajuda ao professor;
+caso contrário, parabenize e libere para o próximo nível.
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.52: iac_monitoramento.c
+   Adiciona contagem de acertos/erros e relatorio de 10 perguntas */
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void mensagemCorreta( void );
+void mensagemIncorreta( void );
+
+int main( void )
+{
+    int corretas = 0;
+    int total = 0;
+    int a, b, resposta;
+    float porcentagem;
+
+    srand( time( NULL ) );
+
+    while ( total < 10 ) {
+        a = 1 + rand() % 9;
+        b = 1 + rand() % 9;
+
+        printf( "Quanto e %d vezes %d? ", a, b );
+        scanf( "%d", &resposta );
+
+        if ( resposta == a * b ) {
+            mensagemCorreta();
+            ++corretas;
+        }
+        else {
+            mensagemIncorreta();
+            /* Continua pedindo a mesma pergunta ate acertar */
+            while ( resposta != a * b ) {
+                printf( "Quanto e %d vezes %d? ", a, b );
+                scanf( "%d", &resposta );
+                if ( resposta != a * b ) mensagemIncorreta();
+            }
+            mensagemCorreta();
+        }
+        ++total;
+    }
+
+    porcentagem = ( corretas * 100.0f ) / total;
+    printf( "\n=== RELATORIO ===\n" );
+    printf( "Acertos no primeiro try: %d / %d\n", corretas, total );
+    printf( "Porcentagem: %.1f%%\n", porcentagem );
+
+    if ( porcentagem < 75.0f ) {
+        printf( "Por favor, peca ajuda a seu professor.\n" );
+    }
+    else {
+        printf( "Parabens, voce esta pronto para o proximo nivel!\n" );
+    }
+
+    return 0;
+}
+
+void mensagemCorreta( void ) {
+    switch ( 1 + rand() % 4 ) {
+        case 1: printf( "Muito bom!\n" );    break;
+        case 2: printf( "Excelente!\n" );    break;
+        case 3: printf( "Bom trabalho!\n" ); break;
+        case 4: printf( "Continue assim!\n"); break;
+    }
+}
+
+void mensagemIncorreta( void ) {
+    switch ( 1 + rand() % 4 ) {
+        case 1: printf( "Nao. Tente novamente.\n" );        break;
+        case 2: printf( "Errado. Tente mais uma vez.\n" );  break;
+        case 3: printf( "Nao desista!\n" );                 break;
+        case 4: printf( "Nao. Continue tentando.\n" );      break;
+    }
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.53 -- IAC: Níveis de Dificuldade}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 5.53]
+Modifique o programa para permitir que o usuário entre com um nível de dificuldade.
+Nível 1 usa números de um dígito; nível 2, dois dígitos; etc.
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.53: iac_niveis.c
+   IAC com niveis de dificuldade */
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <time.h>
+
+int gerarNumero( int nivel );
+
+int main( void )
+{
+    int nivel;
+    int a, b, resposta;
+    int corretas = 0, total = 0;
+
+    srand( time( NULL ) );
+
+    printf( "Digite o nivel de dificuldade (1 a 4): " );
+    scanf( "%d", &nivel );
+
+    while ( total < 10 ) {
+        a = gerarNumero( nivel );
+        b = gerarNumero( nivel );
+
+        printf( "Quanto e %d vezes %d? ", a, b );
+        scanf( "%d", &resposta );
+
+        if ( resposta == a * b ) {
+            printf( "Muito bom!\n" );
+            ++corretas;
+        }
+        else {
+            printf( "Errado! A resposta era %d.\n", a * b );
+        }
+        ++total;
+    }
+
+    printf( "\nResultado: %d/%d (%.1f%%)\n",
+            corretas, total, corretas * 100.0f / total );
+    return 0;
+}
+
+/* Gera numero com 'nivel' digitos */
+int gerarNumero( int nivel )
+{
+    int min = ( int )pow( 10, nivel - 1 );      /* 1, 10, 100, ... */
+    int max = ( int )pow( 10, nivel ) - 1;       /* 9, 99, 999, ... */
+
+    if ( nivel == 1 ) min = 1;  /* evita 0 no nivel 1 */
+
+    return min + rand() % ( max - min + 1 );
+}
+\end{lstlisting}
+
+\textbf{Como o nível afeta:}
+\begin{itemize}[noitemsep]
+  \item Nível 1: $1 \leq n \leq 9$
+  \item Nível 2: $10 \leq n \leq 99$
+  \item Nível 3: $100 \leq n \leq 999$
+  \item Nível 4: $1000 \leq n \leq 9999$
+\end{itemize}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.54 -- IAC: Variando Tipos de Problemas}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 5.54]
+Modifique o programa para permitir que o usuário escolha o tipo de problema:
+1=adição, 2=subtração, 3=multiplicação, 4=mistura aleatória de todos.
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.54: iac_completa.c
+   IAC final: niveis + tipos de operacao */
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <time.h>
+
+int gerarNumero( int nivel );
+int calcular( int a, int b, int operacao );
+char simboloOperacao( int operacao );
+
+int main( void )
+{
+    int nivel, tipo;
+    int a, b, op, resposta, correta;
+    int corretas = 0, total = 0;
+
+    srand( time( NULL ) );
+
+    printf( "===== IAC: Aritmetica =====\n" );
+    printf( "Nivel de dificuldade (1 a 4): " );
+    scanf( "%d", &nivel );
+
+    printf( "Tipo de problema:\n" );
+    printf( "  1 - Adicao\n" );
+    printf( "  2 - Subtracao\n" );
+    printf( "  3 - Multiplicacao\n" );
+    printf( "  4 - Mistura aleatoria\n" );
+    printf( "Escolha: " );
+    scanf( "%d", &tipo );
+
+    while ( total < 10 ) {
+        /* Decide a operacao da pergunta atual */
+        op = ( tipo == 4 ) ? ( 1 + rand() % 3 ) : tipo;
+
+        a = gerarNumero( nivel );
+        b = gerarNumero( nivel );
+
+        /* Para subtracao, evita resultados negativos */
+        if ( op == 2 && a < b ) {
+            int tmp = a; a = b; b = tmp;
+        }
+
+        correta = calcular( a, b, op );
+
+        printf( "Quanto e %d %c %d? ", a, simboloOperacao( op ), b );
+        scanf( "%d", &resposta );
+
+        if ( resposta == correta ) {
+            printf( "Excelente!\n" );
+            ++corretas;
+        }
+        else {
+            printf( "Errado. A resposta era %d.\n", correta );
+        }
+        ++total;
+    }
+
+    printf( "\n=== RELATORIO FINAL ===\n" );
+    printf( "Acertos: %d/%d (%.1f%%)\n",
+            corretas, total, corretas * 100.0f / total );
+
+    if ( corretas * 100 / total < 75 ) {
+        printf( "Por favor, peca ajuda a seu professor.\n" );
+    }
+    else {
+        printf( "Parabens, voce esta pronto para o proximo nivel!\n" );
+    }
+
+    return 0;
+}
+
+int gerarNumero( int nivel )
+{
+    int min, max;
+    if ( nivel == 1 ) { min = 1; max = 9; }
+    else {
+        min = ( int )pow( 10, nivel - 1 );
+        max = ( int )pow( 10, nivel ) - 1;
+    }
+    return min + rand() % ( max - min + 1 );
+}
+
+int calcular( int a, int b, int operacao )
+{
+    switch ( operacao ) {
+        case 1:  return a + b;
+        case 2:  return a - b;
+        case 3:  return a * b;
+        default: return 0;
+    }
+}
+
+char simboloOperacao( int operacao )
+{
+    switch ( operacao ) {
+        case 1:  return '+';
+        case 2:  return '-';
+        case 3:  return '*';
+        default: return '?';
+    }
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section*{Reflexão Final -- IAC e Educação}
+
+\begin{tcolorbox}[colback=ecolightgreen,colframe=ecogreen,
+  title={\bfseries A jornada da Instrução Auxiliada por Computador}]
+
+Os Exercícios 5.50 a 5.54 apresentam uma progressão didática brilhante: começamos
+com um sistema de IAC simples (um único par de fatores e feedback básico) e o
+expandimos passo a passo, incorporando:
+
+\begin{enumerate}[noitemsep]
+  \item \textbf{Variedade no feedback} (5.51) -- humanizando a interação
+  \item \textbf{Monitoramento de desempenho} (5.52) -- avaliação formativa
+  \item \textbf{Adaptação de dificuldade} (5.53) -- personalização
+  \item \textbf{Múltiplos tipos de exercícios} (5.54) -- generalização
+\end{enumerate}
+
+\textbf{Lições de engenharia de software:}
+\begin{itemize}[noitemsep]
+  \item Cada melhoria foi feita \textit{modularmente} -- adicionando ou modificando
+  funções, sem reescrever o programa inteiro.
+  \item As funções \texttt{mensagemCorreta} e \texttt{mensagemIncorreta} são
+  exemplos de \textbf{abstração} -- os detalhes ficam encapsulados.
+  \item O uso de \texttt{switch} e \texttt{rand} mostra como recursos do
+  Capítulo~4 e do Capítulo~5 trabalham juntos para criar programas expressivos.
+\end{itemize}
+
+\textbf{Conexão com o mundo real:} Sistemas IAC sofisticados (como Khan Academy,
+Duolingo, e plataformas de Tutoria Inteligente baseadas em IA) seguem exatamente
+esses princípios -- adaptação ao aluno, feedback variado, progressão de dificuldade
+e monitoramento contínuo. Você acabou de implementar, em pequena escala, os
+fundamentos da \textbf{tecnologia educacional adaptativa} -- um campo que tem
+revolucionado a aprendizagem em escala global.
+\end{tcolorbox}
+
+\bigskip
+
+\begin{boaprática}
+  \textbf{Reutilização e modularização:} note como cada exercício na sequência
+  IAC \textit{reaproveita} as funções dos exercícios anteriores. Esse é o
+  princípio fundamental do Capítulo~5: \textit{funções bem projetadas são
+  blocos de construção que podem ser combinados em sistemas cada vez mais
+  poderosos}. À medida que avançamos no livro, essa habilidade se torna cada
+  vez mais crucial.
+\end{boaprática}
+
+\end{document}

@@ -1,0 +1,1897 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 5 -- Funções em C
+%  EXERCÍCIOS (5.8 -- 5.48)
+%  Abordagem incremental: Caps. 1 + 2 + 3 + 4 + 5
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array,amsmath}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},
+  title={\small\color{white}Saída do programa},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 5 -- Exercícios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 5}\\[0.3cm]
+  {\Large\color{deitelblue!80}Funções em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios (5.8--5.48)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, com código completo}
+  \end{tcolorbox}
+\end{titlepage}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 5.8 -- Valores de \texttt{x}}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+\item \texttt{fabs(7.5)} $\to$ $|7{,}5|$ $=$ \textbf{7,5}
+\item \texttt{floor(7.5)} $\to$ maior inteiro $\leq 7{,}5$ $=$ \textbf{7,0}
+\item \texttt{fabs(0.0)} $\to$ \textbf{0,0}
+\item \texttt{ceil(0.0)} $\to$ \textbf{0,0}
+\item \texttt{fabs(-6.4)} $\to$ \textbf{6,4}
+\item \texttt{ceil(-6.4)} $\to$ menor inteiro $\geq -6{,}4$ $=$ \textbf{-6,0}
+\item \texttt{ceil( -fabs( -8 + floor(-5.5) ) )}\\
+  Avaliando de dentro para fora:
+  \begin{itemize}[noitemsep]
+    \item \texttt{floor(-5.5)} $=$ -6
+    \item \texttt{-8 + (-6)} $=$ -14
+    \item \texttt{fabs(-14)} $=$ 14
+    \item \texttt{-(14)} $=$ -14
+    \item \texttt{ceil(-14)} $=$ \textbf{-14,0}
+  \end{itemize}
+\end{enumerate}
+
+\begin{boaprática}
+  Atenção a \texttt{floor} de números negativos: \texttt{floor(-5.5)} é \texttt{-6}
+  (mais negativo), não \texttt{-5}. Já \texttt{ceil(-5.5)} é \texttt{-5}.
+  Pense em \textit{piso} como ``arredondar para baixo na reta numérica''.
+\end{boaprática}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.9 -- Tarifas de Estacionamento}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Regras:}
+\begin{itemize}[noitemsep]
+  \item Tarifa mínima: R\$ 2,00 (até 3 horas)
+  \item Acima de 3 horas: R\$ 0,50 adicional por hora ou fração
+  \item Máximo: R\$ 10,00 em qualquer período de 24 horas
+\end{itemize}
+
+\begin{lstlisting}
+/* Ex5.9: tarifa_estacionamento.c
+   Calcula taxas de estacionamento para 3 clientes */
+#include <stdio.h>
+#include <math.h>
+
+double calcularTaxas( double horas ); /* prototipo */
+
+int main( void )
+{
+    double horas;          /* horas estacionado */
+    double taxa;           /* tarifa para o cliente atual */
+    double totalHoras = 0.0;
+    double totalReceita = 0.0;
+    int cliente;
+
+    printf( "%5s%8s%10s\n", "Carro", "Horas", "Taxa" );
+
+    for ( cliente = 1; cliente <= 3; ++cliente ) {
+        printf( "Digite horas do carro %d: ", cliente );
+        scanf( "%lf", &horas );
+
+        taxa = calcularTaxas( horas );
+
+        printf( "%5d%8.1f%10.2f\n", cliente, horas, taxa );
+        totalHoras   += horas;
+        totalReceita += taxa;
+    }
+
+    printf( "%5s%8.1f%10.2f\n", "TOTAL", totalHoras, totalReceita );
+    return 0;
+} /* fim da funcao main */
+
+/* Calcula a tarifa segundo as regras */
+double calcularTaxas( double horas )
+{
+    double taxa = 2.00;  /* taxa minima ate 3 horas */
+
+    if ( horas > 3.0 ) {
+        /* Cobra 0,50 por hora ou fracao acima de 3 horas */
+        /* ceil arredonda fracao para a hora cheia seguinte */
+        taxa += 0.50 * ceil( horas - 3.0 );
+    }
+
+    if ( taxa > 10.00 ) {
+        taxa = 10.00;     /* limite maximo diario */
+    }
+
+    return taxa;
+} /* fim da funcao calcularTaxas */
+\end{lstlisting}
+
+\textbf{Análise:} Para 1{,}5 horas, está dentro das 3h iniciais $\to$ R\$ 2,00.
+Para 4 horas, $\text{ceil}(4{-}3) = 1$ hora extra $\to$ 2 + 0{,}50 = R\$ 2,50.
+Para 24 horas, calculado seria $2 + 0{,}50 \times 21 = 12{,}50$, mas limita-se em
+R\$ 10,00.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.10 -- Arredondando para Inteiro}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Truque:} \texttt{floor(x + 0.5)} arredonda \texttt{x} para o inteiro mais
+próximo. Por quê? Se a parte fracionária for $\geq 0{,}5$, somar 0{,}5 ``empurra''
+o número para o próximo inteiro.
+
+\begin{lstlisting}
+/* Ex5.10: arredonda.c */
+#include <stdio.h>
+#include <math.h>
+
+int main( void )
+{
+    double x, arredondado;
+
+    printf( "Digite numero (negativo para terminar): " );
+    scanf( "%lf", &x );
+
+    while ( x >= 0.0 ) {
+        arredondado = floor( x + 0.5 );
+        printf( "Original: %.4f -> Arredondado: %.0f\n",
+                x, arredondado );
+
+        printf( "Proximo (negativo para terminar): " );
+        scanf( "%lf", &x );
+    }
+
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.11 -- Arredondamento por Casa Decimal}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.11: arredonda_casas.c */
+#include <stdio.h>
+#include <math.h>
+
+double arredInteiro    ( double x );
+double arredDecimos    ( double x );
+double arredCentesimos ( double x );
+double arredMilesimos  ( double x );
+
+int main( void )
+{
+    double x;
+    printf( "Digite um numero: " );
+    scanf( "%lf", &x );
+
+    printf( "Original:    %.6f\n", x );
+    printf( "Inteiro:     %.0f\n", arredInteiro( x ) );
+    printf( "Decimos:     %.1f\n", arredDecimos( x ) );
+    printf( "Centesimos:  %.2f\n", arredCentesimos( x ) );
+    printf( "Milesimos:   %.3f\n", arredMilesimos( x ) );
+
+    return 0;
+}
+
+double arredInteiro( double x )
+    { return floor( x + 0.5 ); }
+
+double arredDecimos( double x )
+    { return floor( x * 10.0 + 0.5 ) / 10.0; }
+
+double arredCentesimos( double x )
+    { return floor( x * 100.0 + 0.5 ) / 100.0; }
+
+double arredMilesimos( double x )
+    { return floor( x * 1000.0 + 0.5 ) / 1000.0; }
+\end{lstlisting}
+
+\textbf{Lógica:} para arredondar a $n$ casas decimais, multiplique por $10^n$,
+arredonde para inteiro, e divida de volta por $10^n$. Por exemplo, para arredondar
+3{,}14159 a 2 casas: $3{,}14159 \times 100 = 314{,}159$; \texttt{floor(314{,}659)} = 314;
+$314 / 100 = 3{,}14$.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.12 -- Perguntas sobre Aleatoriedade}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Escolher números ``aleatoriamente''} significa selecioná-los de tal
+modo que cada valor possível tenha igual probabilidade de ser escolhido (distribuição
+uniforme), e que escolhas sucessivas sejam estatisticamente independentes umas das
+outras. Computadores não geram aleatoriedade verdadeira -- usam algoritmos
+determinísticos para produzir sequências que \textit{parecem} aleatórias
+(pseudoaleatoriedade).
+
+\item \texttt{rand} é útil para simular jogos de azar porque modela situações como
+lançamento de dados, baralho, moeda -- em que o resultado depende do acaso. Sem
+\texttt{rand}, todas as execuções produziriam o mesmo resultado, perdendo a
+imprevisibilidade característica do jogo.
+
+\item \textbf{Por que usar \texttt{srand}?} Sem \texttt{srand}, o gerador
+\texttt{rand} produz sempre a \textbf{mesma sequência} a cada execução do programa.
+\texttt{srand(time(NULL))} fornece uma semente diferente a cada vez (baseada no
+relógio do sistema), garantindo sequências distintas.
+
+\textbf{Quando \textit{não} randomizar?} Durante o desenvolvimento e depuração,
+queremos resultados \textit{reproduzíveis} -- o programa deve se comportar
+exatamente igual a cada execução. Nesse contexto, omitir \texttt{srand} (ou usar
+uma semente fixa) é desejável para identificar e corrigir bugs.
+
+\item \textbf{Escala e deslocamento:} \texttt{rand()} retorna valores entre 0 e
+\texttt{RAND\_MAX}. Para gerar valores em outro intervalo $[a, b]$:
+\begin{itemize}[noitemsep]
+  \item \textbf{Escala:} restringir a faixa a $b - a + 1$ valores: \texttt{rand() \% (b - a + 1)}
+  \item \textbf{Deslocamento:} mover para começar em $a$: \texttt{a + ...}
+\end{itemize}
+A fórmula completa: \texttt{a + rand() \% (b - a + 1)}.
+
+\item \textbf{Por que simulações são úteis?} Permitem investigar fenômenos do mundo
+real:
+\begin{itemize}[noitemsep]
+  \item Quando experimentos reais são caros (testes de carros, aviões)
+  \item Perigosos (reações nucleares, epidemiologia)
+  \item Lentos (evolução, mudança climática)
+  \item Ou impossíveis (cenários ``e se?'')
+\end{itemize}
+A simulação permite testar hipóteses, prever resultados e tomar decisões
+informadas em segundos, com custo mínimo.
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.13 -- Geração de aleatórios em intervalos}
+% ============================================================
+
+\begin{respostabox}
+Fórmula geral: \texttt{n = a + rand() \% (b - a + 1)}, gerando valores em $[a, b]$.
+
+\begin{enumerate}[label=\textbf{\alph*)}]
+\item $1 \leq n \leq 2$: \texttt{n = 1 + rand() \% 2;}
+\item $1 \leq n \leq 100$: \texttt{n = 1 + rand() \% 100;}
+\item $0 \leq n \leq 9$: \texttt{n = rand() \% 10;}
+\item $1000 \leq n \leq 1112$: \texttt{n = 1000 + rand() \% 113;} \quad ($1112-1000+1 = 113$)
+\item $-1 \leq n \leq 1$: \texttt{n = -1 + rand() \% 3;} \quad ($1-(-1)+1 = 3$)
+\item $-3 \leq n \leq 11$: \texttt{n = -3 + rand() \% 15;} \quad ($11-(-3)+1 = 15$)
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.14 -- Aleatórios de conjuntos específicos}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Estratégia:} cada conjunto é uma progressão aritmética (PA) com 5 termos.
+Geramos um inteiro aleatório no intervalo apropriado e aplicamos a fórmula
+$\text{primeiro\_termo} + i \cdot \text{razão}$.
+
+\begin{enumerate}[label=\textbf{\alph*)}]
+\item \textbf{2, 4, 6, 8, 10:} primeiro 2, razão 2, 5 termos:
+\begin{lstlisting}
+printf( "%d", 2 + 2 * ( rand() % 5 ) );
+\end{lstlisting}
+
+\item \textbf{3, 5, 7, 9, 11:} primeiro 3, razão 2, 5 termos:
+\begin{lstlisting}
+printf( "%d", 3 + 2 * ( rand() % 5 ) );
+\end{lstlisting}
+
+\item \textbf{6, 10, 14, 18, 22:} primeiro 6, razão 4, 5 termos:
+\begin{lstlisting}
+printf( "%d", 6 + 4 * ( rand() % 5 ) );
+\end{lstlisting}
+\end{enumerate}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.15 -- Cálculo de Hipotenusa}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.15: hipotenusa.c
+   Calcula hipotenusa de triangulo retangulo */
+#include <stdio.h>
+#include <math.h>
+
+double hipotenusa( double cateto1, double cateto2 );
+
+int main( void )
+{
+    double s1, s2;
+    int triangulo;
+
+    /* Tabela 5.18: 3 triangulos a testar */
+    double lado1[] = { 3.0, 5.0, 8.0 };
+    double lado2[] = { 4.0, 12.0, 15.0 };
+
+    printf( "%-10s%-10s%-10s%-15s\n",
+            "Triangulo", "Lado 1", "Lado 2", "Hipotenusa" );
+
+    for ( triangulo = 0; triangulo < 3; ++triangulo ) {
+        s1 = lado1[ triangulo ];
+        s2 = lado2[ triangulo ];
+        printf( "%-10d%-10.1f%-10.1f%-15.2f\n",
+                triangulo + 1, s1, s2, hipotenusa( s1, s2 ) );
+    }
+
+    return 0;
+}
+
+/* Calcula hipotenusa: sqrt(a^2 + b^2) */
+double hipotenusa( double cateto1, double cateto2 )
+{
+    return sqrt( cateto1 * cateto1 + cateto2 * cateto2 );
+}
+\end{lstlisting}
+
+\textbf{Resultado esperado:} (3,4) $\to$ 5,00; (5,12) $\to$ 13,00; (8,15) $\to$ 17,00.
+Todas são triplas de Pitágoras (já vistas no Ex.~4.27).
+
+\textit{Nota:} usamos arrays (\texttt{double lado1[] = \{...\}}) -- conceito que
+veremos formalmente no Capítulo~6. Aqui, é apenas uma forma compacta de listar
+os valores de teste.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.16 -- Função \texttt{potenciaInt}}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.16: potencia_int.c
+   Calcula base^expoente sem usar funcoes de <math.h> */
+#include <stdio.h>
+
+int potenciaInt( int base, int expoente );
+
+int main( void )
+{
+    int b, e;
+    printf( "Digite base e expoente positivo: " );
+    scanf( "%d%d", &b, &e );
+    printf( "%d ^ %d = %d\n", b, e, potenciaInt( b, e ) );
+    return 0;
+}
+
+/* Calcula base elevado a expoente usando for */
+int potenciaInt( int base, int expoente )
+{
+    int resultado = 1;
+    int i;
+
+    for ( i = 1; i <= expoente; ++i ) {
+        resultado *= base;
+    }
+
+    return resultado;
+}
+\end{lstlisting}
+
+\textbf{Verificação:} \texttt{potenciaInt(3, 4)} $\to$ $3 \times 3 \times 3 \times 3 = 81$.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.17 -- Função \texttt{multiple}}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.17: multiplo.c
+   Verifica se segundo inteiro e multiplo do primeiro */
+#include <stdio.h>
+
+int multiple( int a, int b );
+
+int main( void )
+{
+    int x, y;
+
+    printf( "Digite dois inteiros (-1 -1 para terminar): " );
+    scanf( "%d%d", &x, &y );
+
+    while ( x != -1 || y != -1 ) {
+        if ( multiple( x, y ) ) {
+            printf( "%d e multiplo de %d\n", y, x );
+        }
+        else {
+            printf( "%d NAO e multiplo de %d\n", y, x );
+        }
+        printf( "Proximos dois (-1 -1 para terminar): " );
+        scanf( "%d%d", &x, &y );
+    }
+
+    return 0;
+}
+
+/* Retorna 1 se b e multiplo de a, senao 0 */
+int multiple( int a, int b )
+{
+    if ( a == 0 ) {
+        return 0;          /* divisao por zero */
+    }
+    return ( b % a == 0 );  /* avalia para 1 ou 0 */
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.18 -- Função \texttt{even}}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.18: par.c
+   Determina se inteiro e par */
+#include <stdio.h>
+
+int even( int n );
+
+int main( void )
+{
+    int x;
+    printf( "Digite inteiro (0 para terminar): " );
+    scanf( "%d", &x );
+
+    while ( x != 0 ) {
+        if ( even( x ) ) {
+            printf( "%d e PAR\n", x );
+        }
+        else {
+            printf( "%d e IMPAR\n", x );
+        }
+        printf( "Proximo (0 para terminar): " );
+        scanf( "%d", &x );
+    }
+
+    return 0;
+}
+
+int even( int n )
+{
+    return ( n % 2 == 0 );  /* 1 se par, 0 se impar */
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.19 -- Quadrado Sólido de Asteriscos}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.19: quadrado_asteriscos.c */
+#include <stdio.h>
+
+void exibeQuadrado( int lado );
+
+int main( void )
+{
+    int n;
+    printf( "Digite o lado: " );
+    scanf( "%d", &n );
+
+    exibeQuadrado( n );
+    return 0;
+}
+
+void exibeQuadrado( int lado )
+{
+    int i, j;
+    for ( i = 1; i <= lado; ++i ) {
+        for ( j = 1; j <= lado; ++j ) {
+            printf( "*" );
+        }
+        printf( "\n" );
+    }
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.20 -- Quadrado de Caractere Variável}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.20: quadrado_caractere.c */
+#include <stdio.h>
+
+void exibeQuadrado( int lado, char fillCharacter );
+
+int main( void )
+{
+    int n;
+    char ch;
+
+    printf( "Digite o lado e o caractere: " );
+    scanf( "%d %c", &n, &ch );  /* espaco antes de %c */
+
+    exibeQuadrado( n, ch );
+    return 0;
+}
+
+void exibeQuadrado( int lado, char fillCharacter )
+{
+    int i, j;
+    for ( i = 1; i <= lado; ++i ) {
+        for ( j = 1; j <= lado; ++j ) {
+            printf( "%c", fillCharacter );
+        }
+        printf( "\n" );
+    }
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.21 -- Projeto: Desenhando Formas}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.21: formas.c
+   Programa que desenha varias formas usando funcoes */
+#include <stdio.h>
+
+void quadrado    ( int lado, char ch );
+void retangulo   ( int largura, int altura, char ch );
+void triangulo   ( int altura, char ch );
+void linha       ( int comprimento, char ch );
+
+int main( void )
+{
+    int opcao, n;
+    char ch;
+
+    printf( "Menu de formas:\n" );
+    printf( "  1 - Quadrado\n" );
+    printf( "  2 - Retangulo\n" );
+    printf( "  3 - Triangulo\n" );
+    printf( "  4 - Linha\n" );
+    printf( "Escolha: " );
+    scanf( "%d", &opcao );
+
+    switch ( opcao ) {
+        case 1:
+            printf( "Lado e caractere: " );
+            scanf( "%d %c", &n, &ch );
+            quadrado( n, ch );
+            break;
+        case 2: {
+            int alt;
+            printf( "Largura, altura, caractere: " );
+            scanf( "%d %d %c", &n, &alt, &ch );
+            retangulo( n, alt, ch );
+            break;
+        }
+        case 3:
+            printf( "Altura e caractere: " );
+            scanf( "%d %c", &n, &ch );
+            triangulo( n, ch );
+            break;
+        case 4:
+            printf( "Comprimento e caractere: " );
+            scanf( "%d %c", &n, &ch );
+            linha( n, ch );
+            break;
+        default:
+            printf( "Opcao invalida\n" );
+    }
+
+    return 0;
+}
+
+void quadrado( int lado, char ch )
+{
+    int i, j;
+    for ( i = 1; i <= lado; ++i ) {
+        for ( j = 1; j <= lado; ++j ) printf( "%c", ch );
+        printf( "\n" );
+    }
+}
+
+void retangulo( int largura, int altura, char ch )
+{
+    int i, j;
+    for ( i = 1; i <= altura; ++i ) {
+        for ( j = 1; j <= largura; ++j ) printf( "%c", ch );
+        printf( "\n" );
+    }
+}
+
+void triangulo( int altura, char ch )
+{
+    int i, j;
+    for ( i = 1; i <= altura; ++i ) {
+        for ( j = 1; j <= i; ++j ) printf( "%c", ch );
+        printf( "\n" );
+    }
+}
+
+void linha( int comprimento, char ch )
+{
+    int j;
+    for ( j = 1; j <= comprimento; ++j ) printf( "%c", ch );
+    printf( "\n" );
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.22 -- Separando Dígitos}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.22: separa_digitos.c */
+#include <stdio.h>
+
+int parteInteira( int a, int b );  /* parte (a) */
+int moduloInt   ( int a, int b );  /* parte (b) */
+void exibeDigitos( int n );        /* parte (c) */
+
+int main( void )
+{
+    int n;
+    printf( "Digite inteiro entre 1 e 32767: " );
+    scanf( "%d", &n );
+    exibeDigitos( n );
+    return 0;
+}
+
+int parteInteira( int a, int b )
+{
+    return a / b;
+}
+
+int moduloInt( int a, int b )
+{
+    return a % b;
+}
+
+/* Exibe digitos do numero separados por 2 espacos */
+void exibeDigitos( int n )
+{
+    int divisor = 10000;  /* maior potencia <= 32767 */
+    int digito;
+    int comecou = 0;     /* para suprimir zeros a esquerda */
+
+    while ( divisor > 0 ) {
+        digito = parteInteira( n, divisor );
+        n = moduloInt( n, divisor );
+
+        if ( digito != 0 || comecou || divisor == 1 ) {
+            printf( "%d  ", digito );
+            comecou = 1;
+        }
+
+        divisor /= 10;
+    }
+    printf( "\n" );
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.23 -- Tempo em Segundos}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.23: tempo_segundos.c
+   Converte hora:minuto:segundo em segundos desde meia-noite */
+#include <stdio.h>
+
+int paraSegundos( int h, int m, int s );
+
+int main( void )
+{
+    int h1, m1, s1, h2, m2, s2;
+    int seg1, seg2, diferenca;
+
+    printf( "Primeiro horario (h m s): " );
+    scanf( "%d%d%d", &h1, &m1, &s1 );
+
+    printf( "Segundo horario (h m s): " );
+    scanf( "%d%d%d", &h2, &m2, &s2 );
+
+    seg1 = paraSegundos( h1, m1, s1 );
+    seg2 = paraSegundos( h2, m2, s2 );
+    diferenca = seg2 - seg1;
+    if ( diferenca < 0 ) diferenca = -diferenca;
+
+    printf( "Diferenca: %d segundos\n", diferenca );
+    return 0;
+}
+
+int paraSegundos( int h, int m, int s )
+{
+    return h * 3600 + m * 60 + s;
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.24 -- Conversões de Temperatura}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Fórmulas:}
+\begin{align*}
+  C &= \frac{5}{9}(F - 32) \\
+  F &= \frac{9}{5}C + 32
+\end{align*}
+
+\begin{lstlisting}
+/* Ex5.24: temperaturas.c */
+#include <stdio.h>
+
+int celsius( int fahrenheit );
+int fahrenheit( int celsius );
+
+int main( void )
+{
+    int t;
+
+    printf( "Fahrenheit -> Celsius      Celsius -> Fahrenheit\n" );
+    printf( "----------------------     ---------------------\n" );
+
+    for ( t = 32; t <= 212; t += 18 ) {
+        printf( "%4d F = %4d C            %4d C = %4d F\n",
+                t, celsius( t ),
+                t - 32, fahrenheit( t - 32 ) );
+    }
+
+    return 0;
+}
+
+int celsius( int f )
+{
+    return ( int )( 5.0 / 9.0 * ( f - 32 ) );
+}
+
+int fahrenheit( int c )
+{
+    return ( int )( 9.0 / 5.0 * c + 32 );
+}
+\end{lstlisting}
+
+\textit{Nota:} usamos \textit{cast} para \texttt{int} para retornar o resultado
+truncado, conforme exigido pelo enunciado (``com inteiros'').
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.25 -- Mínimo de 3 Números}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.25: minimo_tres.c */
+#include <stdio.h>
+
+double menor( double a, double b, double c );
+
+int main( void )
+{
+    double x, y, z;
+    printf( "Digite 3 numeros: " );
+    scanf( "%lf%lf%lf", &x, &y, &z );
+
+    printf( "O menor e: %f\n", menor( x, y, z ) );
+    return 0;
+}
+
+double menor( double a, double b, double c )
+{
+    double m = a;
+    if ( b < m ) m = b;
+    if ( c < m ) m = c;
+    return m;
+}
+\end{lstlisting}
+
+\textbf{Versão idiomática com operador ternário:}
+\begin{lstlisting}
+double menor( double a, double b, double c )
+{
+    return ( a < b ? ( a < c ? a : c ) : ( b < c ? b : c ) );
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.26 -- Números Perfeitos}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Definição:} Um inteiro $n$ é \textit{perfeito} se a soma de seus divisores
+próprios (excluindo $n$) é igual a $n$.
+
+\begin{lstlisting}
+/* Ex5.26: numeros_perfeitos.c
+   Encontra numeros perfeitos entre 1 e 1000 */
+#include <stdio.h>
+
+int perfect( int n );
+void exibeFatores( int n );
+
+int main( void )
+{
+    int n;
+
+    printf( "Numeros perfeitos entre 1 e 1000:\n" );
+    printf( "%-10s%s\n", "Numero", "Fatores" );
+
+    for ( n = 2; n <= 1000; ++n ) {
+        if ( perfect( n ) ) {
+            printf( "%-10d", n );
+            exibeFatores( n );
+            printf( "\n" );
+        }
+    }
+
+    return 0;
+}
+
+/* Retorna 1 se n e perfeito, senao 0 */
+int perfect( int n )
+{
+    int soma = 1;        /* 1 e sempre fator (excluindo n) */
+    int i;
+
+    for ( i = 2; i * i <= n; ++i ) {
+        if ( n % i == 0 ) {
+            soma += i;
+            if ( i != n / i ) {  /* evita contar raiz quadrada 2x */
+                soma += n / i;
+            }
+        }
+    }
+
+    return ( n > 1 && soma == n );
+}
+
+void exibeFatores( int n )
+{
+    int i;
+    printf( "1 " );
+    for ( i = 2; i <= n / 2; ++i ) {
+        if ( n % i == 0 ) printf( "%d ", i );
+    }
+}
+\end{lstlisting}
+
+\textbf{Resultado:} Os primeiros números perfeitos são \textbf{6} ($1+2+3$),
+\textbf{28} ($1+2+4+7+14$), \textbf{496}, e \textbf{8128}.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.27 -- Números Primos}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.27: primos.c */
+#include <stdio.h>
+#include <math.h>
+
+int primo( int n );
+
+int main( void )
+{
+    int n;
+    int contador = 0;
+
+    printf( "Primos de 1 a 10000:\n" );
+
+    for ( n = 2; n <= 10000; ++n ) {
+        if ( primo( n ) ) {
+            ++contador;
+            printf( "%6d", n );
+            if ( contador % 10 == 0 ) printf( "\n" );
+        }
+    }
+
+    printf( "\n\nTotal de primos: %d\n", contador );
+    return 0;
+}
+
+/* Retorna 1 se n e primo, senao 0
+   So precisa testar ate sqrt(n) -- ver explicacao abaixo */
+int primo( int n )
+{
+    int i;
+    int limite = ( int )sqrt( ( double )n );
+
+    if ( n < 2 ) return 0;
+    if ( n == 2 ) return 1;
+    if ( n % 2 == 0 ) return 0;  /* pares > 2 nao sao primos */
+
+    for ( i = 3; i <= limite; i += 2 ) {
+        if ( n % i == 0 ) return 0;
+    }
+
+    return 1;
+}
+\end{lstlisting}
+
+\textbf{Por que apenas até $\sqrt{n}$?} Se $n = a \times b$ e ambos $a, b > \sqrt{n}$,
+então $a \times b > n$, contradição. Portanto, ao menos um dos fatores deve ser
+$\leq \sqrt{n}$. Se não encontrarmos divisor até $\sqrt{n}$, $n$ é primo.
+
+\textbf{Ganho de desempenho:} para $n = 10\,000$, $\sqrt{n} = 100$. Em vez de
+testar 5\,000 valores ($n/2$), testamos apenas 100 -- redução de 50×!
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.28 -- Inverter Dígitos}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.28: inverte_digitos.c */
+#include <stdio.h>
+
+int inverter( int n );
+
+int main( void )
+{
+    int n;
+    printf( "Digite um inteiro: " );
+    scanf( "%d", &n );
+    printf( "Invertido: %d\n", inverter( n ) );
+    return 0;
+}
+
+int inverter( int n )
+{
+    int invertido = 0;
+    while ( n > 0 ) {
+        invertido = invertido * 10 + n % 10;
+        n /= 10;
+    }
+    return invertido;
+}
+\end{lstlisting}
+
+\textbf{Trace para 7631:} $i=0$, $n=7631$ $\to$ $i=1$, $n=763$ $\to$ $i=13$, $n=76$
+$\to$ $i=136$, $n=7$ $\to$ $i=1367$, $n=0$. Resultado: \textbf{1367}.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.29 -- MDC (Algoritmo de Euclides)}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Algoritmo de Euclides:} $\gcd(a, b) = \gcd(b, a \mod b)$ até que $b = 0$.
+
+\begin{lstlisting}
+/* Ex5.29: mdc.c */
+#include <stdio.h>
+
+int mdc( int a, int b );
+
+int main( void )
+{
+    int x, y;
+    printf( "Digite 2 inteiros positivos: " );
+    scanf( "%d%d", &x, &y );
+    printf( "MDC(%d, %d) = %d\n", x, y, mdc( x, y ) );
+    return 0;
+}
+
+int mdc( int a, int b )
+{
+    int r;
+    while ( b != 0 ) {
+        r = a % b;
+        a = b;
+        b = r;
+    }
+    return a;
+}
+\end{lstlisting}
+
+\textbf{Exemplo:} $\gcd(48, 36) = \gcd(36, 12) = \gcd(12, 0) = 12$.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.30 -- Pontos de Qualidade}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.30: quality_points.c */
+#include <stdio.h>
+
+int qualityPoints( int media );
+
+int main( void )
+{
+    int m;
+    printf( "Digite a media (0-100): " );
+    scanf( "%d", &m );
+    printf( "Pontos de qualidade: %d\n", qualityPoints( m ) );
+    return 0;
+}
+
+int qualityPoints( int media )
+{
+    if ( media >= 90 ) return 4;
+    if ( media >= 80 ) return 3;
+    if ( media >= 70 ) return 2;
+    if ( media >= 60 ) return 1;
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.31 -- Lançamento de Moeda}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.31: moeda.c
+   Simula 100 lancamentos de moeda */
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int flip( void );
+
+int main( void )
+{
+    int caras = 0;
+    int coroas = 0;
+    int i;
+
+    srand( time( NULL ) );  /* randomiza */
+
+    for ( i = 1; i <= 100; ++i ) {
+        if ( flip() == 0 ) {
+            ++caras;
+            printf( "Cara  " );
+        }
+        else {
+            ++coroas;
+            printf( "Coroa " );
+        }
+        if ( i % 5 == 0 ) printf( "\n" );
+    }
+
+    printf( "\nTotal: %d caras, %d coroas\n", caras, coroas );
+    return 0;
+}
+
+int flip( void )
+{
+    return rand() % 2;  /* 0 ou 1 com igual probabilidade */
+}
+\end{lstlisting}
+
+\textbf{Resultado esperado:} aproximadamente 50 caras e 50 coroas (variação típica
+de $\pm 5$ a $\pm 10$ pela natureza pseudoaleatória).
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.32 -- Descubra o Número}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.32: descubra_numero.c */
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main( void )
+{
+    int numeroSecreto;
+    int tentativa;
+    char resposta;
+
+    srand( time( NULL ) );
+
+    do {
+        numeroSecreto = 1 + rand() % 1000;
+
+        printf( "Eu tenho um numero entre 1 e 1000.\n" );
+        printf( "Voce consegue descobrir qual e?\n" );
+        printf( "Digite sua primeira tentativa: " );
+        scanf( "%d", &tentativa );
+
+        while ( tentativa != numeroSecreto ) {
+            if ( tentativa < numeroSecreto ) {
+                printf( "Muito baixo. Tente novamente.\n" );
+            }
+            else {
+                printf( "Muito alto. Tente novamente.\n" );
+            }
+            scanf( "%d", &tentativa );
+        }
+
+        printf( "Excelente! Voce descobriu o numero!\n" );
+        printf( "Gostaria de jogar novamente (s ou n)? " );
+        scanf( " %c", &resposta );
+
+    } while ( resposta == 's' || resposta == 'S' );
+
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.33 -- Modificação de ``Descubra o Número''}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Por que 10 ou menos tentativas bastam?}
+
+A técnica usada é \textbf{busca binária}: a cada tentativa, dividimos o intervalo
+ao meio. Como $2^{10} = 1024 > 1000$, em \textbf{no máximo 10} divisões pelo meio
+consegue-se localizar qualquer número de 1 a 1000.
+
+\textit{Estratégia ótima:} chute sempre o meio do intervalo restante. Começa com
+500. Se ``muito alto'', chute 250. Se ``muito baixo'', chute 125. E assim por diante.
+
+\begin{lstlisting}
+/* Ex5.33: modificacao do jogo */
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main( void )
+{
+    int numeroSecreto, tentativa, contador;
+    char resposta;
+
+    srand( time( NULL ) );
+
+    do {
+        numeroSecreto = 1 + rand() % 1000;
+        contador = 0;
+
+        printf( "Tente descobrir o numero (1 a 1000): " );
+
+        do {
+            scanf( "%d", &tentativa );
+            ++contador;
+
+            if ( tentativa < numeroSecreto ) {
+                printf( "Muito baixo. Tente novamente: " );
+            }
+            else if ( tentativa > numeroSecreto ) {
+                printf( "Muito alto. Tente novamente: " );
+            }
+        } while ( tentativa != numeroSecreto );
+
+        printf( "Excelente! Acertou em %d tentativas.\n", contador );
+
+        if ( contador < 10 ) {
+            printf( "Ou voce conhece o segredo ou teve sorte!\n" );
+        }
+        else if ( contador == 10 ) {
+            printf( "Ahah! Voce conhece o segredo!\n" );
+        }
+        else {
+            printf( "Voce deveria se sair melhor!\n" );
+        }
+
+        printf( "Jogar novamente? (s/n): " );
+        scanf( " %c", &resposta );
+    } while ( resposta == 's' || resposta == 'S' );
+
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.34 -- Exponenciação Recursiva}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Definição recursiva:} $\text{base}^{\text{exp}} = \text{base} \times \text{base}^{\text{exp}-1}$,
+com caso básico $\text{base}^1 = \text{base}$.
+
+\begin{lstlisting}
+/* Ex5.34: power_recursiva.c */
+#include <stdio.h>
+
+int power( int base, int expoente );
+
+int main( void )
+{
+    int b, e;
+    printf( "Digite base e expoente: " );
+    scanf( "%d%d", &b, &e );
+    printf( "%d ^ %d = %d\n", b, e, power( b, e ) );
+    return 0;
+}
+
+int power( int base, int expoente )
+{
+    if ( expoente == 1 ) {           /* caso basico */
+        return base;
+    }
+    return base * power( base, expoente - 1 );  /* recursao */
+}
+\end{lstlisting}
+
+\textbf{Trace para \texttt{power(3, 4)}:}
+\begin{itemize}[noitemsep]
+  \item \texttt{power(3,4)} = $3 \times $ \texttt{power(3,3)}
+  \item \texttt{power(3,3)} = $3 \times $ \texttt{power(3,2)}
+  \item \texttt{power(3,2)} = $3 \times $ \texttt{power(3,1)}
+  \item \texttt{power(3,1)} = 3 (caso básico)
+\end{itemize}
+Resultado: $3 \times 3 \times 3 \times 3 = 81$.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.35 -- Fibonacci Iterativo com \texttt{double}}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Versão não recursiva:}
+\begin{lstlisting}
+/* Ex5.35: fibonacci_iterativo.c */
+#include <stdio.h>
+
+double fibonacci( int n );
+
+int main( void )
+{
+    int n = 0;
+
+    /* Loop ate o resultado falhar (overflow) */
+    while ( 1 ) {
+        printf( "fib(%d) = %.0f\n", n, fibonacci( n ) );
+        ++n;
+    }
+
+    return 0;
+}
+
+double fibonacci( int n )
+{
+    double anterior = 0.0;
+    double atual = 1.0;
+    double proximo;
+    int i;
+
+    if ( n == 0 ) return 0.0;
+    if ( n == 1 ) return 1.0;
+
+    for ( i = 2; i <= n; ++i ) {
+        proximo = anterior + atual;
+        anterior = atual;
+        atual = proximo;
+    }
+
+    return atual;
+}
+\end{lstlisting}
+
+\textbf{Limites:} \texttt{double} representa até cerca de $1{,}8 \times 10^{308}$.
+$F_{1476} \approx 1{,}3 \times 10^{308}$, então em torno desse índice começam os
+\textit{overflows} (resultando em \texttt{inf}).
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.36 -- Torres de Hanói}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Decomposição recursiva:} Para mover $n$ discos do pino A para o pino C usando
+B como auxiliar:
+\begin{enumerate}[noitemsep]
+  \item Mover $n-1$ discos de A para B (usando C como auxiliar).
+  \item Mover o maior disco de A para C.
+  \item Mover $n-1$ discos de B para C (usando A como auxiliar).
+\end{enumerate}
+
+\begin{lstlisting}
+/* Ex5.36: torres_hanoi.c */
+#include <stdio.h>
+
+void hanoi( int n, int origem, int destino, int auxiliar );
+
+int main( void )
+{
+    int n;
+    printf( "Numero de discos: " );
+    scanf( "%d", &n );
+
+    printf( "Sequencia de movimentos:\n" );
+    hanoi( n, 1, 3, 2 );  /* origem=1, destino=3, auxiliar=2 */
+
+    return 0;
+}
+
+void hanoi( int n, int origem, int destino, int auxiliar )
+{
+    if ( n == 1 ) {                                   /* caso basico */
+        printf( "%d -> %d\n", origem, destino );
+        return;
+    }
+    /* Move n-1 discos de origem para auxiliar */
+    hanoi( n - 1, origem, auxiliar, destino );
+
+    /* Move o disco maior */
+    printf( "%d -> %d\n", origem, destino );
+
+    /* Move n-1 discos de auxiliar para destino */
+    hanoi( n - 1, auxiliar, destino, origem );
+}
+\end{lstlisting}
+
+\textbf{Saída para n=3:}
+\begin{saida}
+1 -> 3\\1 -> 2\\3 -> 2\\1 -> 3\\2 -> 1\\2 -> 3\\1 -> 3
+\end{saida}
+
+\textbf{Curiosidade:} para $n$ discos são necessários $2^n - 1$ movimentos. Para
+os 64 discos da lenda, $2^{64} - 1 \approx 1{,}8 \times 10^{19}$ movimentos --
+mesmo a 1 movimento por segundo, levaria $\sim 585$ bilhões de anos!
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.38 -- Visualizando a Recursão (Fatorial)}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.38: fatorial_visual.c */
+#include <stdio.h>
+
+long fatorial( int n, int nivel );
+
+int main( void )
+{
+    int n;
+    printf( "Digite n: " );
+    scanf( "%d", &n );
+    printf( "Resultado: %ld\n", fatorial( n, 0 ) );
+    return 0;
+}
+
+long fatorial( int n, int nivel )
+{
+    int i;
+    long resultado;
+
+    /* Recuo proporcional ao nivel */
+    for ( i = 0; i < nivel; ++i ) printf( "  " );
+    printf( "fatorial(%d) chamado\n", n );
+
+    if ( n <= 1 ) {
+        for ( i = 0; i < nivel; ++i ) printf( "  " );
+        printf( "fatorial(%d) retorna 1\n", n );
+        return 1;
+    }
+
+    resultado = n * fatorial( n - 1, nivel + 1 );
+
+    for ( i = 0; i < nivel; ++i ) printf( "  " );
+    printf( "fatorial(%d) retorna %ld\n", n, resultado );
+
+    return resultado;
+}
+\end{lstlisting}
+
+\textbf{Saída para n=4:}
+\begin{saida}
+fatorial(4) chamado\\
+\hphantom{xx}fatorial(3) chamado\\
+\hphantom{xxxx}fatorial(2) chamado\\
+\hphantom{xxxxxx}fatorial(1) chamado\\
+\hphantom{xxxxxx}fatorial(1) retorna 1\\
+\hphantom{xxxx}fatorial(2) retorna 2\\
+\hphantom{xx}fatorial(3) retorna 6\\
+fatorial(4) retorna 24
+\end{saida}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.39 -- MDC Recursivo}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.39: mdc_recursivo.c */
+#include <stdio.h>
+
+int mdc( int x, int y );
+
+int main( void )
+{
+    int a, b;
+    printf( "Digite 2 inteiros: " );
+    scanf( "%d%d", &a, &b );
+    printf( "MDC(%d, %d) = %d\n", a, b, mdc( a, b ) );
+    return 0;
+}
+
+int mdc( int x, int y )
+{
+    if ( y == 0 ) return x;        /* caso basico */
+    return mdc( y, x % y );        /* recursao */
+}
+\end{lstlisting}
+
+\textbf{Trace para \texttt{mdc(48, 36)}:}
+\begin{itemize}[noitemsep]
+  \item \texttt{mdc(48, 36)} $\to$ \texttt{mdc(36, 48 \% 36)} = \texttt{mdc(36, 12)}
+  \item \texttt{mdc(36, 12)} $\to$ \texttt{mdc(12, 0)}
+  \item \texttt{mdc(12, 0)} $\to$ retorna 12 (caso básico)
+\end{itemize}
+Resultado: \textbf{12}.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.40 -- \texttt{main} Recursiva}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.40: main_recursiva.c */
+#include <stdio.h>
+
+int main( void )
+{
+    static int count = 1;
+    printf( "Chamada #%d\n", count );
+    count++;
+    main();           /* chama-se recursivamente */
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{O que acontece?} A função \texttt{main} \textbf{pode} chamar a si mesma em
+C (não há restrição da linguagem para isso). O programa imprime sucessivamente:
+\texttt{Chamada \#1}, \texttt{Chamada \#2}, \texttt{Chamada \#3}\ldots até que a
+\textbf{pilha de execução transborde} (\textit{stack overflow}). Cada chamada
+consome espaço de pilha; eventualmente, o sistema operacional encerra o programa
+com falha de segmentação.
+
+\textit{Nota:} embora compile e execute, é uma prática \textbf{altamente desencorajada}.
+A recursão deve ter um caso básico que termine; aqui não há.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.41 -- Distância entre Pontos}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.41: distancia.c */
+#include <stdio.h>
+#include <math.h>
+
+double distance( double x1, double y1, double x2, double y2 );
+
+int main( void )
+{
+    double x1, y1, x2, y2;
+    printf( "Digite o primeiro ponto (x1 y1): " );
+    scanf( "%lf%lf", &x1, &y1 );
+    printf( "Digite o segundo ponto (x2 y2): " );
+    scanf( "%lf%lf", &x2, &y2 );
+    printf( "Distancia: %.4f\n",
+            distance( x1, y1, x2, y2 ) );
+    return 0;
+}
+
+double distance( double x1, double y1, double x2, double y2 )
+{
+    double dx = x2 - x1;
+    double dy = y2 - y1;
+    return sqrt( dx * dx + dy * dy );
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.42 -- O que o programa faz?}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+if ( ( c = getchar() ) != EOF ) {
+    main();
+    printf( "%c", c );
+}
+\end{lstlisting}
+
+\textbf{Análise:} O programa lê caracteres do teclado um a um e usa recursão
+através de \texttt{main()}. Para cada caractere lido, antes de imprimi-lo, chama
+\texttt{main()} recursivamente para ler e processar o próximo. Quando \texttt{EOF}
+é encontrado, a recursão começa a desempilhar -- imprimindo os caracteres
+\textbf{na ordem inversa}.
+
+\textbf{Conclusão:} o programa \textbf{inverte uma sequência de caracteres da entrada}.
+
+\textbf{Exemplo:} entrada \texttt{ABC<EOF>} produz saída \texttt{CBA}.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.43 -- O que faz \texttt{mystery}?}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+int mystery( int a, int b )
+{
+    if ( b == 1 ) return a;
+    else return a + mystery( a, b - 1 );
+}
+\end{lstlisting}
+
+\textbf{Análise:} Para \texttt{mystery(a, b)}:
+\begin{itemize}[noitemsep]
+  \item Se $b = 1$: retorna $a$.
+  \item Senão: retorna $a + \text{mystery}(a, b-1)$.
+\end{itemize}
+
+Expandindo: \texttt{mystery(a, b)} = $a + a + \ldots + a$ ($b$ vezes) = $a \times b$.
+
+\textbf{Conclusão:} a função calcula a \textbf{multiplicação $a \times b$ por adições
+sucessivas} -- uma forma recursiva clássica de implementar multiplicação.
+
+\textbf{Restrição:} $b$ deve ser positivo para evitar recursão infinita.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.44 -- \texttt{mystery} sem restrição em \texttt{b}}
+% ============================================================
+
+\begin{respostabox}
+Para tratar $b$ negativo ou zero:
+
+\begin{lstlisting}
+int mystery( int a, int b )
+{
+    if ( b == 0 ) return 0;        /* a * 0 = 0 */
+    if ( b < 0 ) {
+        return -mystery( a, -b );  /* a * (-b) = -(a * b) */
+    }
+    if ( b == 1 ) return a;
+    return a + mystery( a, b - 1 );
+}
+\end{lstlisting}
+
+\textbf{Lógica:}
+\begin{itemize}[noitemsep]
+  \item Se $b = 0$, o produto é 0.
+  \item Se $b < 0$, calculamos com $|b|$ e negamos o resultado.
+  \item Caso contrário, mantemos a recursão original.
+\end{itemize}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.46 -- Identificar e Corrigir Erros}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Erro:} O cabeçalho da definição não tem o tipo de retorno -- deveria
+ser \texttt{double cube(float number)}.\\
+\textbf{Correção:}
+\begin{lstlisting}
+double cube( float ); /* prototipo */
+double cube( float number ) /* definicao */
+{
+    return number * number * number;
+}
+\end{lstlisting}
+
+\item \textbf{Erro:} Combinar dois especificadores de classe de armazenamento
+(\texttt{register} e \texttt{auto}) na mesma declaração é proibido.\\
+\textbf{Correção:} usar apenas um:
+\begin{lstlisting}
+register int x = 7;  /* OU: auto int x = 7; */
+\end{lstlisting}
+
+\item \textbf{Erro:} \texttt{srand} é uma função \texttt{void} (não retorna valor)
+e exige um argumento. Não pode ser usada em uma atribuição como aqui.\\
+\textbf{Correção:} provavelmente o autor quis usar \texttt{rand}:
+\begin{lstlisting}
+int randomNumber = rand();  /* obtem um aleatorio */
+srand( time( NULL ) );      /* uso correto de srand */
+\end{lstlisting}
+
+\item \textbf{Erro:} A conversão \texttt{(double) x} no \texttt{printf} é redundante
+e fora de propósito. O verdadeiro problema é exibir um \texttt{int} com \texttt{\%f},
+o que é incorreto.\\
+\textbf{Correção:}
+\begin{lstlisting}
+double y = 123.45678;
+int x;
+x = (int) y;       /* cast explicito recomendado */
+printf( "%d\n", x );
+\end{lstlisting}
+
+\item \textbf{Erro:} A variável \texttt{number} é \textit{redeclarada} dentro da
+função, sobrepondo o parâmetro do mesmo nome (Erro Comum 5.5).\\
+\textbf{Correção:} remover a redeclaração:
+\begin{lstlisting}
+double square( double number )
+{
+    return number * number;  /* sem 'double number;' aqui */
+}
+\end{lstlisting}
+
+\item \textbf{Erro:} Na recursão, a chamada \texttt{sum(n)} usa o mesmo \texttt{n},
+sem reduzir -- gera \textbf{recursão infinita}.\\
+\textbf{Correção:}
+\begin{lstlisting}
+int sum( int n )
+{
+    if ( n == 0 ) return 0;
+    return n + sum( n - 1 );  /* deve reduzir o argumento */
+}
+\end{lstlisting}
+
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.47 -- Modificação do Jogo Craps}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.47: craps_apostas.c
+   Versao do jogo craps com sistema de apostas */
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int rolarDados( void );
+
+enum Status { CONTINUA, VENCEU, PERDEU };
+
+int main( void )
+{
+    int saldoBanca = 1000;
+    int aposta;
+    int soma, meuPonto;
+    enum Status status;
+
+    srand( time( NULL ) );
+
+    while ( saldoBanca > 0 ) {
+        printf( "\nSaldo: R$ %d\n", saldoBanca );
+        printf( "Aposta (max %d): ", saldoBanca );
+        scanf( "%d", &aposta );
+
+        while ( aposta <= 0 || aposta > saldoBanca ) {
+            printf( "Aposta invalida! Digite (max %d): ",
+                    saldoBanca );
+            scanf( "%d", &aposta );
+        }
+
+        soma = rolarDados();
+        switch ( soma ) {
+            case 7:
+            case 11:
+                status = VENCEU;
+                break;
+            case 2:
+            case 3:
+            case 12:
+                status = PERDEU;
+                break;
+            default:
+                status = CONTINUA;
+                meuPonto = soma;
+                printf( "Ponto e %d\n", meuPonto );
+                break;
+        }
+
+        while ( status == CONTINUA ) {
+            soma = rolarDados();
+            if ( soma == meuPonto ) status = VENCEU;
+            else if ( soma == 7 ) status = PERDEU;
+        }
+
+        if ( status == VENCEU ) {
+            saldoBanca += aposta;
+            printf( "Voce venceu! Novo saldo: R$ %d\n", saldoBanca );
+            printf( "Voce esta ganhando. Aproveite suas fichas!\n" );
+        }
+        else {
+            saldoBanca -= aposta;
+            printf( "Voce perdeu. Novo saldo: R$ %d\n", saldoBanca );
+            if ( saldoBanca == 0 ) {
+                printf( "Sinto muito. Voce esta quebrado!\n" );
+                break;
+            }
+            printf( "Vamos la, continue tentando!\n" );
+        }
+    }
+
+    return 0;
+}
+
+int rolarDados( void )
+{
+    int dado1 = 1 + rand() % 6;
+    int dado2 = 1 + rand() % 6;
+    int soma = dado1 + dado2;
+    printf( "Dados: %d + %d = %d\n", dado1, dado2, soma );
+    return soma;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.48 -- Aperfeiçoando Fibonacci Recursivo}
+% ============================================================
+
+\begin{respostabox}
+\textbf{O problema da implementação ingênua:}
+
+A versão recursiva clássica:
+\begin{lstlisting}
+long fib( int n ) {
+    if ( n <= 1 ) return n;
+    return fib( n - 1 ) + fib( n - 2 );
+}
+\end{lstlisting}
+tem complexidade \textbf{exponencial} ($O(\phi^n)$, onde $\phi \approx 1{,}618$),
+porque \textit{recalcula} os mesmos valores muitas vezes. Para \texttt{fib(40)},
+são feitas \(\approx 10^9\) chamadas!
+
+\textbf{Técnicas de melhoria:}
+
+\textbf{1. Versão iterativa (Ex.~5.35):}
+\begin{lstlisting}
+long fib( int n ) {
+    long a = 0, b = 1, c;
+    int i;
+    for ( i = 2; i <= n; ++i ) {
+        c = a + b;
+        a = b;
+        b = c;
+    }
+    return ( n == 0 ? 0 : b );
+}
+\end{lstlisting}
+Complexidade $O(n)$, espaço $O(1)$.
+
+\textbf{2. Recursão de cauda (\textit{tail recursion}):}
+\begin{lstlisting}
+long fibAux( int n, long a, long b ) {
+    if ( n == 0 ) return a;
+    return fibAux( n - 1, b, a + b );
+}
+long fib( int n ) { return fibAux( n, 0, 1 ); }
+\end{lstlisting}
+Compiladores podem otimizar (eliminar a chamada da pilha), tornando praticamente
+equivalente à versão iterativa.
+
+\textbf{3. Memoização:} armazenar resultados em uma tabela para evitar recálculos.
+Reduz a complexidade da versão recursiva de $O(\phi^n)$ para $O(n)$, mas com custo
+de memória $O(n)$.
+
+\textbf{Comparação dos méritos:}
+\begin{itemize}[noitemsep]
+  \item \textbf{Iterativa:} mais rápida, menos memória, mais difícil de ler para
+  problemas naturalmente recursivos.
+  \item \textbf{Tail recursion:} elegância da recursão + eficiência da iteração
+  (quando o compilador otimiza).
+  \item \textbf{Memoização:} preserva clareza recursiva, mas exige memória
+  adicional. Excelente para problemas com sobreposição de subproblemas.
+\end{itemize}
+\end{respostabox}
+
+\end{document}

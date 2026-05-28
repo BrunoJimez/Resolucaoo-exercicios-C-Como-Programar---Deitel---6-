@@ -1,0 +1,659 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 5 -- Funções em C
+%  EXERCÍCIOS DE AUTORREVISÃO (5.1 -- 5.7)
+%  Abordagem incremental: Caps. 1 + 2 + 3 + 4 + 5
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{prev}[1][]{colback=yellow!8,colframe=deitellorange,
+  fonttitle=\bfseries\small,title={Dica de prevenção de erro},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},title={\small\color{white}Saída do programa},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 5 -- Autorrevisão}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 5}\\[0.3cm]
+  {\Large\color{deitelblue!80}Funções em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios de Autorrevisão (5.1--5.7)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, abordagem incremental\\
+    Capítulos 1 + 2 + 3 + 4 + 5}
+  \end{tcolorbox}
+\end{titlepage}
+
+\section*{Construindo sobre os Capítulos Anteriores}
+
+No Capítulo~5, transformamos a forma como organizamos nossos programas. Construindo sobre
+os fundamentos dos Capítulos 1--4, incorporamos:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Funções definidas pelo programador} -- a base da modularização
+  \item \textbf{Protótipos de funções} -- contratos que o compilador verifica
+  \item \textbf{Cabeçalho e corpo} de função -- estrutura sintática
+  \item \textbf{Parâmetros e argumentos} -- passagem de informações entre funções
+  \item \textbf{Funções da biblioteca matemática} (\texttt{<math.h>}): \texttt{sqrt}, \texttt{exp}, \texttt{log}, \texttt{pow}, \texttt{sin}, \texttt{cos}, \texttt{tan}, \texttt{ceil}, \texttt{floor}, \texttt{fabs}, \texttt{fmod}
+  \item \textbf{Geração de números aleatórios} (\texttt{rand}, \texttt{srand})
+  \item \textbf{Classes de armazenamento} (\texttt{auto}, \texttt{register}, \texttt{static}, \texttt{extern})
+  \item \textbf{Escopo de identificadores} (função, arquivo, bloco, protótipo)
+  \item \textbf{Recursão} -- funções que chamam a si mesmas
+\end{itemize}
+
+\begin{boaprática}
+  Funções são a unidade fundamental de organização em programas C de qualquer porte.
+  Domine os conceitos de \textit{parâmetros}, \textit{tipo de retorno}, \textit{escopo}
+  e \textit{recursão} -- eles são a base da programação modular e da reutilização
+  de software.
+\end{boaprática}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 5.1 -- Preenchimento de Lacunas}
+% ============================================================
+
+\subsection*{Item (a)}
+\begin{respostabox}
+\textbf{Resposta:} Um módulo de programa em C é chamado de \textcolor{deitelblue}{\textbf{função}}.
+
+Da Seção~5.4: ``As funções permitem a criação de um programa em módulos''. Em C,
+toda atividade de programação é feita por meio de funções -- a própria \texttt{main}
+é uma função. Funções são a unidade fundamental de modularização.
+\end{respostabox}
+
+\subsection*{Item (b)}
+\begin{respostabox}
+\textbf{Resposta:} Uma função é invocada com uma \textcolor{deitelblue}{\textbf{chamada de função}}.
+
+A chamada de função consiste no nome da função seguido de parênteses contendo os
+argumentos, por exemplo: \texttt{quadrado(x)}. O termo \textit{invocar} é sinônimo
+de \textit{chamar} (\textit{calling}).
+\end{respostabox}
+
+\subsection*{Item (c)}
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{variável local}}
+
+Variáveis declaradas no corpo de uma função (ou em sua lista de parâmetros) só são
+conhecidas dentro daquela função. Após o retorno da função, essas variáveis deixam
+de existir (a menos que sejam \texttt{static}).
+\end{respostabox}
+
+\subsection*{Item (d)}
+\begin{respostabox}
+\textbf{Resposta:} O comando \textcolor{deitelblue}{\textbf{\texttt{return}}}
+
+\texttt{return expressão;} encerra a execução da função chamada e \textit{retorna}
+o valor da expressão à função chamadora. Existe também \texttt{return;} sem expressão
+(usado em funções \texttt{void}).
+\end{respostabox}
+
+\subsection*{Item (e)}
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{\texttt{void}}}
+
+A palavra-chave \texttt{void} tem dois usos no cabeçalho de uma função:
+\begin{itemize}[noitemsep]
+  \item Como \textit{tipo de retorno}: \texttt{void instrucoes(...)} indica que a
+  função \textbf{não retorna} valor algum.
+  \item Como \textit{lista de parâmetros}: \texttt{int main( void )} indica que a
+  função \textbf{não recebe} nenhum parâmetro.
+\end{itemize}
+\end{respostabox}
+
+\subsection*{Item (f)}
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{escopo}}
+
+O \textit{escopo} de um identificador é a região do programa onde ele pode ser
+referenciado. Em C, há quatro tipos de escopo: de função, de arquivo, de bloco e
+de protótipo de função (Seção~5.12).
+\end{respostabox}
+
+\subsection*{Item (g)}
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{\texttt{return;}}, \texttt{return expressão;} e encontrando a chave direita de fechamento da função}
+
+Existem três formas de retornar o controle:
+\begin{enumerate}[noitemsep]
+  \item \texttt{return;} -- usado em funções \texttt{void}
+  \item \texttt{return expressão;} -- usado em funções com retorno de valor
+  \item Atingir a chave de fechamento \texttt{\}} da função (apenas em \texttt{void})
+\end{enumerate}
+\end{respostabox}
+
+\subsection*{Item (h)}
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{protótipo de função}}
+
+O protótipo informa ao compilador o nome da função, o tipo de retorno e os tipos e
+ordem dos parâmetros, permitindo verificar consistência das chamadas. Exemplo:
+\begin{lstlisting}
+int quadrado( int y );  /* prototipo */
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (i)}
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{\texttt{rand}}}
+
+A função \texttt{rand} (de \texttt{<stdlib.h>}) retorna um inteiro pseudoaleatório
+entre 0 e \texttt{RAND\_MAX} (no mínimo 32767). Para gerar valores em um intervalo
+$[a, b]$, usa-se: \texttt{a + rand() \% (b - a + 1)}.
+\end{respostabox}
+
+\subsection*{Item (j)}
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{\texttt{srand}}}
+
+A função \texttt{srand} (\textit{seed random}) define a ``semente'' do gerador
+pseudoaleatório. Sem \texttt{srand}, \texttt{rand} sempre produzirá a mesma sequência.
+A prática típica é usar o tempo atual como semente: \texttt{srand(time(NULL))}.
+\end{respostabox}
+
+\subsection*{Item (k)}
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{\texttt{auto}, \texttt{register}, \texttt{extern}, \texttt{static}}}
+
+Os quatro especificadores de classe de armazenamento:
+\begin{itemize}[noitemsep]
+  \item \texttt{auto} -- duração automática (default para variáveis locais)
+  \item \texttt{register} -- sugere armazenamento em registrador da CPU
+  \item \texttt{extern} -- variável definida em outro arquivo
+  \item \texttt{static} -- duração estática (mantém valor entre chamadas)
+\end{itemize}
+\end{respostabox}
+
+\subsection*{Item (l)}
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{\texttt{auto}}}
+
+Variáveis declaradas em um bloco ou na lista de parâmetros têm classe \texttt{auto}
+por padrão. Elas são criadas ao entrar no bloco e destruídas ao sair.
+\end{respostabox}
+
+\subsection*{Item (m)}
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{\texttt{register}}}
+
+\texttt{register} é uma \textit{recomendação} ao compilador para armazenar a variável
+em um registrador da CPU, garantindo acesso mais rápido. Compiladores modernos
+geralmente otimizam isso automaticamente, e o uso explícito de \texttt{register}
+é raro hoje em dia.
+\end{respostabox}
+
+\subsection*{Item (n)}
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{externa} (ou \textbf{global})}
+
+Variáveis declaradas fora de qualquer função têm \textit{escopo de arquivo} e são
+chamadas de \textit{externas} ou \textit{globais}. Elas existem durante toda a
+execução do programa.
+\end{respostabox}
+
+\subsection*{Item (o)}
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{\texttt{static}}}
+
+Uma variável local declarada com \texttt{static} mantém seu valor entre chamadas
+sucessivas da função. É inicializada apenas uma vez (na primeira execução).
+\begin{lstlisting}
+void contador( void ) {
+    static int n = 0; /* inicializa apenas na 1a chamada */
+    ++n;
+    printf( "Chamada numero %d\n", n );
+}
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (p)}
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{escopo de função, escopo de arquivo, escopo de bloco e escopo de protótipo de função}}
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Função:} apenas para rótulos (\texttt{label:}, usados com \texttt{goto})
+  \item \textbf{Arquivo:} identificadores fora de funções -- visíveis no arquivo todo
+  \item \textbf{Bloco:} identificadores dentro de \texttt{\{ \}}, criados ao entrar e
+  destruídos ao sair
+  \item \textbf{Protótipo:} parâmetros nomeados em protótipos -- visíveis apenas no
+  protótipo (não conflitam com nomes externos)
+\end{itemize}
+\end{respostabox}
+
+\subsection*{Item (q)}
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{recursiva}}
+
+Uma função recursiva é aquela que chama a si mesma -- direta ou indiretamente.
+A recursão é uma técnica poderosa para resolver problemas que podem ser definidos
+em termos de uma versão menor de si mesmos.
+\end{respostabox}
+
+\subsection*{Item (r)}
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{básico}}
+
+Toda função recursiva tem dois componentes:
+\begin{enumerate}[noitemsep]
+  \item \textbf{Caso básico:} condição que termina a recursão (sem chamada recursiva)
+  \item \textbf{Etapa de recursão:} expressa o problema em termos de uma versão menor
+\end{enumerate}
+
+\begin{erroco}
+  Uma função recursiva sem caso básico (ou com caso básico inalcançável) gera
+  recursão infinita -- causando o esgotamento da \textit{pilha de execução}
+  (\textit{stack overflow}) e o encerramento abrupto do programa.
+\end{erroco}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.2 -- Escopos no programa}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 5.2]
+Para o programa do enunciado, indicar o escopo de:
+(a) variável \texttt{x} em \texttt{main};
+(b) variável \texttt{y} em \texttt{cube};
+(c) função \texttt{cube};
+(d) função \texttt{main};
+(e) protótipo de \texttt{cube};
+(f) identificador \texttt{y} no protótipo de \texttt{cube}.
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+\item \texttt{x} em \texttt{main} \quad $\to$ \quad \textbf{escopo de bloco}
+(visível apenas dentro do corpo da função \texttt{main}).
+\item \texttt{y} em \texttt{cube} \quad $\to$ \quad \textbf{escopo de bloco}
+(parâmetro -- equivalente a uma variável local da função).
+\item Função \texttt{cube} \quad $\to$ \quad \textbf{escopo de arquivo}
+(definida em nível externo, visível em todo o arquivo).
+\item Função \texttt{main} \quad $\to$ \quad \textbf{escopo de arquivo}.
+\item Protótipo de \texttt{cube} \quad $\to$ \quad \textbf{escopo de arquivo}
+(declarado em nível externo).
+\item Identificador \texttt{y} no protótipo \quad $\to$ \quad \textbf{escopo de
+protótipo de função} (visível apenas dentro do próprio protótipo; não conflita
+com nomes externos).
+\end{enumerate}
+
+\begin{boaprática}
+  Os \textit{nomes} dos parâmetros em protótipos podem ser omitidos -- o que
+  importa para o compilador são os \textit{tipos}. Por exemplo,
+  \texttt{int cube(int);} é equivalente a \texttt{int cube(int y);}.
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.3 -- Testar funções da biblioteca matemática}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex5.3: testa_math.c
+   Testa funcoes da biblioteca matematica <math.h>
+   Compilar com: gcc ex05_03.c -o ex05_03 -lm */
+#include <stdio.h>
+#include <math.h>
+
+int main( void )
+{
+    /* Raiz quadrada */
+    printf( "sqrt(%.1f) = %.1f\n", 900.0, sqrt( 900.0 ) );
+    printf( "sqrt(%.1f) = %.1f\n", 9.0,   sqrt( 9.0 ) );
+
+    /* Funcao exponencial e^x */
+    printf( "exp(%.1f) = %f\n", 1.0, exp( 1.0 ) );
+    printf( "exp(%.1f) = %f\n", 2.0, exp( 2.0 ) );
+
+    /* Logaritmo natural (base e) */
+    printf( "log(%f) = %.1f\n", 2.718282, log( 2.718282 ) );
+    printf( "log(%f) = %.1f\n", 7.389056, log( 7.389056 ) );
+
+    /* Logaritmo (base 10) */
+    printf( "log10(%.1f) = %.1f\n", 1.0,   log10( 1.0 ) );
+    printf( "log10(%.1f) = %.1f\n", 10.0,  log10( 10.0 ) );
+    printf( "log10(%.1f) = %.1f\n", 100.0, log10( 100.0 ) );
+
+    /* Valor absoluto */
+    printf( "fabs(%.1f) = %.1f\n",  13.5, fabs( 13.5 ) );
+    printf( "fabs(%.1f) = %.1f\n",   0.0, fabs( 0.0 ) );
+    printf( "fabs(%.1f) = %.1f\n", -13.5, fabs( -13.5 ) );
+
+    /* Teto e piso */
+    printf( "ceil(%.1f) = %.1f\n",  9.2, ceil( 9.2 ) );
+    printf( "ceil(%.1f) = %.1f\n", -9.8, ceil( -9.8 ) );
+    printf( "floor(%.1f) = %.1f\n",  9.2, floor( 9.2 ) );
+    printf( "floor(%.1f) = %.1f\n", -9.8, floor( -9.8 ) );
+
+    /* Potencia */
+    printf( "pow(%.1f, %.1f) = %.1f\n", 2.0, 7.0, pow( 2.0, 7.0 ) );
+    printf( "pow(%.1f, %.1f) = %.1f\n", 9.0, 0.5, pow( 9.0, 0.5 ) );
+
+    /* Modulo de ponto flutuante */
+    printf( "fmod(%.3f/%.3f) = %.3f\n",
+            13.675, 2.333, fmod( 13.675, 2.333 ) );
+
+    /* Funcoes trigonometricas (radianos) */
+    printf( "sin(%.1f) = %.1f\n", 0.0, sin( 0.0 ) );
+    printf( "cos(%.1f) = %.1f\n", 0.0, cos( 0.0 ) );
+    printf( "tan(%.1f) = %.1f\n", 0.0, tan( 0.0 ) );
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\begin{saida}
+sqrt(900.0) = 30.0\\
+sqrt(9.0) = 3.0\\
+exp(1.0) = 2.718282\\
+exp(2.0) = 7.389056\\
+log(2.718282) = 1.0\\
+log(7.389056) = 2.0\\
+log10(1.0) = 0.0\\
+log10(10.0) = 1.0\\
+log10(100.0) = 2.0\\
+fabs(13.5) = 13.5\\
+fabs(0.0) = 0.0\\
+fabs(-13.5) = 13.5\\
+ceil(9.2) = 10.0\\
+ceil(-9.8) = -9.0\\
+floor(9.2) = 9.0\\
+floor(-9.8) = -10.0\\
+pow(2.0, 7.0) = 128.0\\
+pow(9.0, 0.5) = 3.0\\
+fmod(13.675/2.333) = 2.010\\
+sin(0.0) = 0.0\\
+cos(0.0) = 1.0\\
+tan(0.0) = 0.0
+\end{saida}
+
+\begin{boaprática}
+  Em sistemas Linux/macOS, ao usar funções de \texttt{<math.h>}, é necessário
+  ligar a biblioteca matemática durante a compilação:
+  \texttt{gcc programa.c -o programa -lm}. Sem o \texttt{-lm}, o linker reportará
+  ``referência indefinida'' para funções como \texttt{sqrt}, \texttt{pow}, etc.
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.4 -- Cabeçalhos de função}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+\item Função \texttt{hypotenuse} -- 2 argumentos \texttt{double}, retorna \texttt{double}:
+\begin{lstlisting}
+double hypotenuse( double side1, double side2 )
+\end{lstlisting}
+
+\item Função \texttt{smallest} -- 3 \texttt{int}, retorna \texttt{int}:
+\begin{lstlisting}
+int smallest( int x, int y, int z )
+\end{lstlisting}
+
+\item Função \texttt{instructions} -- nada e nada:
+\begin{lstlisting}
+void instructions( void )
+\end{lstlisting}
+
+\item Função \texttt{intToFloat} -- 1 \texttt{int}, retorna \texttt{float}:
+\begin{lstlisting}
+float intToFloat( int number )
+\end{lstlisting}
+\end{enumerate}
+
+\textbf{Observação importante (Erro Comum 5.3):} ao declarar múltiplos parâmetros
+do mesmo tipo, é \textbf{obrigatório} repetir o tipo para cada um. Escrever
+\texttt{double side1, side2} é \textit{erro de compilação} -- deve ser
+\texttt{double side1, double side2}.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.5 -- Protótipos correspondentes}
+% ============================================================
+
+\begin{respostabox}
+Os protótipos são idênticos aos cabeçalhos do Exercício~5.4, terminando com
+\texttt{;} (em vez de \texttt{\{...\}}):
+\begin{lstlisting}
+double hypotenuse( double side1, double side2 );
+int smallest( int x, int y, int z );
+void instructions( void );
+float intToFloat( int number );
+\end{lstlisting}
+
+\begin{boaprática}
+  Os protótipos podem omitir os nomes dos parâmetros, deixando apenas os tipos:
+  \texttt{double hypotenuse( double, double );}. O compilador só precisa dos tipos
+  para verificar a consistência das chamadas.
+\end{boaprática}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 5.6 -- Declarações com classes de armazenamento}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+\item \textbf{Inteiro \texttt{count} em registrador, inicializado em 0:}
+\begin{lstlisting}
+register int count = 0;
+\end{lstlisting}
+
+\item \textbf{Variável \texttt{lastVal} (float) que retém valor entre chamadas:}
+\begin{lstlisting}
+static float lastVal;
+\end{lstlisting}
+
+\item \textbf{Inteiro externo \texttt{number} restrito ao arquivo:}
+\begin{lstlisting}
+static int number; /* fora de qualquer funcao */
+\end{lstlisting}
+
+\textit{Nota:} no contexto de variáveis externas (declaradas fora de funções),
+\texttt{static} restringe o escopo ao arquivo onde foi definida -- isto é, outros
+arquivos do projeto não poderão acessá-la (mesmo com \texttt{extern}). Isso é uma
+forma de \textit{ocultação de informações} no nível de arquivos.
+\end{enumerate}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 5.7 -- Identificar e Corrigir Erros}
+% ============================================================
+
+\subsection*{Item (a) -- Função aninhada}
+\begin{respostabox}
+\textbf{Erro:} A função \texttt{h} está definida \textit{dentro} da função \texttt{g}.
+Em C, \textbf{não é permitido} definir uma função dentro de outra.
+
+\textbf{Correção:} mover a definição de \texttt{h} para fora de \texttt{g}.
+\begin{lstlisting}
+int g( void )
+{
+    printf( "Dentro da funcao g\n" );
+}
+
+int h( void )      /* movida para fora */
+{
+    printf( "Dentro da funcao h\n" );
+}
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (b) -- Falta retorno}
+\begin{respostabox}
+\textbf{Erro:} A função \texttt{sum} é declarada como \texttt{int} (deve retornar
+um inteiro), mas \textit{não há \texttt{return}}. O resultado é indefinido.
+
+\textbf{Correção:}
+\begin{lstlisting}
+int sum( int x, int y )
+{
+    return x + y;  /* simplifica eliminando 'result' */
+}
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (c) -- Recursão sem retorno + chave faltando}
+\begin{respostabox}
+\textbf{Erros:} (1) Falta \texttt{\}} antes do \texttt{else} (sintaxe);
+(2) na cláusula \texttt{else}, \texttt{n + sum(n - 1)} é calculado mas \textit{não
+retornado}.
+
+\textbf{Correção:}
+\begin{lstlisting}
+int sum( int n )
+{
+    if ( n == 0 ) {
+        return 0;
+    }
+    else {
+        return n + sum( n - 1 );  /* adiciona return */
+    }
+}
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (d) -- \texttt{;} após cabeçalho + redefinição de parâmetro}
+\begin{respostabox}
+\textbf{Erros:} (1) Há \texttt{;} após \texttt{void f( float a )} -- isso transforma
+o ``cabeçalho'' em um protótipo, e o que vem depois fica órfão; (2) O parâmetro
+\texttt{a} é \textit{redeclarado} dentro do corpo (\texttt{float a;}), o que é
+erro de compilação.
+
+\textbf{Correção:}
+\begin{lstlisting}
+void f( float a )    /* sem ; */
+{
+                     /* sem 'float a;' aqui */
+    printf( "%f", a );
+}
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (e) -- \texttt{return} em função \texttt{void}}
+\begin{respostabox}
+\textbf{Erro:} A função \texttt{product} é declarada como \texttt{void}, mas tenta
+retornar um valor (\texttt{return result;}). Isso é \textbf{erro de compilação}
+(Erro Comum 5.2).
+
+\textbf{Correção:} simplesmente remover a instrução \texttt{return result;}.
+\begin{lstlisting}
+void product( void )
+{
+    int a, b, c, result;
+    printf( "Digite tres inteiros: " );
+    scanf( "%d%d%d", &a, &b, &c );
+    result = a * b * c;
+    printf( "Resultado e %d", result );
+    /* sem return aqui */
+}
+\end{lstlisting}
+
+\textit{Alternativa:} se realmente quisermos retornar o resultado, mudamos o tipo:
+\begin{lstlisting}
+int product( void )    /* int em vez de void */
+{
+    /* ... */
+    return result;     /* agora valido */
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section*{Gabarito Rápido -- Capítulo 5: Autorrevisão}
+
+\begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,title={\bfseries\large Respostas Resumidas}]
+
+\textbf{5.1:}
+\begin{itemize}[noitemsep]
+  \item[a)] função \quad b) chamada de função \quad c) variável local
+  \item[d)] \texttt{return} \quad e) \texttt{void} \quad f) escopo
+  \item[g)] \texttt{return;}, \texttt{return} expr, ou chave de fechamento
+  \item[h)] protótipo de função \quad i) \texttt{rand} \quad j) \texttt{srand}
+  \item[k)] \texttt{auto}, \texttt{register}, \texttt{extern}, \texttt{static}
+  \item[l)] \texttt{auto} \quad m) \texttt{register} \quad n) externa/global \quad o) \texttt{static}
+  \item[p)] função, arquivo, bloco, protótipo \quad q) recursiva \quad r) básico
+\end{itemize}
+
+\medskip\textbf{5.2:} Todas as variáveis dentro de \texttt{main} ou \texttt{cube}
+têm escopo de \textbf{bloco}. As funções e o protótipo têm escopo de \textbf{arquivo}.
+O nome \texttt{y} no protótipo tem escopo de \textbf{protótipo}.
+
+\medskip\textbf{5.4 e 5.5:} Cabeçalhos completos com \texttt{double}, \texttt{int},
+\texttt{void}, \texttt{float}.
+
+\medskip\textbf{5.6:} (a) \texttt{register int count = 0;}
+(b) \texttt{static float lastVal;}
+(c) \texttt{static int number;}
+
+\medskip\textbf{5.7:} 5 erros corrigidos: função aninhada, falta de \texttt{return},
+sintaxe, ponto e vírgula extra, \texttt{return} em \texttt{void}.
+
+\end{tcolorbox}
+
+\end{document}

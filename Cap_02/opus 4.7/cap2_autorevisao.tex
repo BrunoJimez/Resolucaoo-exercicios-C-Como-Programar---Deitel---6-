@@ -1,0 +1,667 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 2 -- Introdução à Programação em C
+%  EXERCÍCIOS DE AUTORREVISÃO (2.1 -- 2.6)
+%  Abordagem incremental: Caps. 1 + 2
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{prev}[1][]{colback=yellow!8,colframe=deitellorange,
+  fonttitle=\bfseries\small,title={Dica de prevenção de erro},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},title={\small\color{white}Saída do programa},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 2 -- Autorrevisão}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 2}\\[0.3cm]
+  {\Large\color{deitelblue!80}Introdução à Programação em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios de Autorrevisão (2.1--2.6)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, abordagem incremental\\
+    Capítulos 1 + 2}
+  \end{tcolorbox}
+\end{titlepage}
+
+\section*{Construindo sobre o Capítulo 1}
+
+Bem-vindo ao Capítulo~2 -- o primeiro capítulo onde \textit{escrevemos código}!
+Construindo sobre os conceitos do Cap.~1 (hardware, software, ambientes de
+desenvolvimento), agora introduzimos:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Estrutura básica} de um programa em C: \texttt{\#include},
+  \texttt{main}, chaves, instruções, retorno
+  \item \textbf{Funções da biblioteca-padrão} \texttt{<stdio.h>}: \texttt{printf}, \texttt{scanf}
+  \item \textbf{Variáveis e tipos} (\texttt{int}, por enquanto)
+  \item \textbf{Operadores aritméticos}: \texttt{+}, \texttt{-}, \texttt{*}, \texttt{/}, \texttt{\%}
+  \item \textbf{Tomada de decisão} com \texttt{if} e operadores relacionais/de igualdade
+  \item \textbf{Sequências de escape}: \texttt{\textbackslash n}, \texttt{\textbackslash t}, etc.
+  \item \textbf{Especificadores de conversão}: \texttt{\%d} para inteiros
+\end{itemize}
+
+\begin{boaprática}
+  Este é o capítulo mais importante para iniciantes. Cada conceito aqui será
+  usado em \textit{todos} os capítulos seguintes. Não se apresse -- experimente,
+  faça pequenas variações, observe os erros do compilador. Cada erro é uma
+  oportunidade de aprendizado.
+\end{boaprática}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 2.1 -- Preenchimento de Lacunas}
+% ============================================================
+
+\subsection*{Item (a)}
+\begin{respostabox}
+\textbf{Resposta:} Todo programa em C inicia sua execução pela função
+\textcolor{deitelblue}{\textbf{\texttt{main}}}.
+
+A função \texttt{main} é o \textit{ponto de entrada} de todo programa em C. Não
+importa quantas outras funções você defina, a execução sempre começa em \texttt{main}.
+
+\begin{lstlisting}
+int main( void )
+{
+    /* primeira instrucao executada esta aqui */
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (b)}
+\begin{respostabox}
+\textbf{Resposta:} A \textcolor{deitelblue}{\textbf{chave à esquerda (\texttt{\{})}}
+inicia o corpo de cada função, e a
+\textcolor{deitelblue}{\textbf{chave à direita (\texttt{\}})}} encerra o corpo.
+
+As chaves \texttt{\{ \}} delimitam blocos de código em C. Esse padrão é
+amplamente usado em outras linguagens derivadas: C++, Java, JavaScript, C\#.
+\end{respostabox}
+
+\subsection*{Item (c)}
+\begin{respostabox}
+\textbf{Resposta:} Toda instrução termina com um(a)
+\textcolor{deitelblue}{\textbf{ponto e vírgula (\texttt{;})}}.
+
+\begin{erroco}
+  Esquecer o \texttt{;} no final de uma instrução é o erro mais comum em C
+  iniciantes. O compilador geralmente reporta o erro na \textit{próxima} linha
+  (não na linha do erro real), o que pode confundir.
+\end{erroco}
+\end{respostabox}
+
+\subsection*{Item (d)}
+\begin{respostabox}
+\textbf{Resposta:} A função \textcolor{deitelblue}{\textbf{\texttt{printf}}} da
+biblioteca-padrão exibe informações na tela.
+
+\texttt{printf} (de \textit{print formatted}) é a função mais usada em C para
+exibir texto. Está declarada em \texttt{<stdio.h>}.
+\end{respostabox}
+
+\subsection*{Item (e)}
+\begin{respostabox}
+\textbf{Resposta:} A sequência \texttt{\textbackslash n} representa o caractere
+de \textcolor{deitelblue}{\textbf{nova linha}} (\textit{newline}), que posiciona
+o cursor no início da próxima linha.
+
+Sequências de escape são caracteres especiais precedidos por \texttt{\textbackslash}:
+\begin{itemize}[noitemsep]
+  \item \texttt{\textbackslash n} -- nova linha
+  \item \texttt{\textbackslash t} -- tab horizontal
+  \item \texttt{\textbackslash \textbackslash} -- backslash literal
+  \item \texttt{\textbackslash "} -- aspa dupla literal
+  \item \texttt{\textbackslash a} -- alerta (beep)
+\end{itemize}
+\end{respostabox}
+
+\subsection*{Item (f)}
+\begin{respostabox}
+\textbf{Resposta:} A função \textcolor{deitelblue}{\textbf{\texttt{scanf}}} é usada
+para obter dados do teclado.
+
+\texttt{scanf} (de \textit{scan formatted}) lê dados formatados da entrada-padrão
+(\texttt{stdin}). Exige o operador de endereço \texttt{\&} antes da variável
+destino (com algumas exceções a serem vistas nos Caps.~6 e 7).
+
+\begin{lstlisting}
+int idade;
+scanf( "%d", &idade );  /* note o & */
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (g)}
+\begin{respostabox}
+\textbf{Resposta:} O especificador \textcolor{deitelblue}{\textbf{\texttt{\%d}}}
+é usado para inteiros, tanto em \texttt{scanf} quanto em \texttt{printf}.
+
+Outros especificadores que veremos:
+\begin{itemize}[noitemsep]
+  \item \texttt{\%d} -- inteiro decimal com sinal
+  \item \texttt{\%f} -- ponto flutuante (Cap.~3)
+  \item \texttt{\%c} -- caractere (Cap.~8)
+  \item \texttt{\%s} -- string (Cap.~8)
+\end{itemize}
+\end{respostabox}
+
+\subsection*{Item (h)}
+\begin{respostabox}
+\textbf{Resposta:} Quando um novo valor sobrescreve um existente, dizemos que o
+processo é \textcolor{deitelblue}{\textbf{destrutivo}}.
+
+\begin{lstlisting}
+int x = 10;
+x = 20;  /* destrutivo: o 10 foi perdido para sempre */
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (i)}
+\begin{respostabox}
+\textbf{Resposta:} Quando lemos um valor da memória, ele permanece intacto -- esse
+processo é \textcolor{deitelblue}{\textbf{não destrutivo}}.
+
+\begin{lstlisting}
+int x = 10;
+int y;
+y = x;  /* le x (nao destrutivo): x continua 10 */
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (j)}
+\begin{respostabox}
+\textbf{Resposta:} A instrução \textcolor{deitelblue}{\textbf{\texttt{if}}} é
+usada para tomada de decisões.
+
+\begin{lstlisting}
+if ( idade >= 18 ) {
+    printf( "Maior de idade.\n" );
+}
+\end{lstlisting}
+
+A condição usa operadores relacionais (\texttt{<}, \texttt{>}, \texttt{<=},
+\texttt{>=}) ou de igualdade (\texttt{==}, \texttt{!=}).
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 2.2 -- Verdadeiro ou Falso}
+% ============================================================
+
+\subsection*{Item (a) -- \texttt{printf} sempre começa em nova linha}
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+\texttt{printf} começa onde o \textit{cursor} estiver. Se a impressão anterior
+não terminou com \texttt{\textbackslash n}, a nova saída continua na mesma linha.
+
+\begin{lstlisting}
+printf( "Ola, " );    /* imprime "Ola, " sem \n */
+printf( "Mundo!\n" ); /* imprime "Mundo!" na MESMA linha */
+\end{lstlisting}
+Saída: \texttt{Ola, Mundo!}
+\end{tcolorbox}
+
+\subsection*{Item (b) -- Comentários geram saída}
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+Comentários \textbf{não produzem nenhuma ação} em tempo de execução. Eles são
+\textit{ignorados pelo compilador} e servem apenas para documentar o código
+para leitores humanos.
+\begin{lstlisting}
+/* Este comentario NAO aparece na tela */
+// Este tambem nao
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection*{Item (c) -- \texttt{\textbackslash n} posiciona cursor na próxima linha}
+\begin{tcolorbox}[colback=green!5,colframe=deitelgreen,title={\bfseries VERDADEIRO}]
+A sequência \texttt{\textbackslash n} faz exatamente isso.
+\end{tcolorbox}
+
+\subsection*{Item (d) -- Variáveis precisam ser declaradas antes do uso}
+\begin{tcolorbox}[colback=green!5,colframe=deitelgreen,title={\bfseries VERDADEIRO}]
+C é \textit{fortemente tipado}: toda variável precisa de declaração explícita antes
+de ser usada (com nome e tipo).
+\end{tcolorbox}
+
+\subsection*{Item (e) -- Todas variáveis precisam de tipo}
+\begin{tcolorbox}[colback=green!5,colframe=deitelgreen,title={\bfseries VERDADEIRO}]
+Cada variável em C tem um tipo (\texttt{int}, \texttt{double}, \texttt{char}, \ldots)
+que determina quanta memória ocupa e como é interpretada.
+\end{tcolorbox}
+
+\subsection*{Item (f) -- \texttt{número} e \texttt{NúMeRo} são iguais}
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+C é \textbf{case-sensitive}: \texttt{número}, \texttt{NúMeRo}, \texttt{NUMERO} e
+\texttt{numero} são quatro variáveis distintas para o compilador.
+
+\begin{boaprática}
+  Use uma convenção consistente. Em C, a tradição é \texttt{camelCase} para
+  variáveis e funções, \texttt{MAIUSCULAS} para constantes (\texttt{\#define}).
+\end{boaprática}
+\end{tcolorbox}
+
+\subsection*{Item (g) -- Declarações em qualquer ponto da função}
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO (em C89)}]
+No padrão \textbf{C89} (clássico), declarações devem aparecer no início do bloco,
+antes de qualquer instrução executável.
+
+A partir do \textbf{C99} essa restrição foi removida -- declarações podem aparecer
+em qualquer lugar, como em C++. Mas o livro segue C89 estrito, então marca como FALSO.
+\end{tcolorbox}
+
+\subsection*{Item (h) -- \texttt{printf} precisa de \texttt{\&}}
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+É o oposto: \texttt{scanf} normalmente exige \texttt{\&} antes de variáveis;
+\texttt{printf} \textbf{não}.
+
+\begin{lstlisting}
+int x = 42;
+printf( "%d\n", x );    /* SEM & */
+scanf( "%d", &x );      /* COM & */
+\end{lstlisting}
+
+\textbf{Intuição:} \texttt{printf} só precisa do \textit{valor} (para imprimir);
+\texttt{scanf} precisa do \textit{endereço} (para escrever de volta).
+\end{tcolorbox}
+
+\subsection*{Item (i) -- \texttt{\%} só com inteiros}
+\begin{tcolorbox}[colback=green!5,colframe=deitelgreen,title={\bfseries VERDADEIRO}]
+O operador \texttt{\%} (módulo, resto da divisão) exige operandos \textbf{inteiros}.
+Para ponto flutuante, há \texttt{fmod} em \texttt{<math.h>}.
+\end{tcolorbox}
+
+\subsection*{Item (j) -- \texttt{*}, \texttt{/}, \texttt{\%}, \texttt{+}, \texttt{-} mesma precedência}
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+Há \textbf{dois níveis} de precedência:
+\begin{itemize}[noitemsep]
+  \item \textbf{Maior:} \texttt{*}, \texttt{/}, \texttt{\%} (multiplicação, divisão, módulo)
+  \item \textbf{Menor:} \texttt{+}, \texttt{-} (adição, subtração)
+\end{itemize}
+Como em álgebra: \texttt{2 + 3 * 4 = 14}, não 20.
+\end{tcolorbox}
+
+\subsection*{Item (k) -- Identificadores muito longos idênticos}
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+O padrão C \textbf{garante apenas 31 caracteres significativos} em identificadores
+internos. Compiladores mais antigos podem tratar os nomes \textit{distintos} acima
+como o \textit{mesmo} nome (apenas os primeiros 31 chars contam).
+
+Compiladores modernos geralmente diferenciam, mas a portabilidade não é garantida.
+
+\begin{boaprática}
+  Use nomes \textit{significativos} mas \textit{razoavelmente curtos}: \texttt{contador},
+  \texttt{saldoMedio}, \texttt{numeroAlunos}. Identificadores com mais de 31 caracteres
+  são tipicamente um sinal de que o nome deveria ser refeito.
+\end{boaprática}
+\end{tcolorbox}
+
+\subsection*{Item (l) -- 3 linhas exigem 3 \texttt{printf}}
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+Um único \texttt{printf} com \texttt{\textbackslash n} pode produzir várias linhas:
+\begin{lstlisting}
+printf( "Linha 1\nLinha 2\nLinha 3\n" );
+\end{lstlisting}
+Saída:
+\begin{saida}
+Linha 1\\Linha 2\\Linha 3
+\end{saida}
+\end{tcolorbox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 2.3 -- Escrever Instruções em C}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Declarar 4 variáveis \texttt{int}:}
+\begin{lstlisting}
+int c, estaVariavel, q76354, numero;
+\end{lstlisting}
+
+\item \textbf{Pedir um inteiro:}
+\begin{lstlisting}
+printf( "Digite um inteiro: " );
+\end{lstlisting}
+Note o espaço após \texttt{:} e a ausência de \texttt{\textbackslash n} (o cursor
+fica na mesma linha aguardando entrada).
+
+\item \textbf{Ler inteiro para \texttt{a}:}
+\begin{lstlisting}
+scanf( "%d", &a );
+\end{lstlisting}
+
+\item \textbf{Se \texttt{numero != 7}, exibir mensagem:}
+\begin{lstlisting}
+if ( numero != 7 ) {
+    printf( "A variavel numero nao e igual a 7.\n" );
+}
+\end{lstlisting}
+
+\item \textbf{Imprimir mensagem em uma linha:}
+\begin{lstlisting}
+printf( "Este e um programa em C.\n" );
+\end{lstlisting}
+
+\item \textbf{Em duas linhas, quebrando após ``C'':}
+\begin{lstlisting}
+printf( "Este e um programa em\nC.\n" );
+\end{lstlisting}
+
+\item \textbf{Cada palavra em uma linha:}
+\begin{lstlisting}
+printf( "Este\ne\num\nprograma\nem\nC.\n" );
+\end{lstlisting}
+
+\item \textbf{Palavras separadas por tabulações:}
+\begin{lstlisting}
+printf( "Este\te\tum\tprograma\tem\tC.\n" );
+\end{lstlisting}
+
+\end{enumerate}
+
+\begin{boaprática}
+  \texttt{\textbackslash n} e \texttt{\textbackslash t} são suas ferramentas
+  principais para formatar saída no início. Brinque com elas: combine, alterne,
+  observe como o cursor se move.
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 2.4 -- Cálculo do Produto de 3 Inteiros}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Comentário documentando propósito:}
+\begin{lstlisting}
+/* Calcula o produto de tres inteiros */
+\end{lstlisting}
+
+\item \textbf{Declarar variáveis:}
+\begin{lstlisting}
+int x, y, z, resultado;
+\end{lstlisting}
+
+\item \textbf{Pedir 3 inteiros:}
+\begin{lstlisting}
+printf( "Digite tres inteiros: " );
+\end{lstlisting}
+
+\item \textbf{Ler 3 inteiros:}
+\begin{lstlisting}
+scanf( "%d%d%d", &x, &y, &z );
+\end{lstlisting}
+
+\item \textbf{Calcular produto:}
+\begin{lstlisting}
+resultado = x * y * z;
+\end{lstlisting}
+
+\item \textbf{Exibir resultado:}
+\begin{lstlisting}
+printf( "O produto e %d\n", resultado );
+\end{lstlisting}
+
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.5 -- Programa Completo}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex2.5: produto_tres.c
+   Calcula o produto de tres inteiros */
+#include <stdio.h>
+
+int main( void )
+{
+    int x, y, z, resultado;  /* declara variaveis */
+
+    printf( "Digite tres inteiros: " );  /* prompt */
+    scanf( "%d%d%d", &x, &y, &z );        /* le tres inteiros */
+    resultado = x * y * z;                 /* multiplica */
+    printf( "O produto e %d\n", resultado ); /* exibe */
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\textbf{Exemplo de execução:}
+\begin{saida}
+Digite tres inteiros: 2 3 4\\
+O produto e 24
+\end{saida}
+
+\textit{Nota:} \texttt{scanf("\%d\%d\%d", ...)} aceita os 3 números separados por
+espaços, tabs ou novas linhas -- todos servem como delimitadores.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 2.6 -- Identificar e Corrigir Erros}
+% ============================================================
+
+\subsection*{Item (a)}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+printf( "O valor e %d\n", &numero );
+\end{lstlisting}
+
+\textbf{Erro:} Uso do operador de endereço \texttt{\&} em \texttt{printf}.
+\texttt{printf} precisa do \textit{valor}, não do endereço.
+
+\textbf{Correção:}
+\begin{lstlisting}
+printf( "O valor e %d\n", numero );
+\end{lstlisting}
+
+(O endereço só seria necessário com o especificador \texttt{\%p} para imprimir o
+endereço em si, conceito do Cap.~7.)
+\end{respostabox}
+
+\subsection*{Item (b)}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+scanf( "%d%d", &numero1, numero2 );
+\end{lstlisting}
+
+\textbf{Erro:} Falta o \texttt{\&} antes de \texttt{numero2}. \texttt{scanf} precisa
+do endereço para gravar de volta.
+
+\textbf{Correção:}
+\begin{lstlisting}
+scanf( "%d%d", &numero1, &numero2 );
+\end{lstlisting}
+
+\begin{erroco}
+  Esquecer o \texttt{\&} no \texttt{scanf} é um dos erros mais comuns. O programa
+  pode até compilar (geralmente com warning), mas vai gravar em endereço aleatório,
+  causando comportamento imprevisível ou falha de segmentação.
+\end{erroco}
+\end{respostabox}
+
+\subsection*{Item (c)}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+if ( c < 7 );{
+    printf( "C e menor que 7\n" );
+}
+\end{lstlisting}
+
+\textbf{Erro:} \textbf{Ponto e vírgula após a condição do \texttt{if}}. Isso cria
+uma \textit{instrução vazia} como corpo do \texttt{if}, e o bloco com chaves
+sempre executa, independentemente da condição!
+
+\textbf{Correção:}
+\begin{lstlisting}
+if ( c < 7 ) {  /* sem ponto e virgula */
+    printf( "C e menor que 7\n" );
+}
+\end{lstlisting}
+
+\begin{erroco}
+  Esse é um bug \textbf{silencioso} -- o programa compila e ``funciona'', mas com
+  comportamento errado. Sempre revise os \texttt{if} para garantir que não haja
+  \texttt{;} acidental após a condição.
+\end{erroco}
+\end{respostabox}
+
+\subsection*{Item (d)}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+if ( c => 7 ) {
+    printf( "C e igual ou menor que 7\n" );
+}
+\end{lstlisting}
+
+\textbf{Erros:}
+\begin{itemize}[noitemsep]
+  \item \texttt{=>} não é operador válido. Em C, ``maior ou igual'' é \texttt{>=}.
+  \item A mensagem está semanticamente errada: ``maior ou igual'', não ``igual ou
+  menor''.
+\end{itemize}
+
+\textbf{Correção:}
+\begin{lstlisting}
+if ( c >= 7 ) {
+    printf( "C e maior ou igual a 7\n" );
+}
+\end{lstlisting}
+
+\textbf{Operadores relacionais corretos em C:}
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{c l}
+\toprule
+\textbf{Operador} & \textbf{Significado} \\ \midrule
+\texttt{<}  & menor que \\
+\texttt{>}  & maior que \\
+\texttt{<=} & menor ou igual \\
+\texttt{>=} & maior ou igual \\
+\texttt{==} & igual \\
+\texttt{!=} & diferente \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{erroco}
+  Confundir \texttt{=} (atribuição) com \texttt{==} (comparação de igualdade) é
+  outro erro frequente. \texttt{if (x = 5)} sempre é verdadeiro (atribui 5 a x e
+  avalia a 5, que é diferente de zero). O correto seria \texttt{if (x == 5)}.
+\end{erroco}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section*{Gabarito Rápido -- Capítulo 2: Autorrevisão}
+
+\begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,title={\bfseries\large Respostas Resumidas}]
+
+\textbf{2.1:}
+\begin{itemize}[noitemsep]
+  \item[a)] \texttt{main} \quad b) \texttt{\{} e \texttt{\}} \quad c) \texttt{;}
+  \quad d) \texttt{printf}
+  \item[e)] nova linha \quad f) \texttt{scanf} \quad g) \texttt{\%d}
+  \quad h) destrutivo \quad i) não destrutivo \quad j) \texttt{if}
+\end{itemize}
+
+\medskip\textbf{2.2 -- Verdadeiro/Falso:}
+\begin{itemize}[noitemsep]
+  \item[a)] F (imprime onde o cursor está)
+  \item[b)] F (comentários são ignorados em execução)
+  \item[c)] V \quad d) V \quad e) V
+  \item[f)] F (C é case-sensitive)
+  \item[g)] F em C89 \quad h) F (é o contrário)
+  \item[i)] V \quad j) F (dois níveis de precedência)
+  \item[k)] F (só 31 chars garantidos) \quad l) F (\texttt{\textbackslash n} permite várias linhas)
+\end{itemize}
+
+\medskip\textbf{2.3:} \texttt{int c, ...}; \texttt{printf("Digite ...")}; 
+\texttt{scanf("\%d", \&a)}; \texttt{if (numero != 7)} \{...\}; combinações de
+\texttt{\textbackslash n} e \texttt{\textbackslash t} para formatar.
+
+\medskip\textbf{2.4:} comentário inicial, declaração, prompt, \texttt{scanf}
+com 3 \texttt{\&}, cálculo, \texttt{printf} com resultado.
+
+\medskip\textbf{2.5:} programa completo de 13 linhas com \texttt{\#include},
+\texttt{main}, declaração, prompt, leitura, cálculo, saída, \texttt{return}.
+
+\medskip\textbf{2.6 -- 4 erros corrigidos:}
+\begin{itemize}[noitemsep]
+  \item[a)] Remover \texttt{\&} em \texttt{printf}
+  \item[b)] Adicionar \texttt{\&} em \texttt{numero2}
+  \item[c)] Remover \texttt{;} após condição do \texttt{if}
+  \item[d)] \texttt{=>} $\to$ \texttt{>=}
+\end{itemize}
+
+\end{tcolorbox}
+
+\end{document}

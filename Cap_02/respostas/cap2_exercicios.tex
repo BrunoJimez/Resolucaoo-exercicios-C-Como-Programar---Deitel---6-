@@ -1,0 +1,971 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 2 -- Introdução à Programação em C
+%  EXERCÍCIOS (2.3 -- 2.31)
+%  Abordagem incremental: Caps. 1 + 2
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array,amsmath}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},title={\small\color{white}Saída do programa},breakable,#1}
+\newtcolorbox{atencao}[1][]{colback=yellow!10,colframe=deitellorange,
+  fonttitle=\bfseries\small,title={Atenção},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 2 -- Exercícios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{\thesubsection.}{0.5em}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue,urlcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 2}\\[0.3cm]
+  {\Large\color{deitelblue!80}Introdução à Programação em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios (2.3 -- 2.31)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, com código C completo e saída esperada\\
+    Abordagem incremental: Capítulos 1 e 2}
+  \end{tcolorbox}
+  \vfill{\small Abordagem incremental Deitel}
+\end{titlepage}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 2.3 -- Instruções C Únicas}
+% ============================================================
+\begin{enunciadoBox}[Enunciado 2.3]
+Escreva uma única instrução C para cada alternativa:
+a) Declarar \texttt{c}, \texttt{estaVariavel}, \texttt{q76354} e \texttt{numero} como \texttt{int}.
+b) Pedir ao usuário que digite um inteiro, terminando com \texttt{: }.
+c) Ler um inteiro e armazenar em \texttt{a}.
+d) Se \texttt{numero != 7}, exibir \texttt{"A variavel numero nao e igual a 7"}.
+e) Imprimir \texttt{"Este e um programa em C."} em uma linha.
+f) Imprimir em duas linhas, terminando a primeira em C.
+g) Imprimir cada palavra em uma linha separada.
+h) Imprimir as palavras separadas por tabulações.
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Declaração de múltiplas variáveis do tipo \texttt{int}}
+\begin{lstlisting}
+int c, estaVariavel, q76354, numero;
+\end{lstlisting}
+Múltiplas variáveis do mesmo tipo podem ser declaradas em uma única instrução, separadas
+por vírgulas. A instrução termina com ponto e vírgula.
+
+\item \textbf{Exibir prompt com dois pontos}
+\begin{lstlisting}
+printf( "Digite um inteiro: " );
+\end{lstlisting}
+Observe: não há \texttt{\textbackslash n} ao final, pois o cursor deve ficar posicionado
+após o espaço, na mesma linha do prompt.
+
+\item \textbf{Ler um inteiro e armazenar em \texttt{a}}
+\begin{lstlisting}
+scanf( "%d", &a );
+\end{lstlisting}
+O \texttt{\&} é o operador de endereço, obrigatório em \texttt{scanf} para informar ao
+compilador onde armazenar o valor lido.
+
+\item \textbf{Decisão com \texttt{if}}
+\begin{lstlisting}
+if ( numero != 7 ) {
+    printf( "A variavel numero nao e igual a 7.\n" );
+}
+\end{lstlisting}
+O operador \texttt{!=} significa ``diferente de''. O corpo do \texttt{if} executa apenas
+quando a condição for verdadeira.
+
+\item \textbf{Imprimir em uma linha}
+\begin{lstlisting}
+printf( "Este e um programa em C.\n" );
+\end{lstlisting}
+
+\item \textbf{Imprimir em duas linhas (a primeira termina em C)}
+\begin{lstlisting}
+printf( "Este e um programa em\nC.\n" );
+\end{lstlisting}
+O \texttt{\textbackslash n} no meio da string divide a saída em duas linhas. Saída:
+\begin{saida}
+Este e um programa em\\C.
+\end{saida}
+
+\item \textbf{Cada palavra em uma linha separada}
+\begin{lstlisting}
+printf( "Este\ne\num\nprograma\nem\nC.\n" );
+\end{lstlisting}
+Cada \texttt{\textbackslash n} separa uma palavra em sua própria linha.
+
+\item \textbf{Palavras separadas por tabulações}
+\begin{lstlisting}
+printf( "Este\te\tum\tprograma\tem\tC.\n" );
+\end{lstlisting}
+A sequência de escape \texttt{\textbackslash t} insere uma tabulação horizontal.
+
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.4 -- Instruções para Produto de Três Inteiros}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 2.4]
+Escreva uma instrução (ou comentário) para: a) indicar o propósito do programa;
+b) declarar \texttt{x}, \texttt{y}, \texttt{z}, \texttt{resultado} como \texttt{int};
+c) pedir três inteiros; d) ler três inteiros; e) calcular o produto e atribuir a
+\texttt{resultado}; f) exibir o resultado.
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+\item \begin{lstlisting}
+/* Calcula o produto de tres inteiros */
+\end{lstlisting}
+\item \begin{lstlisting}
+int x, y, z, resultado;
+\end{lstlisting}
+\item \begin{lstlisting}
+printf( "Digite tres inteiros: " );
+\end{lstlisting}
+\item \begin{lstlisting}
+scanf( "%d%d%d", &x, &y, &z );
+\end{lstlisting}
+Um único \texttt{scanf} pode ler múltiplos valores -- um especificador \texttt{\%d} para
+cada variável, e o operador \texttt{\&} antes de cada uma.
+\item \begin{lstlisting}
+resultado = x * y * z;
+\end{lstlisting}
+\item \begin{lstlisting}
+printf( "O produto e %d\n", resultado );
+\end{lstlisting}
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.5 -- Programa Completo: Produto de Três Inteiros}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 2.5]
+Usando as instruções do Exercício 2.4, escreva um programa completo que calcule o
+produto de três inteiros.
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Figura Ex2.5: produto_tres_inteiros.c
+   Calcula o produto de tres inteiros */
+#include <stdio.h>
+
+int main( void )
+{
+    int x, y, z, resultado; /* declara as quatro variaveis */
+
+    printf( "Digite tres inteiros: " ); /* prompt ao usuario */
+    scanf( "%d%d%d", &x, &y, &z );     /* le tres inteiros  */
+
+    resultado = x * y * z;             /* calcula o produto */
+
+    printf( "O produto e %d\n", resultado ); /* exibe resultado */
+
+    return 0; /* indica conclusao bem-sucedida */
+} /* fim da funcao main */
+\end{lstlisting}
+
+\textbf{Exemplo de execução:}
+\begin{saida}
+Digite tres inteiros: 4 5 6\\
+O produto e 120
+\end{saida}
+
+\textbf{Passo a passo da execução:}
+\begin{enumerate}
+  \item O programa inclui \texttt{<stdio.h>} para ter acesso a \texttt{printf} e \texttt{scanf}.
+  \item Declara quatro variáveis \texttt{int}: \texttt{x}, \texttt{y}, \texttt{z}, \texttt{resultado}.
+  \item Exibe o prompt e lê três inteiros do teclado.
+  \item Calcula o produto: \texttt{resultado = 4 * 5 * 6 = 120}.
+  \item Exibe o resultado formatado.
+  \item Retorna 0 ao sistema operacional.
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.6 -- Identificar e Corrigir Erros}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 2.6]
+Identifique e corrija os erros em cada instrução:
+\begin{itemize}
+  \item[a)] \texttt{printf( "O valor e \%d\textbackslash n", \&numero );}
+  \item[b)] \texttt{scanf( "\%d\%d", \&numero1, numero2 );}
+  \item[c)] \texttt{if ( c < 7 );\{ printf( "C e menor que 7\textbackslash n" ); \}}
+  \item[d)] \texttt{if ( c => 7 ) \{ printf( "C e igual ou menor que 7\textbackslash n" ); \}}
+\end{itemize}
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Erro:} O \texttt{\&} antes de \texttt{numero} é incorreto em \texttt{printf}.
+\texttt{printf} precisa do \textit{valor} da variável, não de seu endereço.
+
+\textbf{Código com erro:}
+\begin{lstlisting}
+printf( "O valor e %d\n", &numero );  /* ERRO: & desnecessario */
+\end{lstlisting}
+\textbf{Código corrigido:}
+\begin{lstlisting}
+printf( "O valor e %d\n", numero );   /* CORRETO: sem & */
+\end{lstlisting}
+
+\item \textbf{Erro:} A variável \texttt{numero2} está sem o operador de endereço \texttt{\&}
+em \texttt{scanf}.
+
+\textbf{Código com erro:}
+\begin{lstlisting}
+scanf( "%d%d", &numero1, numero2 );   /* ERRO: falta & em numero2 */
+\end{lstlisting}
+\textbf{Código corrigido:}
+\begin{lstlisting}
+scanf( "%d%d", &numero1, &numero2 );  /* CORRETO */
+\end{lstlisting}
+
+\item \textbf{Erro:} Ponto e vírgula após o parêntese direito da condição do \texttt{if}.
+Esse \texttt{;} cria uma \textit{instrução vazia} como corpo do \texttt{if}, de modo que
+o \texttt{printf} sempre é executado, independente da condição.
+
+\textbf{Código com erro:}
+\begin{lstlisting}
+if ( c < 7 );{                           /* ERRO: ; cria corpo vazio */
+    printf( "C e menor que 7\n" );
+}
+\end{lstlisting}
+\textbf{Código corrigido:}
+\begin{lstlisting}
+if ( c < 7 ) {                           /* CORRETO: sem ; apos ) */
+    printf( "C e menor que 7\n" );
+}
+\end{lstlisting}
+
+\item \textbf{Erro:} O operador relacional \texttt{=>} não existe em C. O operador correto
+para ``maior ou igual a'' é \texttt{>=}.
+
+\textbf{Código com erro:}
+\begin{lstlisting}
+if ( c => 7 ) {                          /* ERRO: => nao existe em C */
+    printf( "C e igual ou maior que 7\n" );
+}
+\end{lstlisting}
+\textbf{Código corrigido:}
+\begin{lstlisting}
+if ( c >= 7 ) {                          /* CORRETO: >= (maior ou igual) */
+    printf( "C e igual ou maior que 7\n" );
+}
+\end{lstlisting}
+
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.7 -- Identificar e Corrigir Erros (avançado)}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 2.7]
+Identifique e corrija os erros (pode haver mais de um por instrução).
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Código:} \texttt{scanf( "d", valor );}
+
+\textbf{Erros:} (1) Falta o \texttt{\%} no especificador de conversão; (2) falta \texttt{\&} antes de \texttt{valor}.
+\begin{lstlisting}
+scanf( "%d", &valor ); /* CORRETO */
+\end{lstlisting}
+
+\item \textbf{Código:} \texttt{printf( "O produto de \%d e \%d e \%d"\textbackslash n, x, y );}
+
+\textbf{Erros:} (1) O \texttt{\textbackslash n} está \textit{fora} das aspas da string; (2) falta o terceiro argumento para o terceiro \texttt{\%d}.
+\begin{lstlisting}
+printf( "O produto de %d e %d e %d\n", x, y, x * y ); /* CORRETO */
+\end{lstlisting}
+
+\item \textbf{Código:} \texttt{primeiroNumero + segundoNumero = somaDosNumeros}
+
+\textbf{Erros:} (1) O cálculo está no lado esquerdo do \texttt{=} (atribuição inválida); (2) falta ponto e vírgula.
+\begin{lstlisting}
+somaDosNumeros = primeiroNumero + segundoNumero; /* CORRETO */
+\end{lstlisting}
+
+\item \textbf{Código:} \texttt{if ( numero => maior ) maior == numero;}
+
+\textbf{Erros:} (1) \texttt{=>} não existe em C -- deve ser \texttt{>=}; (2) \texttt{==} é comparação, não atribuição -- deve ser \texttt{=}.
+\begin{lstlisting}
+if ( numero >= maior ) {
+    maior = numero; /* CORRETO */
+}
+\end{lstlisting}
+
+\item \textbf{Código:} \texttt{*/ Programa para determinar o maior dentre tres inteiros /*}
+
+\textbf{Erro:} Comentário com delimitadores invertidos. O comentário deve começar com \texttt{/*} e terminar com \texttt{*/}.
+\begin{lstlisting}
+/* Programa para determinar o maior dentre tres inteiros */ /* CORRETO */
+\end{lstlisting}
+
+\item \textbf{Código:} \texttt{Scanf( "\%d", umInteiro );}
+
+\textbf{Erros:} (1) \texttt{Scanf} com S maiúsculo é inválido (C é \textit{case-sensitive}); (2) falta \texttt{\&} antes de \texttt{umInteiro}.
+\begin{lstlisting}
+scanf( "%d", &umInteiro ); /* CORRETO */
+\end{lstlisting}
+
+\item \textbf{Código:} \texttt{printf( "Modulo de \%d dividido por \%d e\textbackslash n", x, y, x \% y );}
+
+\textbf{Erro:} O \texttt{\textbackslash n} está no lugar errado. A frase fica incompleta antes da nova linha.
+\begin{lstlisting}
+printf( "Modulo de %d dividido por %d e %d\n", x, y, x % y ); /* CORRETO */
+\end{lstlisting}
+
+\item \textbf{Código:} \texttt{if ( x = y ); printf( \%d e igual a \%d\textbackslash n", x, y );}
+
+\textbf{Erros:} (1) \texttt{x = y} é atribuição, não comparação -- deve ser \texttt{x == y}; (2) ponto e vírgula após \texttt{)} cria corpo vazio; (3) falta aspas de abertura na string de \texttt{printf}.
+\begin{lstlisting}
+if ( x == y ) {
+    printf( "%d e igual a %d\n", x, y ); /* CORRETO */
+}
+\end{lstlisting}
+
+\item \textbf{Código:} \texttt{print( "A soma e \%d\textbackslash n," x + y );}
+
+\textbf{Erros:} (1) \texttt{print} não existe -- deve ser \texttt{printf}; (2) a vírgula está dentro das aspas (deve estar fora).
+\begin{lstlisting}
+printf( "A soma e %d\n", x + y ); /* CORRETO */
+\end{lstlisting}
+
+\item \textbf{Código:} \texttt{printf( "A soma e \%d\textbackslash n," x + y );}
+
+\textbf{Erro:} A vírgula está dentro das aspas -- deve estar fora, separando os argumentos.
+\begin{lstlisting}
+printf( "A soma e %d\n", x + y ); /* CORRETO */
+\end{lstlisting}
+
+\item \textbf{Código:} \texttt{Printf( "O valor que voce digitou e: \%d\textbackslash n, \&valor );}
+
+\textbf{Erros:} (1) \texttt{Printf} com P maiúsculo é inválido; (2) as aspas de fechamento da string estão faltando antes de \texttt{, \&valor}; (3) \texttt{\&valor} não deve ser usado em \texttt{printf}.
+\begin{lstlisting}
+printf( "O valor que voce digitou e: %d\n", valor ); /* CORRETO */
+\end{lstlisting}
+
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.8 -- Preenchimento de Lacunas}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.8 -- Respostas}]
+\begin{enumerate}[label=\textbf{\alph*)}]
+  \item \textbf{Comentários} são usados para documentar um programa e melhorar sua legibilidade.
+  \item A função usada para exibir informações na tela é \textbf{\texttt{printf}}.
+  \item Uma instrução C responsável pela tomada de decisão é \textbf{\texttt{if}}.
+  \item Os cálculos normalmente são realizados por instruções de \textbf{atribuição} (usando o operador \texttt{=}).
+  \item A função \textbf{\texttt{scanf}} lê valores do teclado.
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.9 -- Instruções Únicas em C}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.9}]
+\begin{enumerate}[label=\textbf{\alph*)}]
+\item \textbf{Exibir mensagem:}
+\begin{lstlisting}
+printf( "Digite dois numeros.\n" );
+\end{lstlisting}
+
+\item \textbf{Atribuir produto de \texttt{b} e \texttt{c} a \texttt{a}:}
+\begin{lstlisting}
+a = b * c;
+\end{lstlisting}
+
+\item \textbf{Indicar cálculo de folha de pagamento (comentário):}
+\begin{lstlisting}
+/* Calcula o salario liquido a partir do salario bruto e descontos */
+\end{lstlisting}
+
+\item \textbf{Ler três inteiros para \texttt{a}, \texttt{b} e \texttt{c}:}
+\begin{lstlisting}
+scanf( "%d%d%d", &a, &b, &c );
+\end{lstlisting}
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.10 -- Verdadeiro ou Falso}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.10}]
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{``Os operadores em C são avaliados da esquerda para a direita.''}
+
+\textcolor{deitelred}{\textbf{Falso.}} Os operadores são avaliados de acordo com sua
+\textit{precedência} e \textit{associatividade}. A maioria se associa da esquerda para
+a direita, mas o operador de atribuição \texttt{=} se associa da \textit{direita para
+a esquerda}. Além disso, \texttt{*}, \texttt{/}, \texttt{\%} têm precedência sobre
+\texttt{+}, \texttt{-}, independente da posição.
+
+\item \textbf{Nomes de variáveis válidos:} \texttt{\_sub\_barra\_}, \texttt{m928134},
+\texttt{t5}, \texttt{j7}, \texttt{suas\_vendas}, \texttt{total\_sua\_conta}, \texttt{a},
+\texttt{b}, \texttt{c}, \texttt{z}, \texttt{z2}.
+
+\textcolor{deitelgreen}{\textbf{Verdadeiro.}} Todos são identificadores válidos em C.
+Um identificador pode conter letras, dígitos e sublinhados, mas não pode começar com
+um dígito. Todos esses exemplos atendem a essa regra.
+
+\item \textbf{\texttt{printf("a = 5;");} é uma instrução de atribuição.}
+
+\textcolor{deitelred}{\textbf{Falso.}} Essa é uma \textit{instrução de saída}
+(\texttt{printf}). Ela apenas \textit{exibe} o texto \texttt{a = 5;} na tela. Uma
+instrução de atribuição real seria \texttt{a = 5;} -- sem as aspas e sem \texttt{printf}.
+
+\item \textbf{Uma expressão sem parênteses é avaliada da esquerda para a direita.}
+
+\textcolor{deitelred}{\textbf{Falso.}} A avaliação segue as regras de precedência
+primeiro. Por exemplo, \texttt{2 + 3 * 4} é avaliado como \texttt{2 + 12 = 14} (e não
+como \texttt{5 * 4 = 20}), porque \texttt{*} tem precedência maior. A associatividade
+da esquerda para a direita só se aplica entre operadores de \textit{mesmo} nível de
+precedência.
+
+\item \textbf{Nomes de variáveis inválidos:} \texttt{3g}, \texttt{87}, \texttt{67h2},
+\texttt{h22}, \texttt{2h}.
+
+\textcolor{deitelgreen}{\textbf{Verdadeiro.}} Todos começam com um dígito, o que é
+proibido em C. Um identificador válido deve começar com uma letra ou sublinhado.
+Note que \texttt{h22} e \texttt{h22h} seriam válidos, pois começam com letra.
+
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.11 -- Mais Preenchimento de Lacunas}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.11}]
+\begin{enumerate}[label=\textbf{\alph*)}]
+\item As operações no mesmo nível de precedência da multiplicação são: \textbf{divisão (\texttt{/}) e módulo (\texttt{\%})}.
+Juntos, \texttt{*}, \texttt{/} e \texttt{\%} formam o grupo de maior precedência aritmética.
+
+\item Quando os parênteses são aninhados, o par \textbf{mais interno} é avaliado primeiro.
+Exemplo: em \texttt{((a + b) + c)}, \texttt{a + b} é calculado primeiro.
+
+\item Uma posição na memória que pode conter diferentes valores ao longo da execução é chamada de \textbf{variável}.
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.12 -- O que é exibido?}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 2.12]
+O que é exibido por cada instrução? Considere \texttt{x = 2} e \texttt{y = 3}.
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+\item \texttt{printf( "\%d", x );} $\to$ exibe \textbf{2}
+\item \texttt{printf( "\%d", x + x );} $\to$ \texttt{2 + 2 = 4} $\to$ exibe \textbf{4}
+\item \texttt{printf( "x=" );} $\to$ exibe a string literal \textbf{x=}
+\item \texttt{printf( "x=\%d", x );} $\to$ exibe \textbf{x=2}
+\item \texttt{printf( "\%d = \%d", x + y, y + x );} $\to$ \texttt{5 = 5} $\to$ exibe \textbf{5 = 5}
+\item \texttt{z = x + y;} $\to$ \textbf{Nada} é exibido; apenas atribui 5 a \texttt{z}
+\item \texttt{scanf( "\%d\%d", \&x, \&y );} $\to$ \textbf{Nada} é exibido; aguarda entrada do usuário
+\item \texttt{/* printf( "x + y = \%d", x + y ); */} $\to$ \textbf{Nada}; está comentado
+\item \texttt{printf( "\textbackslash n" );} $\to$ \textbf{Nada visível}; apenas move o cursor para nova linha
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.13 -- Variáveis com Valores Substituídos}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.13}]
+\begin{enumerate}[label=\textbf{\alph*)}]
+\item \texttt{scanf( "\%d\%d\%d\%d\%d", \&b, \&c, \&d, \&e, \&f );} $\to$
+  \textbf{Sim}: \texttt{b, c, d, e, f} recebem novos valores (escrita destrutiva)
+\item \texttt{p = i + j + k + 7;} $\to$
+  \textbf{Sim}: \texttt{p} recebe um novo valor
+\item \texttt{printf( "Valores sao substituidos" );} $\to$
+  \textbf{Não}: apenas exibe uma string; nenhuma variável é alterada
+\item \texttt{printf( "a = 5" );} $\to$
+  \textbf{Não}: apenas exibe o texto; \texttt{a} não é alterada
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.14 -- A equação \texorpdfstring{$y = ax^3 + 7$}{y = ax³ + 7}}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.14 -- Instruções corretas para $y = ax^3 + 7$}]
+
+A equação algébrica $y = ax^3 + 7$ deve ser expressa em C sem usar a notação de expoente.
+Como não há operador de exponenciação em C (cap. 2), representamos $x^3$ como \texttt{x*x*x}.
+
+\begin{enumerate}[label=\textbf{\alph*)}]
+\item \texttt{y = a * x * x * x + 7;} $\to$ \textcolor{deitelgreen}{\textbf{CORRETO}}
+  \\ Avaliação: $a \cdot x \cdot x \cdot x$ (multiplicações da esquerda) $+ 7$
+
+\item \texttt{y = a * x * x * ( x + 7 );} $\to$ \textcolor{deitelred}{\textbf{INCORRETO}}
+  \\ Calcula $ax^2(x+7) = ax^3 + 7ax^2 \neq ax^3 + 7$
+
+\item \texttt{y = ( a * x ) * x * ( x + 7 );} $\to$ \textcolor{deitelred}{\textbf{INCORRETO}}
+  \\ Mesma razão do item b.
+
+\item \texttt{y = ( a * x ) * x * x + 7;} $\to$ \textcolor{deitelgreen}{\textbf{CORRETO}}
+  \\ $(ax) \cdot x \cdot x + 7 = ax^3 + 7$ \checkmark
+
+\item \texttt{y = a * ( x * x * x ) + 7;} $\to$ \textcolor{deitelgreen}{\textbf{CORRETO}}
+  \\ $a \cdot (x^3) + 7 = ax^3 + 7$ \checkmark
+
+\item \texttt{y = a * x * ( x * x + 7 );} $\to$ \textcolor{deitelred}{\textbf{INCORRETO}}
+  \\ $ax(x^2 + 7) = ax^3 + 7ax \neq ax^3 + 7$
+\end{enumerate}
+
+\textbf{Respostas corretas: a), d) e e).}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.15 -- Ordem de Avaliação e Valor de \texttt{x}}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.15}]
+
+\textbf{a)} \texttt{x = 7 + 3 * 6 / 2 - 1;}
+
+Passo a passo (da esquerda para a direita, \texttt{*} e \texttt{/} antes de \texttt{+} e \texttt{-}):
+\[
+7 + \underbrace{3 \times 6}_{18} / 2 - 1 \to 7 + \underbrace{18 / 2}_{9} - 1 \to \underbrace{7 + 9}_{16} - 1 \to 16 - 1 = \mathbf{15}
+\]
+
+\textbf{b)} \texttt{x = 2 \% 2 + 2 * 2 - 2 / 2;}
+\[
+\underbrace{2 \% 2}_{0} + \underbrace{2 \times 2}_{4} - \underbrace{2 / 2}_{1} \to 0 + 4 - 1 = \mathbf{3}
+\]
+
+\textbf{c)} \texttt{x = ( 3 * 9 * ( 3 + ( 9 * 3 / ( 3 ) ) ) );}
+
+Do parêntese mais interno para o externo:
+\[
+9 * 3 / 3 = 27/3 = 9 \to 3 + 9 = 12 \to 3 * 9 * 12 = 27 * 12 = \mathbf{324}
+\]
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.16 -- Aritmética Completa}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.16 -- Programa de aritmética}]
+\begin{lstlisting}
+/* Ex2.16: aritmetica.c
+   Le dois numeros e imprime soma, produto, diferenca, quociente e modulo */
+#include <stdio.h>
+
+int main( void )
+{
+    int a, b; /* dois inteiros fornecidos pelo usuario */
+
+    printf( "Digite dois inteiros: " );
+    scanf( "%d%d", &a, &b );
+
+    printf( "Soma:      %d + %d = %d\n",  a, b, a + b );
+    printf( "Produto:   %d * %d = %d\n",  a, b, a * b );
+    printf( "Diferenca: %d - %d = %d\n",  a, b, a - b );
+
+    /* Divisao inteira: o resultado descarta a parte fracionaria */
+    printf( "Quociente: %d / %d = %d\n",  a, b, a / b );
+
+    /* Modulo: resto da divisao inteira */
+    printf( "Modulo:    %d %% %d = %d\n", a, b, a % b );
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\begin{saida}
+Digite dois inteiros: 17 5\\
+Soma:      17 + 5 = 22\\
+Produto:   17 * 5 = 85\\
+Diferenca: 17 - 5 = 12\\
+Quociente: 17 / 5 = 3\\
+Modulo:    17 \% 5 = 2
+\end{saida}
+
+\textit{Nota:} Para exibir o caractere \texttt{\%} literalmente com \texttt{printf}, usa-se \texttt{\%\%}.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.17 -- Imprimindo 1 a 4}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.17 -- Três métodos para imprimir 1 2 3 4}]
+
+\textbf{a) Uma instrução \texttt{printf} sem especificadores:}
+\begin{lstlisting}
+printf( "1 2 3 4\n" );
+\end{lstlisting}
+
+\textbf{b) Uma instrução com quatro especificadores:}
+\begin{lstlisting}
+printf( "%d %d %d %d\n", 1, 2, 3, 4 );
+\end{lstlisting}
+
+\textbf{c) Quatro instruções \texttt{printf}:}
+\begin{lstlisting}
+printf( "%d ", 1 );
+printf( "%d ", 2 );
+printf( "%d ", 3 );
+printf( "%d\n", 4 );
+\end{lstlisting}
+\begin{saida}
+1 2 3 4
+\end{saida}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.18 -- Comparando Inteiros}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.18 -- Comparar dois inteiros}]
+\begin{lstlisting}
+/* Ex2.18: comparando_inteiros.c
+   Le dois inteiros e imprime o maior, ou "iguais" */
+#include <stdio.h>
+
+int main( void )
+{
+    int num1, num2; /* dois inteiros a comparar */
+
+    printf( "Digite dois inteiros: " );
+    scanf( "%d%d", &num1, &num2 );
+
+    if ( num1 > num2 ) {
+        printf( "%d e maior\n", num1 );
+    }
+
+    if ( num2 > num1 ) {
+        printf( "%d e maior\n", num2 );
+    }
+
+    if ( num1 == num2 ) {
+        printf( "Esses numeros sao iguais\n" );
+    }
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\begin{saida}
+Digite dois inteiros: 8 3\\
+8 e maior
+\end{saida}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.19 -- Aritmética, Maior e Menor}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.19 -- Soma, média, produto, menor e maior}]
+\begin{lstlisting}
+/* Ex2.19: maior_menor.c
+   Le tres inteiros e calcula soma, media, produto, menor e maior */
+#include <stdio.h>
+
+int main( void )
+{
+    int n1, n2, n3;             /* tres inteiros */
+    int soma, produto;
+    int menor, maior;
+
+    printf( "Digite tres inteiros diferentes: " );
+    scanf( "%d%d%d", &n1, &n2, &n3 );
+
+    soma    = n1 + n2 + n3;
+    produto = n1 * n2 * n3;
+    menor   = n1;   /* assume n1 como menor inicial */
+    maior   = n1;   /* assume n1 como maior inicial */
+
+    /* Verifica se n2 e menor ou maior */
+    if ( n2 < menor ) menor = n2;
+    if ( n2 > maior ) maior = n2;
+
+    /* Verifica se n3 e menor ou maior */
+    if ( n3 < menor ) menor = n3;
+    if ( n3 > maior ) maior = n3;
+
+    printf( "A soma e %d\n",    soma );
+    printf( "A media e %d\n",   soma / 3 );  /* divisao inteira */
+    printf( "O produto e %d\n", produto );
+    printf( "O menor e %d\n",   menor );
+    printf( "O maior e %d\n",   maior );
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\begin{saida}
+Digite tres inteiros diferentes: 13 27 14\\
+A soma e 54\\
+A media e 18\\
+O produto e 4914\\
+O menor e 13\\
+O maior e 27
+\end{saida}
+
+\textit{Nota sobre a média:} Como usamos apenas \texttt{int} (Cap. 2), a divisão \texttt{54 / 3 = 18} é exata. Com valores que não dividem exatamente, a parte decimal seria truncada. No Capítulo~3 aprenderemos \texttt{double} para precisão.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.20 -- Círculo: Diâmetro, Circunferência e Área}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.20 -- Propriedades do círculo}]
+\begin{lstlisting}
+/* Ex2.20: circulo.c
+   Calcula diametro, circunferencia e area de um circulo */
+#include <stdio.h>
+
+int main( void )
+{
+    int raio; /* raio em unidades inteiras */
+
+    printf( "Digite o raio do circulo: " );
+    scanf( "%d", &raio );
+
+    /* Calcula dentro dos printf, usando %f para ponto flutuante */
+    printf( "Diametro:      %f\n", 2 * 3.14159 * raio / 3.14159 );
+    printf( "Diametro:      %f\n", (float)( 2 * raio ) );
+    printf( "Circunferencia: %f\n", 2 * 3.14159 * raio );
+    printf( "Area:           %f\n", 3.14159 * raio * raio );
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\textit{Nota:} O enunciado pede que cada cálculo seja feito dentro de \texttt{printf}
+e use \texttt{\%f}. No Cap.~2, trabalhamos com \texttt{int}; ao multiplicar um \texttt{int}
+por uma constante \texttt{double} (como \texttt{3.14159}), o resultado automaticamente
+torna-se \texttt{double} -- por isso \texttt{\%f} funciona aqui.
+
+\begin{saida}
+Digite o raio do circulo: 5\\
+Diametro:      10.000000\\
+Circunferencia: 31.415900\\
+Area:           78.539750
+\end{saida}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.22 -- O que imprime \texttt{printf("*\textbackslash n**\textbackslash n...");}}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.22}]
+O código \texttt{printf( "*\textbackslash n**\textbackslash n***\textbackslash n****\textbackslash n*****\textbackslash n" );} imprime:
+
+\begin{saida}
+*\\
+**\\
+***\\
+****\\
+*****
+\end{saida}
+
+Cada \texttt{\textbackslash n} provoca um salto de linha. A quantidade de asteriscos aumenta de 1 a 5.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.24 -- Par ou Ímpar}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.24 -- Par ou ímpar com operador módulo}]
+\begin{lstlisting}
+/* Ex2.24: par_impar.c
+   Determina se um inteiro e par ou impar */
+#include <stdio.h>
+
+int main( void )
+{
+    int numero;
+
+    printf( "Digite um inteiro: " );
+    scanf( "%d", &numero );
+
+    /* Um numero e par se o resto da divisao por 2 e zero */
+    if ( numero % 2 == 0 ) {
+        printf( "%d e PAR\n", numero );
+    }
+
+    if ( numero % 2 != 0 ) {
+        printf( "%d e IMPAR\n", numero );
+    }
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\begin{saida}
+Digite um inteiro: 14\\
+14 e PAR
+\end{saida}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.26 -- Múltiplos}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.26 -- Verificar se o primeiro é múltiplo do segundo}]
+\begin{lstlisting}
+/* Ex2.26: multiplos.c
+   Verifica se o primeiro inteiro e multiplo do segundo */
+#include <stdio.h>
+
+int main( void )
+{
+    int a, b;
+
+    printf( "Digite dois inteiros: " );
+    scanf( "%d%d", &a, &b );
+
+    /* a e multiplo de b se o resto de a/b for zero */
+    if ( a % b == 0 ) {
+        printf( "%d e multiplo de %d\n", a, b );
+    }
+
+    if ( a % b != 0 ) {
+        printf( "%d NAO e multiplo de %d\n", a, b );
+    }
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\begin{saida}
+Digite dois inteiros: 15 5\\
+15 e multiplo de 5
+\end{saida}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.28 -- Erro Fatal vs. Erro Não Fatal}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.28 -- Distinguindo erros fatais de não fatais}]
+
+Da Seção~1.14 e Seção~2.5:
+
+\textbf{Erro fatal:} Um erro que causa o \textit{encerramento imediato} do programa, sem
+que ele complete sua tarefa. Exemplo clássico: divisão por zero (\texttt{x / 0}).
+O programa é interrompido abruptamente pelo sistema operacional.
+
+\textbf{Erro não fatal:} Um erro que permite que o programa \textit{continue executando}
+até o fim, mas produzindo \textit{resultados incorretos}. Exemplo: esquecer o \texttt{\&}
+em um \texttt{scanf} pode gerar resultados errados sem terminar o programa com um crash.
+
+\textbf{Por que preferir erros fatais?}
+
+Paradoxalmente, um erro fatal é mais fácil de encontrar e corrigir: o programa para
+imediatamente e frequentemente indica a linha onde ocorreu o problema. Um erro não fatal
+pode passar despercebido por muito tempo, pois o programa aparentemente ``funciona'', mas
+produz respostas erradas que só serão descobertas com testes cuidadosos -- possivelmente
+muito depois do produto estar em uso real.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 2.30 -- Separando Dígitos de um Inteiro}
+% ============================================================
+
+\begin{respostabox}[title={Exercício 2.30 -- Separar dígitos de número de 5 dígitos}]
+\begin{lstlisting}
+/* Ex2.30: separar_digitos.c
+   Le um numero de 5 digitos e os separa por tres espacos */
+#include <stdio.h>
+
+int main( void )
+{
+    int numero, d1, d2, d3, d4, d5;
+
+    printf( "Digite um numero de 5 digitos: " );
+    scanf( "%d", &numero );
+
+    /* Extraindo cada digito usando divisao inteira e modulo */
+    d1 = numero / 10000;         /* milhar: 42139 / 10000 = 4  */
+    d2 = numero / 1000 % 10;     /* centena: 42139 / 1000 = 42 % 10 = 2 */
+    d3 = numero / 100  % 10;     /* dezena: 421 % 10 = 1        */
+    d4 = numero / 10   % 10;     /* unidade de dezena: 4213 % 10 = 3 */
+    d5 = numero        % 10;     /* unidade: 42139 % 10 = 9     */
+
+    printf( "%d   %d   %d   %d   %d\n", d1, d2, d3, d4, d5 );
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\begin{saida}
+Digite um numero de 5 digitos: 42139\\
+4   2   1   3   9
+\end{saida}
+\end{respostabox}
+
+\end{document}

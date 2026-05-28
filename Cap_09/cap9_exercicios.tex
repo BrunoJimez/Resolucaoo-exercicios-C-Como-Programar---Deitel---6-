@@ -1,0 +1,873 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 9 -- Entrada/Saída Formatada em C
+%  EXERCÍCIOS (9.4 -- 9.20)
+%  Abordagem incremental: Caps. 1 a 9
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array,amsmath}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},
+  title={\small\color{white}Saída do programa},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 9 -- Exercícios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 9}\\[0.3cm]
+  {\Large\color{deitelblue!80}Entrada/Saída Formatada em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios (9.4--9.20)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, com código completo}
+  \end{tcolorbox}
+\end{titlepage}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 9.4 -- Instruções \texttt{printf} e \texttt{scanf}}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Inteiro sem sinal 40000 alinhado à esquerda em campo de 15:}
+\begin{lstlisting}
+printf( "%-15u\n", 40000 );
+\end{lstlisting}
+
+\item \textbf{Ler hexadecimal em \texttt{hex}:}
+\begin{lstlisting}
+scanf( "%x", &hex );
+\end{lstlisting}
+
+\item \textbf{Imprimir 200 com e sem sinal:}
+\begin{lstlisting}
+printf( "%d %u\n", 200, 200 );
+\end{lstlisting}
+
+\item \textbf{Imprimir 100 em hex precedido por 0x:}
+\begin{lstlisting}
+printf( "%#x\n", 100 );  /* imprime 0x64 */
+\end{lstlisting}
+A flag \texttt{\#} com \texttt{x} adiciona o prefixo \texttt{0x}.
+
+\item \textbf{Ler caracteres em \texttt{s} até encontrar 'p':}
+\begin{lstlisting}
+scanf( "%[^p]", s );
+\end{lstlisting}
+O \texttt{\^{}} dentro do conjunto significa ``qualquer caractere \textit{exceto}''
+os listados. Aqui: lê tudo até encontrar \texttt{p}.
+
+\item \textbf{Imprimir 1.234 em campo de 9 com zeros iniciais:}
+\begin{lstlisting}
+printf( "%09.3f\n", 1.234 );  /* imprime 00001.234 */
+\end{lstlisting}
+A flag \texttt{0} preenche com zeros à esquerda; \texttt{.3} mantém 3 decimais.
+
+\item \textbf{Ler \texttt{hh:mm:ss} com supressão dos \texttt{:}:}
+\begin{lstlisting}
+scanf( "%d%*c%d%*c%d", &hora, &minuto, &segundo );
+\end{lstlisting}
+\texttt{\%*c} lê um caractere e descarta-o (supressão de atribuição).
+
+\item \textbf{Ler ``caracteres'' (com aspas) e armazenar em \texttt{s}:}
+\begin{lstlisting}
+scanf( "\"%[^\"]\"", s );
+\end{lstlisting}
+Lê literalmente as aspas iniciais e finais, e captura em \texttt{s} todos os
+caracteres entre elas.
+
+\item \textbf{Ler \texttt{hh:mm:ss} sem supressão:}
+\begin{lstlisting}
+scanf( "%d:%d:%d", &hora, &minuto, &segundo );
+\end{lstlisting}
+Os \texttt{:} na string de formato \textit{esperam} encontrar \texttt{:} na entrada
+(que são descartados).
+
+\end{enumerate}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 9.5 -- Saídas das Instruções}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{\texttt{printf( "\%-10d\textbackslash n", 10000 );}}\\
+\textbf{Saída:} \texttt{10000\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace}\\
+(10000 ocupa 5 caracteres, com 5 espaços à direita até totalizar 10.)
+
+\item \textbf{\texttt{printf( "\%c\textbackslash n", "Isto e uma string" );}}\\
+\textbf{ERRO:} \texttt{\%c} espera um \texttt{char}, mas recebeu um ponteiro para
+\texttt{char}. Comportamento indefinido -- provavelmente imprime um caractere
+``estranho'' ou causa falha.\\
+\textbf{Correção:} \texttt{printf( "\%s\textbackslash n", "Isto e uma string" );}
+
+\item \textbf{\texttt{printf( "\%*.*lf\textbackslash n", 8, 3, 1024.987654 );}}\\
+Largura dinâmica = 8, precisão dinâmica = 3.\\
+\textbf{Saída:} \texttt{1024.988} \quad (8 caracteres, 3 decimais arredondados)
+
+\item \textbf{\texttt{printf( "\%\#o\textbackslash n\%\#X\textbackslash n\%\#e\textbackslash n", 17, 17, 1008.83689 );}}\\
+\textbf{Saída:}
+\begin{verbatim}
+021
+0X11
+1.008837e+03
+\end{verbatim}
+
+\item \textbf{\texttt{printf( "\% ld\textbackslash n\%+ld\textbackslash n", 1000000, 1000000 );}}\\
+Flag espaço: insere espaço antes de positivos. Flag \texttt{+}: insere \texttt{+}.\\
+\textbf{Saída:}
+\begin{verbatim}
+ 1000000
++1000000
+\end{verbatim}
+
+\item \textbf{\texttt{printf( "\%10.2E\textbackslash n", 444.93738 );}}\\
+\textbf{Saída:} \texttt{\textvisiblespace\textvisiblespace 4.45E+02} \quad (largura 10, 2 decimais, E maiúsculo)
+
+\item \textbf{\texttt{printf( "\%10.2g\textbackslash n", 444.93738 );}}\\
+\texttt{\%g} usa o formato mais compacto. Com precisão 2 (2 dígitos significativos):\\
+\textbf{Saída:} \texttt{\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace 4.4e+02}
+
+\item \textbf{\texttt{printf( "\%d\textbackslash n", 10.987 );}}\\
+\textbf{ERRO:} \texttt{\%d} espera \texttt{int}, mas recebeu \texttt{double}.
+Comportamento indefinido (em sistemas modernos pode imprimir lixo ou crashar).\\
+\textbf{Correção:}
+\begin{lstlisting}
+printf( "%d\n", ( int )10.987 );    /* cast explicito */
+printf( "%f\n", 10.987 );           /* ou use %f      */
+\end{lstlisting}
+\end{enumerate}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 9.6 -- Erros nos Segmentos}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{\texttt{printf( "\%s\textbackslash n", 'Feliz aniversario' );}}\\
+\textbf{Erro:} String entre aspas simples. Strings exigem aspas duplas.\\
+\textbf{Correção:} \texttt{printf( "\%s\textbackslash n", "Feliz aniversario" );}
+
+\item \textbf{\texttt{printf( "\%c\textbackslash n", 'Ola' );}}\\
+\textbf{Erro:} Aspas simples com múltiplos caracteres (\texttt{'Ola'}) gera apenas
+um \texttt{int} com valor implementação-definido.\\
+\textbf{Correção:} para imprimir apenas um caractere, use \texttt{'O'} (um único
+caractere); para a palavra, use \texttt{\%s} com \texttt{"Ola"}.
+
+\item \textbf{\texttt{printf( "\%c\textbackslash n", "Isso e uma string" );}}\\
+\textbf{Erro:} \texttt{\%c} espera caractere, recebeu string.\\
+\textbf{Correção:} use \texttt{\%s}, ou para imprimir apenas o primeiro caractere:
+\begin{lstlisting}
+printf( "%c\n", "Isso e uma string"[ 0 ] );
+\end{lstlisting}
+
+\item \textbf{\texttt{printf( ""\%s"", "Boa viagem" );}}\\
+\textbf{Erro:} Aspas duplicadas dentro da string de formato sem escape.\\
+\textbf{Correção:}
+\begin{lstlisting}
+printf( "\"%s\"", "Boa viagem" );  /* imprime "Boa viagem" */
+\end{lstlisting}
+
+\item \textbf{\texttt{char day[] = "Domingo"; printf( "\%s\textbackslash n", day[ 3 ] );}}\\
+\textbf{Erro:} \texttt{day[3]} é um \texttt{char} (no caso, \texttt{'i'}), não um
+ponteiro. \texttt{\%s} espera \texttt{char *}.\\
+\textbf{Correção:}
+\begin{lstlisting}
+printf( "%s\n", &day[ 3 ] );  /* imprime "ingo" a partir do 4o char */
+\end{lstlisting}
+
+\item \textbf{\texttt{printf( 'Digite seu nome: ' );}}\\
+\textbf{Erro:} String entre aspas simples.\\
+\textbf{Correção:} \texttt{printf( "Digite seu nome: " );}
+
+\item \textbf{\texttt{printf( \%f, 123.456 );}}\\
+\textbf{Erro:} String de formato sem aspas.\\
+\textbf{Correção:} \texttt{printf( "\%f", 123.456 );}
+
+\item \textbf{\texttt{printf( "\%s\%s\textbackslash n", 'O', 'K' );}}\\
+\textbf{Erro:} \texttt{\%s} espera strings, recebeu caracteres em aspas simples.\\
+\textbf{Correção:}
+\begin{lstlisting}
+printf( "%c%c\n", 'O', 'K' );    /* dois caracteres */
+printf( "%s%s\n", "O", "K" );    /* duas strings    */
+\end{lstlisting}
+
+\item \textbf{\texttt{char s[10]; scanf( "\%c", s[ 7 ] );}}\\
+\textbf{Erro:} Falta o operador de endereço \texttt{\&}. \texttt{scanf} precisa de
+ponteiro para onde armazenar.\\
+\textbf{Correção:} \texttt{scanf( "\%c", \&s[ 7 ] );}
+
+\end{enumerate}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 9.7 -- Diferenças entre \texttt{\%d} e \texttt{\%i}}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex9.7: d_vs_i.c */
+#include <stdio.h>
+
+int main( void )
+{
+    int x, y;
+
+    printf( "Digite dois inteiros: " );
+    scanf( "%i%d", &x, &y );
+    printf( "Lidos: x = %d, y = %d\n", x, y );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Diferença chave:} \texttt{\%d} sempre lê em \textit{decimal}. Já \texttt{\%i}
+\textit{detecta} a base automaticamente baseando-se no prefixo:
+\begin{itemize}[noitemsep]
+  \item \texttt{0x} ou \texttt{0X} $\to$ hexadecimal
+  \item \texttt{0} (zero à esquerda) $\to$ octal
+  \item Sem prefixo $\to$ decimal
+\end{itemize}
+
+\textbf{Testes com os conjuntos sugeridos:}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{l|l|l}
+\toprule
+\textbf{Entrada} & \texttt{\%i} (x) & \texttt{\%d} (y) \\ \midrule
+\texttt{10 10}     & 10  & 10  \\
+\texttt{-10 -10}   & -10 & -10 \\
+\texttt{010 010}   & 8 (octal) & 10 (decimal, ignora 0) \\
+\texttt{0x10 0x10} & 16 (hex)  & 0 (lê 0, para no 'x') \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Conclusão:} \texttt{\%i} é mais ``inteligente''. Útil quando o usuário pode
+inserir números em bases diferentes. Para uso geral, \texttt{\%d} é mais previsível.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 9.8 -- \texttt{\%n} para Contar Caracteres}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex9.8: contador_chars.c */
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#define N 10
+
+int main( void )
+{
+    int number[ N ];
+    int impressos;       /* caracteres impressos por valor */
+    int total = 0;       /* acumulado */
+    int i;
+
+    srand( time( NULL ) );
+
+    /* Inicializa array */
+    for ( i = 0; i < N; ++i ) {
+        number[ i ] = 1 + rand() % 1000;
+    }
+
+    printf( "%-10s%-15s%s\n", "Valor", "Chars", "Total acumulado" );
+
+    for ( i = 0; i < N; ++i ) {
+        printf( "%-10d%n", number[ i ], &impressos );
+
+        /* impressos contem o numero de chars escritos ATE %n */
+        total += impressos - 0;  /* subtrai o tamanho ja somado */
+
+        /* Re-imprime o valor + total ate aqui */
+        total = 10;  /* largura do campo */
+        printf( "Total acumulado: %d\n", total * ( i + 1 ) );
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+\textit{Nota:} \texttt{\%n} é um especificador especial que \textit{não imprime
+nada}, mas armazena no inteiro apontado pelo argumento o número de caracteres
+já impressos até aquele ponto na string de saída.
+
+\begin{erroco}
+  \texttt{\%n} é considerado \textbf{perigoso} em código moderno. Sistemas com
+  \textit{format string vulnerability} podem ser explorados via \texttt{\%n}.
+  Por isso, muitos compiladores e bibliotecas (incluindo Windows) o desabilitam
+  por padrão. Use com cuidado, apenas em contextos educacionais.
+\end{erroco}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 9.9 -- Ponteiros como Inteiros}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex9.9: ponteiros_int.c */
+#include <stdio.h>
+
+int main( void )
+{
+    int x = 42;
+    int *ptr = &x;
+
+    printf( "%%p:  %p\n", ( void * )ptr );
+
+    /* Possivelmente OK (depende do compilador) */
+    printf( "%%d:  %d\n", ( int )( long )ptr );
+    printf( "%%u:  %u\n", ( unsigned )( long )ptr );
+
+    /* Em sistemas 64-bit, int causa truncamento */
+    printf( "%%lu: %lu\n", ( unsigned long )ptr );
+    printf( "%%lx: %lx\n", ( unsigned long )ptr );
+    printf( "%%o:  %o\n", ( unsigned )( long )ptr );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Resultados esperados:}
+\begin{itemize}[noitemsep]
+  \item \textbf{\texttt{\%p}}: formato definido pela implementação. Geralmente
+  em hexadecimal, e.g.\ \texttt{0x7fff5fbff8ac} em sistemas Linux/macOS.
+  \item \textbf{\texttt{\%d}, \texttt{\%u}}: em sistemas 64-bit, gera valor truncado
+  (perda de bits altos) -- \textbf{valores estranhos}.
+  \item \textbf{\texttt{\%lu}, \texttt{\%lx}}: representação completa em decimal/hex.
+  \item \textbf{\texttt{\%o}}: representação octal -- valores ``estranhos'', muito longos.
+\end{itemize}
+
+\textbf{Erros possíveis:} sem cast adequado, o compilador moderno emite avisos.
+Casts inadequados podem levar a comportamento indefinido em arquiteturas onde
+\texttt{int} é menor que \texttt{void *}.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 9.10 -- Larguras de Campo Diversas}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex9.10: larguras_diversas.c */
+#include <stdio.h>
+
+int main( void )
+{
+    int   inteiro = 12345;
+    float real    = 1.2345f;
+    int   largura;
+
+    printf( "%-10s | %-10s\n", "Largura", "Saida" );
+    printf( "-----------+--------------\n" );
+
+    for ( largura = 1; largura <= 10; ++largura ) {
+        printf( "%-10d | %*d\n", largura, largura, inteiro );
+    }
+
+    printf( "\n%-10s | %-15s\n", "Largura", "Saida float" );
+    printf( "-----------+--------------------\n" );
+
+    for ( largura = 1; largura <= 10; ++largura ) {
+        printf( "%-10d | %*.4f\n", largura, largura, real );
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{O que acontece com largura insuficiente?} \textbf{C \textit{nunca} trunca o número}.
+Quando o valor não cabe na largura especificada, ele é impresso por completo,
+``estourando'' o campo. Ou seja, a largura é um \textit{mínimo}, não um máximo.
+
+\textbf{Exemplo:} \texttt{printf("\%3d", 12345)} imprime \texttt{12345} (5 chars), não \texttt{123}.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 9.11 -- Arredondamento}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex9.11: arredondamento.c */
+#include <stdio.h>
+
+int main( void )
+{
+    double valor = 100.453627;
+
+    printf( "Original:           %.6f\n", valor );
+    printf( "Inteiro (%%.0f):     %.0f\n", valor );
+    printf( "Decimo (%%.1f):      %.1f\n", valor );
+    printf( "Centesimo (%%.2f):   %.2f\n", valor );
+    printf( "Milesimo (%%.3f):    %.3f\n", valor );
+    printf( "Decimo milesimo:    %.4f\n", valor );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Saída:}
+\begin{saida}
+Original:           100.453627\\
+Inteiro (\%.0f):     100\\
+Decimo (\%.1f):      100.5\\
+Centesimo (\%.2f):   100.45\\
+Milesimo (\%.3f):    100.454\\
+Decimo milesimo:    100.4536
+\end{saida}
+
+\textbf{Note:} \texttt{printf} arredonda matematicamente, não trunca.
+\texttt{100.4536} arredondado para a quarta casa: o quinto dígito é 2, então mantém.
+Mas \texttt{100.453627} arredondado para 3 casas: o quarto dígito é 6 ($\geq 5$),
+arredonda para cima $\to$ \texttt{100.454}.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 9.12 -- String em Campo do Dobro}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex9.12: string_dobro.c */
+#include <stdio.h>
+#include <string.h>
+
+int main( void )
+{
+    char texto[ 100 ];
+    int  tam, larguraDobro;
+
+    printf( "Digite uma string: " );
+    fgets( texto, 100, stdin );
+    texto[ strcspn( texto, "\n" ) ] = '\0';
+
+    tam = strlen( texto );
+    larguraDobro = tam * 2;
+
+    printf( "Comprimento: %d\n", tam );
+    printf( "Dobrado (%d chars): [%*s]\n",
+            larguraDobro, larguraDobro, texto );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Exemplo:} se a entrada for ``Ola'' (3 chars), o campo será de 6 caracteres
+e a saída terá 3 espaços à esquerda + ``Ola''.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 9.13 -- Tabela Fahrenheit/Celsius}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex9.13: tabela_temperaturas.c */
+#include <stdio.h>
+
+int main( void )
+{
+    int fahrenheit;
+    double celsius;
+
+    printf( "%10s%10s\n", "Fahr", "Celsius" );
+    printf( "%10s%10s\n", "----", "-------" );
+
+    for ( fahrenheit = 0; fahrenheit <= 212; ++fahrenheit ) {
+        celsius = 5.0 / 9.0 * ( fahrenheit - 32 );
+        printf( "%10d%+10.3f\n", fahrenheit, celsius );
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Saída parcial:}
+\begin{saida}
+\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace Fahr\textvisiblespace\textvisiblespace\textvisiblespace Celsius\\
+\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace ----\textvisiblespace\textvisiblespace\textvisiblespace -------\\
+\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace 0\textvisiblespace\textvisiblespace -17.778\\
+\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace 1\textvisiblespace\textvisiblespace -17.222\\
+\ldots\\
+\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace 32\textvisiblespace\textvisiblespace\textvisiblespace +0.000\\
+\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace 100\textvisiblespace\textvisiblespace +37.778\\
+\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace 212\textvisiblespace +100.000
+\end{saida}
+
+\textbf{Flags-chave:} \texttt{\%+10.3f} -- sinal sempre exibido (\texttt{+}),
+largura 10 alinhada à direita, 3 dígitos decimais.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 9.14 -- Sequências de Escape}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex9.14: escapes.c */
+#include <stdio.h>
+
+int main( void )
+{
+    printf( "\\n: " ); printf( "[A\nB]\n" );
+    printf( "\\t: [A\tB]\n" );
+    printf( "\\a (alerta sonoro): [A\aB]\n" );
+    printf( "\\b (backspace):    [AX\bB]\n" );
+    printf( "\\r (retorno):      [ABC\rXY]\n" );
+    printf( "\\f (form feed):    [A\fB]\n" );
+    printf( "\\v (tab vertical): [A\vB]\n" );
+    printf( "\\\\: [\\]\n" );
+    printf( "\\\": [\"]\n" );
+    printf( "\\?: [\?]\n" );
+    printf( "\\0: [A\0B] (string termina no \\0)\n" );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Comportamentos:}
+\begin{itemize}[noitemsep]
+  \item \texttt{\textbackslash n}: nova linha (cursor para próxima linha)
+  \item \texttt{\textbackslash t}: tab horizontal (próxima posição de tab)
+  \item \texttt{\textbackslash a}: alerta (geralmente beep)
+  \item \texttt{\textbackslash b}: backspace (cursor recua 1 posição)
+  \item \texttt{\textbackslash r}: carriage return (cursor volta ao início da linha)
+  \item \texttt{\textbackslash f}: form feed (avança para próxima página em impressoras)
+  \item \texttt{\textbackslash v}: tab vertical
+  \item \texttt{\textbackslash \textbackslash}, \texttt{\textbackslash "}, \texttt{\textbackslash ?}: caracteres literais escapados
+\end{itemize}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 9.15 -- ? Literal sem Escape}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex9.15: interrogacao.c */
+#include <stdio.h>
+
+int main( void )
+{
+    printf( "Com escape: \?\n" );
+    printf( "Sem escape: ?\n" );
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Resposta:} \textbf{Sim}, o caractere \texttt{?} pode ser impresso diretamente
+como caractere literal em uma string \texttt{printf}. As duas formas (\texttt{?}
+e \texttt{\textbackslash ?}) produzem o mesmo resultado.
+
+\textbf{Por que existe \texttt{\textbackslash ?} então?} Existe para evitar
+\textit{trigraphs} (sequências de 3 caracteres que começam com \texttt{??}, usadas
+em terminais antigos para representar caracteres especiais). Por exemplo,
+\texttt{??/} era equivalente a \texttt{\textbackslash}. Em código moderno, trigraphs
+foram removidos do padrão C23, mas \texttt{\textbackslash ?} ainda funciona.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 9.16 -- Ler 437 com Todos os Especificadores}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex9.16: ler_437.c */
+#include <stdio.h>
+
+int main( void )
+{
+    int valor;
+
+    printf( "Digite 437 (decimal): " );
+    scanf( "%d", &valor );
+    printf( "  %%d=%d  %%i=%d  %%o=%o  %%u=%u  %%x=%x\n",
+            valor, valor, valor, valor, valor );
+
+    printf( "Digite 437 (octal, ex: 665): " );
+    scanf( "%o", &valor );
+    printf( "  %%d=%d  %%o=%o\n", valor, valor );
+
+    printf( "Digite 437 (hex, ex: 1b5): " );
+    scanf( "%x", &valor );
+    printf( "  %%d=%d  %%x=%x\n", valor, valor );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Conversões equivalentes a 437:}
+\begin{itemize}[noitemsep]
+  \item Decimal: 437
+  \item Octal: 665 (porque $6 \times 64 + 6 \times 8 + 5 = 437$)
+  \item Hex: 0x1B5 (porque $1 \times 256 + 11 \times 16 + 5 = 437$)
+\end{itemize}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 9.17 -- Ler 1.2345 com \texttt{e}, \texttt{f}, \texttt{g}}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex9.17: ler_floats.c */
+#include <stdio.h>
+
+int main( void )
+{
+    float a, b, c;
+
+    printf( "Digite 1.2345 em formato decimal: " );
+    scanf( "%f", &a );
+
+    printf( "Digite 1.2345 em formato exponencial (ex: 1.2345e0): " );
+    scanf( "%e", &b );
+
+    printf( "Digite 1.2345 em formato geral: " );
+    scanf( "%g", &c );
+
+    printf( "\nValores lidos: a=%f, b=%f, c=%f\n", a, b, c );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Conclusão:} \texttt{\%e}, \texttt{\%f} e \texttt{\%g} no \texttt{scanf} são
+\textit{equivalentes para leitura} -- todos aceitam tanto notação decimal quanto
+científica. A diferença está apenas na \texttt{printf} (formato de saída).
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 9.18 -- Strings com Aspas}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex9.18: aspas.c */
+#include <stdio.h>
+
+int main( void )
+{
+    char a[ 50 ], b[ 50 ], c[ 50 ];
+
+    printf( "Digite 3 entradas: suzy \"suzy\" 'suzy'\n" );
+    scanf( "%s%s%s", a, b, c );
+
+    printf( "a = [%s]\n", a );
+    printf( "b = [%s]\n", b );
+    printf( "c = [%s]\n", c );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Resultado:} C \textbf{não} ignora aspas -- elas são lidas como parte da
+string. \texttt{\%s} para no primeiro espaço em branco. Então:
+\begin{itemize}[noitemsep]
+  \item \texttt{a = "suzy"} (sem aspas)
+  \item \texttt{b = "\textbackslash"suzy\textbackslash""} (com as aspas duplas)
+  \item \texttt{c = "'suzy'"} (com as aspas simples)
+\end{itemize}
+
+\textbf{Como ignorar aspas?} Usar \texttt{scanf("\textbackslash"\%[\textasciicircum\textbackslash"]\textbackslash"", b);}
+que lê literalmente as aspas e captura o conteúdo entre elas.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 9.19 -- \texttt{'?'} como Caractere}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex9.19: caractere_interrogacao.c */
+#include <stdio.h>
+
+int main( void )
+{
+    printf( "Constante de caractere '?': [%c]\n", '?' );
+    printf( "Sequencia de escape  '\\?':  [%c]\n", '\?' );
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Resultado:} Ambas as formas (\texttt{'?'} e \texttt{'\textbackslash ?'})
+funcionam perfeitamente e produzem o mesmo caractere de interrogação na saída.
+A diferença é apenas estilística; \texttt{'\textbackslash ?'} historicamente protegia
+contra trigraphs (hoje obsoleto).
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 9.20 -- \texttt{\%g} com Precisões 1 a 9}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex9.20: g_precisoes.c */
+#include <stdio.h>
+
+int main( void )
+{
+    double valor = 9876.12345;
+    int  prec;
+
+    printf( "Valor: %f\n\n", valor );
+    printf( "%-10s%s\n", "Precisao", "Saida com %g" );
+    printf( "---------------------\n" );
+
+    for ( prec = 1; prec <= 9; ++prec ) {
+        printf( "%-10d%.*g\n", prec, prec, valor );
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Saída esperada:}
+\begin{saida}
+Valor: 9876.123450\\
+\\
+Precisao  Saida com \%g\\
+---------------------\\
+1\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace 1e+04\\
+2\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace 9.9e+03\\
+3\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace 9.88e+03\\
+4\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace 9876\\
+5\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace 9876.1\\
+6\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace 9876.12\\
+7\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace 9876.123\\
+8\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace 9876.1234\\
+9\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace 9876.12345
+\end{saida}
+
+\textbf{Comportamento do \texttt{\%g}:} a ``precisão'' em \texttt{\%g} significa
+\textbf{dígitos significativos} (não casas decimais). O formato escolhe
+automaticamente entre \texttt{\%e} e \texttt{\%f}, escolhendo o mais compacto:
+\begin{itemize}[noitemsep]
+  \item Precisão $\leq 4$: usa notação científica (\texttt{\%e}).
+  \item Precisão $> 4$: usa notação decimal padrão (\texttt{\%f}).
+  \item Zeros à direita são suprimidos (diferente de \texttt{\%f}).
+\end{itemize}
+
+\begin{boaprática}
+  \texttt{\%g} é excelente quando você não sabe a magnitude dos valores que
+  serão impressos. Mostra valores pequenos em decimal e valores muito grandes
+  ou muito pequenos em notação científica -- a melhor representação compacta
+  para cada caso.
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section*{Reflexão Final -- Capítulo 9}
+
+\begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,
+  title={\bfseries A arte da E/S formatada}]
+
+O Capítulo~9 aprofunda algo que aparentemente já conhecíamos do Capítulo~2:
+\texttt{printf} e \texttt{scanf}. Mas o que parecia simples revelou-se uma
+\textbf{mini-linguagem} dentro de C, com dezenas de especificadores, flags,
+modificadores e nuances.
+
+\textbf{Domínio dos pontos-chave:}
+\begin{itemize}[noitemsep]
+  \item Saber qual especificador usar para cada tipo (\texttt{\%d}, \texttt{\%lf}, \texttt{\%s}, \texttt{\%p}, \ldots).
+  \item Controlar largura, precisão e alinhamento para criar tabelas legíveis.
+  \item Usar conjunto de varredura e supressão para parsear entradas complexas.
+  \item Combinar flags (\texttt{+}, \texttt{-}, \texttt{0}, \texttt{\#}) com elegância.
+  \item Reconhecer armadilhas: \texttt{\%d} com \texttt{double}, falta de \texttt{\&}
+  no \texttt{scanf}, \texttt{\%c} com strings.
+\end{itemize}
+
+\textbf{Por que isso importa em projetos reais?} Logs, relatórios financeiros,
+arquivos CSV, dashboards, parsers de configuração -- todos dependem de E/S formatada
+com precisão. Programas amadores são reconhecíveis pela formatação descuidada;
+programas profissionais primam por saídas limpas, alinhadas e informativas.
+
+\textbf{Próximos passos:} no Cap.~10 chegaremos a \texttt{struct} -- agrupando
+dados heterogêneos; no Cap.~11, arquivos -- aplicando tudo o que aprendemos
+até agora a entrada/saída persistente em disco.
+
+\end{tcolorbox}
+
+\end{document}

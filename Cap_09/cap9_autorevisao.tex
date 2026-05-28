@@ -1,0 +1,318 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 9 -- Entrada/Saída Formatada em C
+%  EXERCÍCIOS DE AUTORREVISÃO (9.1 -- 9.3)
+%  Abordagem incremental: Caps. 1 a 9
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},title={\small\color{white}Saída do programa},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 9 -- Autorrevisão}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 9}\\[0.3cm]
+  {\Large\color{deitelblue!80}Entrada/Saída Formatada em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios de Autorrevisão (9.1--9.3)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, abordagem incremental\\
+    Capítulos 1 a 9}
+  \end{tcolorbox}
+\end{titlepage}
+
+\section*{Construindo sobre os Capítulos Anteriores}
+
+No Capítulo~9, aprofundamos o que já conhecemos sobre \texttt{printf} e
+\texttt{scanf} desde o Cap.~2. Construindo sobre os fundamentos dos Caps.~1--8,
+incorporamos:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Fluxos (\textit{streams})} -- toda E/S em C passa por \texttt{stdin},
+  \texttt{stdout}, \texttt{stderr}
+  \item \textbf{Especificadores de conversão completos} -- \texttt{\%d}, \texttt{\%i},
+  \texttt{\%o}, \texttt{\%u}, \texttt{\%x}, \texttt{\%X}, \texttt{\%e}, \texttt{\%E},
+  \texttt{\%f}, \texttt{\%g}, \texttt{\%G}, \texttt{\%c}, \texttt{\%s}, \texttt{\%p},
+  \texttt{\%n}
+  \item \textbf{Flags de formatação} -- \texttt{-} (esquerda), \texttt{+} (sinal),
+  espaço, \texttt{\#}, \texttt{0}
+  \item \textbf{Modificadores de tipo} -- \texttt{h}, \texttt{l}, \texttt{L}
+  \item \textbf{Largura de campo} e \textbf{precisão} -- também via \texttt{*}
+  para receber valores dinâmicos
+  \item \textbf{Sequências de escape} -- \texttt{\textbackslash n}, \texttt{\textbackslash t},
+  \texttt{\textbackslash "}, \texttt{\textbackslash \textbackslash}, etc.
+  \item \textbf{Conjunto de varredura (\textit{scan set})} no \texttt{scanf}: \texttt{\%[\ldots]}
+  \item \textbf{Caractere de supressão} \texttt{*} no \texttt{scanf}
+\end{itemize}
+
+\begin{boaprática}
+  Domínio fino de \texttt{printf} e \texttt{scanf} faz toda a diferença em
+  programas de qualidade. Saída bem formatada economiza tempo do leitor; leitura
+  precisa evita classes inteiras de bugs.
+\end{boaprática}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 9.1 -- Preenchimento de Lacunas (22 itens)}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+\item Toda E/S é trabalhada na forma de \textbf{fluxos} (\textit{streams}).
+\item O fluxo \textbf{de entrada-padrão} (\texttt{stdin}) está conectado ao teclado.
+\item O fluxo \textbf{de saída-padrão} (\texttt{stdout}) está conectado à tela.
+\item A formatação precisa de saída é obtida com a função \textbf{\texttt{printf}}.
+\item A string de controle de formato pode conter \textbf{especificadores de
+conversão}, \textbf{flags}, \textbf{larguras de campo}, \textbf{precisões} e
+\textbf{caracteres literais}.
+\item Tanto \textbf{\texttt{d}} quanto \textbf{\texttt{i}} podem ser usados para
+inteiros decimais com sinal.
+\item \textbf{\texttt{o}}, \textbf{\texttt{u}}, \textbf{\texttt{x}} (ou \texttt{X})
+para inteiros sem sinal em formato octal, decimal e hexadecimal.
+\item Os modificadores \textbf{\texttt{h}} e \textbf{\texttt{l}} indicam
+\texttt{short} ou \texttt{long}.
+\item O especificador \textbf{\texttt{e}} (ou \texttt{E}) para notação exponencial.
+\item O modificador \textbf{\texttt{L}} para \texttt{long double}.
+\item Sem precisão especificada, \texttt{e}, \texttt{E}, \texttt{f} mostram
+\textbf{6} dígitos à direita do ponto decimal.
+\item \textbf{\texttt{s}} e \textbf{\texttt{c}} são usados para strings e caracteres.
+\item Todas as strings terminam no caractere \textbf{NULL} (\texttt{'\textbackslash 0'}).
+\item Largura e precisão dinâmicas via \texttt{\%*.*} -- substituir por
+\textbf{asterisco} (\texttt{*}).
+\item Flag \textbf{\texttt{-}} alinha à esquerda.
+\item Flag \textbf{\texttt{+}} exibe sinal explicitamente.
+\item Formatação precisa de entrada: função \textbf{\texttt{scanf}}.
+\item \textbf{Conjunto de varredura} (\textit{scan set}, \texttt{\%[\ldots]})
+varre por caracteres específicos.
+\item Especificador \textbf{\texttt{i}} no \texttt{scanf} para inteiros opcionalmente
+com sinal em qualquer base (decimal, octal ou hex).
+\item Para \texttt{double}: \textbf{\texttt{le}}, \textbf{\texttt{lE}},
+\textbf{\texttt{lf}}, \textbf{\texttt{lg}} ou \textbf{\texttt{lG}}.
+\item \textbf{Caractere de supressão de atribuição} (\texttt{*}) lê e descarta.
+\item \textbf{Largura de campo} no \texttt{scanf} limita quantos caracteres ler.
+\end{enumerate}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 9.2 -- Identificar e Corrigir Erros}
+% ============================================================
+
+\subsection*{Item (a)}
+\begin{respostabox}
+\textbf{Código:} \texttt{printf( "\%s\textbackslash n", 'c' );}
+
+\textbf{Erro:} \texttt{\%s} espera um ponteiro para \texttt{char} (string), não
+um único caractere.
+
+\textbf{Correção:} usar \texttt{\%c} para caractere, ou trocar \texttt{'c'} por \texttt{"c"}:
+\begin{lstlisting}
+printf( "%c\n", 'c' );    /* caractere */
+printf( "%s\n", "c" );    /* string */
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (b)}
+\begin{respostabox}
+\textbf{Código:} \texttt{printf( "\%.3f\%", 9.375 );}
+
+\textbf{Erro:} Tentativa de imprimir o caractere literal \texttt{\%} sem usar a
+sequência \texttt{\%\%}.
+
+\textbf{Correção:}
+\begin{lstlisting}
+printf( "%.3f%%", 9.375 );  /* imprime 9.375% */
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (c)}
+\begin{respostabox}
+\textbf{Código:} \texttt{printf( "\%c\textbackslash n", "Domingo" );}
+
+\textbf{Erro:} \texttt{\%c} espera um \texttt{char}, não um ponteiro para \texttt{char}
+(string).
+
+\textbf{Correção:} usar \texttt{\%1s} (string de largura 1):
+\begin{lstlisting}
+printf( "%.1s\n", "Domingo" );  /* imprime D */
+\end{lstlisting}
+Ou desreferenciar o primeiro caractere:
+\begin{lstlisting}
+printf( "%c\n", "Domingo"[ 0 ] );
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (d)}
+\begin{respostabox}
+\textbf{Código:} \texttt{printf( ""Uma string entre aspas"" );}
+
+\textbf{Erro:} Aspas literais dentro de string sem escape.
+
+\textbf{Correção:} usar \texttt{\textbackslash "}:
+\begin{lstlisting}
+printf( "\"Uma string entre aspas\"" );
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (e)}
+\begin{respostabox}
+\textbf{Código:} \texttt{printf( \%d\%d, 12, 20 );}
+
+\textbf{Erro:} A string de controle não está entre aspas.
+
+\textbf{Correção:}
+\begin{lstlisting}
+printf( "%d%d", 12, 20 );
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (f)}
+\begin{respostabox}
+\textbf{Código:} \texttt{printf( "\%c", "x" );}
+
+\textbf{Erro:} Caractere \texttt{x} com aspas duplas (string) sendo passado para
+\texttt{\%c} (que espera \texttt{char}).
+
+\textbf{Correção:} usar aspas simples:
+\begin{lstlisting}
+printf( "%c", 'x' );
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (g)}
+\begin{respostabox}
+\textbf{Código:} \texttt{printf( "\%s\textbackslash n", 'Ricardo' );}
+
+\textbf{Erro:} String entre aspas simples (\texttt{'Ricardo'}). Aspas simples são
+para caractere único.
+
+\textbf{Correção:}
+\begin{lstlisting}
+printf( "%s\n", "Ricardo" );
+\end{lstlisting}
+
+\begin{boaprática}
+  Em C: \textbf{aspas simples} (\texttt{'x'}) para um caractere; \textbf{aspas
+  duplas} (\texttt{"x"}) para uma string (mesmo com um único caractere -- a string
+  inclui o \texttt{'\textbackslash 0'}).
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 9.3 -- Instruções}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{1234 alinhado à direita em campo de 10:}
+\begin{lstlisting}
+printf( "%10d\n", 1234 );
+\end{lstlisting}
+
+\item \textbf{123.456789 em notação exponencial com sinal e 3 dígitos:}
+\begin{lstlisting}
+printf( "%+.3e\n", 123.456789 );
+\end{lstlisting}
+
+\item \textbf{Ler \texttt{double} para \texttt{number}:}
+\begin{lstlisting}
+scanf( "%lf", &number );
+\end{lstlisting}
+\textit{Nota:} \texttt{lf} no \texttt{scanf} para \texttt{double}.
+
+\item \textbf{Imprimir 100 em octal precedido de 0:}
+\begin{lstlisting}
+printf( "%#o\n", 100 );  /* imprime 0144 */
+\end{lstlisting}
+A flag \texttt{\#} adiciona o prefixo \texttt{0} (octal) ou \texttt{0x}/\texttt{0X} (hex).
+
+\item \textbf{Ler string para array \texttt{string}:}
+\begin{lstlisting}
+scanf( "%s", string );
+\end{lstlisting}
+
+\item \textbf{Ler dígitos até encontrar não-dígito:}
+\begin{lstlisting}
+scanf( "%[0123456789]", n );
+\end{lstlisting}
+O conjunto de varredura lê apenas caracteres do conjunto especificado.
+
+\item \textbf{Usar \texttt{x} e \texttt{y} como largura e precisão dinâmicas:}
+\begin{lstlisting}
+printf( "%*.*f\n", x, y, 87.4573 );
+\end{lstlisting}
+
+\item \textbf{Ler 3.5\% e armazenar 3.5 em \texttt{percent} sem supressão:}
+\begin{lstlisting}
+scanf( "%f%%", &percent );
+\end{lstlisting}
+O \texttt{\%\%} na string de \texttt{scanf} significa: ``espere um caractere
+literal \texttt{\%} aqui''.
+
+\item \textbf{Imprimir \texttt{long double} 3.333333 com sinal, largura 20, precisão 3:}
+\begin{lstlisting}
+printf( "%+20.3Lf\n", 3.333333 );
+\end{lstlisting}
+
+\end{enumerate}
+\end{respostabox}
+
+\end{document}

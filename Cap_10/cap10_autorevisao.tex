@@ -1,0 +1,514 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 10 -- Estruturas, Uniões, Manipulações de Bits
+%               e Enumerações em C
+%  EXERCÍCIOS DE AUTORREVISÃO (10.1 -- 10.4)
+%  Abordagem incremental: Caps. 1 a 10
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},title={\small\color{white}Saída do programa},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 10 -- Autorrevisão}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 10}\\[0.3cm]
+  {\Large\color{deitelblue!80}Estruturas, Uniões, Manipulações de Bits e Enumerações em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios de Autorrevisão (10.1--10.4)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, abordagem incremental\\
+    Capítulos 1 a 10}
+  \end{tcolorbox}
+\end{titlepage}
+
+\section*{Construindo sobre os Capítulos Anteriores}
+
+No Capítulo~10, ampliamos drasticamente nossa capacidade de modelar dados em C.
+Construindo sobre os fundamentos dos Caps.~1--9, incorporamos quatro famílias de
+recursos poderosos:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Estruturas (\texttt{struct})} -- agrupam variáveis \textit{heterogêneas}
+  (tipos diferentes) sob um único nome, criando ``registros''
+  \item \textbf{Uniões (\texttt{union})} -- estruturas onde os membros
+  \textit{compartilham} o mesmo espaço de memória
+  \item \textbf{Operadores sobre bits} -- \texttt{\&}, \texttt{|}, \texttt{\^{}},
+  \texttt{\~{}}, \texttt{<<}, \texttt{>>} para manipulação em nível de bits
+  \item \textbf{Campos de bit} -- membros de estrutura com largura específica em bits
+  \item \textbf{\texttt{typedef}} -- cria sinônimos para tipos existentes
+  \item \textbf{Enumerações (\texttt{enum})} -- conjuntos nomeados de constantes inteiras
+\end{itemize}
+
+\begin{boaprática}
+  As \texttt{struct} são a ponte para conceitos de programação orientada a objetos.
+  Antes de \texttt{struct}, manipulávamos apenas tipos primitivos isolados ou arrays
+  homogêneos. Agora podemos criar \textit{tipos próprios} -- a base do design moderno
+  de software.
+\end{boaprática}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 10.1 -- Preenchimento de Lacunas (14 itens)}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item Uma \textbf{estrutura} (\texttt{struct}) é uma coleção de variáveis relacionadas
+agrupadas sob um único nome.
+
+\item Uma \textbf{união} (\texttt{union}) é uma coleção de variáveis sob um único nome
+que \textit{compartilham o mesmo espaço de armazenamento}.
+
+\item Os bits no resultado de uma expressão com o operador \textbf{AND sobre bits
+(\texttt{\&})} são 1 se os bits correspondentes em \textit{ambos} os operandos são 1.
+
+\item Variáveis declaradas em uma definição de estrutura são chamadas de \textbf{membros}.
+
+\item Em expressões com \textbf{OR inclusivo sobre bits (\texttt{|})}, os bits são 1
+se \textit{pelo menos um} dos bits correspondentes for 1.
+
+\item A palavra-chave \textbf{\texttt{struct}} introduz uma declaração de estrutura.
+
+\item A palavra-chave \textbf{\texttt{typedef}} cria um sinônimo para um tipo previamente
+definido.
+
+\item Em expressões com \textbf{OR exclusivo (XOR) sobre bits (\texttt{\^{}})}, os bits são
+1 se \textit{exatamente um} dos bits correspondentes for 1.
+
+\item O AND sobre bits é normalmente usado para \textbf{mascarar} bits (selecionar
+certos e zerar outros).
+
+\item A palavra-chave \textbf{\texttt{union}} introduz uma definição de união.
+
+\item O nome da estrutura é chamado de \textbf{nome de tag} (\textit{tag name}).
+
+\item Um membro pode ser acessado com o operador \textbf{ponto (\texttt{.})} ou
+\textbf{seta (\texttt{->})}, este último quando temos um ponteiro para a estrutura.
+
+\item \textbf{\texttt{<<}} (deslocamento à esquerda) e \textbf{\texttt{>>}} (deslocamento
+à direita) deslocam os bits de um valor.
+
+\item Uma \textbf{enumeração} (\texttt{enum}) é um conjunto de inteiros representados
+por identificadores.
+
+\end{enumerate}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 10.2 -- Verdadeiro ou Falso}
+% ============================================================
+
+\subsection*{Item (a) -- \texttt{struct} só com um tipo}
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+Esta é justamente a grande vantagem das estruturas sobre arrays: \texttt{struct}
+pode conter \textbf{muitos tipos diferentes}. Esse é o ponto-chave que diferencia
+\texttt{struct} de array (que é homogêneo).
+
+\begin{lstlisting}
+struct aluno {
+    char nome[ 50 ];   /* char[] */
+    int  matricula;    /* int    */
+    double media;       /* double */
+};
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection*{Item (b) -- Uniões podem ser comparadas com \texttt{==}}
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+Uniões \textbf{não} podem ser comparadas diretamente porque podem ter
+\textit{bytes indefinidos} (padding) com valores diferentes mesmo quando o
+conteúdo lógico é o mesmo. A comparação byte-a-byte poderia falhar incorretamente.
+
+Para comparar uniões, compare membros individuais de forma explícita.
+\end{tcolorbox}
+
+\subsection*{Item (c) -- Nome da tag é opcional}
+\begin{tcolorbox}[colback=green!5,colframe=deitelgreen,title={\bfseries VERDADEIRO}]
+Uma estrutura pode ser declarada sem nome de tag (estrutura anônima), útil
+geralmente combinada com \texttt{typedef}:
+\begin{lstlisting}
+typedef struct {       /* sem tag */
+    int x, y;
+} Ponto;
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection*{Item (d) -- Membros de \texttt{struct}s diferentes devem ter nomes únicos}
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+Membros de \textit{estruturas diferentes} podem ter nomes iguais sem conflito,
+porque o acesso é qualificado pelo nome da estrutura: \texttt{a.nome} vs
+\texttt{b.nome}. Apenas dentro da \textbf{mesma} estrutura os nomes devem ser
+únicos.
+
+\begin{lstlisting}
+struct ponto2d { double x, y; };
+struct ponto3d { double x, y, z; };  /* x e y aqui sao OK */
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection*{Item (e) -- \texttt{typedef} define novos tipos}
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+\texttt{typedef} \textit{não cria} novos tipos -- ele apenas cria \textbf{sinônimos}
+(\textit{aliases}) para tipos existentes. \texttt{Idade} e \texttt{int} são
+intercambiáveis se \texttt{typedef int Idade;}.
+
+\begin{lstlisting}
+typedef int Idade;
+Idade a = 30;      /* equivale a int a = 30; */
+int   b = a;       /* sem conversao -- mesmo tipo */
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsection*{Item (f) -- \texttt{struct}s sempre passadas por referência}
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+Estruturas são passadas \textbf{por valor} por padrão em C -- exatamente como
+qualquer outro tipo. Isso pode ser \textit{caro} para estruturas grandes, pois
+\textit{toda a estrutura é copiada}.
+
+Para passar por referência, passe um ponteiro explicitamente:
+\begin{lstlisting}
+void f( struct grande s );          /* por valor: COPIA tudo */
+void f( struct grande *s );         /* por referencia */
+\end{lstlisting}
+
+\begin{boaprática}
+  Para \texttt{struct} grandes, prefira passar por ponteiro. Use \texttt{const}
+  quando não pretende modificar a estrutura -- princípio do menor privilégio.
+\end{boaprática}
+\end{tcolorbox}
+
+\subsection*{Item (g) -- \texttt{struct}s não podem ser comparadas com \texttt{==}}
+\begin{tcolorbox}[colback=green!5,colframe=deitelgreen,title={\bfseries VERDADEIRO}]
+\texttt{struct}s não podem ser comparadas diretamente com \texttt{==} ou
+\texttt{!=}, pelos mesmos motivos das uniões: bytes de \textit{padding} (preenchimento
+para alinhamento) podem ter valores indefinidos.
+
+Para comparar duas \texttt{struct}, compare membro por membro:
+\begin{lstlisting}
+if ( a.x == b.x && a.y == b.y ) { ... }
+\end{lstlisting}
+\end{tcolorbox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 10.3 -- Código com \texttt{struct peça}}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Definir \texttt{struct peça}:}
+\begin{lstlisting}
+struct peca {
+    int  numPeca;
+    char nomePeca[ 26 ];  /* 25 chars + '\0' */
+};
+\end{lstlisting}
+
+\item \textbf{\texttt{typedef} para criar \texttt{Peça}:}
+\begin{lstlisting}
+typedef struct peca Peca;
+\end{lstlisting}
+
+\item \textbf{Declarações usando \texttt{Peça}:}
+\begin{lstlisting}
+Peca a;          /* variavel simples */
+Peca b[ 10 ];    /* array de 10 Pecas */
+Peca *ptr;       /* ponteiro para Peca */
+\end{lstlisting}
+\textit{Nota:} com \texttt{typedef} podemos colocar tudo em uma linha:
+\texttt{Peca a, b[10], *ptr;}.
+
+\item \textbf{Ler número e nome para os membros de \texttt{a}:}
+\begin{lstlisting}
+scanf( "%d%25s", &a.numPeca, a.nomePeca );
+\end{lstlisting}
+\textit{Cuidado:} \texttt{a.nomePeca} (sem \texttt{\&}) porque é um array;
+o nome já é o endereço.
+
+\item \textbf{Atribuir \texttt{a} ao elemento 3 de \texttt{b}:}
+\begin{lstlisting}
+b[ 3 ] = a;   /* C suporta atribuicao entre structs */
+\end{lstlisting}
+
+\item \textbf{Atribuir endereço de \texttt{b} a \texttt{ptr}:}
+\begin{lstlisting}
+ptr = b;   /* nome do array = endereco do 1o elemento */
+\end{lstlisting}
+
+\item \textbf{Imprimir elemento 3 via \texttt{ptr}:}
+\begin{lstlisting}
+printf( "%d %s\n", ( ptr + 3 )->numPeca,
+                   ( ptr + 3 )->nomePeca );
+\end{lstlisting}
+
+\textit{Explicação:} \texttt{ptr + 3} é aritmética de ponteiro (Cap.~7) -- aponta
+para \texttt{b[3]}. O operador \texttt{->} é equivalente a \texttt{(*p).membro},
+mas mais legível.
+\end{enumerate}
+
+\begin{boaprática}
+  A combinação \texttt{struct} + \texttt{typedef} + ponteiro é o tripé que
+  sustenta todo o desenvolvimento orientado a tipos em C. Listas encadeadas
+  (Cap.~12), árvores e sistemas grandes usam exatamente esse padrão.
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 10.4 -- Identificar e Corrigir Erros}
+% ============================================================
+
+\subsection*{Item (a) -- Precedência de \texttt{*} e \texttt{->}}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+printf( "%s\n", *cPtr->face );
+\end{lstlisting}
+
+\textbf{Erro:} O operador \texttt{->} tem precedência \textit{maior} que \texttt{*}.
+A expressão é avaliada como \texttt{*(cPtr->face)}, o que tenta desreferenciar o
+\texttt{char *} (retornando um \texttt{char}), incompatível com \texttt{\%s} que
+espera \texttt{char *}.
+
+\textbf{Correção:} adicionar parênteses para forçar a ordem desejada:
+\begin{lstlisting}
+printf( "%s\n", ( *cPtr ).face );
+\end{lstlisting}
+Mais idiomático seria simplesmente:
+\begin{lstlisting}
+printf( "%s\n", cPtr->face );  /* equivalente */
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (b) -- Subscrito de array faltando}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+printf( "%s\n", copas.face );  /* tentava acessar elemento 10 */
+\end{lstlisting}
+
+\textbf{Erro:} \texttt{copas} é um \textit{array} (\texttt{hearts[13]}), não uma
+estrutura individual. Para acessar o décimo elemento (índice 10), use subscrito:
+\begin{lstlisting}
+printf( "%s\n", copas[ 10 ].face );
+\end{lstlisting}
+(Notar que ``elemento 10'' tradicionalmente significa o de índice 9 ou 10 a depender
+de convenção; o livro usa 10.)
+\end{respostabox}
+
+\subsection*{Item (c) -- Inicialização de \texttt{union}}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+union valores {
+    char w;
+    float x;
+    double y;
+};
+union valores v = { 1.27 };
+\end{lstlisting}
+
+\textbf{Erro:} Em uniões inicializadas com a sintaxe de chaves, a inicialização
+aplica-se \textit{apenas ao primeiro membro}. Como o primeiro membro é \texttt{char w},
+não dá para inicializá-lo com \texttt{1.27} (um \texttt{double}).
+
+\textbf{Correção:} reordenar a união ou usar inicializador designado (C99):
+\begin{lstlisting}
+/* Opcao 1: reordenar */
+union valores {
+    double y;
+    char w;
+    float x;
+};
+union valores v = { 1.27 };   /* OK: y = 1.27 */
+
+/* Opcao 2: inicializador designado (C99) */
+union valores v = { .y = 1.27 };
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (d) -- Falta \texttt{;}}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+struct pessoa {
+    char nome[ 15 ];
+    char sobrenome[ 15 ];
+    int idade;
+}
+\end{lstlisting}
+
+\textbf{Erro:} Falta o \texttt{;} \textbf{depois} do \texttt{\}}. Diferente do que
+acontece com funções (que não têm \texttt{;} após \texttt{\}}), declarações de
+\texttt{struct} (e \texttt{union}, \texttt{enum}) precisam de \texttt{;} no final.
+
+\textbf{Correção:}
+\begin{lstlisting}
+struct pessoa {
+    char nome[ 15 ];
+    char sobrenome[ 15 ];
+    int idade;
+};   /* <-- nao esqueca este ; */
+\end{lstlisting}
+
+\begin{erroco}
+  Esquecer o \texttt{;} após \texttt{\}} de \texttt{struct}/\texttt{union}/\texttt{enum}
+  é um erro extremamente comum, e o compilador pode emitir mensagens confusas
+  apontando para a próxima linha.
+\end{erroco}
+\end{respostabox}
+
+\subsection*{Item (e) -- Falta \texttt{struct}}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+pessoa d;   /* assumindo definicao do item (d) ja corrigida */
+\end{lstlisting}
+
+\textbf{Erro:} Sem \texttt{typedef}, é necessário usar o nome completo
+\texttt{struct pessoa} para declarar variáveis.
+
+\textbf{Correção:}
+\begin{lstlisting}
+struct pessoa d;
+\end{lstlisting}
+
+\textbf{Alternativa:} usar \texttt{typedef}:
+\begin{lstlisting}
+typedef struct pessoa Pessoa;
+Pessoa d;   /* agora funciona */
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (f) -- Atribuição entre tipos diferentes}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+struct pessoa p;
+struct card   c;
+p = c;
+\end{lstlisting}
+
+\textbf{Erro:} Em C, atribuição entre \texttt{struct} só funciona entre o
+\textbf{mesmo tipo}. \texttt{struct pessoa} e \texttt{struct card} são tipos
+distintos, mesmo que tivessem layout idêntico.
+
+\textbf{Não há correção direta:} a operação não faz sentido semanticamente.
+Se realmente quiséssemos copiar campos compatíveis, faríamos manualmente:
+\begin{lstlisting}
+strcpy( p.nome, c.algumCampo );
+/* ... outros campos ... */
+\end{lstlisting}
+
+\begin{boaprática}
+  C é \textbf{tipado nominalmente}: dois tipos \texttt{struct} são diferentes
+  mesmo se tiverem o mesmo layout. Isso é uma forma de proteção contra erros
+  -- impede misturar conceitos por acidente.
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section*{Gabarito Rápido -- Capítulo 10: Autorrevisão}
+
+\begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,title={\bfseries\large Respostas Resumidas}]
+
+\textbf{10.1:}
+\begin{itemize}[noitemsep]
+  \item[a)] estrutura \quad b) união \quad c) AND \texttt{\&}
+  \item[d)] membros \quad e) OR inclusivo \texttt{|} \quad f) \texttt{struct}
+  \item[g)] \texttt{typedef} \quad h) XOR \texttt{\^{}} \quad i) mascarar
+  \item[j)] \texttt{union} \quad k) nome de tag \quad l) \texttt{.} ou \texttt{->}
+  \item[m)] \texttt{<<} e \texttt{>>} \quad n) enumeração
+\end{itemize}
+
+\medskip\textbf{10.2 -- Verdadeiro/Falso:}
+\begin{itemize}[noitemsep]
+  \item[a)] F (\texttt{struct} aceita múltiplos tipos)
+  \item[b)] F (uniões têm bytes indefinidos)
+  \item[c)] V (nome de tag é opcional)
+  \item[d)] F (apenas dentro da mesma \texttt{struct})
+  \item[e)] F (\texttt{typedef} cria sinônimos, não tipos novos)
+  \item[f)] F (\texttt{struct} é passada por valor)
+  \item[g)] V (não comparáveis com \texttt{==})
+\end{itemize}
+
+\medskip\textbf{10.3:} \texttt{struct peca \{...\}}; \texttt{typedef ... Peca};
+\texttt{Peca a, b[10], *ptr;}; \texttt{scanf} com \texttt{\&a.num} e \texttt{a.nome};
+\texttt{b[3] = a}; \texttt{ptr = b}; \texttt{(ptr+3)->num}.
+
+\medskip\textbf{10.4 -- Erros corrigidos:}
+\begin{itemize}[noitemsep]
+  \item[a)] precedência \texttt{*} vs \texttt{->}: use \texttt{(*cPtr).face} ou \texttt{cPtr->face}
+  \item[b)] falta subscrito de array
+  \item[c)] tipo do primeiro membro da união
+  \item[d)] falta \texttt{;} após \texttt{\}} da \texttt{struct}
+  \item[e)] falta palavra \texttt{struct} na declaração
+  \item[f)] não se pode atribuir entre tipos \texttt{struct} diferentes
+\end{itemize}
+
+\end{tcolorbox}
+
+\end{document}

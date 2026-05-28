@@ -1,0 +1,836 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 1 -- Introdução aos Computadores, à Internet e à Web
+%  EXERCÍCIOS (1.3 a 1.9)
+%  Estilo didático e incremental -- no espírito de Paul Deitel
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=3cm}
+\usepackage{parskip}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable, theorems}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{array}
+
+% Paleta Deitel
+\definecolor{deitelblue}{RGB}{0, 70, 127}
+\definecolor{deitelgray}{RGB}{240, 242, 245}
+\definecolor{deitelgreen}{RGB}{0, 110, 60}
+\definecolor{deitellorange}{RGB}{200, 90, 0}
+\definecolor{deitellightblue}{RGB}{220, 235, 250}
+\definecolor{deitelred}{RGB}{160, 20, 20}
+\definecolor{verdadeiro}{RGB}{0, 100, 50}
+\definecolor{falso}{RGB}{160, 20, 20}
+
+% Caixas
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{portab}[1][]{colback=green!5,colframe=deitelgreen,
+  fonttitle=\bfseries\small,title={Dica de portabilidade},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{verdadeiroBox}{colback=green!5,colframe=verdadeiro,
+  fonttitle=\bfseries\color{verdadeiro},title={VERDADEIRO},breakable}
+\newtcolorbox{falsoBox}{colback=red!5,colframe=falso,
+  fonttitle=\bfseries\color{falso},title={FALSO},breakable}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,
+  rulecolor=\color{deitelblue!40},
+  breaklines=true,
+  showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,
+  numbers=none,
+  xleftmargin=10pt,xrightmargin=5pt,
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed.\ $|$ Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap.\ 1 -- Exercícios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{\thesubsection.}{0.5em}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue,urlcolor=deitelblue}
+
+% ============================================================
+\begin{document}
+
+% ---- Capa ----
+\begin{titlepage}
+  \centering
+  \vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue} C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue} 6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 1}\\[0.3cm]
+  {\Large\color{deitelblue!80} Introdução aos Computadores, à Internet e à Web}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.8\linewidth]
+    \centering
+    {\large\bfseries Exercícios (1.3 -- 1.9)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, com explicações conceituais,\\
+    no estilo incremental Deitel}
+  \end{tcolorbox}
+  \vfill
+  {\small Conteúdo restrito ao Capítulo 1 $\cdot$ Abordagem incremental}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Exercício 1.3 -- Hardware ou Software?}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado]
+Categorize os seguintes itens como \textbf{hardware} ou \textbf{software}:
+\begin{enumerate}
+  \item CPU
+  \item compilador C++
+  \item ALU
+  \item pré-processador C++
+  \item unidade de entrada
+  \item um programa editor
+\end{enumerate}
+\end{enunciadoBox}
+
+\bigskip
+
+\begin{respostabox}
+
+\textbf{Fundamentação conceitual:}
+
+Antes de categorizar cada item, recordemos as definições fundamentais da Seção~1.2:
+
+\begin{itemize}
+  \item \textbf{Hardware:} Os diversos \textit{dispositivos físicos} que compõem um sistema
+  de computador -- tudo que pode ser tocado: circuitos, chips, teclados, discos, etc.
+  \item \textbf{Software:} Os \textit{programas} executados em um computador -- as
+  instruções que controlam o hardware e o fazem realizar tarefas úteis.
+\end{itemize}
+
+\medskip
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{>{\bfseries}c l l p{6cm}}
+  \toprule
+  \textbf{Item} & \textbf{Elemento} & \textbf{Categoria} & \textbf{Justificativa} \\
+  \midrule
+  a & CPU & \textcolor{deitelblue}{\bfseries Hardware} &
+    A \textit{Unidade Central de Processamento} é um componente físico (chip
+    eletrônico) que coordena todas as operações do computador. É a ``seção
+    administrativa'' do hardware. \\
+  \midrule
+  b & Compilador C++ & \textcolor{deitellorange}{\bfseries Software} &
+    Um compilador é um \textit{programa} (conjunto de instruções) que traduz código
+    em linguagem de alto nível (C++) para linguagem de máquina. Reside em disco e
+    é executado na CPU -- portanto, é software. \\
+  \midrule
+  c & ALU & \textcolor{deitelblue}{\bfseries Hardware} &
+    A \textit{Unidade Lógica e Aritmética} é a ``seção de processamento'' física do
+    computador, responsável por realizar cálculos e comparações. Nos computadores
+    modernos, está integrada fisicamente à CPU no mesmo chip. \\
+  \midrule
+  d & Pré-processador C++ & \textcolor{deitellorange}{\bfseries Software} &
+    O pré-processador é um \textit{programa} que processa diretivas como
+    \texttt{\#include} e \texttt{\#define} antes da compilação. É software, pois
+    consiste em instruções executadas pelo computador. \\
+  \midrule
+  e & Unidade de entrada & \textcolor{deitelblue}{\bfseries Hardware} &
+    A unidade de entrada é a ``seção receptora'' física do computador -- abrange
+    dispositivos como teclado, mouse, scanner. São componentes físicos, portanto,
+    hardware. \\
+  \midrule
+  f & Programa editor & \textcolor{deitellorange}{\bfseries Software} &
+    Um programa editor (como \texttt{vi}, \texttt{emacs} ou o editor do Visual Studio)
+    é um \textit{programa} -- uma coleção de instruções de software -- usado para
+    criar e modificar o código-fonte. \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+\textbf{Resumo:} Hardware $\rightarrow$ a), c), e) \qquad Software $\rightarrow$ b), d), f)
+
+\end{respostabox}
+
+\begin{boaprática}
+  A distinção hardware/software é fundamental em programação. Todo programa que
+  você escreverá em C é \textit{software}, mas seu funcionamento depende inteiramente
+  do \textit{hardware} subjacente. Entender essa relação o tornará um programador
+  mais consciente sobre desempenho, portabilidade e limitações do sistema.
+\end{boaprática}
+
+\newpage
+
+% ============================================================
+\section{Exercício 1.4 -- Linguagem Independente vs.\ Dependente de Máquina}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado]
+Por que você escreveria um programa em uma linguagem independente de máquina em vez
+de em uma linguagem dependente da máquina? Por que uma linguagem dependente da máquina
+poderia ser mais apropriada para a escrita de certos tipos de programas?
+\end{enunciadoBox}
+
+\bigskip
+
+\begin{respostabox}
+
+\textbf{Parte 1: Por que usar linguagem independente de máquina?}
+
+As \textbf{linguagens de alto nível}, como C, são consideradas \textit{independentes de
+máquina} porque um mesmo programa pode ser compilado e executado em diferentes tipos de
+computador (com diferentes CPUs e sistemas operacionais), geralmente com poucas ou nenhuma
+modificação.
+
+As principais razões para escolher uma linguagem independente de máquina são:
+
+\begin{enumerate}
+  \item \textbf{Portabilidade:} Um programa escrito em C pode ser compilado para rodar em
+  um PC com Windows, em um servidor Linux, em um Mac ou em um microcontrolador -- o mesmo
+  código-fonte funciona em múltiplas plataformas. Como afirma a Dica de
+  Portabilidade~1.1 do livro: \textit{``os aplicativos escritos em C podem ser executados
+  com pouca ou nenhuma modificação em uma grande variedade de sistemas de computação
+  diferentes''}.
+
+  \item \textbf{Facilidade de escrita e leitura:} As linguagens de alto nível usam palavras
+  próximas ao inglês e notação matemática. Um comando como
+  \texttt{valorTotal = salario + horaExtra;} é imediatamente compreensível para um
+  humano, ao contrário de uma sequência binária como \texttt{+1300042774}.
+
+  \item \textbf{Produtividade:} Uma única instrução de alto nível pode equivaler a dezenas
+  de instruções em linguagem de máquina ou simbólica. Isso reduz drasticamente o tempo
+  de desenvolvimento de programas.
+
+  \item \textbf{Manutenibilidade:} Programas em linguagens de alto nível são muito mais
+  fáceis de ler, depurar, modificar e manter ao longo do tempo.
+
+  \item \textbf{Reutilização:} É possível aproveitar a biblioteca-padrão de C e outras
+  bibliotecas já escritas, sem se preocupar com os detalhes do hardware específico.
+\end{enumerate}
+
+\bigskip
+\textbf{Parte 2: Quando uma linguagem dependente de máquina pode ser mais apropriada?}
+
+As \textbf{linguagens dependentes de máquina}, como a linguagem de máquina e a linguagem
+simbólica (assembly), apesar de difíceis de usar, oferecem vantagens em situações específicas:
+
+\begin{enumerate}
+  \item \textbf{Desempenho crítico:} O programador tem controle absoluto sobre cada
+  instrução executada pelo processador. Em aplicações onde cada nanossegundo importa
+  (como drivers de dispositivos, kernels de sistemas operacionais e código de tempo real),
+  o assembly pode gerar código mais rápido que qualquer compilador.
+
+  \item \textbf{Acesso direto ao hardware:} Em programação de sistemas embarcados
+  (microcontroladores, dispositivos de IoT), às vezes é necessário manipular registradores,
+  portas de I/O e interrupções diretamente -- operações que somente linguagens dependentes
+  de máquina permitem com precisão absoluta.
+
+  \item \textbf{Tamanho mínimo de código:} Em sistemas com memória extremamente limitada,
+  o código assembly tende a ser menor que o equivalente compilado.
+
+  \item \textbf{Inicialização de hardware:} O código de inicialização (``bootloader'')
+  de um computador muitas vezes precisa ser escrito em assembly, antes que qualquer
+  ambiente de linguagem de alto nível esteja disponível.
+\end{enumerate}
+
+\medskip
+\textbf{Conclusão:} Para a grande maioria das aplicações, a linguagem de alto nível (como
+C) é a escolha ideal, pois combina portabilidade, produtividade e legibilidade. O assembly
+fica reservado para as raras situações em que o controle direto do hardware ou o desempenho
+máximo são requisitos inegociáveis.
+
+\end{respostabox}
+
+\begin{portab}
+  Curiosamente, C ocupa uma posição única: é uma linguagem de alto nível com capacidades
+  de baixo nível. Por meio de ponteiros e outros recursos (estudados no Capítulo~7),
+  C permite acesso próximo ao hardware sem abrir mão da portabilidade -- razão pela
+  qual ainda é a linguagem predominante em sistemas operacionais e firmware.
+\end{portab}
+
+\newpage
+
+% ============================================================
+\section{Exercício 1.5 -- Preenchimento de Lacunas: Unidades do Computador}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado]
+Preencha os espaços em cada uma das seguintes sentenças:
+\begin{enumerate}
+  \item Qual unidade lógica do computador recebe informações de fora para serem usadas por ele? \underline{\hspace{4cm}}.
+  \item O processo de instruir o computador para resolver problemas específicos é chamado de \underline{\hspace{4cm}}.
+  \item Que tipo de linguagem de computador usa abreviações em inglês para as instruções em linguagem de máquina? \underline{\hspace{4cm}}.
+  \item Qual unidade lógica do computador envia informações que já foram processadas por ele para diversos dispositivos? \underline{\hspace{4cm}}.
+  \item Quais unidades lógicas do computador retêm informações? \underline{\hspace{4cm}}.
+  \item Qual unidade lógica do computador realiza cálculos? \underline{\hspace{4cm}}.
+  \item Qual unidade lógica do computador toma decisões lógicas? \underline{\hspace{4cm}}.
+  \item O nível de linguagem de computador mais conveniente para a elaboração rápida e fácil de programas é \underline{\hspace{4cm}}.
+  \item A única linguagem que um computador entende com clareza é a chamada \underline{\hspace{4cm}} desse computador.
+  \item Qual unidade lógica do computador coordena as atividades de todas as outras unidades lógicas? \underline{\hspace{4cm}}.
+\end{enumerate}
+\end{enunciadoBox}
+
+\bigskip
+
+\begin{respostabox}
+
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+  \item \textbf{Unidade de entrada}
+
+  A \textit{unidade de entrada} é a seção ``receptora'' do computador (Seção~1.3).
+  Ela capta informações do mundo exterior -- teclado, mouse, microfone, scanner,
+  sensores, dados da Internet -- e as disponibiliza para as demais unidades processarem.
+  Sem ela, o computador não teria como receber dados ou instruções.
+
+  \medskip
+  \item \textbf{Programação}
+
+  Programação é o processo pelo qual os programadores criam conjuntos ordenados de
+  instruções (programas) que instruem o computador a resolver problemas específicos.
+  Todo o conteúdo deste livro é dedicado a ensiná-lo a programar em C.
+
+  \medskip
+  \item \textbf{Linguagem simbólica} (também chamada de \textit{assembly})
+
+  Da Seção~1.6: as linguagens simbólicas substituem as sequências numéricas da
+  linguagem de máquina por abreviações mnemônicas próximas ao inglês, como
+  \texttt{load}, \texttt{add}, \texttt{store}. Programas chamados
+  \textit{assemblers} (montadores) traduzem esse código para linguagem de máquina.
+
+  \medskip
+  \item \textbf{Unidade de saída}
+
+  A \textit{unidade de saída} é a seção de ``expedição'' do computador. Ela pega
+  as informações já processadas e as envia para dispositivos externos -- monitor,
+  impressora, alto-falantes, arquivos em disco, conexões de rede, etc.
+
+  \medskip
+  \item \textbf{Unidade de memória} e \textbf{unidade de armazenamento secundário}
+
+  \textit{Duas} unidades retêm informações:
+  \begin{itemize}
+    \item A \textbf{unidade de memória} (RAM) armazena dados temporariamente enquanto
+    o programa é executado. É volátil -- perde seu conteúdo quando o computador é
+    desligado.
+    \item A \textbf{unidade de armazenamento secundário} (disco rígido, SSD, etc.)
+    armazena dados de forma persistente e por longos períodos.
+  \end{itemize}
+
+  \medskip
+  \item \textbf{Unidade lógica e aritmética (ALU)}
+
+  A ALU é a seção de ``processamento'' do computador. Ela executa as quatro operações
+  aritméticas básicas (adição, subtração, multiplicação e divisão), bem como operações
+  lógicas (comparações entre valores). Nos processadores modernos, a ALU está integrada
+  dentro da CPU.
+
+  \medskip
+  \item \textbf{Unidade lógica e aritmética (ALU)}
+
+  A mesma ALU que realiza cálculos também é responsável por \textit{tomar decisões
+  lógicas} -- como comparar se dois valores são iguais, se um é maior que outro, etc.
+  Essas decisões são a base de todas as estruturas de controle que você aprenderá em C
+  (\texttt{if}, \texttt{while}, \texttt{for}, etc.).
+
+  \medskip
+  \item \textbf{Linguagem de alto nível}
+
+  As linguagens de alto nível (como C, C++, Java) são as mais convenientes para o
+  programador, pois usam sintaxe próxima ao inglês e permitem expressar operações
+  complexas em poucas instruções. Uma única instrução de alto nível pode corresponder
+  a dezenas de instruções de máquina.
+
+  \medskip
+  \item \textbf{Linguagem de máquina}
+
+  A linguagem de máquina é o ``idioma nativo'' de cada processador específico. É a
+  única linguagem que a CPU entende diretamente, sem necessidade de tradução. Consiste
+  em sequências de números binários que representam as operações elementares do
+  hardware.
+
+  \medskip
+  \item \textbf{Unidade central de processamento (CPU)}
+
+  A CPU é a seção ``administrativa'' do computador. Ela coordena e supervisiona o
+  funcionamento de todas as demais unidades lógicas: diz à unidade de entrada quando
+  ler dados, à ALU quando calcular, à unidade de saída quando enviar resultados, e ao
+  armazenamento secundário quando gravar ou recuperar dados.
+
+\end{enumerate}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 1.6 -- Verdadeiro ou Falso}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado]
+Indique se as sentenças a seguir são \textbf{verdadeiras} ou \textbf{falsas}.
+Explique sua resposta caso a resposta seja \textit{falsa}.
+\begin{enumerate}
+  \item Linguagens de máquina geralmente são dependentes da máquina.
+  \item Assim como outras linguagens de alto nível, C geralmente é considerada como independente da máquina.
+\end{enumerate}
+\end{enunciadoBox}
+
+\bigskip
+
+\subsection*{Item (a) -- Linguagens de máquina são dependentes da máquina}
+
+\begin{verdadeiroBox}
+\textbf{Sentença: VERDADEIRA}
+
+\medskip
+\textbf{Explicação:}
+
+Da Seção~1.6: \textit{``As linguagens de máquina são dependentes da máquina, isto é,
+uma linguagem de máquina em particular só pode ser usada em um tipo de computador.''}
+
+Cada família de processadores (Intel x86-64, ARM, RISC-V, MIPS, etc.) possui seu
+próprio conjunto de instruções de máquina. Um programa em linguagem de máquina escrito
+para um processador Intel não funcionará em um processador ARM, e vice-versa. Isso ocorre
+porque a linguagem de máquina é definida pelo projeto físico do hardware do processador
+-- pelos circuitos internos que interpretam cada sequência de bits como uma operação
+específica.
+
+\medskip
+Essa dependência de máquina é exatamente a razão histórica pela qual as linguagens de
+alto nível foram criadas: para libertar os programadores da necessidade de reescrever
+seus programas inteiramente a cada mudança de hardware.
+\end{verdadeiroBox}
+
+\bigskip
+
+\subsection*{Item (b) -- C é independente de máquina}
+
+\begin{verdadeiroBox}
+\textbf{Sentença: VERDADEIRA} (com ressalva importante)
+
+\medskip
+\textbf{Explicação:}
+
+Da Seção~1.7 e da Dica de Portabilidade~1.1: C é \textit{predominantemente} independente
+de hardware. Um programa bem escrito em C pode ser compilado e executado em múltiplas
+plataformas (Windows, Linux, macOS, sistemas embarcados) com poucas ou nenhuma
+modificação.
+
+\medskip
+\textbf{A ressalva essencial -- Dica de Portabilidade~1.2:}
+\end{verdadeiroBox}
+
+\begin{portab}
+  Embora seja possível escrever programas portáveis em C, existem muitos problemas
+  entre compiladores C diferentes e computadores diferentes que podem tornar a
+  portabilidade difícil de ser alcançada. Simplesmente escrever programas em C
+  \textit{não garante} portabilidade. Com frequência, o programador precisará lidar
+  com variações entre computadores.
+\end{portab}
+
+Exemplos de situações que podem comprometer a portabilidade em C:
+\begin{itemize}
+  \item O tamanho em bytes de tipos como \texttt{int} e \texttt{long} varia entre
+  plataformas (32 ou 64 bits).
+  \item Extensões proprietárias de compiladores (recursos específicos do MSVC ou do GCC
+  que não estão no padrão C).
+  \item Dependência de comportamento indefinido (\textit{undefined behavior}) do padrão C.
+\end{itemize}
+
+\newpage
+
+% ============================================================
+\section{Exercício 1.7 -- stdin, stdout e stderr}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado]
+Explique o significado dos termos a seguir:
+\begin{enumerate}
+  \item \texttt{stdin}
+  \item \texttt{stdout}
+  \item \texttt{stderr}
+\end{enumerate}
+\end{enunciadoBox}
+
+\bigskip
+
+\begin{respostabox}
+
+Os três termos descrevem os três \textbf{fluxos de dados padrão} (\textit{standard
+streams}) disponíveis em todo programa C que é executado em um sistema operacional
+baseado em UNIX/Linux (e também em Windows). Eles são introduzidos na Seção~1.14.
+Cada fluxo é um canal de comunicação predefinido entre o programa e o sistema operacional.
+
+\medskip
+
+\textbf{a) \texttt{stdin} -- Fluxo de Entrada Padrão (\textit{Standard Input})}
+
+\begin{itemize}
+  \item \textbf{O que é:} O canal pelo qual o programa recebe dados de entrada.
+  \item \textbf{Dispositivo padrão:} O teclado. Quando seu programa em C chama
+  \texttt{scanf()} ou \texttt{getchar()}, ele lê dados do \texttt{stdin}.
+  \item \textbf{Redirecionamento:} O \texttt{stdin} pode ser redirecionado para ler de um
+  arquivo em vez do teclado. Por exemplo, no terminal Linux:
+  \begin{lstlisting}
+./meu_programa < dados.txt
+  \end{lstlisting}
+  Isso faz o programa ler de \texttt{dados.txt} como se o usuário tivesse digitado
+  os dados pelo teclado.
+  \item \textbf{Origem do nome:} ``stdin'' = \textit{standard input} (entrada padrão).
+\end{itemize}
+
+\bigskip
+
+\textbf{b) \texttt{stdout} -- Fluxo de Saída Padrão (\textit{Standard Output})}
+
+\begin{itemize}
+  \item \textbf{O que é:} O canal pelo qual o programa envia sua saída normal (resultados,
+  mensagens, dados calculados).
+  \item \textbf{Dispositivo padrão:} A tela (monitor). Quando seu programa em C chama
+  \texttt{printf()}, ele escreve no \texttt{stdout}.
+  \item \textbf{Redirecionamento:} O \texttt{stdout} pode ser redirecionado para gravar em
+  um arquivo:
+  \begin{lstlisting}
+./meu_programa > resultado.txt
+  \end{lstlisting}
+  Isso salva toda a saída do programa no arquivo \texttt{resultado.txt}.
+  \item \textbf{Combinação:} É possível redirecionar tanto entrada quanto saída
+  simultaneamente:
+  \begin{lstlisting}
+./meu_programa < dados.txt > resultado.txt
+  \end{lstlisting}
+\end{itemize}
+
+\bigskip
+
+\textbf{c) \texttt{stderr} -- Fluxo de Erro Padrão (\textit{Standard Error})}
+
+\begin{itemize}
+  \item \textbf{O que é:} Um canal separado do \texttt{stdout}, destinado exclusivamente
+  a \textit{mensagens de erro e diagnóstico}.
+  \item \textbf{Dispositivo padrão:} Também a tela, por padrão.
+  \item \textbf{Por que um canal separado?} A grande vantagem de ter \texttt{stderr}
+  independente do \texttt{stdout} é que o usuário pode redirecionar a saída normal
+  (\texttt{stdout}) para um arquivo, enquanto as mensagens de erro (\texttt{stderr})
+  continuam aparecendo na tela -- garantindo que erros nunca passem despercebidos:
+  \begin{lstlisting}
+./meu_programa > resultado.txt   /* stdout vai para arquivo */
+                                 /* stderr continua na tela  */
+  \end{lstlisting}
+  \item \textbf{Uso em C:} A função \texttt{fprintf(stderr, "Mensagem de erro\n");}
+  é usada para escrever no \texttt{stderr}. Isso será estudado em detalhes nos
+  capítulos sobre funções e entrada/saída formatada.
+\end{itemize}
+
+\medskip
+\textbf{Resumo visual:}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{>{\ttfamily\bfseries}l l l l}
+  \toprule
+  \normalfont\textbf{Stream} & \textbf{Tipo} & \textbf{Padrão} & \textbf{Função C} \\
+  \midrule
+  stdin  & Entrada  & Teclado & \texttt{scanf()}, \texttt{getchar()} \\
+  stdout & Saída normal & Tela & \texttt{printf()}, \texttt{putchar()} \\
+  stderr & Saída de erros & Tela & \texttt{fprintf(stderr, ...)} \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 1.8 -- Programação Orientada a Objetos}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado]
+Por que tanta atenção é dada hoje à programação orientada a objetos?
+\end{enunciadoBox}
+
+\bigskip
+
+\begin{respostabox}
+
+Esta é uma questão que vai além de uma resposta técnica simples -- ela toca na história
+e na evolução da engenharia de software. Vamos construir a resposta incrementalmente,
+a partir do que o Capítulo~1 nos ensina nas Seções~1.9 e~1.13.
+
+\bigskip
+\textbf{1. O problema que a POO veio resolver}
+
+Na Seção~1.13, o co-autor Harvey Deitel relata que, já na década de 1960, as organizações
+de software enfrentavam graves dificuldades com projetos de grande porte: softwares com
+atrasos de entrega, estouro de orçamento e resultados pouco confiáveis. As técnicas de
+\textit{programação procedural} (como C, FORTRAN, COBOL) focavam em \textbf{ações
+(verbos)}, o que tornava difícil modelar o mundo real -- que é composto de
+\textbf{coisas (substantivos)}.
+
+\bigskip
+\textbf{2. O que a Programação Orientada a Objetos (POO) oferece}
+
+A POO organiza o software em torno de \textbf{objetos} -- componentes que modelam
+entidades do mundo real (uma conta bancária, um produto, um aluno) e encapsulam
+tanto seus \textit{dados} quanto seus \textit{comportamentos}. As principais razões
+pelas quais a POO recebe tanta atenção são:
+
+\begin{enumerate}
+  \item \textbf{Reutilização de software:} Objetos bem projetados (chamados \textit{classes})
+  tendem a ser reutilizáveis em projetos futuros. Isso economiza tempo e dinheiro, evitando
+  que as equipes ``reinventem a roda'' a cada novo projeto. A Observação sobre Engenharia de
+  Software~1.1 do livro destaca que grandes bibliotecas de classes reutilizáveis estão
+  disponíveis gratuitamente na Internet.
+
+  \item \textbf{Software mais inteligível e organizado:} Como afirma a Seção~1.13, algumas
+  organizações relatam que o principal benefício da POO \textit{não} é a reutilização, mas
+  sim que o software produzido é mais \textit{claro, bem organizado e fácil de manter,
+  modificar e depurar}. Isso é vital porque até 80\% dos custos de software estão associados
+  à \textit{manutenção contínua}, não ao desenvolvimento inicial.
+
+  \item \textbf{Modelagem natural do mundo real:} Vivemos em um mundo de objetos (carros,
+  pessoas, produtos, contratos). A POO permite que os programadores modelem o sistema de
+  forma que espelhe essa realidade, tornando o design mais intuitivo.
+
+  \item \textbf{Produtividade das equipes:} O uso de uma abordagem modular e orientada
+  a objetos torna os grupos de desenvolvimento muito mais produtivos do que seria possível
+  com técnicas procedurais.
+
+  \item \textbf{Encapsulamento e proteção de dados:} A POO permite esconder os detalhes
+  internos de implementação de um objeto, expondo apenas o que é necessário para o uso
+  externo. Isso reduz erros e facilita a evolução do sistema.
+\end{enumerate}
+
+\bigskip
+\textbf{3. Perspectiva histórica e o papel de C}
+
+C++ (Seção~1.9), desenvolvida por Bjarne Stroustrup no Bell Laboratories, foi a primeira
+linguagem a trazer POO com ampla aceitação no mercado, ao adicionar recursos de objetos
+à linguagem C. Desde a década de 1990, linguagens orientadas a objetos (C++, Java, C\#,
+Python) tornaram-se dominantes -- e a POO passou a ser a metodologia-chave do
+desenvolvimento de software.
+
+\medskip
+\textbf{Nota importante para este curso:} Você aprenderá primeiro C (Capítulos~1--14),
+desenvolvendo uma base sólida em programação estruturada. Nos Capítulos~15--24, você
+então estudará C++ e POO -- construindo sobre o alicerce que está construindo agora.
+
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 1.9 -- Identificando Linguagens de Programação}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado]
+Qual linguagem de programação é mais bem descrita por cada uma das seguintes sentenças?
+\begin{enumerate}
+  \item Desenvolvida pela IBM para aplicações científicas e de engenharia.
+  \item Desenvolvida especificamente para aplicações comerciais.
+  \item Desenvolvida para o ensino de programação estruturada.
+  \item Seu nome homenageia a primeira pessoa a programar um computador no mundo.
+  \item Desenvolvida para familiarizar iniciantes com as técnicas de programação.
+  \item Desenvolvida especificamente para ajudar os programadores a migrar para .NET.
+  \item Conhecida como a linguagem de desenvolvimento do UNIX.
+  \item Formada, principalmente, pela inclusão da programação orientada a objetos à linguagem C.
+  \item Inicialmente, teve sucesso devido à sua capacidade de criar páginas Web com conteúdo dinâmico.
+\end{enumerate}
+\end{enunciadoBox}
+
+\bigskip
+
+\begin{respostabox}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{>{\bfseries}c p{7.5cm} l}
+  \toprule
+  \textbf{Item} & \textbf{Descrição} & \textbf{Linguagem} \\
+  \midrule
+  a & Desenvolvida pela IBM para aplicações científicas e de engenharia. &
+    \textcolor{deitelblue}{\bfseries FORTRAN} \\
+  b & Desenvolvida especificamente para aplicações comerciais. &
+    \textcolor{deitelblue}{\bfseries COBOL} \\
+  c & Desenvolvida para o ensino de programação estruturada. &
+    \textcolor{deitelblue}{\bfseries Pascal} \\
+  d & Seu nome homenageia a primeira pessoa a programar um computador no mundo. &
+    \textcolor{deitelblue}{\bfseries Ada} \\
+  e & Desenvolvida para familiarizar iniciantes com as técnicas de programação. &
+    \textcolor{deitelblue}{\bfseries BASIC} \\
+  f & Desenvolvida especificamente para ajudar os programadores a migrar para .NET. &
+    \textcolor{deitelblue}{\bfseries Visual C\#} \\
+  g & Conhecida como a linguagem de desenvolvimento do UNIX. &
+    \textcolor{deitelblue}{\bfseries C} \\
+  h & Formada, principalmente, pela inclusão da POO à linguagem C. &
+    \textcolor{deitelblue}{\bfseries C++} \\
+  i & Teve sucesso pela capacidade de criar páginas Web com conteúdo dinâmico. &
+    \textcolor{deitelblue}{\bfseries Java} \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\bigskip
+\textbf{Explicações detalhadas:}
+
+\textbf{a) FORTRAN (FORmula TRANslator):}
+Desenvolvida pela IBM Corporation em meados da década de 1950 (Seção~1.11). Foi
+criada para aplicações científicas e de engenharia que exigem cálculos matemáticos
+complexos. Ainda é amplamente utilizada em aplicações de engenharia e simulações
+científicas.
+
+\medskip
+\textbf{b) COBOL (COmmon Business Oriented Language):}
+Desenvolvida no final da década de 1950 por fabricantes de computadores, pelo
+governo dos EUA e por usuários corporativos (Seção~1.11). É utilizada principalmente
+em aplicações comerciais que exigem manipulação precisa de grandes volumes de dados
+(como sistemas bancários e de folha de pagamento). Muitos sistemas legados ainda
+rodam COBOL hoje.
+
+\medskip
+\textbf{c) Pascal:}
+Projetada pelo professor Niklaus Wirth em 1971, em homenagem ao matemático Blaise
+Pascal (Seção~1.11). Foi criada especificamente para o ensino de programação
+estruturada e tornou-se a linguagem preferida em ambientes acadêmicos por décadas.
+
+\medskip
+\textbf{d) Ada:}
+Desenvolvida com o patrocínio do Departamento de Defesa dos EUA na década de 1970
+(Seção~1.11). Recebeu o nome de \textbf{Lady Ada Lovelace}, filha do poeta Lord
+Byron, reconhecida historicamente como a primeira programadora do mundo (século XIX).
+Ada suporta \textit{multitarefa} nativamente.
+
+\medskip
+\textbf{e) BASIC (Beginner's All-purpose Symbolic Instruction Code):}
+Desenvolvida em meados da década de 1960 no Dartmouth College (Seção~1.12), com o
+objetivo de familiarizar iniciantes com as técnicas de programação. Foi a linguagem
+de entrada de inúmeros programadores nas décadas de 1970 e 1980.
+
+\medskip
+\textbf{f) Visual C\#:}
+Uma nova linguagem criada pela Microsoft exclusivamente para a plataforma .NET
+(Seção~1.12), baseada em C++ e Java. Foi desenvolvida especificamente para ajudar
+os programadores a criar aplicações para o ambiente .NET, facilitando a migração
+de desenvolvedores C++ e Java para a plataforma Microsoft.
+
+\medskip
+\textbf{g) C:}
+Como já estudamos extensamente no Capítulo~1 (Seção~1.7), C ficou mundialmente
+conhecida como a linguagem de desenvolvimento do sistema operacional UNIX. Criada por
+Dennis Ritchie no Bell Laboratories em 1972, C e UNIX cresceram juntos e definiram
+uma era na computação.
+
+\medskip
+\textbf{h) C++:}
+Desenvolvida por Bjarne Stroustrup no Bell Laboratories (Seção~1.9). C++ foi
+formada adicionando-se recursos de programação orientada a objetos à linguagem C
+-- especificamente, absorvendo os conceitos de objetos da linguagem de simulação
+Simula~67.
+
+\medskip
+\textbf{i) Java:}
+Criada pela Sun Microsystems com base em C++ (Seção~1.10). Embora inicialmente
+desenvolvida para aparelhos eletrônicos, Java ganhou enorme popularidade quando
+a World Wide Web explodiu em 1993, pois permitia criar \textit{applets} com conteúdo
+dinâmico e interativo nas páginas Web -- uma capacidade revolucionária na época.
+
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section*{Resumo das Respostas -- Exercícios 1.3 a 1.9}
+% ============================================================
+
+\begin{tcolorbox}[colback=deitellightblue, colframe=deitelblue,
+  title={\bfseries\large Gabarito Rápido}, breakable]
+
+\textbf{1.3 -- Hardware ou Software:}
+\begin{itemize}[noitemsep]
+  \item[a)] CPU $\to$ \textbf{hardware} \quad
+  b) compilador C++ $\to$ \textbf{software} \quad
+  c) ALU $\to$ \textbf{hardware}
+  \item[d)] pré-processador C++ $\to$ \textbf{software} \quad
+  e) unidade de entrada $\to$ \textbf{hardware} \quad
+  f) programa editor $\to$ \textbf{software}
+\end{itemize}
+
+\medskip
+\textbf{1.5 -- Unidades do Computador:}
+\begin{itemize}[noitemsep]
+  \item[a)] unidade de entrada \quad b) programação \quad c) linguagem simbólica
+  \item[d)] unidade de saída \quad e) memória + armazenamento secundário
+  \item[f)] ALU \quad g) ALU \quad h) linguagem de alto nível
+  \item[i)] linguagem de máquina \quad j) CPU
+\end{itemize}
+
+\medskip
+\textbf{1.6 -- Verdadeiro/Falso:}
+\begin{itemize}[noitemsep]
+  \item[a)] \textbf{Verdadeiro} -- linguagens de máquina são dependentes da máquina.
+  \item[b)] \textbf{Verdadeiro} (com ressalva) -- C é predominantemente independente,
+  mas portabilidade perfeita exige cuidado.
+\end{itemize}
+
+\medskip
+\textbf{1.7 -- Streams:}
+\begin{itemize}[noitemsep]
+  \item \texttt{stdin} = fluxo de entrada padrão (teclado)
+  \item \texttt{stdout} = fluxo de saída padrão (tela)
+  \item \texttt{stderr} = fluxo de erro padrão (tela, separado do stdout)
+\end{itemize}
+
+\medskip
+\textbf{1.9 -- Linguagens:}
+\begin{itemize}[noitemsep]
+  \item[a)] FORTRAN \quad b) COBOL \quad c) Pascal \quad d) Ada \quad e) BASIC
+  \item[f)] Visual C\# \quad g) C \quad h) C++ \quad i) Java
+\end{itemize}
+
+\end{tcolorbox}
+
+\bigskip
+
+\begin{boaprática}
+  Você completou os Exercícios do Capítulo~1! Os conceitos aqui revisados --
+  organização do computador, tipos de linguagens, ambiente de desenvolvimento,
+  streams padrão -- formam a base conceitual sobre a qual todo o restante do
+  livro é construído. No Capítulo~2, você começará a escrever seus primeiros
+  programas em C, aplicando esses conceitos de forma prática e concreta.
+\end{boaprática}
+
+\end{document}

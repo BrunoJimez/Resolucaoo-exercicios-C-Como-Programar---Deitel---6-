@@ -1,0 +1,952 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 10 -- Estruturas, Uniões, Manipulações de Bits
+%               e Enumerações em C
+%  EXERCÍCIOS (10.5 -- 10.20)
+%  Abordagem incremental: Caps. 1 a 10
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array,amsmath}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},
+  title={\small\color{white}Saída do programa},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 10 -- Exercícios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 10}\\[0.3cm]
+  {\Large\color{deitelblue!80}Estruturas, Uniões, Manipulações de Bits e Enumerações em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios (10.5--10.20)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, com código completo}
+  \end{tcolorbox}
+\end{titlepage}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 10.5 -- Definir Estruturas e Uniões}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Estrutura \texttt{estoque}:}
+\begin{lstlisting}
+struct estoque {
+    char nomePeca[ 30 ];
+    int   numPeca;
+    float preco;
+    int   quantidade;
+    int   pedido;
+};
+\end{lstlisting}
+
+\item \textbf{União \texttt{dados}:}
+\begin{lstlisting}
+union dados {
+    char   c;
+    short  s;
+    long   b;
+    float  f;
+    double d;
+};
+\end{lstlisting}
+
+\item \textbf{Estrutura \texttt{endereco}:}
+\begin{lstlisting}
+struct endereco {
+    char rua[ 25 ];
+    char cidade[ 20 ];
+    char estado[ 2 ];
+    char cep[ 8 ];
+};
+\end{lstlisting}
+
+\item \textbf{Estrutura \texttt{aluno} aninhando \texttt{endereco}:}
+\begin{lstlisting}
+struct aluno {
+    char nome[ 15 ];
+    char sobrenome[ 15 ];
+    struct endereco endResid;  /* estrutura aninhada */
+};
+\end{lstlisting}
+
+\item \textbf{Estrutura \texttt{teste} com 16 campos de bit:}
+\begin{lstlisting}
+struct teste {
+    unsigned int a : 1;
+    unsigned int b : 1;
+    unsigned int c : 1;
+    unsigned int d : 1;
+    unsigned int e : 1;
+    unsigned int f : 1;
+    unsigned int g : 1;
+    unsigned int h : 1;
+    unsigned int i : 1;
+    unsigned int j : 1;
+    unsigned int k : 1;
+    unsigned int l : 1;
+    unsigned int m : 1;
+    unsigned int n : 1;
+    unsigned int o : 1;
+    unsigned int p : 1;
+};
+\end{lstlisting}
+
+\textbf{Campos de bit} permitem economizar memória quando precisamos apenas de
+poucos bits para representar valores -- útil em estruturas que mapeiam registradores
+de hardware ou protocolos de rede.
+\end{enumerate}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 10.6 -- Acesso a Membros}
+% ============================================================
+
+\begin{respostabox}
+Dadas as declarações da estrutura aninhada \texttt{cliente} e o ponteiro
+\texttt{ptrCliente = \&regCliente}:
+
+\begin{enumerate}[label=\textbf{\alph*)}]
+\item \texttt{regCliente.sobrenome}
+\item \texttt{ptrCliente->sobrenome}
+\item \texttt{regCliente.nome}
+\item \texttt{ptrCliente->nome}
+\item \texttt{regCliente.numCliente}
+\item \texttt{ptrCliente->numCliente}
+\item \texttt{regCliente.pessoal.telefone}
+\item \texttt{ptrCliente->pessoal.telefone}
+\item \texttt{regCliente.pessoal.endereco}
+\item \texttt{ptrCliente->pessoal.endereco}
+\item \texttt{regCliente.pessoal.cidade}
+\item \texttt{ptrCliente->pessoal.cidade}
+\item \texttt{regCliente.pessoal.estado}
+\item \texttt{ptrCliente->pessoal.estado}
+\item \texttt{regCliente.pessoal.cep}
+\item \texttt{ptrCliente->pessoal.cep}
+\end{enumerate}
+
+\begin{boaprática}
+  \textbf{Padrão de acesso:}
+  \begin{itemize}[noitemsep]
+    \item Variável simples: \texttt{var.membro}
+    \item Via ponteiro: \texttt{ptr->membro} (equivale a \texttt{(*ptr).membro})
+    \item Aninhada: \texttt{ptr->grupo.membro} (acompanhe a hierarquia)
+  \end{itemize}
+\end{boaprática}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 10.7 -- Embaralhamento Eficiente de Cartas}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex10.7: cartas_struct.c
+   Embaralhamento e distribuicao usando struct Card */
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#define CARTAS 52
+
+struct card {
+    const char *face;
+    const char *suit;
+};
+
+typedef struct card Card;
+
+void fillDeck( Card * const baralho,
+               const char * faces[],
+               const char * suits[] );
+void shuffleDeck( Card * const baralho );  /* Fisher-Yates */
+void dealDeck( const Card * const baralho );
+
+int main( void )
+{
+    /* Inicializa arrays de nomes */
+    const char *faces[] = {
+        "As","Dois","Tres","Quatro","Cinco","Seis","Sete",
+        "Oito","Nove","Dez","Valete","Dama","Rei"
+    };
+    const char *suits[] = { "Copas","Ouros","Espadas","Paus" };
+
+    Card deck[ CARTAS ];
+
+    srand( time( NULL ) );
+
+    fillDeck( deck, faces, suits );
+    shuffleDeck( deck );
+    dealDeck( deck );
+
+    return 0;
+}
+
+void fillDeck( Card * const baralho,
+               const char * faces[],
+               const char * suits[] )
+{
+    int i;
+    for ( i = 0; i < CARTAS; ++i ) {
+        baralho[ i ].face = faces[ i % 13 ];
+        baralho[ i ].suit = suits[ i / 13 ];
+    }
+}
+
+/* Fisher-Yates: O(n), sem adiamento indefinido */
+void shuffleDeck( Card * const baralho )
+{
+    int i, j;
+    Card temp;
+    for ( i = CARTAS - 1; i > 0; --i ) {
+        j = rand() % ( i + 1 );
+        temp = baralho[ i ];
+        baralho[ i ] = baralho[ j ];
+        baralho[ j ] = temp;
+    }
+}
+
+/* Distribui em formato de 2 colunas */
+void dealDeck( const Card * const baralho )
+{
+    int i;
+    for ( i = 0; i < CARTAS; ++i ) {
+        printf( "%-7s de %-10s%s",
+                baralho[ i ].face,
+                baralho[ i ].suit,
+                ( i % 2 == 0 ) ? "   " : "\n" );
+    }
+}
+\end{lstlisting}
+
+\textbf{Pontos-chave:}
+\begin{itemize}[noitemsep]
+  \item \texttt{struct card} agrupa \texttt{face} e \texttt{suit} -- duas
+  informações por carta.
+  \item \texttt{Fisher-Yates} elimina o adiamento indefinido do algoritmo ingênuo.
+  \item \texttt{Card * const baralho} -- ponteiro constante (não pode mudar para onde
+  aponta) mas o conteúdo apontado pode mudar.
+\end{itemize}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 10.8 -- União \texttt{integer}}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex10.8: union_integer.c
+   Demonstra como diferentes tipos compartilham memoria */
+#include <stdio.h>
+
+union integer {
+    char  c;
+    short s;
+    int   i;
+    long  b;
+};
+
+int main( void )
+{
+    union integer u;
+
+    /* Aceita um char */
+    printf( "Digite um char: " );
+    scanf( " %c", &u.c );
+    printf( "\nApos atribuir char:\n" );
+    printf( "  c = %c\n", u.c );
+    printf( "  s = %hd\n", u.s );
+    printf( "  i = %d\n", u.i );
+    printf( "  b = %ld\n", u.b );
+
+    /* Aceita um short */
+    printf( "\nDigite um short: " );
+    scanf( "%hd", &u.s );
+    printf( "Apos atribuir short:\n" );
+    printf( "  c = %c (codigo %d)\n", u.c, u.c );
+    printf( "  s = %hd\n", u.s );
+    printf( "  i = %d\n", u.i );
+    printf( "  b = %ld\n", u.b );
+
+    /* Aceita int e long */
+    printf( "\nDigite um int: " );
+    scanf( "%d", &u.i );
+    printf( "Apos atribuir int:\n" );
+    printf( "  c = %c (codigo %d)\n", u.c, u.c );
+    printf( "  s = %hd\n", u.s );
+    printf( "  i = %d\n", u.i );
+    printf( "  b = %ld\n", u.b );
+
+    printf( "\nDigite um long: " );
+    scanf( "%ld", &u.b );
+    printf( "Apos atribuir long:\n" );
+    printf( "  c = %c (codigo %d)\n", u.c, u.c );
+    printf( "  s = %hd\n", u.s );
+    printf( "  i = %d\n", u.i );
+    printf( "  b = %ld\n", u.b );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Os valores sempre são impressos corretamente?} \textbf{NÃO!} Como todos
+os membros \textit{compartilham} memória, atribuir a um membro destrói o conteúdo
+dos outros. Apenas o último membro atribuído é confiável; os demais mostram
+``lixo'' do ponto de vista lógico (na verdade, são reinterpretações dos mesmos
+bits sob outros tipos).
+
+\begin{boaprática}
+  Uniões são úteis quando uma variável precisa ser interpretada de várias formas,
+  ou quando queremos economizar memória sabendo que apenas \textit{um} dos campos
+  é válido em cada momento. Em geral, mantenha um ``tag'' separado indicando qual
+  membro está atualmente válido.
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 10.9 -- União \texttt{pontoFlutuante}}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex10.9: union_float.c */
+#include <stdio.h>
+
+union pontoFlutuante {
+    float       f;
+    double      d;
+    long double x;
+};
+
+int main( void )
+{
+    union pontoFlutuante u;
+
+    printf( "Digite um float: " );
+    scanf( "%f", &u.f );
+    printf( "  f=%f  d=%f  x=%Lf\n\n", u.f, u.d, u.x );
+
+    printf( "Digite um double: " );
+    scanf( "%lf", &u.d );
+    printf( "  f=%f  d=%f  x=%Lf\n\n", u.f, u.d, u.x );
+
+    printf( "Digite um long double: " );
+    scanf( "%Lf", &u.x );
+    printf( "  f=%f  d=%f  x=%Lf\n", u.f, u.d, u.x );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Mesma conclusão do Ex.~10.8:} apenas o último valor atribuído faz sentido.
+A diferença aqui é que os tipos \texttt{float} (4 bytes), \texttt{double} (8 bytes)
+e \texttt{long double} (10--16 bytes, dependendo do sistema) têm representação
+IEEE 754 muito diferentes -- interpretar os mesmos bits como tipos diferentes
+produz lixo numérico.
+
+\textbf{Tamanho da união:} a união ocupa o tamanho do \textit{maior} membro --
+\texttt{sizeof(long double)} no caso.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 10.10 -- Deslocamento à Direita}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex10.10: shift_direita.c */
+#include <stdio.h>
+
+void displayBits( unsigned valor );
+
+int main( void )
+{
+    unsigned valor;
+
+    printf( "Digite um inteiro nao negativo: " );
+    scanf( "%u", &valor );
+
+    printf( "\nAntes do deslocamento:  " );
+    displayBits( valor );
+
+    valor >>= 4;  /* desloca 4 bits a direita */
+
+    printf( "Apos >>= 4:             " );
+    displayBits( valor );
+
+    return 0;
+}
+
+void displayBits( unsigned valor )
+{
+    unsigned i;
+    unsigned mask = 1u << ( sizeof( unsigned ) * 8 - 1 );
+
+    for ( i = 1; i <= sizeof( unsigned ) * 8; ++i ) {
+        putchar( valor & mask ? '1' : '0' );
+        valor <<= 1;
+
+        if ( i % 8 == 0 ) putchar( ' ' );
+    }
+    putchar( '\n' );
+}
+\end{lstlisting}
+
+\textbf{O que entra nos bits vagos?}
+\begin{itemize}[noitemsep]
+  \item Para \texttt{unsigned}: sempre 0s. Esse é chamado \textbf{deslocamento lógico}.
+  \item Para \texttt{int} (signed) negativo: depende da implementação -- a maioria
+  usa \textbf{deslocamento aritmético}, copiando o bit de sinal (1). Em compiladores
+  modernos da família GCC, signed right shift de negativo preserva o sinal.
+\end{itemize}
+
+\begin{boaprática}
+  Para resultados portáveis e previsíveis, prefira sempre tipos \texttt{unsigned}
+  ao realizar manipulações de bits.
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 10.11 -- \texttt{displayBits} para 2 Bytes}
+% ============================================================
+
+\begin{respostabox}
+A função \texttt{displayBits} do Ex.~10.10 já é portável: ela usa
+\texttt{sizeof(unsigned) * 8} para determinar o número de bits. Em sistemas com
+\texttt{unsigned} de 2 bytes (16 bits), o loop itera 16 vezes; com 4 bytes,
+32 vezes.
+
+\textbf{Versão original do livro (não portável, fixa em 4 bytes):}
+\begin{lstlisting}
+/* Versao fixa em 32 bits */
+void displayBits( unsigned valor )
+{
+    int i;
+    unsigned mask = 1 << 31;  /* fixo em 32 bits */
+
+    for ( i = 1; i <= 32; ++i ) {
+        putchar( valor & mask ? '1' : '0' );
+        valor <<= 1;
+        if ( i % 8 == 0 ) putchar( ' ' );
+    }
+    putchar( '\n' );
+}
+\end{lstlisting}
+
+\textbf{Para 2 bytes, basta mudar 31 $\to$ 15 e 32 $\to$ 16}.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 10.12 -- Multiplicação por Deslocamento}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Fato:} deslocar à esquerda em 1 bit equivale a multiplicar por 2.
+Em \texttt{n} bits, equivale a multiplicar por $2^n$.
+
+\begin{lstlisting}
+/* Ex10.12: potencia_dois.c */
+#include <stdio.h>
+
+void displayBits( unsigned valor );
+
+unsigned potencia2( unsigned numero, unsigned pot )
+{
+    return numero << pot;
+}
+
+int main( void )
+{
+    unsigned numero, pot;
+
+    printf( "Digite numero e expoente: " );
+    scanf( "%u%u", &numero, &pot );
+
+    unsigned resultado = potencia2( numero, pot );
+
+    printf( "\n%u * 2^%u = %u\n\n", numero, pot, resultado );
+    printf( "Bits de %u: ", numero );    displayBits( numero );
+    printf( "Bits de resultado: " );      displayBits( resultado );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Por que funciona?} A representação binária ``empurra'' todos os bits para
+posições mais altas. Como cada posição vale $2^k$, mover um bit uma posição à
+esquerda multiplica seu peso por 2.
+
+\textit{Exemplo:} $5 = 101_2$. $5 << 2 = 10100_2 = 20 = 5 \times 4 = 5 \times 2^2$. ✓
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 10.13 -- Compactar 2 Caracteres}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex10.13: compactar.c */
+#include <stdio.h>
+
+void displayBits( unsigned valor );
+unsigned compactaCaracteres( char a, char b );
+
+int main( void )
+{
+    char a, b;
+
+    printf( "Digite dois caracteres: " );
+    scanf( " %c %c", &a, &b );
+
+    printf( "\nCaractere 1 ('%c'): ", a );
+    displayBits( ( unsigned )a );
+
+    printf( "Caractere 2 ('%c'): ", b );
+    displayBits( ( unsigned )b );
+
+    unsigned compactado = compactaCaracteres( a, b );
+
+    printf( "\nCompactado:         " );
+    displayBits( compactado );
+
+    return 0;
+}
+
+unsigned compactaCaracteres( char a, char b )
+{
+    unsigned resultado;
+
+    resultado  = a;             /* coloca 'a' nos 8 bits baixos */
+    resultado <<= 8;            /* desloca para os 8 bits altos */
+    resultado |= ( unsigned )b; /* coloca 'b' nos 8 bits baixos */
+
+    return resultado;
+}
+\end{lstlisting}
+
+\textbf{Exemplo:} para \texttt{'A'} (65 = \texttt{01000001}) e \texttt{'B'}
+(66 = \texttt{01000010}):
+\begin{enumerate}[noitemsep]
+  \item \texttt{resultado = 0x41 = 00000000 01000001}
+  \item \texttt{resultado <<= 8} $\to$ \texttt{01000001 00000000}
+  \item \texttt{resultado |= 0x42} $\to$ \texttt{01000001 01000010}
+\end{enumerate}
+
+Os dois caracteres agora ocupam 16 bits da variável \texttt{unsigned}, com \texttt{'A'}
+nos bits altos e \texttt{'B'} nos bits baixos.
+
+\textbf{Por que isso é útil?} Em sistemas embarcados e protocolos de rede, é comum
+\textit{empacotar} múltiplos valores pequenos em uma variável maior para economizar
+memória ou largura de banda.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 10.14 -- Descompactar 2 Caracteres}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex10.14: descompactar.c */
+#include <stdio.h>
+
+void displayBits( unsigned valor );
+
+void descompactaCaracteres( unsigned valor, char *a, char *b )
+{
+    /* Mascara 65280 = 0x0000FF00 isola os bits 8-15 */
+    *a = ( valor & 65280 ) >> 8;
+
+    /* Mascara 255 = 0x000000FF isola os bits 0-7 */
+    *b = valor & 255;
+}
+
+int main( void )
+{
+    unsigned valor;
+    char a, b;
+
+    printf( "Digite um inteiro compactado: " );
+    scanf( "%u", &valor );
+
+    printf( "\nValor compactado: " );
+    displayBits( valor );
+
+    descompactaCaracteres( valor, &a, &b );
+
+    printf( "\nCaractere 1 ('%c'): ", a );
+    displayBits( ( unsigned )a );
+
+    printf( "Caractere 2 ('%c'): ", b );
+    displayBits( ( unsigned )b );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Técnica das máscaras:}
+\begin{itemize}[noitemsep]
+  \item \texttt{0xFF00} (65280) tem apenas os bits 8--15 acesos.
+  \item \texttt{AND} com essa máscara \textit{isola} apenas esses bits.
+  \item \texttt{>> 8} desloca para a posição correta de \texttt{char}.
+  \item \texttt{0x00FF} (255) isola os bits 0--7 sem necessidade de deslocar.
+\end{itemize}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 10.15 -- Compactar 4 Caracteres}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex10.15: compactar4.c */
+#include <stdio.h>
+
+unsigned compactaCaracteres4( char a, char b, char c, char d )
+{
+    unsigned resultado = 0;
+
+    resultado  = ( unsigned )a;  /* a nos bits 24-31 */
+    resultado <<= 8;
+    resultado |= ( unsigned )b;  /* b nos bits 16-23 */
+    resultado <<= 8;
+    resultado |= ( unsigned )c;  /* c nos bits 8-15 */
+    resultado <<= 8;
+    resultado |= ( unsigned )d;  /* d nos bits 0-7 */
+
+    return resultado;
+}
+
+int main( void )
+{
+    char a, b, c, d;
+    printf( "Digite 4 caracteres: " );
+    scanf( " %c %c %c %c", &a, &b, &c, &d );
+
+    unsigned compactado = compactaCaracteres4( a, b, c, d );
+    printf( "Compactado: 0x%08X\n", compactado );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Exemplo:} ``ABCD'' empacotado fica \texttt{0x41424344}. Este é o conceito
+por trás da representação de inteiros de 4 bytes em arquivos -- e da forma como
+sistemas big-endian/little-endian organizam dados na memória.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 10.16 -- Descompactar 4 Caracteres}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex10.16: descompactar4.c */
+#include <stdio.h>
+
+void descompactaCaracteres4( unsigned v,
+                             char *a, char *b, char *c, char *d )
+{
+    unsigned mascara = 255;  /* 0x000000FF */
+
+    *d =   v          & mascara;
+    *c = ( v >>  8 )  & mascara;
+    *b = ( v >> 16 )  & mascara;
+    *a = ( v >> 24 )  & mascara;
+}
+
+int main( void )
+{
+    unsigned valor;
+    char a, b, c, d;
+
+    printf( "Digite valor compactado (em hex, ex: 0x41424344): " );
+    scanf( "%x", &valor );
+
+    descompactaCaracteres4( valor, &a, &b, &c, &d );
+    printf( "Caracteres: %c %c %c %c\n", a, b, c, d );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Alternativa: máscaras separadas} (técnica do enunciado):
+\begin{lstlisting}
+unsigned mask_d = 255u;          /* bits 0-7   */
+unsigned mask_c = 255u << 8;     /* bits 8-15  */
+unsigned mask_b = 255u << 16;    /* bits 16-23 */
+unsigned mask_a = 255u << 24;    /* bits 24-31 */
+
+*d =   v & mask_d;
+*c = ( v & mask_c ) >> 8;
+*b = ( v & mask_b ) >> 16;
+*a = ( v & mask_a ) >> 24;
+\end{lstlisting}
+
+As duas abordagens são equivalentes; a primeira (deslocar antes de mascarar)
+é ligeiramente mais eficiente.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 10.17 -- Inverter Bits}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex10.17: reverseBits.c */
+#include <stdio.h>
+
+void displayBits( unsigned valor );
+
+unsigned reverseBits( unsigned valor )
+{
+    unsigned resultado = 0;
+    unsigned numBits = sizeof( unsigned ) * 8;
+    unsigned i;
+
+    for ( i = 0; i < numBits; ++i ) {
+        /* Pega o bit menos significativo de valor */
+        unsigned bit = valor & 1;
+
+        /* Desloca resultado para a esquerda e adiciona o bit */
+        resultado = ( resultado << 1 ) | bit;
+
+        /* Desloca valor para o proximo bit */
+        valor >>= 1;
+    }
+
+    return resultado;
+}
+
+int main( void )
+{
+    unsigned v;
+
+    printf( "Digite um unsigned: " );
+    scanf( "%u", &v );
+
+    printf( "\nAntes:  " );  displayBits( v );
+
+    unsigned inv = reverseBits( v );
+    printf( "Apos:   " );    displayBits( inv );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Lógica:} percorremos cada bit de \texttt{valor} (do menos para o mais
+significativo) e o colocamos como bit mais significativo de \texttt{resultado}.
+É como ``empilhar'' bits ao contrário.
+
+\textit{Aplicações:} processamento de sinais digitais, FFT
+(\textit{Fast Fourier Transform}), algoritmos de checksum.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 10.18 -- \texttt{displayBits} Portátil}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex10.18: displayBits_portavel.c
+   Funciona em sistemas com unsigned de qualquer tamanho */
+#include <stdio.h>
+
+void displayBits( unsigned valor )
+{
+    /* sizeof(unsigned) * 8 = numero de bits da arquitetura */
+    unsigned numBits = sizeof( unsigned ) * 8;
+    unsigned mask = 1u << ( numBits - 1 );
+    unsigned i;
+
+    printf( "%-10u = ", valor );
+
+    for ( i = 1; i <= numBits; ++i ) {
+        putchar( valor & mask ? '1' : '0' );
+        valor <<= 1;
+        if ( i % 8 == 0 ) putchar( ' ' );
+    }
+    putchar( '\n' );
+}
+
+int main( void )
+{
+    printf( "Tamanho de unsigned: %zu bytes (%zu bits)\n",
+            sizeof( unsigned ), sizeof( unsigned ) * 8 );
+
+    displayBits( 0u );
+    displayBits( 1u );
+    displayBits( 255u );
+    displayBits( 65535u );
+    displayBits( ~0u );  /* todos os bits 1 */
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Chave da portabilidade:} \texttt{sizeof} é avaliado em tempo de compilação
+e retorna o tamanho exato do tipo na arquitetura atual. Em qualquer sistema (2,
+4, ou 8 bytes), a função funciona sem modificações.
+
+\begin{boaprática}
+  Sempre que escrever código que dependa do tamanho de tipos, use \texttt{sizeof}
+  -- nunca constantes literais como 4, 32 ou 64. Seu código será automaticamente
+  portátil entre arquiteturas.
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 10.19 -- Qual é o valor de X?}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Função suspeita:}
+\begin{lstlisting}
+int multiple( int num )
+{
+    int i, mask = 1, mult = 1;
+    for ( i = 1; i <= 10; i++, mask <<= 1 ) {
+        if ( ( num & mask ) != 0 ) {
+            mult = 0;
+            break;
+        }
+    }
+    return mult;
+}
+\end{lstlisting}
+
+\textbf{Análise passo a passo:}
+
+A função testa os 10 bits menos significativos de \texttt{num}. Se \textit{qualquer
+um} dos primeiros 10 bits for 1, retorna 0 (não é múltiplo). Caso contrário, retorna 1.
+
+\textbf{Quando os 10 bits menos significativos são todos zero?} Quando \texttt{num}
+é múltiplo de $2^{10} = 1024$.
+
+\textbf{Verificação:}
+\begin{itemize}[noitemsep]
+  \item \texttt{num = 1024 = $2^{10}$}: binário \texttt{10000000000} (apenas o
+  11º bit é 1). Os bits 0--9 são todos 0. Retorna 1.
+  \item \texttt{num = 1025}: bit 0 é 1. Retorna 0.
+  \item \texttt{num = 2048}: \texttt{100000000000} (12º bit é 1, bits 0--9 são 0).
+  Retorna 1.
+\end{itemize}
+
+\textbf{Resposta: $X = 1024$ ($2^{10}$).}
+
+A função determina se \texttt{num} é múltiplo de 1024.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 10.20 -- O que \texttt{mystery} faz?}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Função misteriosa:}
+\begin{lstlisting}
+int mystery( unsigned bits )
+{
+    unsigned i, total = 0;
+    unsigned mask = 1 << 31;
+
+    for ( i = 1; i <= 32; i++, bits <<= 1 ) {
+        if ( ( bits & mask ) == mask ) {
+            total++;
+        }
+    }
+    return !( total % 2 ) ? 1 : 0;
+}
+\end{lstlisting}
+
+\textbf{Análise:}
+\begin{enumerate}[noitemsep]
+  \item O loop percorre os 32 bits de \texttt{bits} (assumindo 32-bit).
+  \item Para cada bit, verifica se o bit \textit{mais significativo} atual é 1.
+  Se for, incrementa \texttt{total}.
+  \item Após o loop, \texttt{bits} foi totalmente deslocado para a esquerda.
+  \item \texttt{total} agora contém o \textit{número de bits 1} (chamado
+  \textit{population count} ou \textit{Hamming weight}).
+  \item Retorna 1 se \texttt{total \% 2 == 0} (par), ou 0 caso contrário.
+\end{enumerate}
+
+\textbf{Conclusão:} \texttt{mystery} verifica a \textbf{paridade par} da contagem
+de bits 1. Retorna 1 (verdadeiro) se há um número \textbf{par} de bits 1; retorna
+0 se ímpar.
+
+\textbf{Aplicação:} verificação de paridade é usada em transmissão de dados e
+detecção de erros. Memórias ECC, RS-232, e protocolos antigos de telecomunicações
+usam essa ideia para detectar erros de transmissão.
+\end{respostabox}
+
+\end{document}

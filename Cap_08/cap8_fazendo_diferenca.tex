@@ -1,0 +1,562 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 8 -- Caracteres e Strings em C
+%  FAZENDO A DIFERENÇA (8.43 -- 8.46)
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array,amsmath}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+\definecolor{ecogreen}{RGB}{0,120,50}
+\definecolor{ecolightgreen}{RGB}{210,240,220}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},
+  title={\small\color{white}Saída do programa},breakable,#1}
+\newtcolorbox{pesquisa}[1][]{colback=ecolightgreen,colframe=ecogreen,
+  fonttitle=\bfseries\small,title={Pesquisa externa realizada},breakable,#1}
+\newtcolorbox{atencao}[1][]{colback=yellow!10,colframe=deitellorange,
+  fonttitle=\bfseries\small,title={Atenção},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 8 -- Fazendo a Diferença}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue,urlcolor=ecogreen}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 8}\\[0.3cm]
+  {\Large\color{deitelblue!80}Caracteres e Strings em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=ecolightgreen,colframe=ecogreen,width=0.85\linewidth]
+    \centering{\large\bfseries\color{ecogreen}Fazendo a Diferença}\\[0.3cm]
+    {\normalsize Exercícios 8.43 a 8.46\\[0.2cm]
+    Receitas saudáveis · Detector de spam\\
+    Linguagem SMS · Neutralidade de gênero}
+  \end{tcolorbox}
+  \vfill{\small Abordagem incremental Deitel}
+\end{titlepage}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 8.43 -- Cozinhando com Ingredientes Saudáveis}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 8.43]
+Escreva um programa que leia uma receita do usuário e sugira substitutos mais
+saudáveis para ingredientes. O programa deve considerar problemas como colesterol
+alto, perda de peso e alergias. Use as substituições típicas da tabela do livro
+(Figura 8.40).
+\end{enunciadoBox}
+
+\subsection*{Pesquisa: Substituições de Ingredientes}
+
+\begin{pesquisa}
+Conforme a tabela da Figura 8.40 do livro (com fontes em sites de nutrição):
+\begin{itemize}[noitemsep]
+  \item 1 xícara de creme de leite $\to$ 1 xícara de iogurte
+  \item 1 xícara de açúcar $\to$ 1/2 xícara de mel ou 1/4 de adoçante
+  \item 1 xícara de manteiga $\to$ 1 xícara de margarina/iogurte
+  \item 1 ovo $\to$ 2 colheres de amido + 2 claras (ou banana amassada)
+  \item Farinha branca $\to$ farinha integral ou de arroz
+  \item 1 xícara de maionese $\to$ 1 xícara de cottage
+\end{itemize}
+
+A lógica do programa: percorrer a receita, identificar ingredientes-alvo via
+\texttt{strstr}, e substituí-los conforme o perfil de saúde do usuário.
+\end{pesquisa}
+
+\subsection*{Solução em C}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.43: receita_saudavel.c
+   Sugere substituicoes mais saudaveis em receitas */
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#define MAX_RECEITA 2000
+
+/* Estrutura de substituicao */
+typedef struct {
+    const char *original;
+    const char *substituto;
+    const char *motivo;  /* "colesterol", "perda peso", "alergia" */
+} Substituicao;
+
+void sugerir( const char *receita, const Substituicao subs[], int n );
+
+int main( void )
+{
+    Substituicao subs[] = {
+        { "creme de leite", "iogurte natural",           "colesterol/peso" },
+        { "manteiga",       "azeite ou margarina light", "colesterol" },
+        { "acucar",         "mel ou adocante",            "peso/diabetes" },
+        { "maionese",       "queijo cottage",             "colesterol" },
+        { "ovo",            "2 claras + 2 colheres amido","colesterol" },
+        { "farinha branca", "farinha integral",            "perda peso"   },
+        { "leite",          "leite desnatado/soja",        "colesterol" }
+    };
+    int n = sizeof( subs ) / sizeof( subs[ 0 ] );
+
+    char receita[ MAX_RECEITA ];
+
+    printf( "===== CONVERSOR DE RECEITAS SAUDAVEIS =====\n\n" );
+    printf( "ATENCAO: Sempre consulte um medico antes de fazer\n" );
+    printf( "         mudancas significativas em sua dieta.\n\n" );
+
+    printf( "Digite sua receita (digite END em uma linha sozinha):\n" );
+
+    /* Le linhas ate encontrar "END" */
+    receita[ 0 ] = '\0';
+    char linha[ 200 ];
+    while ( fgets( linha, sizeof( linha ), stdin ) != NULL ) {
+        if ( strncmp( linha, "END", 3 ) == 0 ) break;
+        strcat( receita, linha );
+    }
+
+    sugerir( receita, subs, n );
+
+    return 0;
+}
+
+void sugerir( const char *receita, const Substituicao subs[], int n )
+{
+    int i;
+    int encontrou_algo = 0;
+
+    printf( "\n=========== SUGESTOES ===========\n" );
+
+    for ( i = 0; i < n; ++i ) {
+        if ( strstr( receita, subs[ i ].original ) != NULL ) {
+            printf( "- Substitua \"%s\" por \"%s\"\n",
+                    subs[ i ].original, subs[ i ].substituto );
+            printf( "  (beneficio: %s)\n", subs[ i ].motivo );
+            encontrou_algo = 1;
+        }
+    }
+
+    if ( !encontrou_algo ) {
+        printf( "Nenhuma substituicao aplicavel encontrada.\n" );
+        printf( "Sua receita parece estar com ingredientes ja saudaveis!\n" );
+    }
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.44 -- Analisador de Spam}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 8.44]
+Pesquise palavras comuns em spam e crie uma lista com 30. Escreva um programa que
+leia uma mensagem (sem ultrapassar o limite do array), conte ocorrências dessas
+palavras-chave, e avalie a probabilidade de a mensagem ser spam.
+\end{enunciadoBox}
+
+\subsection*{Solução em C}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.44: analisador_spam.c */
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#define MAX_MSG 5000
+#define NUM_PALAVRAS 30
+
+int main( void )
+{
+    const char *palavrasSpam[ NUM_PALAVRAS ] = {
+        "gratis",      "promocao",    "ganhe",       "premio",
+        "credito",     "oferta",      "dinheiro",    "urgente",
+        "exclusivo",   "limitado",    "100%",        "garantido",
+        "renda",       "milionario",  "investimento", "lucro",
+        "viagra",      "remedio",     "farmacia",    "barato",
+        "desconto",    "imperdivel",  "milagre",     "secreto",
+        "rapido",      "sucesso",     "saude",       "emagrecer",
+        "clique aqui", "ganhador"
+    };
+
+    char msg[ MAX_MSG ];
+    char msgLower[ MAX_MSG ];
+    int  pontos = 0;
+    int  i, j;
+    char linha[ 200 ];
+
+    printf( "Digite a mensagem de e-mail (END para terminar):\n" );
+
+    msg[ 0 ] = '\0';
+    while ( fgets( linha, sizeof( linha ), stdin ) != NULL ) {
+        if ( strncmp( linha, "END", 3 ) == 0 ) break;
+
+        /* Garante que nao excede o tamanho */
+        if ( strlen( msg ) + strlen( linha ) < MAX_MSG - 1 ) {
+            strcat( msg, linha );
+        }
+    }
+
+    /* Converte para minusculas para busca case-insensitive */
+    for ( i = 0; msg[ i ] != '\0'; ++i ) {
+        msgLower[ i ] = tolower( ( unsigned char )msg[ i ] );
+    }
+    msgLower[ i ] = '\0';
+
+    /* Conta ocorrencias de cada palavra-chave */
+    printf( "\n=== ANALISE ===\n" );
+    for ( i = 0; i < NUM_PALAVRAS; ++i ) {
+        int conta = 0;
+        char *p = msgLower;
+        while ( ( p = strstr( p, palavrasSpam[ i ] ) ) != NULL ) {
+            ++conta;
+            ++p;
+        }
+        if ( conta > 0 ) {
+            printf( "  '%s' aparece %d vez(es)\n", palavrasSpam[ i ], conta );
+            pontos += conta;
+        }
+    }
+
+    /* Avaliacao */
+    printf( "\nNivel de spam: %d pontos\n", pontos );
+    if ( pontos == 0 ) {
+        printf( "Provavelmente NAO e spam.\n" );
+    }
+    else if ( pontos <= 2 ) {
+        printf( "Possivelmente legitimo.\n" );
+    }
+    else if ( pontos <= 5 ) {
+        printf( "SUSPEITO: pode ser spam.\n" );
+    }
+    else {
+        printf( "MUITO PROVAVELMENTE SPAM!\n" );
+    }
+
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Reflexão}
+
+\begin{boaprática}
+Filtros de spam reais usam técnicas muito mais sofisticadas:
+\begin{itemize}[noitemsep]
+  \item \textbf{Bayes ingênuo:} cálculo probabilístico baseado em palavras e suas frequências em corpus de spam vs.\ ham.
+  \item \textbf{Análise de cabeçalhos:} verificação de remetente, SPF, DKIM.
+  \item \textbf{Listas de bloqueio (blacklists):} domínios e IPs conhecidos por enviar spam.
+  \item \textbf{Aprendizado de máquina:} redes neurais treinadas em milhões de mensagens.
+\end{itemize}
+O exercício é uma porta de entrada para esse domínio fascinante, em que estatística
+e linguística computacional encontram a engenharia de software.
+\end{boaprática}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.45 -- Linguagem SMS}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 8.45]
+Escreva um programa que traduza mensagens em \textit{linguagem SMS} (abreviações
+de mensagens de texto) para português padrão e vice-versa. Lembre-se de que
+algumas abreviações podem ter múltiplos significados (ambiguidade).
+\end{enunciadoBox}
+
+\subsection*{Solução em C}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.45: tradutor_sms.c */
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#define MAX_MSG 1000
+
+typedef struct {
+    const char *sms;
+    const char *portugues;
+} Abreviacao;
+
+void substituirTodas( char *texto, const char *de, const char *para );
+
+int main( void )
+{
+    Abreviacao tabela[] = {
+        { "vc",  "voce" },        { "tb",  "tambem" },
+        { "blz", "beleza" },      { "pq",  "porque" },
+        { "tbm", "tambem" },      { "qq",  "qualquer" },
+        { "qdo", "quando" },      { "msm", "mesmo" },
+        { "td",  "tudo" },        { "qto", "quanto" },
+        { "obg", "obrigado" },    { "vlw", "valeu" },
+        { "abs", "abracos" },     { "bjs", "beijos" },
+        { "emo", "em minha opiniao" }
+    };
+    int n = sizeof( tabela ) / sizeof( tabela[ 0 ] );
+
+    int opcao;
+    char texto[ MAX_MSG ];
+    int  i;
+
+    printf( "1 - SMS -> Portugues\n2 - Portugues -> SMS\nEscolha: " );
+    scanf( "%d", &opcao );
+    getchar();  /* consome \n */
+
+    printf( "Digite a mensagem: " );
+    fgets( texto, MAX_MSG, stdin );
+
+    if ( opcao == 1 ) {
+        for ( i = 0; i < n; ++i ) {
+            substituirTodas( texto, tabela[ i ].sms, tabela[ i ].portugues );
+        }
+    }
+    else {
+        for ( i = 0; i < n; ++i ) {
+            substituirTodas( texto, tabela[ i ].portugues, tabela[ i ].sms );
+        }
+    }
+
+    printf( "\nResultado: %s\n", texto );
+    return 0;
+}
+
+void substituirTodas( char *texto, const char *de, const char *para )
+{
+    char buffer[ MAX_MSG ];
+    char *p;
+    int  tamDe = strlen( de );
+    int  tamPara = strlen( para );
+
+    while ( ( p = strstr( texto, de ) ) != NULL ) {
+        /* Copia ate o ponto encontrado */
+        int prefixo = p - texto;
+        strncpy( buffer, texto, prefixo );
+        buffer[ prefixo ] = '\0';
+
+        /* Concatena substituicao */
+        strcat( buffer, para );
+
+        /* Concatena resto apos o termo encontrado */
+        strcat( buffer, p + tamDe );
+
+        /* Copia de volta */
+        strcpy( texto, buffer );
+    }
+}
+\end{lstlisting}
+
+\textbf{Problema da ambiguidade:} ``EMO'' pode significar ``em minha opinião'',
+``Empresa Marítima Ocidental'', ou um gênero musical. Sistemas reais usam contexto
+para resolver: vizinhança de outras palavras, modelos estatísticos de linguagem,
+ou perguntar ao usuário. Esse é um problema clássico de \textit{desambiguação
+lexical}.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.46 -- Neutralidade de Gênero}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 8.46]
+Crie um programa que leia um parágrafo de texto e substitua palavras de gênero
+específico por equivalentes sem gênero. Apresente o texto resultante.
+\end{enunciadoBox}
+
+\subsection*{Solução em C}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.46: neutralizar_genero.c */
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#define MAX_TEXTO 5000
+
+typedef struct {
+    const char *generificado;
+    const char *neutro;
+} Substituicao;
+
+void substituirTodas( char *texto, const char *de, const char *para );
+
+int main( void )
+{
+    /* Tabela de substituicoes para neutralidade de genero
+       (apenas alguns exemplos -- expandir conforme a necessidade) */
+    Substituicao subs[] = {
+        { "porta-voz",   "representante"      },
+        { "presidente",  "presidencia"        },
+        { "homem-feito", "industrial"         },
+        { "homens",      "pessoas"            },
+        { "homem",       "pessoa"             },
+        { "policial",    "policial"           },  /* ja neutro */
+        { "bombeiro",    "agente do corpo de bombeiros" },
+        { "garcom",      "atendente"          },
+        { "carteiro",    "agente postal"      },
+        { "merceeiro",   "comerciante"        },
+        { "marinheiro",  "tripulante"         },
+        { "doutora",     "doutor(a)"          }
+    };
+    int n = sizeof( subs ) / sizeof( subs[ 0 ] );
+
+    char texto[ MAX_TEXTO ];
+    char linha[ 500 ];
+    int i;
+
+    printf( "Digite o paragrafo (END para terminar):\n" );
+
+    texto[ 0 ] = '\0';
+    while ( fgets( linha, sizeof( linha ), stdin ) != NULL ) {
+        if ( strncmp( linha, "END", 3 ) == 0 ) break;
+        if ( strlen( texto ) + strlen( linha ) < MAX_TEXTO - 1 ) {
+            strcat( texto, linha );
+        }
+    }
+
+    /* Aplica todas as substituicoes */
+    for ( i = 0; i < n; ++i ) {
+        substituirTodas( texto, subs[ i ].generificado, subs[ i ].neutro );
+    }
+
+    printf( "\n=== Texto neutralizado ===\n%s\n", texto );
+
+    return 0;
+}
+
+void substituirTodas( char *texto, const char *de, const char *para )
+{
+    char buffer[ MAX_TEXTO ];
+    char *p;
+    int  tamDe = strlen( de );
+
+    while ( ( p = strstr( texto, de ) ) != NULL ) {
+        int prefixo = p - texto;
+        strncpy( buffer, texto, prefixo );
+        buffer[ prefixo ] = '\0';
+        strcat( buffer, para );
+        strcat( buffer, p + tamDe );
+        strcpy( texto, buffer );
+    }
+}
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Reflexão}
+
+\begin{atencao}
+A neutralidade linguística em português é um tema mais complexo do que em inglês
+por causa da \textit{flexão de gênero em substantivos e adjetivos}. Soluções
+profissionais consideram:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Reescrita estrutural:} ``o aluno deve fazer'' $\to$ ``é necessário fazer''
+  \item \textbf{Formas duplas:} ``aluno/aluna'', ``aluno(a)''
+  \item \textbf{Linguagem inclusiva moderna:} ``alunes'', ``alunx'' (controverso)
+  \item \textbf{Coletivos:} ``estudantes'', ``pessoa interessada''
+\end{itemize}
+
+A substituição automática é apenas o primeiro passo. Sistemas avançados usam
+processamento de linguagem natural (PLN) para entender contexto e propor
+reescritas mais naturais.
+\end{atencao}
+
+\bigskip
+
+\begin{boaprática}
+\textbf{Padrão comum nos 4 exercícios desta seção:} todos envolvem
+\textit{substituição contextual} em texto, e implementam o algoritmo central
+\texttt{substituirTodas} (busca + substituição). Reusabilidade!
+
+Este é o princípio do \textbf{DRY} (\textit{Don't Repeat Yourself}): identificar
+o padrão e implementar uma vez. O Cap.~5 (funções) e o Cap.~7 (ponteiros) deram
+a você as ferramentas necessárias para fazê-lo elegantemente.
+\end{boaprática}
+
+\newpage
+
+% ============================================================
+\section*{Reflexão Final do Capítulo 8}
+
+\begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,
+  title={\bfseries A computação a serviço da linguagem humana}]
+
+O Capítulo~8 nos leva a um território fascinante: a interseção entre programação
+e linguagem natural. Os exercícios ``Fazendo a Diferença'' demonstram aplicações
+de manipulação de strings que tocam questões sociais profundas:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Saúde pública} (8.43) -- ajudar pessoas a comer melhor.
+  \item \textbf{Segurança digital} (8.44) -- proteger usuários de e-mails maliciosos.
+  \item \textbf{Comunicação} (8.45) -- traduzir entre dialetos da era digital.
+  \item \textbf{Inclusão social} (8.46) -- promover linguagem mais inclusiva.
+\end{itemize}
+
+Em todos eles, o ponto central é o mesmo: \textbf{texto é uma forma de dados
+extremamente importante}, e dominar suas manipulações abre portas para
+aplicações com impacto real na sociedade.
+
+\textbf{Aonde isso leva?} O processamento de linguagem natural (PLN) é hoje
+uma das áreas mais quentes da computação. Modelos de linguagem como GPT, BERT
+e Claude são, no fundo, sistemas extraordinariamente sofisticados de manipulação
+de strings -- com bilhões de parâmetros, mas baseados em ideias fundamentais que
+você acabou de praticar: tokenização, busca, substituição, classificação.
+
+\end{tcolorbox}
+
+\begin{boaprática}
+\textbf{Próximos passos:} no Capítulo~9, estudaremos formatação detalhada de
+E/S; no Capítulo~10, estruturas (\texttt{struct}) que permitem agrupar dados
+heterogêneos; no Capítulo~11, manipulação de arquivos (essencial para
+processamento de textos do mundo real); no Capítulo~12, estruturas de dados
+encadeadas (que suportam dicionários, tabelas hash, parsing de árvores
+sintáticas, etc.). O que você acabou de aprender é a base de tudo.
+\end{boaprática}
+
+\end{document}

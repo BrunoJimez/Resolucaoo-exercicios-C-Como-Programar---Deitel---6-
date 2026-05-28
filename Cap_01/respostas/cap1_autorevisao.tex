@@ -1,0 +1,668 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 1 -- Introdução aos Computadores, à Internet e à Web
+%  EXERCÍCIOS DE AUTORREVISÃO (com respostas comentadas)
+%  Estilo didático e incremental -- no espírito de Paul Deitel
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+
+% ---------- Codificação e idioma ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+
+% ---------- Layout ----------
+\usepackage{geometry}
+\geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=3cm}
+\usepackage{parskip}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+% ---------- Tipografia ----------
+
+
+
+% ---------- Cores e caixas ----------
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable, theorems}
+
+% Paleta de cores Deitel
+\definecolor{deitelblue}{RGB}{0, 70, 127}
+\definecolor{deitelgray}{RGB}{240, 242, 245}
+\definecolor{deitelgreen}{RGB}{0, 110, 60}
+\definecolor{deitellorange}{RGB}{200, 90, 0}
+\definecolor{deitellightblue}{RGB}{220, 235, 250}
+\definecolor{deitelred}{RGB}{160, 20, 20}
+
+% ---------- Caixas de destaque ----------
+\newtcolorbox{boaprática}[1][]{
+  colback=deitellightblue, colframe=deitelblue,
+  fonttitle=\bfseries\small, title={Boa prática de programação},
+  breakable, #1
+}
+\newtcolorbox{erroco}[1][]{
+  colback=red!5, colframe=deitelred,
+  fonttitle=\bfseries\small, title={Erro comum de programação},
+  breakable, #1
+}
+\newtcolorbox{portab}[1][]{
+  colback=green!5, colframe=deitelgreen,
+  fonttitle=\bfseries\small, title={Dica de portabilidade},
+  breakable, #1
+}
+\newtcolorbox{respostabox}[1][]{
+  colback=deitelgray, colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue}, title={Resposta detalhada},
+  breakable, #1
+}
+\newtcolorbox{enunciadoBox}[1][]{
+  colback=white, colframe=deitelblue,
+  fonttitle=\bfseries, title={#1},
+  breakable
+}
+
+% ---------- Listas ----------
+\usepackage{enumitem}
+\setlist[enumerate,1]{label=\textbf{\alph*)}, leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+% ---------- Código ----------
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{deitelgray},
+  frame=single, framerule=0.4pt,
+  rulecolor=\color{deitelblue!40},
+  breaklines=true,
+  showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,
+  numbers=none,
+  xleftmargin=10pt, xrightmargin=5pt,
+  belowskip=4pt, aboveskip=4pt,
+}
+
+% ---------- Cabeçalho / rodapé ----------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed.\ $|$ Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap.\ 1 -- Autorrevisão}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ---------- Títulos ----------
+\usepackage{titlesec}
+\titleformat{\section}[block]
+  {\large\bfseries\color{deitelblue}}
+  {\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]
+  {\normalsize\bfseries\color{deitelblue!80}}
+  {\thesubsection.}{0.5em}{}
+
+% ---------- Hiperlinks ----------
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=deitelblue, urlcolor=deitelblue}
+
+% ============================================================
+\begin{document}
+
+% ---- Capa ----
+\begin{titlepage}
+  \centering
+  \vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue} C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue} 6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 1}\\[0.3cm]
+  {\Large\color{deitelblue!80} Introdução aos Computadores, à Internet e à Web}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue, colframe=deitelblue, width=0.8\linewidth]
+    \centering
+    {\large\bfseries Exercícios de Autorrevisão}\\[0.2cm]
+    {\normalsize Respostas completamente explicadas, passo a passo,\\
+    no estilo incremental Deitel}
+  \end{tcolorbox}
+  \vfill
+  {\small Conteúdo restrito ao Capítulo 1 $\cdot$ Abordagem incremental}
+\end{titlepage}
+
+% ---- Introdução metodológica ----
+\section*{Nota ao Estudante}
+
+Bem-vindo ao primeiro conjunto de exercícios de autorrevisão do livro \textit{C: Como Programar}.
+Antes de prosseguir, queremos ressaltar a importância desta seção. Os exercícios de autorrevisão
+são concebidos para que você possa verificar, de forma imediata e autônoma, se os conceitos
+fundamentais do capítulo foram assimilados. Cada questão é respondida de maneira detalhada,
+com explicações que vão além do simples gabarito, sempre conectando a resposta ao conteúdo
+desenvolvido no Capítulo~1.
+
+\begin{boaprática}
+  Leia cada enunciado com atenção antes de consultar a resposta. Tente
+  responder de memória. Essa prática ativa de recuperação de conteúdo é uma
+  das técnicas mais eficazes de aprendizado comprovadas pela ciência cognitiva.
+\end{boaprática}
+
+\newpage
+\tableofcontents
+\newpage
+
+% =============================================================
+\section{Exercício 1.1 -- Preenchimento de Lacunas: Conceitos Gerais}
+% =============================================================
+
+\begin{enunciadoBox}[Enunciado]
+Preencha os espaços em cada uma das seguintes sentenças:
+\begin{enumerate}[label=\textbf{\alph*)}]
+  \item A empresa que popularizou a computação pessoal foi \underline{\hspace{3cm}}.
+  \item O computador que tornou a computação pessoal possível no comércio e na indústria foi o \underline{\hspace{3cm}}.
+  \item Computadores processam dados sob o controle de conjuntos de instruções chamadas \underline{\hspace{3cm}} de computador.
+  \item As seis unidades lógicas do computador são \underline{\hspace{2cm}}, \underline{\hspace{2cm}}, \underline{\hspace{2cm}}, \underline{\hspace{2cm}}, \underline{\hspace{2cm}} e \underline{\hspace{2cm}}.
+  \item Os três tipos de linguagem que discutimos são \underline{\hspace{2cm}}, \underline{\hspace{2cm}} e \underline{\hspace{2cm}}.
+  \item Os programas que traduzem programas em linguagem de alto nível na linguagem de máquina são chamados de \underline{\hspace{3cm}}.
+  \item C é bastante conhecida como a linguagem de desenvolvimento do sistema operacional \underline{\hspace{3cm}}.
+  \item O Department of Defense desenvolveu a linguagem Ada com uma capacidade chamada de \underline{\hspace{3cm}}, que permite que os programadores especifiquem as atividades que podem ocorrer em paralelo.
+\end{enumerate}
+\end{enunciadoBox}
+
+\bigskip
+
+% ---- a) ----
+\subsection*{Item (a) -- A empresa que popularizou a computação pessoal}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{Apple}}
+
+\medskip
+\textbf{Explicação passo a passo:}
+
+Na Seção~1.4 do Capítulo~1 aprendemos que, em 1977, a \textbf{Apple Computer} popularizou a
+computação pessoal. Antes disso, os computadores eram equipamentos de grande porte, caros e
+restritos a organizações governamentais, acadêmicas e grandes empresas. A Apple lançou
+computadores pessoais acessíveis, abrindo as portas para que indivíduos pudessem usar
+computadores em suas casas e pequenos negócios.
+
+\medskip
+É importante não confundir ``popularizar'' com ``introduzir''. A IBM introduziu o
+\textit{IBM Personal Computer} (PC) em 1981 (item b), mas quem \textit{popularizou} -- isto é,
+tornou a computação pessoal amplamente acessível e desejada -- foi a Apple, quatro anos antes.
+\end{respostabox}
+
+\bigskip
+
+% ---- b) ----
+\subsection*{Item (b) -- O computador que levou a computação pessoal ao comércio e à indústria}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{IBM Personal Computer (IBM PC)}}
+
+\medskip
+\textbf{Explicação passo a passo:}
+
+Em 1981, a IBM -- na época o maior vendedor de computadores do mundo -- lançou o
+\textbf{IBM Personal Computer}. Esse evento foi decisivo: pelo fato de a IBM já estar
+consolidada em empresas, governos e indústrias (por meio de seus mainframes), a chegada do
+IBM PC deu credibilidade comercial à computação pessoal. Empresas passaram a adotar
+computadores pessoais em larga escala, transformando para sempre os ambientes de trabalho.
+
+\medskip
+Note a distinção histórica: a Apple democratizou o uso \textit{pessoal}; o IBM PC
+democratizou o uso \textit{corporativo}. Ambos, juntos, definiram a era da computação pessoal.
+\end{respostabox}
+
+\bigskip
+
+% ---- c) ----
+\subsection*{Item (c) -- Conjuntos de instruções que controlam os computadores}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{programas}}
+
+\medskip
+\textbf{Explicação passo a passo:}
+
+Da Seção~1.2: \textit{``Computadores processam dados sob o controle de conjuntos de
+instruções chamados \textbf{programas} de computador.''}
+
+Essa definição é fundamental. Um computador, por si só, é apenas hardware -- circuitos,
+chips e dispositivos físicos. O que dá vida a esse hardware e o faz executar tarefas
+úteis são os \textbf{programas} (software) escritos por programadores. Programar em C é
+exatamente a arte de criar esses conjuntos de instruções ordenadas.
+\end{respostabox}
+
+\bigskip
+
+% ---- d) ----
+\subsection*{Item (d) -- As seis unidades lógicas do computador}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{(1) unidade de entrada, (2) unidade de saída, (3) unidade de memória, (4) unidade lógica e aritmética (ALU), (5) unidade central de processamento (CPU), (6) unidade de armazenamento secundário}}
+
+\medskip
+\textbf{Explicação passo a passo:}
+
+A Seção~1.3 descreve que, independentemente de sua aparência física, todo computador pode
+ser dividido em \textbf{seis unidades lógicas}. Veja cada uma delas:
+
+\begin{itemize}
+  \item \textbf{Unidade de entrada:} A seção ``receptora'' do computador. Recebe dados e
+  programas do mundo externo (teclado, mouse, sensores, etc.) e os disponibiliza para as
+  demais unidades.
+
+  \item \textbf{Unidade de saída:} A seção de ``expedição''. Pega as informações processadas
+  e as envia para dispositivos externos (monitor, impressora, alto-falantes, etc.).
+
+  \item \textbf{Unidade de memória:} O ``depósito rápido'' do computador. Armazena dados e
+  programas temporariamente enquanto estão em uso. Suas informações são \textit{voláteis}
+  (perdidas quando o computador é desligado). Também chamada de \textit{memória primária}
+  ou \textit{RAM}.
+
+  \item \textbf{Unidade lógica e aritmética (ALU):} A seção de ``processamento''. Realiza
+  cálculos matemáticos (adição, subtração, multiplicação, divisão) e tomada de decisões
+  lógicas (comparações entre valores).
+
+  \item \textbf{Unidade central de processamento (CPU):} A seção ``administrativa''.
+  Coordena e supervisiona todas as demais unidades. É ela que diz \textit{quando} a
+  unidade de entrada deve ler dados, \textit{quando} a ALU deve calcular, \textit{quando}
+  a unidade de saída deve enviar resultados.
+
+  \item \textbf{Unidade de armazenamento secundário:} O ``depósito de longo prazo''.
+  Armazena programas e dados de forma \textit{persistente} (mantida mesmo com o computador
+  desligado), em discos rígidos, CDs, DVDs, pendrives etc.
+\end{itemize}
+
+\medskip
+\begin{boaprática}
+  Memorize as seis unidades lógicas e suas funções. Esse modelo conceitual
+  é independente do hardware físico e será útil durante todo o curso, pois
+  entender \textit{onde} os dados vivem (entrada → memória → ALU/CPU → saída/disco)
+  é essencial para escrever programas eficientes em C.
+\end{boaprática}
+\end{respostabox}
+
+\bigskip
+
+% ---- e) ----
+\subsection*{Item (e) -- Os três tipos de linguagem de programação}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{linguagens de máquina, linguagens simbólicas (assembly) e linguagens de alto nível}}
+
+\medskip
+\textbf{Explicação passo a passo:}
+
+A Seção~1.6 apresenta a evolução histórica das linguagens de programação em três gerações:
+
+\begin{enumerate}
+  \item \textbf{Linguagens de máquina:} O ``idioma nativo'' do hardware. Consistem em
+  sequências de números binários (0s e 1s) que a CPU entende diretamente. São
+  dependentes de máquina -- um programa escrito para um tipo de CPU não funciona
+  em outro. Extremamente difíceis para seres humanos lerem e escreverem.
+
+  \item \textbf{Linguagens simbólicas (assembly):} Substituem as sequências numéricas por
+  abreviações mnemônicas (como \texttt{load}, \texttt{add}, \texttt{store}). Programas
+  chamados \textit{assemblers} (montadores) traduzem essas abreviações para linguagem de
+  máquina. Ainda dependentes de máquina, porém muito mais legíveis que a linguagem de máquina pura.
+
+  \item \textbf{Linguagens de alto nível:} Usam palavras próximas ao inglês e notação
+  matemática convencional (como \texttt{valorTotal = salario + horaExtra;}). Uma única
+  instrução de alto nível pode gerar dezenas de instruções de máquina. Programas chamados
+  \textit{compiladores} fazem essa tradução. \textbf{C é uma linguagem de alto nível.}
+\end{enumerate}
+\end{respostabox}
+
+\bigskip
+
+% ---- f) ----
+\subsection*{Item (f) -- Programas que traduzem linguagem de alto nível para linguagem de máquina}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{compiladores}}
+
+\medskip
+\textbf{Explicação passo a passo:}
+
+Da Seção~1.6: programas tradutores chamados \textbf{compiladores} convertem os programas
+escritos em linguagem de alto nível (como C) para a linguagem de máquina que o computador
+pode executar.
+
+É importante distinguir dois tipos de tradutores:
+\begin{itemize}
+  \item \textbf{Compiladores:} Traduzem o programa \textit{inteiro} de uma vez, gerando um
+  arquivo executável (código objeto). A execução posterior é rápida.
+  \item \textbf{Interpretadores:} Traduzem e executam o programa \textit{linha por linha},
+  sem gerar um executável separado. São mais lentos na execução, mas eliminam a etapa
+  de compilação.
+\end{itemize}
+
+Em C, usamos \textit{compiladores} (como o \texttt{gcc} no Linux ou o Visual C++ no Windows).
+\end{respostabox}
+
+\bigskip
+
+% ---- g) ----
+\subsection*{Item (g) -- O sistema operacional associado ao desenvolvimento de C}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{UNIX}}
+
+\medskip
+\textbf{Explicação passo a passo:}
+
+Da Seção~1.7: C foi criada por \textbf{Dennis Ritchie} no Bell Laboratories, em 1972,
+originalmente implementada em um computador DEC PDP-11. Sua principal motivação foi o
+desenvolvimento do \textbf{sistema operacional UNIX}. C e UNIX cresceram juntos: C tornou-se
+a linguagem de implementação do UNIX e ganhou popularidade com ele.
+
+Hoje, praticamente todos os sistemas operacionais modernos -- Linux, macOS, iOS, Android --
+têm raízes no UNIX e foram escritos em C e/ou C++. Isso ilustra o alcance e a longevidade
+de C como linguagem de sistemas.
+\end{respostabox}
+
+\bigskip
+
+% ---- h) ----
+\subsection*{Item (h) -- O recurso da linguagem Ada para paralelismo}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{multitarefa} (do inglês \textit{multitasking})}
+
+\medskip
+\textbf{Explicação passo a passo:}
+
+Da Seção~1.11: a linguagem \textbf{Ada} foi desenvolvida pelo Departamento de Defesa dos
+EUA (DoD) e possui um recurso chamado \textbf{multitarefa}, que permite que os programadores
+especifiquem que muitas atividades devem ocorrer simultaneamente (em paralelo).
+
+A Ada recebeu seu nome em homenagem a \textbf{Lady Ada Lovelace}, filha do poeta Lord Byron,
+reconhecida como a primeira programadora de computadores da história. Note que, embora a
+multitarefa não faça parte do C padrão (ANSI C), ela está disponível por meio de bibliotecas
+complementares, como a POSIX Threads (\texttt{pthreads}).
+\end{respostabox}
+
+\newpage
+
+% =============================================================
+\section{Exercício 1.2 -- Preenchimento de Lacunas: Ambiente de Desenvolvimento em C}
+% =============================================================
+
+\begin{enunciadoBox}[Enunciado]
+Preencha os espaços em cada uma das sentenças a respeito do ambiente C:
+\begin{enumerate}[label=\textbf{\alph*)}]
+  \item Programas em C são normalmente digitados em um computador utilizando-se um programa \underline{\hspace{3cm}}.
+  \item Em um sistema C, um programa \underline{\hspace{3cm}} é executado automaticamente antes que se inicie a fase de tradução.
+  \item Os tipos mais comuns de diretivas de pré-processador são utilizados para \underline{\hspace{3cm}} e \underline{\hspace{3cm}}.
+  \item O programa \underline{\hspace{3cm}} combina a saída do compilador com várias funções de biblioteca para produzir uma imagem executável.
+  \item O programa \underline{\hspace{3cm}} transfere a imagem executável do disco para a memória.
+  \item Para carregar e executar o programa compilado mais recentemente em um sistema Linux, digite \underline{\hspace{3cm}}.
+\end{enumerate}
+\end{enunciadoBox}
+
+\bigskip
+
+% ---- a) ----
+\subsection*{Item (a) -- O programa usado para digitar código C}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{editor} (programa editor)}
+
+\medskip
+\textbf{Explicação passo a passo:}
+
+A \textbf{Fase 1} do desenvolvimento de um programa em C, descrita na Seção~1.14
+(Figura~1.1), consiste em \textit{editar} o arquivo fonte. Um \textbf{programa editor}
+é utilizado para criar e modificar o código-fonte.
+
+Exemplos de editores amplamente usados:
+\begin{itemize}
+  \item No Linux: \texttt{vi}, \texttt{vim}, \texttt{emacs}, \texttt{nano}, \texttt{gedit}
+  \item Em ambientes integrados (IDEs): o editor já vem embutido (ex.: Microsoft Visual
+  Studio, Eclipse, Code::Blocks)
+\end{itemize}
+
+Os arquivos de código-fonte C devem ter extensão \textbf{\texttt{.c}} (por exemplo,
+\texttt{bemvindo.c}, \texttt{calculadora.c}).
+\end{respostabox}
+
+\bigskip
+
+% ---- b) ----
+\subsection*{Item (b) -- O programa executado automaticamente antes da compilação}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{pré-processador}}
+
+\medskip
+\textbf{Explicação passo a passo:}
+
+Na \textbf{Fase 2} (descrita na Seção~1.14), antes que o compilador propriamente dito
+inicie a tradução do código C para linguagem de máquina, um programa especial chamado
+\textbf{pré-processador C} é executado \textit{automaticamente}.
+
+O pré-processador obedece a comandos especiais chamados \textbf{diretivas de
+pré-processador}, que começam com o caractere \texttt{\#}. O pré-processador prepara
+o código-fonte para a compilação, realizando as manipulações indicadas por essas
+diretivas.
+
+\begin{boaprática}
+  Em um sistema C típico, o programador não precisa invocar o pré-processador
+  manualmente. Ao executar o comando de compilação (\texttt{cc} ou \texttt{gcc}),
+  o pré-processador é acionado automaticamente como primeira etapa.
+\end{boaprática}
+\end{respostabox}
+
+\bigskip
+
+% ---- c) ----
+\subsection*{Item (c) -- Os usos mais comuns das diretivas de pré-processador}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{incluir outros arquivos no arquivo a ser compilado} e \textbf{substituir símbolos especiais por texto de programa}}
+
+\medskip
+\textbf{Explicação passo a passo:}
+
+As \textbf{diretivas de pré-processador} mais comuns, conforme a Seção~1.14, servem para:
+
+\begin{enumerate}
+  \item \textbf{Incluir outros arquivos:} A diretiva \texttt{\#include} insere o conteúdo de
+  outro arquivo no arquivo a ser compilado. Por exemplo:
+  \begin{lstlisting}
+#include <stdio.h>  /* inclui funcoes de entrada/saida */
+  \end{lstlisting}
+  Isso é essencial para usar funções da biblioteca-padrão de C, como \texttt{printf} e
+  \texttt{scanf}.
+
+  \item \textbf{Substituições de texto (macros):} A diretiva \texttt{\#define} cria
+  \textit{macros} -- símbolos que serão substituídos por um valor ou trecho de código
+  antes da compilação. Por exemplo:
+  \begin{lstlisting}
+#define PI 3.14159265
+  \end{lstlisting}
+  Toda ocorrência de \texttt{PI} no código será substituída por \texttt{3.14159265}
+  antes que o compilador processe o arquivo.
+\end{enumerate}
+
+Uma discussão detalhada de todas as diretivas do pré-processador é apresentada no
+Capítulo~13 do livro.
+\end{respostabox}
+
+\bigskip
+
+% ---- d) ----
+\subsection*{Item (d) -- O programa que combina código objeto com bibliotecas}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{editor de ligação} (ou \textit{linker})}
+
+\medskip
+\textbf{Explicação passo a passo:}
+
+A \textbf{Fase 4} do processo é chamada de \textit{ligação} (\textit{linking}). O
+\textbf{editor de ligação} (ou \textit{linker}) resolve as referências externas presentes
+no código objeto gerado pelo compilador.
+
+Quando o compilador traduz seu código C para código objeto, ele deixa ``lacunas'' para
+as funções que você usou, mas que estão definidas em outros arquivos (por exemplo, na
+biblioteca-padrão de C). O \textit{linker} preenche essas lacunas, combinando o código
+objeto do seu programa com o código das funções de biblioteca, produzindo uma
+\textbf{imagem executável} completa -- um arquivo que pode ser executado pelo sistema
+operacional.
+
+No Linux, tanto a compilação quanto a ligação são feitas pelo comando \texttt{gcc}:
+\begin{lstlisting}
+gcc bemvindo.c   /* compila E liga, gerando a.out */
+\end{lstlisting}
+\end{respostabox}
+
+\bigskip
+
+% ---- e) ----
+\subsection*{Item (e) -- O programa que transfere a imagem executável para a memória}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{carregador} (\textit{loader})}
+
+\medskip
+\textbf{Explicação passo a passo:}
+
+A \textbf{Fase 5} é a \textit{carga} (\textit{loading}). O \textbf{carregador}
+(\textit{loader}) pega a imagem executável armazenada no disco e a transfere para a
+\textbf{memória primária} (RAM), deixando-a pronta para ser executada pela CPU.
+
+Além do executável principal, o carregador também carrega os componentes adicionais das
+\textbf{bibliotecas compartilhadas} (\textit{shared libraries}) necessários ao programa.
+Em sistemas modernos, o carregador é chamado automaticamente pelo sistema operacional
+quando o usuário solicita a execução do programa.
+\end{respostabox}
+
+\bigskip
+
+% ---- f) ----
+\subsection*{Item (f) -- Comando para executar o programa em Linux}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{\texttt{./a.out}}}
+
+\medskip
+\textbf{Explicação passo a passo:}
+
+Na \textbf{Fase 6} (execução), para carregar e executar o programa mais recentemente
+compilado em um sistema Linux, digita-se no terminal:
+
+\begin{lstlisting}
+./a.out
+\end{lstlisting}
+
+Por que \texttt{./a.out}? Vamos entender cada parte:
+
+\begin{itemize}
+  \item \texttt{./} $\rightarrow$ indica ao sistema operacional que o executável está no
+  \textit{diretório atual} (o ``\texttt{.}'' representa o diretório corrente e ``\texttt{/}''
+  é o separador de caminho no Linux).
+  \item \texttt{a.out} $\rightarrow$ é o nome padrão do arquivo executável gerado pelo
+  \texttt{gcc} quando nenhum nome específico é informado.
+\end{itemize}
+
+Você pode especificar um nome diferente para o executável usando a opção \texttt{-o}:
+\begin{lstlisting}
+gcc bemvindo.c -o bemvindo   /* gera executavel chamado "bemvindo" */
+./bemvindo                   /* executa o programa */
+\end{lstlisting}
+
+\begin{erroco}
+  Os comandos do Linux diferenciam maiúsculas de minúsculas
+  (\textit{case-sensitive}). Digitar \texttt{./A.OUT} ou \texttt{./A.out}
+  resultará em erro, pois o arquivo gerado pelo \texttt{gcc} é \texttt{a.out}
+  (letras minúsculas).
+\end{erroco}
+\end{respostabox}
+
+\newpage
+
+% =============================================================
+\section*{Visão Geral: O Ciclo de Desenvolvimento de Programas em C}
+% =============================================================
+
+Para consolidar os conceitos abordados no Exercício~1.2, apresentamos abaixo um resumo
+visual do ciclo completo de desenvolvimento de um programa em C (Figura~1.1 do livro):
+
+\bigskip
+
+\begin{tcolorbox}[colback=deitelgray, colframe=deitelblue, title={\bfseries As Seis Fases do Desenvolvimento em C}, breakable]
+\begin{enumerate}
+  \item[\textbf{Fase 1}] \textbf{Edição} $\longrightarrow$ O programador cria o arquivo
+  \texttt{.c} com um \textbf{editor de texto}.
+
+  \item[\textbf{Fase 2}] \textbf{Pré-processamento} $\longrightarrow$ O \textbf{pré-processador}
+  executa as diretivas \texttt{\#include}, \texttt{\#define}, etc.
+
+  \item[\textbf{Fase 3}] \textbf{Compilação} $\longrightarrow$ O \textbf{compilador}
+  traduz o código C para código objeto (linguagem de máquina).
+
+  \item[\textbf{Fase 4}] \textbf{Ligação (Linking)} $\longrightarrow$ O \textbf{editor de
+  ligação} combina o código objeto com as bibliotecas, gerando a imagem executável
+  (\texttt{a.out}).
+
+  \item[\textbf{Fase 5}] \textbf{Carregamento (Loading)} $\longrightarrow$ O
+  \textbf{carregador} transfere o executável do disco para a memória RAM.
+
+  \item[\textbf{Fase 6}] \textbf{Execução} $\longrightarrow$ A \textbf{CPU} executa o
+  programa, instrução por instrução.
+\end{enumerate}
+\end{tcolorbox}
+
+\bigskip
+
+\begin{portab}
+  Em sistemas Linux, todo esse processo (Fases~2 a~4) é normalmente ativado por um
+  único comando: \texttt{gcc nome.c}. A simplicidade do processo é uma das razões
+  pelas quais C permanece como a linguagem preferida para programação de sistemas
+  em múltiplas plataformas.
+\end{portab}
+
+\newpage
+
+% =============================================================
+\section*{Resumo das Respostas dos Exercícios de Autorrevisão}
+% =============================================================
+
+\begin{tcolorbox}[colback=deitellightblue, colframe=deitelblue, title={\bfseries\large Gabarito Rápido -- Capítulo 1}, breakable]
+
+\textbf{Exercício 1.1:}
+\begin{enumerate}[label=\alph*)]
+  \item Apple
+  \item IBM Personal Computer (IBM PC)
+  \item programas
+  \item unidade de entrada, unidade de saída, unidade de memória, unidade lógica e aritmética (ALU), unidade central de processamento (CPU), unidade de armazenamento secundário
+  \item linguagens de máquina, linguagens simbólicas (assembly), linguagens de alto nível
+  \item compiladores
+  \item UNIX
+  \item multitarefa
+\end{enumerate}
+
+\medskip
+\textbf{Exercício 1.2:}
+\begin{enumerate}[label=\alph*)]
+  \item editor (programa editor)
+  \item pré-processador
+  \item incluir outros arquivos no arquivo a ser compilado; substituir símbolos especiais por texto de programa
+  \item editor de ligação (\textit{linker})
+  \item carregador (\textit{loader})
+  \item \texttt{./a.out}
+\end{enumerate}
+\end{tcolorbox}
+
+\bigskip
+
+\begin{boaprática}
+  Após verificar suas respostas, retorne ao Capítulo~1 e releia os trechos
+  referentes aos itens que você errou. A leitura direcionada, motivada por uma
+  dificuldade específica, é muito mais eficaz do que a leitura passiva e linear.
+  Esse é o espírito da abordagem \textit{incremental} Deitel.
+\end{boaprática}
+
+\end{document}

@@ -1,0 +1,424 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 10 -- Estruturas, Uniões, Manipulações de Bits
+%               e Enumerações em C
+%  FAZENDO A DIFERENÇA (10.21)
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array,amsmath}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+\definecolor{ecogreen}{RGB}{0,120,50}
+\definecolor{ecolightgreen}{RGB}{210,240,220}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},
+  title={\small\color{white}Saída do programa},breakable,#1}
+\newtcolorbox{pesquisa}[1][]{colback=ecolightgreen,colframe=ecogreen,
+  fonttitle=\bfseries\small,title={Pesquisa externa realizada},breakable,#1}
+\newtcolorbox{atencao}[1][]{colback=yellow!10,colframe=deitellorange,
+  fonttitle=\bfseries\small,title={Atenção},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 10 -- Fazendo a Diferença}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue,urlcolor=ecogreen}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 10}\\[0.3cm]
+  {\Large\color{deitelblue!80}Estruturas, Uniões, Manipulações de Bits e Enumerações}\\[0.8cm]
+  \begin{tcolorbox}[colback=ecolightgreen,colframe=ecogreen,width=0.85\linewidth]
+    \centering{\large\bfseries\color{ecogreen}Fazendo a Diferença}\\[0.3cm]
+    {\normalsize Exercício 10.21\\[0.2cm]
+    Informatização de registros de saúde\\
+    Sistema integrado com IMC e frequência cardíaca}
+  \end{tcolorbox}
+  \vfill{\small Abordagem incremental Deitel}
+\end{titlepage}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 10.21 -- Perfil de Saúde}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 10.21]
+Crie uma estrutura \texttt{PerfilSaude} com nome, sobrenome, sexo, data de
+nascimento, altura (cm) e peso (kg). Implemente funções que:
+\begin{itemize}[noitemsep]
+  \item Recebam esses dados e definam os membros da estrutura.
+  \item Calculem a idade em anos.
+  \item Calculem a frequência cardíaca máxima e ideal.
+  \item Calculem o IMC.
+\end{itemize}
+Exiba todas as informações junto com a tabela de classificação de IMC.
+\end{enunciadoBox}
+
+\subsection*{Pesquisa Externa}
+
+\begin{pesquisa}
+\textbf{Frequência cardíaca máxima:} fórmula clássica de Tanaka
+\[
+\text{FC}_{\max} = 220 - \text{idade}
+\]
+
+\textbf{Frequência cardíaca ideal (zona aeróbica):} 50\% a 85\% da FC\textsubscript{máx}.
+A faixa típica para exercícios de queima de gordura é 60--70\%; para
+condicionamento cardiovascular, 70--85\%.
+
+\textbf{IMC:} $\text{IMC} = \text{peso (kg)} / \text{altura (m)}^2$, com classificação
+da OMS (abaixo do peso, normal, sobrepeso, obeso) -- a mesma do Ex.~2.32.
+
+\textbf{Cálculo de idade:} diferença entre o ano atual e o ano de nascimento,
+\textit{ajustada} se o aniversário ainda não ocorreu no ano corrente.
+\end{pesquisa}
+
+\subsection*{Solução em C}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex10.21: perfil_saude.c
+   Sistema integrado de perfil de saude */
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+
+/* Estrutura para data */
+typedef struct {
+    int dia;
+    int mes;
+    int ano;
+} Data;
+
+/* Estrutura principal de perfil */
+typedef struct {
+    char nome[ 30 ];
+    char sobrenome[ 30 ];
+    char sexo;            /* 'M' ou 'F' */
+    Data nascimento;
+    double altura_cm;
+    double peso_kg;
+} PerfilSaude;
+
+/* Prototipos */
+void   lerPerfil       ( PerfilSaude *p );
+int    calcularIdade   ( const Data *nasc );
+int    fcMaxima        ( int idade );
+double fcIdealMin      ( int idade );
+double fcIdealMax      ( int idade );
+double calcularIMC     ( double peso_kg, double altura_cm );
+const char* classificarIMC( double imc );
+void   exibirPerfil    ( const PerfilSaude *p );
+
+int main( void )
+{
+    PerfilSaude paciente;
+
+    printf( "===== SISTEMA DE PERFIL DE SAUDE =====\n\n" );
+    lerPerfil( &paciente );
+    exibirPerfil( &paciente );
+
+    return 0;
+}
+
+void lerPerfil( PerfilSaude *p )
+{
+    printf( "Nome: " );
+    scanf( "%29s", p->nome );
+
+    printf( "Sobrenome: " );
+    scanf( "%29s", p->sobrenome );
+
+    printf( "Sexo (M/F): " );
+    scanf( " %c", &p->sexo );
+
+    printf( "Data de nascimento (dia mes ano): " );
+    scanf( "%d%d%d", &p->nascimento.dia,
+                     &p->nascimento.mes,
+                     &p->nascimento.ano );
+
+    printf( "Altura em cm: " );
+    scanf( "%lf", &p->altura_cm );
+
+    printf( "Peso em kg: " );
+    scanf( "%lf", &p->peso_kg );
+}
+
+int calcularIdade( const Data *nasc )
+{
+    time_t t = time( NULL );
+    struct tm hoje = *localtime( &t );
+
+    int anoAtual = hoje.tm_year + 1900;
+    int mesAtual = hoje.tm_mon + 1;
+    int diaAtual = hoje.tm_mday;
+
+    int idade = anoAtual - nasc->ano;
+
+    /* Se ainda nao fez aniversario, subtrai 1 */
+    if ( mesAtual < nasc->mes ||
+       ( mesAtual == nasc->mes && diaAtual < nasc->dia ) ) {
+        idade--;
+    }
+    return idade;
+}
+
+int fcMaxima( int idade )
+{
+    return 220 - idade;
+}
+
+double fcIdealMin( int idade )
+{
+    return fcMaxima( idade ) * 0.50;
+}
+
+double fcIdealMax( int idade )
+{
+    return fcMaxima( idade ) * 0.85;
+}
+
+double calcularIMC( double peso_kg, double altura_cm )
+{
+    double altura_m = altura_cm / 100.0;
+    return peso_kg / ( altura_m * altura_m );
+}
+
+const char* classificarIMC( double imc )
+{
+    if ( imc < 18.5 )       return "Abaixo do peso";
+    if ( imc < 25.0 )       return "Normal";
+    if ( imc < 30.0 )       return "Acima do peso (sobrepeso)";
+    return "Obeso";
+}
+
+void exibirPerfil( const PerfilSaude *p )
+{
+    int idade = calcularIdade( &p->nascimento );
+    double imc = calcularIMC( p->peso_kg, p->altura_cm );
+
+    printf( "\n========== PERFIL ==========\n" );
+    printf( "Nome:           %s %s\n", p->nome, p->sobrenome );
+    printf( "Sexo:           %c\n", p->sexo );
+    printf( "Nascimento:     %02d/%02d/%d\n",
+            p->nascimento.dia, p->nascimento.mes, p->nascimento.ano );
+    printf( "Idade:          %d anos\n", idade );
+    printf( "Altura:         %.1f cm\n", p->altura_cm );
+    printf( "Peso:           %.1f kg\n", p->peso_kg );
+
+    printf( "\n=== METRICAS DE SAUDE ===\n" );
+    printf( "IMC:                  %.2f (%s)\n",
+            imc, classificarIMC( imc ) );
+    printf( "FC maxima:            %d bpm\n",
+            fcMaxima( idade ) );
+    printf( "FC ideal (50%%-85%%):  %.0f - %.0f bpm\n",
+            fcIdealMin( idade ), fcIdealMax( idade ) );
+
+    printf( "\n=== TABELA DE IMC (OMS) ===\n" );
+    printf( "  Abaixo do peso:  IMC < 18.5\n" );
+    printf( "  Normal:          18.5 a 24.9\n" );
+    printf( "  Sobrepeso:       25.0 a 29.9\n" );
+    printf( "  Obeso:           IMC >= 30.0\n" );
+
+    printf( "\nLembre: estes valores sao orientativos.\n" );
+    printf( "Sempre consulte um profissional de saude.\n" );
+}
+\end{lstlisting}
+
+\textbf{Exemplo de execução:}
+\begin{saida}
+===== SISTEMA DE PERFIL DE SAUDE =====\\
+\\
+Nome: Maria\\
+Sobrenome: Silva\\
+Sexo (M/F): F\\
+Data de nascimento (dia mes ano): 15 6 1990\\
+Altura em cm: 165\\
+Peso em kg: 60\\
+\\
+========== PERFIL ==========\\
+Nome:           Maria Silva\\
+Sexo:           F\\
+Nascimento:     15/06/1990\\
+Idade:          35 anos\\
+Altura:         165.0 cm\\
+Peso:           60.0 kg\\
+\\
+=== METRICAS DE SAUDE ===\\
+IMC:                  22.04 (Normal)\\
+FC maxima:            185 bpm\\
+FC ideal (50\%-85\%):  93 - 157 bpm\\
+\\
+=== TABELA DE IMC (OMS) ===\\
+\ \ Abaixo do peso:  IMC < 18.5\\
+\ \ Normal:          18.5 a 24.9\\
+\ \ Sobrepeso:       25.0 a 29.9\\
+\ \ Obeso:           IMC >= 30.0
+\end{saida}
+\end{respostabox}
+
+\subsection*{Análise didática}
+
+\begin{boaprática}
+\textbf{Por que \texttt{struct} brilha aqui?}
+
+Sem \texttt{struct}, precisaríamos passar 8 ou mais parâmetros para cada função:
+\begin{lstlisting}
+/* SEM struct -- horrivel */
+void exibir( char *nome, char *sobrenome, char sexo,
+             int dia, int mes, int ano,
+             double altura, double peso );
+\end{lstlisting}
+
+Com \texttt{struct}, encapsulamos tudo:
+\begin{lstlisting}
+/* COM struct -- limpo */
+void exibir( const PerfilSaude *p );
+\end{lstlisting}
+
+\textbf{Outros benefícios:}
+\begin{itemize}[noitemsep]
+  \item Adicionar campos (ex.: alergias, medicamentos) não muda assinaturas de funções.
+  \item Passa-se um único ponteiro -- eficiente para estruturas grandes.
+  \item Código mais legível e auto-documentado.
+\end{itemize}
+\end{boaprática}
+
+\bigskip
+
+\begin{atencao}
+\textbf{Aninhamento de \texttt{struct}:} note como \texttt{PerfilSaude} contém
+\texttt{Data nascimento}. Isso é \textit{composição} -- estruturas dentro de
+estruturas. Para acessar campos aninhados via ponteiro:
+\begin{lstlisting}
+p->nascimento.ano    /* p eh ponteiro; nascimento eh subestrutura */
+\end{lstlisting}
+A intuição: \texttt{->} ``deszipa'' um ponteiro; \texttt{.} acessa membros
+de uma estrutura já desreferenciada.
+\end{atencao}
+
+\bigskip
+
+\subsection*{Por que isso é ``fazer a diferença''?}
+
+\begin{tcolorbox}[colback=ecolightgreen,colframe=ecogreen,
+  title={\bfseries Registros eletrônicos de saúde}]
+
+A informatização de registros médicos é uma das maiores transformações da
+medicina moderna:
+
+\textbf{Benefícios:}
+\begin{itemize}[noitemsep]
+  \item \textbf{Salva vidas em emergências:} médicos acessam histórico completo
+  do paciente -- alergias, medicamentos, condições prévias.
+  \item \textbf{Evita interações medicamentosas:} sistemas podem alertar
+  automaticamente sobre combinações perigosas.
+  \item \textbf{Reduz custos:} elimina exames duplicados, agilizando o atendimento.
+  \item \textbf{Pesquisa epidemiológica:} dados agregados (anonimizados) revelam
+  padrões de doenças em populações.
+\end{itemize}
+
+\textbf{Desafios:}
+\begin{itemize}[noitemsep]
+  \item \textbf{Privacidade:} dados de saúde são extremamente sensíveis. LGPD
+  (Brasil) e HIPAA (EUA) regulam estritamente seu uso.
+  \item \textbf{Segurança:} sistemas hospitalares são alvos preferenciais de
+  ataques cibernéticos.
+  \item \textbf{Interoperabilidade:} sistemas diferentes precisam se comunicar
+  (padrões como HL7 FHIR).
+  \item \textbf{Inclusão digital:} nem todos têm acesso a tecnologia.
+\end{itemize}
+
+Você acabou de construir, em escala minimalista, o núcleo de um sistema
+\textbf{Electronic Health Record (EHR)}. Empresas como Epic, Cerner, e a brasileira
+MV Sistemas movimentam bilhões de reais com esse tipo de software.
+\end{tcolorbox}
+
+\bigskip
+
+% ============================================================
+\section*{Reflexão Final -- Capítulo 10}
+
+\begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,
+  title={\bfseries Da memória bruta aos tipos próprios}]
+
+O Capítulo~10 representa um salto qualitativo em sua jornada com C:
+
+\textbf{O que mudou?}
+\begin{itemize}[noitemsep]
+  \item Antes: variáveis isoladas, arrays homogêneos, ponteiros.
+  \item Agora: \textbf{tipos próprios}, modelando entidades do mundo real.
+\end{itemize}
+
+\textbf{Conceitos que se tornam possíveis:}
+\begin{itemize}[noitemsep]
+  \item \textbf{Modelagem de domínio:} \texttt{PerfilSaude}, \texttt{Card},
+  \texttt{Conta}, \texttt{Aluno}\ldots
+  \item \textbf{Encapsulamento:} função recebe uma estrutura, não 10 parâmetros.
+  \item \textbf{Composição:} \texttt{struct} dentro de \texttt{struct} (ex.: \texttt{Data} em \texttt{Perfil}).
+  \item \textbf{Manipulação de bits:} controle fino sobre representação binária --
+  essencial em sistemas embarcados, gráficos, criptografia.
+  \item \textbf{Uniões:} mesmo espaço, múltiplas interpretações -- útil em parsers
+  e drivers.
+\end{itemize}
+
+\textbf{Próximos passos:}
+\begin{itemize}[noitemsep]
+  \item \textbf{Cap.~11:} arquivos -- persistir nossas \texttt{struct}s em disco.
+  \item \textbf{Cap.~12:} ponteiros para \texttt{struct} formam listas encadeadas,
+  filas, pilhas, árvores -- as estruturas de dados clássicas.
+  \item \textbf{Cap.~13:} pré-processador para macros poderosas com estruturas.
+\end{itemize}
+
+A combinação \texttt{struct + typedef + ponteiro} é o tripé sobre o qual se
+constrói todo o software sério em C. Domine esses três e você terá as ferramentas
+para projetar sistemas de qualquer complexidade.
+
+\end{tcolorbox}
+
+\end{document}

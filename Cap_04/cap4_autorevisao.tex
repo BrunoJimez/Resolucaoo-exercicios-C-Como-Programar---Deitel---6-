@@ -1,0 +1,570 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 4 -- Controle de Programa em C
+%  EXERCÍCIOS DE AUTORREVISÃO (4.1 -- 4.4)
+%  Abordagem incremental: Caps. 1 + 2 + 3 + 4
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{prev}[1][]{colback=yellow!8,colframe=deitellorange,
+  fonttitle=\bfseries\small,title={Dica de prevenção de erro},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},title={\small\color{white}Saída do programa},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 4 -- Autorrevisão}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 4}\\[0.3cm]
+  {\Large\color{deitelblue!80}Controle de Programa em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios de Autorrevisão (4.1--4.4)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, abordagem incremental\\
+    Capítulos 1 + 2 + 3 + 4}
+  \end{tcolorbox}
+\end{titlepage}
+
+\section*{Construindo sobre os Capítulos Anteriores}
+
+No Capítulo~4, ampliamos significativamente o controle de programa em C. Construindo sobre os fundamentos
+dos Capítulos~1, 2 e 3, incorporamos:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Estrutura \texttt{for}} -- ideal para repetição controlada por contador
+  \item \textbf{Estrutura \texttt{do...while}} -- testa a condição \textit{depois} do corpo
+  \item \textbf{Estrutura \texttt{switch}} -- seleção múltipla baseada em valores constantes
+  \item \textbf{\texttt{break} e \texttt{continue}} -- modificadores do fluxo de loops
+  \item \textbf{Operadores lógicos} \texttt{\&\&} (E), \texttt{||} (OU), \texttt{!} (NÃO)
+  \item \textbf{Diferença entre \texttt{=} e \texttt{==}} -- atribuição vs.\ comparação
+  \item \textbf{Função \texttt{pow}} da biblioteca matemática \texttt{<math.h>}
+  \item \textbf{Formatação avançada de \texttt{printf}} -- largura de campo e alinhamento
+\end{itemize}
+
+\begin{boaprática}
+  Os recursos do Capítulo~4 dão ao seu programa muito mais expressividade. \texttt{for}
+  é a forma idiomática de loops contados; \texttt{switch} substitui cadeias de
+  \texttt{if...else} quando comparamos uma variável com valores constantes; e os
+  operadores lógicos permitem combinar condições naturalmente.
+\end{boaprática}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 4.1 -- Preenchimento de Lacunas}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 4.1]
+Preencha os espaços nas seis sentenças sobre repetição controlada por contador,
+repetição controlada por sentinela, comandos de controle e estrutura \texttt{switch}.
+\end{enunciadoBox}
+
+\subsection*{Item (a) -- Repetição controlada por contador}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{definida}}
+
+A repetição controlada por contador é também conhecida como \textit{repetição definida},
+porque o número de iterações é \textbf{conhecido com antecedência}, antes que o laço
+comece a ser executado. Por exemplo, ``execute esta tarefa exatamente 10 vezes''.
+A estrutura \texttt{for} foi projetada especificamente para esse padrão.
+\end{respostabox}
+
+\subsection*{Item (b) -- Repetição controlada por sentinela}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{indefinida}}
+
+A repetição controlada por sentinela é também conhecida como \textit{repetição indefinida},
+porque \textbf{não sabemos com antecedência} quantas vezes o laço executará. O usuário
+controla isso digitando o valor de sentinela quando desejar terminar.
+\end{respostabox}
+
+\subsection*{Item (c) -- O elemento contador da repetição definida}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{variável de controle}} (ou \textbf{contador})
+
+A \textit{variável de controle} é a variável que conta o número de iterações executadas.
+Em uma estrutura \texttt{for}, ela aparece três vezes no cabeçalho:
+\begin{lstlisting}
+for ( i = 1; i <= 10; ++i ) {
+    /* corpo do for */
+}
+\end{lstlisting}
+\begin{itemize}[noitemsep]
+  \item \texttt{i = 1} -- valor \textit{inicial} da variável de controle
+  \item \texttt{i <= 10} -- condição de continuação testada \textit{antes} de cada iteração
+  \item \texttt{++i} -- incremento da variável de controle, após cada iteração
+\end{itemize}
+\end{respostabox}
+
+\subsection*{Item (d) -- Comando para a próxima iteração}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{\texttt{continue}}}
+
+O comando \texttt{continue} \textit{pula} o restante do corpo do laço e prossegue
+imediatamente com a próxima iteração. Em \texttt{while} e \texttt{do...while}, isso
+significa retornar ao teste da condição; em \texttt{for}, executa primeiro a expressão
+de incremento.
+
+\begin{lstlisting}
+/* Imprime 1 a 10, mas pula 5 */
+for ( i = 1; i <= 10; ++i ) {
+    if ( i == 5 ) {
+        continue;  /* pula esta iteracao */
+    }
+    printf( "%d ", i );
+}
+/* Saida: 1 2 3 4 6 7 8 9 10 */
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (e) -- Comando para sair imediatamente da estrutura}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{\texttt{break}}}
+
+O comando \texttt{break} causa a saída \textbf{imediata} de uma estrutura de repetição
+(\texttt{for}, \texttt{while}, \texttt{do...while}) ou de uma estrutura \texttt{switch}.
+A execução continua na primeira instrução \textit{após} a estrutura.
+
+\begin{lstlisting}
+/* Encontra o primeiro multiplo de 7 acima de 50 */
+for ( i = 50; i <= 100; ++i ) {
+    if ( i % 7 == 0 ) {
+        printf( "Encontrado: %d\n", i );
+        break;  /* sai do for imediatamente */
+    }
+}
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (f) -- Estrutura para testar valores inteiros constantes}
+
+\begin{respostabox}
+\textbf{Resposta:} \textcolor{deitelblue}{\textbf{estrutura de seleção múltipla \texttt{switch}}}
+
+A estrutura \texttt{switch} (Seção~4.7) testa uma variável (ou expressão) contra
+valores inteiros constantes -- chamados \textit{rótulos \texttt{case}}. Para cada
+rótulo correspondente, executa as instruções associadas até encontrar um \texttt{break}.
+O caso \texttt{default} (opcional) captura todos os valores não casados.
+
+\begin{lstlisting}
+switch ( opcao ) {
+    case 1:
+        printf( "Opcao 1 escolhida\n" );
+        break;
+    case 2:
+        printf( "Opcao 2 escolhida\n" );
+        break;
+    default:
+        printf( "Opcao invalida\n" );
+        break;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 4.2 -- Verdadeiro ou Falso}
+% ============================================================
+
+\subsection*{Item (a) -- O caso default é obrigatório no switch}
+
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+O caso \texttt{default} é \textbf{opcional}. Se não for necessário tomar nenhuma
+ação para valores não casados pelos rótulos \texttt{case}, o \texttt{default} pode
+ser omitido. Sem \texttt{default}, valores não correspondentes simplesmente não
+disparam nenhuma ação.
+
+\begin{boaprática}
+  Mesmo quando aparentemente desnecessário, fornecer um \texttt{default} é uma
+  excelente prática defensiva. Ele captura valores inesperados (devido a bugs
+  ou entradas inválidas) que poderiam passar silenciosamente despercebidos.
+\end{boaprática}
+\end{tcolorbox}
+
+\subsection*{Item (b) -- O \texttt{break} é obrigatório no caso default}
+
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+O \texttt{break} é \textbf{usado para sair da estrutura \texttt{switch}}, evitando
+o efeito conhecido como \textit{fall-through} (queda em cascata para o próximo case).
+Quando o \texttt{default} é o \textit{último} rótulo do \texttt{switch}, o \texttt{break}
+é desnecessário, pois não há mais casos para os quais ``cair''.
+
+Ainda assim, é uma boa prática colocar \texttt{break} no \texttt{default}, pois se
+um case adicional for adicionado depois, no futuro, o \texttt{break} já estará lá
+prevenindo bugs.
+\end{tcolorbox}
+
+\subsection*{Item (c) -- A expressão \texttt{(x > y \&\& a < b)}}
+
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+O operador \texttt{\&\&} (E lógico) exige que \textbf{ambas} as expressões relacionais
+sejam verdadeiras para que o resultado total seja verdadeiro. A enunciação ``\textit{ou}''
+do enunciado descreve o operador \texttt{||} (OU lógico), não o \texttt{\&\&}.
+
+\textbf{Tabela-verdade do \texttt{\&\&}:}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{c c c}
+  \toprule
+  \textbf{x > y} & \textbf{a < b} & \textbf{x > y \&\& a < b} \\ \midrule
+  falso & falso & falso \\
+  falso & verdadeiro & falso \\
+  verdadeiro & falso & falso \\
+  verdadeiro & verdadeiro & \textbf{verdadeiro} \\
+  \bottomrule
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\subsection*{Item (d) -- A expressão com \texttt{||}}
+
+\begin{tcolorbox}[colback=green!5,colframe=deitelgreen,title={\bfseries VERDADEIRO}]
+O operador \texttt{||} (OU lógico) é verdadeiro se \textbf{pelo menos um} dos
+operandos for verdadeiro. Em particular, é verdadeiro também quando \textit{ambos}
+são verdadeiros. Apenas quando \textit{ambos} são falsos é que o \texttt{||}
+produz falso.
+\end{tcolorbox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 4.3 -- Instruções com novos recursos}
+% ============================================================
+
+\subsection*{Item (a) -- Soma dos ímpares de 1 a 99 com \texttt{for}}
+
+\begin{respostabox}
+\begin{lstlisting}
+soma = 0;
+for ( contador = 1; contador <= 99; contador += 2 ) {
+    soma += contador;
+}
+\end{lstlisting}
+\textbf{Explicação:} Inicializamos \texttt{contador} em 1 (primeiro ímpar) e
+incrementamos de 2 em 2 (\texttt{contador += 2}), garantindo que percorremos
+apenas ímpares: 1, 3, 5, \ldots, 99. \textbf{Resultado:} $1 + 3 + 5 + \ldots + 99 = 2500$.
+\end{respostabox}
+
+\subsection*{Item (b) -- Imprimir 333,546372 com 5 precisões diferentes}
+
+\begin{respostabox}
+\begin{lstlisting}
+printf( "%-15.1f\n", 333.546372 );  /* imprime: 333.5            */
+printf( "%-15.2f\n", 333.546372 );  /* imprime: 333.55           */
+printf( "%-15.3f\n", 333.546372 );  /* imprime: 333.546          */
+printf( "%-15.4f\n", 333.546372 );  /* imprime: 333.5464         */
+printf( "%-15.5f\n", 333.546372 );  /* imprime: 333.54637        */
+\end{lstlisting}
+\textbf{Explicação dos especificadores:}
+\begin{itemize}[noitemsep]
+  \item \texttt{\%} -- início do especificador
+  \item \texttt{-} -- alinha à \textbf{esquerda} no campo
+  \item \texttt{15} -- largura do campo (15 posições)
+  \item \texttt{.N} -- precisão (N casas decimais)
+  \item \texttt{f} -- tipo \texttt{float} ou \texttt{double}
+\end{itemize}
+
+\textbf{Os 5 valores impressos:} \texttt{333.5}, \texttt{333.55}, \texttt{333.546},
+\texttt{333.5464}, \texttt{333.54637}. Note o arredondamento, não truncamento.
+\end{respostabox}
+
+\subsection*{Item (c) -- Calcular $2{,}5^3$ usando \texttt{pow}}
+
+\begin{respostabox}
+\begin{lstlisting}
+#include <math.h>  /* necessario para usar pow */
+/* ... */
+printf( "%10.2f\n", pow( 2.5, 3 ) );  /* imprime: "    15.63" */
+\end{lstlisting}
+
+\textbf{Valor impresso:} \texttt{15.63} (com 6 espaços antes, totalizando 10 posições).
+
+\textbf{Observações:}
+\begin{itemize}[noitemsep]
+  \item \texttt{pow(base, expoente)} retorna $\text{base}^{\text{expoente}}$ como \texttt{double}
+  \item $2{,}5^3 = 2{,}5 \times 2{,}5 \times 2{,}5 = 15{,}625$ \(\to\) arredondado a 2 casas: \texttt{15.63}
+  \item Sem o \texttt{-}, o valor é alinhado à \textbf{direita} no campo de 10 caracteres
+\end{itemize}
+
+\begin{boaprática}
+  Para usar funções da biblioteca matemática (\texttt{pow}, \texttt{sqrt}, \texttt{sin},
+  etc.), inclua \texttt{<math.h>}. Em sistemas Linux, ao compilar, pode ser necessário
+  ligar a biblioteca matemática com \texttt{-lm}: \texttt{gcc programa.c -o programa -lm}.
+\end{boaprática}
+\end{respostabox}
+
+\subsection*{Item (d) -- Imprimir 1 a 20 com \texttt{while}, 5 por linha}
+
+\begin{respostabox}
+\begin{lstlisting}
+x = 1;
+while ( x <= 20 ) {
+    printf( "%d", x );
+    if ( x % 5 == 0 ) {
+        printf( "\n" );  /* nova linha a cada 5 numeros */
+    }
+    else {
+        printf( "\t" );  /* tabulacao entre numeros     */
+    }
+    ++x;
+}
+\end{lstlisting}
+
+\textbf{Saída esperada:}
+\begin{saida}
+1\textbackslash{}t2\textbackslash{}t3\textbackslash{}t4\textbackslash{}t5\\
+6\textbackslash{}t7\textbackslash{}t8\textbackslash{}t9\textbackslash{}t10\\
+11\textbackslash{}t12\textbackslash{}t13\textbackslash{}t14\textbackslash{}t15\\
+16\textbackslash{}t17\textbackslash{}t18\textbackslash{}t19\textbackslash{}t20
+\end{saida}
+
+\textbf{Lógica do truque:} \texttt{x \% 5 == 0} é verdadeiro apenas para múltiplos
+de 5 (5, 10, 15, 20) -- exatamente onde queremos quebrar a linha.
+\end{respostabox}
+
+\subsection*{Item (e) -- O mesmo, com \texttt{for}}
+
+\begin{respostabox}
+\begin{lstlisting}
+for ( x = 1; x <= 20; ++x ) {
+    printf( "%d", x );
+    if ( x % 5 == 0 ) {
+        printf( "\n" );
+    }
+    else {
+        printf( "\t" );
+    }
+}
+\end{lstlisting}
+
+\textbf{Comparação \texttt{while} vs.\ \texttt{for}:} A versão \texttt{for} é mais
+\textit{idiomática} para repetição controlada por contador. As três partes do controle
+(inicialização, condição, incremento) ficam concentradas no cabeçalho do \texttt{for},
+tornando o código mais conciso e legível.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 4.4 -- Identificar e Corrigir Erros}
+% ============================================================
+
+\subsection*{Item (a) -- Loop infinito por \texttt{;} extra}
+
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+x = 1;
+while ( x <= 10 );
+    x++;
+}
+\end{lstlisting}
+
+\textbf{Erros identificados:}
+\begin{enumerate}[noitemsep]
+  \item O ponto e vírgula após \texttt{while ( x <= 10 )} cria um corpo de laço \textit{vazio};
+  como \texttt{x} nunca é incrementado, gera-se um \textbf{loop infinito}.
+  \item Falta a chave de abertura \texttt{\{} (há \texttt{\}} no final, mas sem \texttt{\{}).
+\end{enumerate}
+
+\textbf{Correção:}
+\begin{lstlisting}
+x = 1;
+while ( x <= 10 ) {  /* remove o ; e abre chave aqui */
+    x++;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (b) -- Ponto flutuante como variável de controle}
+
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+for ( y = .1; y != 1.0; y += .1 )
+    printf( "%f\n", y );
+\end{lstlisting}
+
+\textbf{Erro:} Usar um número de \textbf{ponto flutuante} como variável de controle de
+um \texttt{for} é \textit{perigosíssimo}. Devido à imprecisão da representação binária
+de números fracionários (você não consegue representar 0,1 exatamente em binário, da
+mesma forma que não consegue representar 1/3 exatamente em decimal), a soma cumulativa
+de incrementos \texttt{0.1} \textbf{não chega} exatamente a \texttt{1.0}, e a condição
+\texttt{y != 1.0} nunca se torna verdadeira. \textbf{Loop infinito}!
+
+\textbf{Correção:} use um inteiro como variável de controle e faça a divisão
+para obter o valor fracionário desejado.
+\begin{lstlisting}
+for ( y = 1; y != 10; y++ )
+    printf( "%f\n", (float) y / 10 );
+\end{lstlisting}
+
+\begin{prev}
+  \textbf{Regra de ouro:} \textit{nunca} compare valores de ponto flutuante por
+  igualdade exata (\texttt{==} ou \texttt{!=}). Se for absolutamente necessário,
+  teste se a diferença é menor que uma pequena tolerância:
+  \texttt{fabs(x - y) < 1e-9}.
+\end{prev}
+\end{respostabox}
+
+\subsection*{Item (c) -- Falta \texttt{break} no \texttt{switch}}
+
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+switch ( n ) {
+    case 1:
+        printf( "O numero e 1\n" );
+    case 2:
+        printf( "O numero e 2\n" );
+        break;
+    default:
+        printf( "O numero nao e nem 1 nem 2\n" );
+        break;
+}
+\end{lstlisting}
+
+\textbf{Erro:} Falta o \texttt{break} no final do \texttt{case 1}. Quando \texttt{n == 1},
+o programa imprime ``O numero e 1'' e \textbf{continua executando} as instruções do
+\texttt{case 2} (\textit{fall-through}), imprimindo também ``O numero e 2'' --
+comportamento incorreto.
+
+\textbf{Correção:}
+\begin{lstlisting}
+switch ( n ) {
+    case 1:
+        printf( "O numero e 1\n" );
+        break;  /* adiciona break para evitar fall-through */
+    case 2:
+        printf( "O numero e 2\n" );
+        break;
+    default:
+        printf( "O numero nao e nem 1 nem 2\n" );
+        break;
+}
+\end{lstlisting}
+
+\textit{Nota:} Em raras situações, o \textit{fall-through} é \textbf{intencional}.
+Por exemplo, na contagem de notas (Figura~4.7 do livro), \texttt{case 'A'} cai em
+\texttt{case 'a'} para tratar maiúscula e minúscula igualmente.
+\end{respostabox}
+
+\subsection*{Item (d) -- Operador relacional incorreto}
+
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+n = 1;
+while ( n < 10 )
+    printf( "%d ", n++ );
+\end{lstlisting}
+
+\textbf{Erro:} A condição \texttt{n < 10} é \textit{estritamente menor que}, então o
+laço termina quando \texttt{n} chega a 10 -- imprimindo apenas de 1 a 9, não 1 a 10.
+
+\textbf{Correção:} use \texttt{<=} em vez de \texttt{<}.
+\begin{lstlisting}
+n = 1;
+while ( n <= 10 )
+    printf( "%d ", n++ );
+\end{lstlisting}
+
+\begin{erroco}
+  Erros de \textbf{off-by-one} (``erro de uma posição'') -- usar \texttt{<} em vez
+  de \texttt{<=} ou vice-versa -- são entre os mais comuns e perigosos. Eles
+  podem fazer um laço executar uma vez a menos (ou a mais) do que deveria,
+  com resultados sutis difíceis de detectar.
+\end{erroco}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section*{Gabarito Rápido -- Capítulo 4: Autorrevisão}
+
+\begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,title={\bfseries\large Respostas Resumidas}]
+
+\textbf{4.1:}
+\begin{itemize}[noitemsep]
+  \item[a)] definida \quad b) indefinida \quad c) variável de controle (contador)
+  \item[d)] \texttt{continue} \quad e) \texttt{break} \quad f) \texttt{switch}
+\end{itemize}
+
+\medskip\textbf{4.2 -- Verdadeiro/Falso:}
+\begin{itemize}[noitemsep]
+  \item[a)] \textcolor{deitelred}{\textbf{Falso}} -- \texttt{default} é opcional
+  \item[b)] \textcolor{deitelred}{\textbf{Falso}} -- \texttt{break} pode ser dispensado se \texttt{default} for o último
+  \item[c)] \textcolor{deitelred}{\textbf{Falso}} -- \texttt{\&\&} exige ambas verdadeiras
+  \item[d)] \textcolor{deitelgreen}{\textbf{Verdadeiro}} -- \texttt{||} é verdadeiro se um ou ambos forem verdadeiros
+\end{itemize}
+
+\medskip\textbf{4.3:} Soluções com \texttt{for}, \texttt{while}, \texttt{pow} e formatação \texttt{\%-15.Nf}.
+
+\medskip\textbf{4.4:}
+\begin{itemize}[noitemsep]
+  \item[a)] \texttt{;} extra após \texttt{while} cria loop infinito
+  \item[b)] Não use \texttt{float} como controle de \texttt{for}
+  \item[c)] Falta \texttt{break} no \texttt{case 1}
+  \item[d)] Use \texttt{<=} em vez de \texttt{<}
+\end{itemize}
+
+\end{tcolorbox}
+
+\end{document}

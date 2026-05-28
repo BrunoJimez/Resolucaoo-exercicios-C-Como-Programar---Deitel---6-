@@ -1,0 +1,575 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 7 -- Ponteiros em C
+%  EXERCÍCIOS DE AUTORREVISÃO (7.1 -- 7.6)
+%  Abordagem incremental: Caps. 1 + 2 + 3 + 4 + 5 + 6 + 7
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{prev}[1][]{colback=yellow!8,colframe=deitellorange,
+  fonttitle=\bfseries\small,title={Dica de prevenção de erro},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},title={\small\color{white}Saída do programa},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 7 -- Autorrevisão}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 7}\\[0.3cm]
+  {\Large\color{deitelblue!80}Ponteiros em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios de Autorrevisão (7.1--7.6)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, abordagem incremental\\
+    Capítulos 1 + 2 + 3 + 4 + 5 + 6 + 7}
+  \end{tcolorbox}
+\end{titlepage}
+
+\section*{Construindo sobre os Capítulos Anteriores}
+
+No Capítulo~7, abordamos um dos tópicos mais poderosos -- e desafiadores -- de C:
+os \textbf{ponteiros}. Construindo sobre os fundamentos dos Capítulos 1--6, incorporamos:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Ponteiros} -- variáveis que armazenam endereços de memória
+  \item \textbf{Operador de endereço \texttt{\&}} -- obtém o endereço de uma variável
+  \item \textbf{Operador de desreferência \texttt{*}} -- acessa o valor apontado
+  \item \textbf{Chamada por referência simulada} -- passar ponteiros para funções
+  \item \textbf{Aritmética de ponteiros} -- somar/subtrair inteiros a ponteiros
+  \item \textbf{Equivalência entre arrays e ponteiros} -- nomes de arrays como ponteiros constantes
+  \item \textbf{Ponteiros e \texttt{const}} -- 4 combinações de privilégios
+  \item \textbf{Ponteiros para funções} -- passar e armazenar comportamento
+  \item \textbf{Strings como arrays de \texttt{char}} -- preparação para o Cap.~8
+\end{itemize}
+
+\begin{boaprática}
+  Ponteiros são a chave para entender a memória em C. Domine os operadores
+  \texttt{\&} (endereço) e \texttt{*} (desreferência), a equivalência array/ponteiro
+  e a aritmética de ponteiros. Esses três tópicos resolvem 90\% das dificuldades
+  com ponteiros.
+\end{boaprática}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 7.1 -- Preenchimento de Lacunas}
+% ============================================================
+
+\subsection*{Item (a)}
+\begin{respostabox}
+\textbf{Resposta:} Uma variável de ponteiro contém como valor o(a)
+\textcolor{deitelblue}{\textbf{endereço}} de outra variável.
+
+Um ponteiro \textbf{não} contém um valor de dados (como 42 ou 3.14); ele contém
+o \textit{endereço de memória} onde um valor está armazenado. Em C, declaramos
+ponteiros com asterisco antes do nome:
+\begin{lstlisting}
+int *ptr;          /* ptr e um ponteiro para int */
+int x = 42;
+ptr = &x;          /* ptr agora contem o ENDERECO de x */
+printf( "%d\n", *ptr );  /* *ptr desreferencia: imprime 42 */
+\end{lstlisting}
+
+\textbf{Analogia:} se uma variável é uma ``caixa'' com um valor dentro, um ponteiro
+é um ``papel com o número da caixa'' -- não a caixa em si, mas o caminho para
+encontrá-la.
+\end{respostabox}
+
+\subsection*{Item (b)}
+\begin{respostabox}
+\textbf{Resposta:} Os três valores para inicializar um ponteiro são
+\textcolor{deitelblue}{\textbf{0}}, \textcolor{deitelblue}{\textbf{NULL}} e
+\textcolor{deitelblue}{\textbf{um endereço}}.
+
+\begin{itemize}[noitemsep]
+  \item \textbf{0} -- valor inteiro literal zero; tratado como ponteiro nulo em contexto de ponteiro
+  \item \textbf{NULL} -- constante simbólica definida em \texttt{<stddef.h>} e outros
+  cabeçalhos; representa ``nenhum endereço''
+  \item \textbf{Um endereço} -- de outra variável, obtido com \texttt{\&}
+\end{itemize}
+
+\begin{boaprática}
+  Use \texttt{NULL} (não 0) ao inicializar ponteiros, pois deixa a intenção
+  explícita: \texttt{int *ptr = NULL;}. Inicializar ponteiros é fundamental --
+  ponteiros não inicializados (``ponteiros perdidos'') causam comportamento
+  imprevisível.
+\end{boaprática}
+\end{respostabox}
+
+\subsection*{Item (c)}
+\begin{respostabox}
+\textbf{Resposta:} O único inteiro que pode ser atribuído a um ponteiro é
+\textcolor{deitelblue}{\textbf{0}}.
+
+\begin{lstlisting}
+int *ptr;
+ptr = 0;       /* OK: equivale a NULL */
+ptr = NULL;    /* OK: forma preferida  */
+ptr = 100;     /* ERRO (em compiladores modernos) */
+\end{lstlisting}
+
+A regra existe para evitar atribuições acidentais de números ``mágicos'' a ponteiros
+-- algo que quase certamente causaria falha de segmentação. O zero é a exceção por
+ter um significado especial como ``endereço inválido''.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 7.2 -- Verdadeiro ou Falso}
+% ============================================================
+
+\subsection*{Item (a) -- \texttt{\&} aplica-se a constantes, expressões e registradores}
+
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+O operador de endereço \texttt{\&} aplica-se \textbf{somente a variáveis}.
+Não pode ser aplicado a:
+\begin{itemize}[noitemsep]
+  \item \textbf{Constantes:} \texttt{\&5} é inválido (constantes literais não têm endereço fixo).
+  \item \textbf{Expressões:} \texttt{\&(x + y)} é inválido (expressões temporárias).
+  \item \textbf{Variáveis \texttt{register}:} elas podem estar em registradores da
+  CPU, que não possuem endereço na RAM.
+\end{itemize}
+\end{tcolorbox}
+
+\subsection*{Item (b) -- Ponteiro \texttt{void} pode ser desreferenciado}
+
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+Um ponteiro \texttt{void *} \textbf{não} pode ser desreferenciado diretamente,
+porque o compilador não sabe \textit{quantos bytes} ler nem \textit{como interpretá-los}.
+
+Para desreferenciar, primeiro deve-se converter (\textit{cast}) o ponteiro para
+o tipo apropriado:
+\begin{lstlisting}
+void *vp;
+int x = 42;
+vp = &x;
+
+/* *vp; ERRO -- nao se pode desreferenciar void* */
+int valor = *( ( int * )vp );  /* OK: converte para int* primeiro */
+\end{lstlisting}
+
+\textit{Por que existe \texttt{void *}?} É o ``ponteiro genérico'': pode receber
+endereço de qualquer tipo, útil em funções de uso geral (como \texttt{malloc}, que
+estudaremos no Cap.~12).
+\end{tcolorbox}
+
+\subsection*{Item (c) -- Ponteiros de tipos diferentes podem ser atribuídos sem cast}
+
+\begin{tcolorbox}[colback=red!5,colframe=deitelred,title={\bfseries FALSO}]
+Ponteiros de tipos diferentes \textbf{não} podem ser atribuídos uns aos outros
+sem cast (com a única exceção do \texttt{void *}). Por exemplo:
+
+\begin{lstlisting}
+int   *ip;
+float *fp;
+ip = fp;            /* ERRO ou aviso de compilacao */
+ip = ( int * )fp;   /* OK com cast (mas perigoso!) */
+\end{lstlisting}
+
+A regra existe porque a aritmética de ponteiros e a desreferenciação dependem do tipo
+(\texttt{int *} avança 4 bytes; \texttt{float *} também 4 bytes; mas \texttt{double *}
+avança 8 bytes, etc.). Atribuir entre tipos incompatíveis pode levar a interpretações
+incorretas dos dados.
+
+\textbf{Exceção:} \texttt{void *} pode ser atribuído a/de qualquer outro tipo de
+ponteiro sem cast explícito.
+\end{tcolorbox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 7.3 -- Array \texttt{numbers}}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Definir e inicializar:}
+\begin{lstlisting}
+#define SIZE 10
+float numbers[ SIZE ] = { 0.0, 1.1, 2.2, 3.3, 4.4,
+                          5.5, 6.6, 7.7, 8.8, 9.9 };
+\end{lstlisting}
+
+\item \textbf{Ponteiro para \texttt{float}:}
+\begin{lstlisting}
+float *nPtr;
+\end{lstlisting}
+
+\item \textbf{Imprimir com notação de subscrito:}
+\begin{lstlisting}
+for ( i = 0; i < SIZE; ++i ) {
+    printf( "%.1f ", numbers[ i ] );
+}
+\end{lstlisting}
+
+\item \textbf{Atribuir endereço inicial a \texttt{nPtr} (duas formas):}
+\begin{lstlisting}
+nPtr = numbers;          /* nome do array e o endereco do 1o elemento */
+nPtr = &numbers[ 0 ];    /* equivalente, mas explicito */
+\end{lstlisting}
+
+\item \textbf{Imprimir usando \texttt{nPtr} com notação ponteiro/deslocamento:}
+\begin{lstlisting}
+for ( i = 0; i < SIZE; ++i ) {
+    printf( "%.1f ", *( nPtr + i ) );
+}
+\end{lstlisting}
+\textit{Note:} \texttt{*(nPtr + i)} é equivalente a \texttt{nPtr[i]} ou \texttt{numbers[i]}.
+
+\item \textbf{Imprimir usando o nome do array como ponteiro:}
+\begin{lstlisting}
+for ( i = 0; i < SIZE; ++i ) {
+    printf( "%.1f ", *( numbers + i ) );
+}
+\end{lstlisting}
+
+\item \textbf{Imprimir subscritando \texttt{nPtr}:}
+\begin{lstlisting}
+for ( i = 0; i < SIZE; ++i ) {
+    printf( "%.1f ", nPtr[ i ] );
+}
+\end{lstlisting}
+
+\item \textbf{Referenciar o elemento 4 de \textbf{quatro formas:}}
+\begin{lstlisting}
+numbers[ 4 ]        /* notacao de subscrito de array     */
+*( numbers + 4 )    /* ponteiro/deslocamento com nome do array */
+nPtr[ 4 ]           /* notacao de subscrito de ponteiro  */
+*( nPtr + 4 )       /* ponteiro/deslocamento com nPtr    */
+\end{lstlisting}
+
+\item \textbf{Endereço de \texttt{nPtr + 8}:}\\
+Endereço inicial: 1002500. Cada \texttt{float} ocupa 4 bytes. Aritmética:
+\[
+1002500 + 8 \times 4 = 1002500 + 32 = \mathbf{1002532}
+\]
+Valor armazenado em \texttt{numbers[8]}: \textbf{8.8}.
+
+\item \textbf{Endereço após \texttt{nPtr -= 4}, supondo \texttt{nPtr} aponta para \texttt{numbers[5]}:}
+\begin{itemize}[noitemsep]
+  \item Endereço de \texttt{numbers[5]}: $1002500 + 5 \times 4 = 1002520$
+  \item Após \texttt{nPtr -= 4}: $1002520 - 4 \times 4 = \mathbf{1002504}$
+\end{itemize}
+Esse endereço é \texttt{numbers[1]}, cujo valor é \textbf{1.1}.
+
+\end{enumerate}
+
+\begin{boaprática}
+  As \textbf{quatro notações equivalentes} -- \texttt{numbers[i]}, \texttt{nPtr[i]},
+  \texttt{*(numbers + i)}, \texttt{*(nPtr + i)} -- são uma das ideias mais
+  poderosas de C. Domine-as e ponteiros deixam de parecer ``mágicos''.
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 7.4 -- Variáveis \texttt{number1}, \texttt{number2} e \texttt{fPtr}}
+% ============================================================
+
+\begin{respostabox}
+Considere \texttt{float number1 = 7.3;} e \texttt{float number2;}.
+
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Definir ponteiro \texttt{fPtr}:}
+\begin{lstlisting}
+float *fPtr;
+\end{lstlisting}
+
+\item \textbf{Atribuir endereço de \texttt{number1}:}
+\begin{lstlisting}
+fPtr = &number1;
+\end{lstlisting}
+
+\item \textbf{Imprimir valor apontado:}
+\begin{lstlisting}
+printf( "O valor de *fPtr e %f\n", *fPtr );
+\end{lstlisting}
+
+\item \textbf{Atribuir o valor apontado a \texttt{number2}:}
+\begin{lstlisting}
+number2 = *fPtr;
+\end{lstlisting}
+
+\item \textbf{Imprimir \texttt{number2}:}
+\begin{lstlisting}
+printf( "O valor de number2 e %f\n", number2 );
+\end{lstlisting}
+
+\item \textbf{Imprimir endereço de \texttt{number1} com \texttt{\%p}:}
+\begin{lstlisting}
+printf( "O endereco de number1 e %p\n", &number1 );
+\end{lstlisting}
+
+\item \textbf{Imprimir endereço armazenado em \texttt{fPtr}:}
+\begin{lstlisting}
+printf( "O endereco armazenado em fPtr e %p\n", fPtr );
+\end{lstlisting}
+
+\textbf{O valor impresso é o mesmo que \texttt{\&number1}?} \textbf{Sim!} Como
+\texttt{fPtr = \&number1} no item (b), \texttt{fPtr} contém exatamente o endereço
+de \texttt{number1}. Os dois \texttt{printf} produzirão a mesma saída.
+
+\end{enumerate}
+
+\textit{Nota sobre \texttt{\%p}:} é o especificador padrão para imprimir endereços
+em formato hexadecimal. A representação exata depende do compilador (geralmente
+\texttt{0x7fffe1a23bdc} ou similar).
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 7.5 -- Protótipos e Cabeçalhos}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Cabeçalho de \texttt{exchange}}: dois ponteiros para \texttt{float}, retorna \texttt{void}.
+\begin{lstlisting}
+void exchange( float *x, float *y )
+\end{lstlisting}
+
+\item \textbf{Protótipo de \texttt{exchange}}: adicione \texttt{;}.
+\begin{lstlisting}
+void exchange( float *x, float *y );
+\end{lstlisting}
+
+\item \textbf{Cabeçalho de \texttt{evaluate}}: recebe \texttt{int x} e um ponteiro
+para a função \texttt{poly} (que recebe \texttt{int} e retorna \texttt{int}); retorna \texttt{int}.
+\begin{lstlisting}
+int evaluate( int x, int (*poly)( int ) )
+\end{lstlisting}
+
+\item \textbf{Protótipo de \texttt{evaluate}}:
+\begin{lstlisting}
+int evaluate( int x, int (*poly)( int ) );
+\end{lstlisting}
+
+\end{enumerate}
+
+\textbf{Sintaxe importante:} a expressão \texttt{int (*poly)(int)} é lida como
+``\texttt{poly} é um ponteiro para função que recebe um \texttt{int} e retorna
+um \texttt{int}''. Os parênteses ao redor de \texttt{*poly} são \textbf{essenciais}:
+sem eles, \texttt{int *poly(int)} seria interpretado como ``função que retorna
+\texttt{int *}'' -- algo totalmente diferente!
+
+\begin{boaprática}
+  Ponteiros para funções são poderosos porque permitem \textit{passar comportamento}
+  como argumento -- a base de \textit{callbacks}, \textit{strategy pattern} e
+  programação funcional. Já vimos um exemplo prático: \texttt{qsort} aceita um
+  ponteiro para função de comparação.
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 7.6 -- Identificar e Corrigir Erros}
+% ============================================================
+
+\textbf{Considere as declarações:}
+\begin{lstlisting}
+int *zPtr;                            /* nao inicializado! */
+int *aPtr = NULL;
+void *sPtr = NULL;
+int number, i;
+int z[ 5 ] = { 1, 2, 3, 4, 5 };
+sPtr = z;
+\end{lstlisting}
+
+\subsection*{Item (a)}
+\begin{respostabox}
+\textbf{Código com erro:} \texttt{++zptr;}
+
+\textbf{Erros:}
+\begin{enumerate}[noitemsep]
+  \item \texttt{zptr} (minúsculo) é diferente de \texttt{zPtr}; C é \textit{case-sensitive}.
+  \item Mesmo escrevendo \texttt{++zPtr}, há erro: \texttt{zPtr} nunca foi inicializado.
+  Incrementar um ponteiro indefinido leva a comportamento indefinido.
+\end{enumerate}
+
+\textbf{Correção:}
+\begin{lstlisting}
+zPtr = z;     /* inicializa antes de usar */
+++zPtr;       /* agora aponta para z[1] */
+\end{lstlisting}
+
+\begin{erroco}
+  Usar um ponteiro \textbf{não inicializado} é uma das principais causas de
+  falhas em C. Sempre inicialize ponteiros (com \texttt{NULL}, \texttt{0} ou
+  um endereço válido) antes de usá-los.
+\end{erroco}
+\end{respostabox}
+
+\subsection*{Item (b)}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+/* usa o ponteiro para obter o primeiro valor do array */
+number = zPtr;
+\end{lstlisting}
+
+\textbf{Erro:} \texttt{zPtr} é um \textit{endereço} (ponteiro), não um valor inteiro.
+Atribuí-lo a \texttt{number} (que é \texttt{int}) gera aviso ou erro.
+
+\textbf{Correção:} desreferenciar com \texttt{*}:
+\begin{lstlisting}
+number = *zPtr;  /* obtem o valor apontado */
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (c)}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+number = *zPtr[ 2 ];
+\end{lstlisting}
+
+\textbf{Erro:} \texttt{zPtr[2]} já é um \textit{valor} \texttt{int} (não um ponteiro).
+Aplicar \texttt{*} a um inteiro é incorreto.
+
+\textbf{Correção:}
+\begin{lstlisting}
+number = zPtr[ 2 ];  /* equivale a *(zPtr + 2) */
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (d)}
+\begin{respostabox}
+\textbf{Código com erro:}
+\begin{lstlisting}
+for ( i = 0; i <= 5; i++ ) {
+    printf( "%d ", zPtr[ i ] );
+}
+\end{lstlisting}
+
+\textbf{Erro:} \texttt{i <= 5} acessa \texttt{zPtr[5]}, que está \textbf{fora dos
+limites} do array \texttt{z} (índices válidos: 0 a 4).
+
+\textbf{Correção:}
+\begin{lstlisting}
+for ( i = 0; i < 5; ++i ) {  /* < em vez de <= */
+    printf( "%d ", zPtr[ i ] );
+}
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (e)}
+\begin{respostabox}
+\textbf{Código com erro:} \texttt{number = *sPtr;}
+
+\textbf{Erro:} \texttt{sPtr} é \texttt{void *} -- não pode ser desreferenciado
+diretamente sem cast.
+
+\textbf{Correção:}
+\begin{lstlisting}
+number = *( ( int * )sPtr );  /* cast para int* antes */
+\end{lstlisting}
+\end{respostabox}
+
+\subsection*{Item (f)}
+\begin{respostabox}
+\textbf{Código com erro:} \texttt{++z;}
+
+\textbf{Erro:} O nome de um array (\texttt{z}) é um \textit{ponteiro constante} --
+seu valor não pode ser modificado.
+
+\textbf{Correção:} usar uma variável de ponteiro auxiliar:
+\begin{lstlisting}
+int *p = z;
+++p;            /* agora p aponta para z[1]; z permanece valido */
+\end{lstlisting}
+
+Alternativamente, usar subscrito direto: \texttt{z[1]} para acessar o segundo elemento.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section*{Gabarito Rápido -- Capítulo 7: Autorrevisão}
+
+\begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,title={\bfseries\large Respostas Resumidas}]
+
+\textbf{7.1:}
+\begin{itemize}[noitemsep]
+  \item[a)] endereço \quad b) 0, NULL, um endereço \quad c) 0
+\end{itemize}
+
+\medskip\textbf{7.2 -- Verdadeiro/Falso (todos falsos):}
+\begin{itemize}[noitemsep]
+  \item[a)] \textcolor{deitelred}{\textbf{Falso}} -- \texttt{\&} só em variáveis (não \texttt{register})
+  \item[b)] \textcolor{deitelred}{\textbf{Falso}} -- \texttt{void *} não pode ser desreferenciado
+  \item[c)] \textcolor{deitelred}{\textbf{Falso}} -- precisa de cast (exceto \texttt{void *})
+\end{itemize}
+
+\medskip\textbf{7.3:} arrays e ponteiros; quatro notações equivalentes;
+endereços calculados pela aritmética de ponteiros (deslocamento $\times$ tamanho do tipo).
+
+\medskip\textbf{7.4:} \texttt{fPtr = \&number1}, desreferência com \texttt{*fPtr},
+\texttt{\%p} para endereços (idênticos para \texttt{\&number1} e \texttt{fPtr}).
+
+\medskip\textbf{7.5:} sintaxe de ponteiros para funções: \texttt{int (*poly)(int)}.
+
+\medskip\textbf{7.6:} 6 erros corrigidos: ponteiro não inicializado, desreferência
+faltando, desreferência incorreta, \texttt{<=} em vez de \texttt{<}, falta cast em
+\texttt{void *}, e modificação de nome de array.
+
+\end{tcolorbox}
+
+\end{document}

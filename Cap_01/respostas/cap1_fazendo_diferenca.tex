@@ -1,0 +1,738 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 1 -- Introdução aos Computadores, à Internet e à Web
+%  FAZENDO A DIFERENÇA (1.10, 1.11, 1.12)
+%  Pesquisa externa + raciocínio algorítmico introdutório
+%  Estilo didático e incremental -- no espírito de Paul Deitel
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=3cm}
+\usepackage{parskip}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable, theorems}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amsmath}
+
+% Paleta Deitel
+\definecolor{deitelblue}{RGB}{0, 70, 127}
+\definecolor{deitelgray}{RGB}{240, 242, 245}
+\definecolor{deitelgreen}{RGB}{0, 110, 60}
+\definecolor{deitellorange}{RGB}{200, 90, 0}
+\definecolor{deitellightblue}{RGB}{220, 235, 250}
+\definecolor{deitelred}{RGB}{160, 20, 20}
+\definecolor{ecogreen}{RGB}{0, 120, 50}
+\definecolor{ecolightgreen}{RGB}{210, 240, 220}
+\definecolor{saude}{RGB}{150, 0, 60}
+\definecolor{saudelightred}{RGB}{245, 215, 225}
+\definecolor{genero}{RGB}{100, 0, 150}
+\definecolor{generolightpurple}{RGB}{235, 220, 245}
+
+% Caixas
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{pesquisa}[1][]{colback=ecolightgreen,colframe=ecogreen,
+  fonttitle=\bfseries\small,title={Pesquisa externa realizada},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{algoritmo}[1][]{colback=deitelgray,colframe=deitellorange,
+  fonttitle=\bfseries\small\color{deitellorange},title={Descrição do Algoritmo},breakable,#1}
+\newtcolorbox{atencao}[1][]{colback=yellow!10,colframe=deitellorange,
+  fonttitle=\bfseries\small,title={Atenção},breakable,#1}
+\newtcolorbox{ecoCaixa}[1][]{colback=ecolightgreen,colframe=ecogreen,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saudeCaixa}[1][]{colback=saudelightred,colframe=saude,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{generoCaixa}[1][]{colback=generolightpurple,colframe=genero,
+  fonttitle=\bfseries,title={#1},breakable}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,
+  rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{ecogreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=none,
+  xleftmargin=10pt,xrightmargin=5pt,
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed.\ $|$ Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap.\ 1 -- Fazendo a Diferença}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{\thesubsection.}{0.5em}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue,urlcolor=ecogreen}
+
+% ============================================================
+\begin{document}
+
+% ---- Capa ----
+\begin{titlepage}
+  \centering
+  \vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue} C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue} 6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 1}\\[0.3cm]
+  {\Large\color{deitelblue!80} Introdução aos Computadores, à Internet e à Web}\\[0.8cm]
+  \begin{tcolorbox}[colback=ecolightgreen,colframe=ecogreen,width=0.85\linewidth]
+    \centering
+    {\large\bfseries\color{ecogreen} Fazendo a Diferença}\\[0.3cm]
+    {\normalsize Exercícios 1.10 $\cdot$ 1.11 $\cdot$ 1.12}\\[0.2cm]
+    {\small Inclui pesquisa externa, análise de ferramentas e\\
+    raciocínio algorítmico introdutório}
+  \end{tcolorbox}
+  \vfill
+  {\small\color{deitelblue} ``Encorajamos você a usar computadores e a Internet para pesquisar e
+  resolver\\problemas que realmente fazem a diferença.'' -- Deitel \& Deitel, Prefácio}
+\end{titlepage}
+
+% ---- Introdução ----
+\section*{Sobre os Exercícios ``Fazendo a Diferença''}
+
+A série \textbf{Fazendo a Diferença} foi introduzida nesta 6ª edição como um conjunto
+especial de exercícios que vai além do domínio técnico de C. Nosso objetivo é
+encorajá-lo a usar computadores e a Internet para pesquisar e resolver problemas que
+realmente importam para a sociedade e para o mundo. Esperamos que você encare esses
+exercícios com seus próprios valores, crenças e visão de mundo.
+
+Diferentemente dos exercícios anteriores, alguns itens desta seção envolvem
+\textbf{pesquisa na Web} e uma abordagem mais reflexiva e descritiva -- afinal,
+no Capítulo~1 ainda não aprendemos a programar em C. O que podemos fazer, com toda
+a profundidade, é \textbf{descrever algoritmos} -- isto é, os passos lógicos e
+ordenados que um futuro programa seguiria para resolver cada problema.
+
+\begin{atencao}
+  Lembre-se: no Capítulo~1, não escrevemos código C. Descrevemos os problemas,
+  exploramos as ferramentas disponíveis e formulamos o raciocínio algorítmico
+  que será implementado em capítulos posteriores. No Capítulo~3 você aprenderá
+  o que é um algoritmo formalmente, e no Capítulo~4 aprenderá a expressá-lo
+  em pseudocódigo e em C.
+\end{atencao}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Exercício 1.10 -- \textit{Test-Drive}: Calculadora de Emissão de Carbono}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado]
+\textbf{\textit{Test-drive}: Calculadora de emissão de carbono.}
+Alguns cientistas acreditam que as emissões de carbono, especialmente as ocorridas pela
+queima de combustíveis fósseis, contribuem de modo significativo para o aquecimento global,
+e que isso pode ser combatido se os indivíduos tomarem medidas que limitem seu uso de
+combustíveis com base no carbono. Sites da Web como o TerraPass
+(\texttt{www.terrapass.com/carbon-footprint-calculator/}) e o Carbon Footprint
+(\texttt{www.carbonfootprint.com/calculator.aspx}) oferecem calculadoras de emissão de
+carbono. \textbf{Faça o teste dessas calculadoras para estimar sua emissão de carbono.}
+Para se preparar, pesquise na Web as fórmulas usadas no cálculo.
+\end{enunciadoBox}
+
+\bigskip
+
+\begin{pesquisa}
+Este exercício requer pesquisa externa, conforme solicitado pelo autor. As informações
+a seguir foram obtidas consultando as calculadoras indicadas e a literatura científica
+sobre pegada de carbono (\textit{carbon footprint}).
+\end{pesquisa}
+
+\bigskip
+
+\subsection*{1.1 \ O que é Pegada de Carbono?}
+
+A \textbf{pegada de carbono} (\textit{carbon footprint}) de um indivíduo ou organização
+é a quantidade total de \textbf{gases de efeito estufa (GEE)} -- principalmente dióxido
+de carbono (CO\textsubscript{2}) e metano (CH\textsubscript{4}) -- emitidos como resultado
+direto ou indireto de suas atividades. É medida em \textbf{toneladas de CO\textsubscript{2}
+equivalente} (tCO\textsubscript{2}e) por ano.
+
+\bigskip
+
+\subsection*{1.2 \ Principais Fontes de Emissão Individual}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{l l p{6.5cm}}
+  \toprule
+  \textbf{Categoria} & \textbf{Fonte} & \textbf{Fator de Emissão (referência)}\\ \midrule
+  Transporte & Automóvel a gasolina &
+    $\approx 2{,}31$ kg CO\textsubscript{2}/litro de gasolina\\
+  Transporte & Voos domésticos &
+    $\approx 0{,}255$ kg CO\textsubscript{2}/km/passageiro\\
+  Energia & Eletricidade (Brasil -- fator médio 2023) &
+    $\approx 0{,}100$ kg CO\textsubscript{2}/kWh (matriz predominantemente hidrelétrica)\\
+  Alimentação & Carne bovina &
+    $\approx 27$ kg CO\textsubscript{2}e/kg consumido\\
+  Alimentação & Dieta vegetariana &
+    $\approx 1{,}5$ kg CO\textsubscript{2}e/dia\\
+  Consumo & Compras gerais &
+    Varia amplamente; estimativa: 0,5--2,0 tCO\textsubscript{2}e/ano\\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\bigskip
+
+\subsection*{1.3 \ Análise das Calculadoras Testadas}
+
+\textbf{a) TerraPass Carbon Footprint Calculator}
+(\url{https://www.terrapass.com/carbon-footprint-calculator/})
+
+A calculadora da TerraPass divide a análise em categorias:
+\begin{itemize}
+  \item \textbf{Veículo:} solicita milhas percorridas por ano e o consumo do veículo
+  (milhas por galão -- MPG). A fórmula subjacente é:
+  \[
+    \text{CO}_2\ (\text{libras}) =
+    \frac{\text{milhas anuais}}{\text{MPG}} \times 19{,}6
+  \]
+  onde o fator $19{,}6$ é o número de libras de CO\textsubscript{2} emitidas por galão
+  de gasolina queimada (EPA -- Agência de Proteção Ambiental dos EUA).
+
+  \item \textbf{Voos:} solicita número de voos de curta, média e longa distância.
+  Cada trecho tem um fator de emissão estimado em kg CO\textsubscript{2} por passageiro.
+
+  \item \textbf{Residência:} consumo de gás natural, óleo combustível e eletricidade.
+\end{itemize}
+
+\textbf{b) Carbon Footprint Calculator}
+(\url{https://www.carbonfootprint.com/calculator.aspx})
+
+Esta calculadora é mais abrangente e inclui:
+\begin{itemize}
+  \item Eletricidade e gás doméstico
+  \item Voos (domésticos e internacionais, com classes diferentes de cabine)
+  \item Transporte público, carro pessoal e motocicleta
+  \item Estilo de vida: alimentação, compras, serviços, resíduos
+\end{itemize}
+
+A metodologia segue o protocolo GHG (\textit{Greenhouse Gas Protocol}) da WBCSD/WRI,
+padrão internacional para contabilidade de emissões.
+
+\bigskip
+
+\subsection*{1.4 \ Simulação de Teste: Perfil Típico de Estudante Universitário Brasileiro}
+
+Para ilustrar o uso da calculadora, realizamos uma estimativa com o seguinte perfil:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{l r}
+  \toprule
+  \textbf{Atividade} & \textbf{Emissão estimada (tCO\textsubscript{2}e/ano)} \\ \midrule
+  Transporte de carro (15.000 km/ano, carro flex) & $\approx 1{,}50$ \\
+  Eletricidade residencial (200 kWh/mês) & $\approx 0{,}24$ \\
+  Alimentação (onívoro moderado) & $\approx 1{,}20$ \\
+  Sem voos internacionais & $0{,}00$ \\
+  Consumo geral & $\approx 0{,}80$ \\ \midrule
+  \textbf{Total aproximado} & $\approx \mathbf{3{,}74}$ \\ \bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+Para comparação, a média mundial é de $\approx 4{,}7$ tCO\textsubscript{2}e/pessoa/ano,
+e o limite sustentável para 1,5°C de aquecimento é de aproximadamente
+$\mathbf{2{,}3}$ tCO\textsubscript{2}e/pessoa/ano (IPCC, 2018).
+
+\bigskip
+
+\subsection*{1.5 \ Esboço do Algoritmo (preparação para o Capítulo~2)}
+
+Ainda que no Capítulo~1 não escrevamos código C, podemos esboçar o \textbf{algoritmo}
+(sequência lógica de passos) que um programa de calculadora de emissões seguiria.
+Você implementará isso em capítulos posteriores:
+
+\begin{algoritmo}
+\textbf{Algoritmo: Calculadora de Emissão de Carbono}
+
+\begin{enumerate}
+  \item Obter do usuário: quilômetros percorridos de carro por ano e consumo médio
+  do veículo (km/litro).
+  \item Calcular emissão do carro:
+  \[
+    E_{\text{carro}} = \frac{\text{km}}{\text{km/litro}} \times 2{,}31
+    \quad [\text{kg CO}_2]
+  \]
+  \item Obter do usuário: consumo mensal de eletricidade (kWh).
+  \item Calcular emissão de eletricidade:
+  \[
+    E_{\text{eletricidade}} = \text{kWh\_mensal} \times 12 \times \text{fator\_regional}
+    \quad [\text{kg CO}_2]
+  \]
+  \item Obter do usuário: tipo de dieta (carnívora, onívora, vegetariana, vegana).
+  \item Associar dieta a um fator de emissão anual pré-determinado.
+  \item Somar todas as emissões e converter para toneladas:
+  \[
+    E_{\text{total}} = (E_{\text{carro}} + E_{\text{eletricidade}} + E_{\text{dieta}} + \ldots)
+    \div 1000 \quad [\text{tCO}_2\text{e/ano}]
+  \]
+  \item Exibir o resultado e compará-lo com médias nacionais e globais.
+  \item Sugerir ações para reduzir a pegada de carbono.
+\end{enumerate}
+\end{algoritmo}
+
+\begin{boaprática}
+  Exercícios futuros (Capítulos~2 e~4) pedirão que você implemente em C uma
+  calculadora de emissão de carbono. Este exercício de \textit{test-drive} o
+  prepara conceitualmente: ao usar as calculadoras existentes, você entende
+  quais dados são necessários, quais cálculos são feitos e qual seria a saída
+  esperada do seu programa. Essa compreensão do problema \textit{antes} de
+  codificá-lo é uma excelente prática de engenharia de software.
+\end{boaprática}
+
+\newpage
+
+% ============================================================
+\section{Exercício 1.11 -- \textit{Test-Drive}: Calculadora de IMC}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado]
+\textbf{\textit{Test-drive}: Calculadora de índice de massa corporal.}
+De acordo com estimativas recentes, dois terços da população dos EUA estão acima do
+peso, e cerca de metade dela é obesa. Isso causa aumentos significativos na incidência
+de doenças como diabetes e problemas cardíacos. Para determinar se uma pessoa está com
+excesso de peso ou sofre de obesidade, pode-se usar o \textbf{Índice de Massa Corporal
+(IMC)}. Nos EUA, o Department of Health and Human Services oferece uma calculadora
+de IMC em \texttt{www.nhlbisupport.com/bmi/}. Use-a para calcular seu IMC. Um
+exercício no Capítulo~2 lhe pedirá para programar sua própria calculadora de IMC.
+Para se preparar, pesquise na Web as fórmulas utilizadas no cálculo.
+\end{enunciadoBox}
+
+\bigskip
+
+\begin{pesquisa}
+Este exercício requer pesquisa externa. As informações a seguir foram obtidas com
+base nos critérios do WHO (Organização Mundial da Saúde), NIH (Institutos Nacionais
+de Saúde dos EUA) e Ministério da Saúde do Brasil.
+\end{pesquisa}
+
+\bigskip
+
+\subsection*{2.1 \ O que é o Índice de Massa Corporal (IMC)?}
+
+O \textbf{IMC} (\textit{Body Mass Index} -- BMI) é uma medida internacional
+amplamente utilizada para avaliar se o peso de uma pessoa está dentro de uma
+faixa saudável, considerando sua altura. É uma medida de triagem (não de diagnóstico),
+simples de calcular e aplicável a adultos.
+
+\bigskip
+
+\subsection*{2.2 \ Fórmula do IMC}
+
+\textbf{Sistema métrico (padrão utilizado no Brasil):}
+\[
+  \boxed{IMC = \frac{\text{massa} \, [\text{kg}]}{\text{altura}^2 \, [\text{m}^2]}}
+\]
+
+\textbf{Exemplo:} Uma pessoa com 75 kg e 1,75 m de altura:
+\[
+  IMC = \frac{75}{1{,}75^2} = \frac{75}{3{,}0625} \approx 24{,}5 \, \text{kg/m}^2
+\]
+
+\textbf{Sistema imperial (usado nas calculadoras americanas):}
+\[
+  IMC = \frac{\text{peso} \, [\text{libras}] \times 703}{\text{altura}^2 \, [\text{polegadas}^2]}
+\]
+
+O fator 703 é o fator de conversão de unidades imperiais para o sistema métrico.
+
+\bigskip
+
+\subsection*{2.3 \ Classificação da OMS por Faixa de IMC}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c l l}
+  \toprule
+  \textbf{IMC (kg/m²)} & \textbf{Classificação (OMS)} & \textbf{Risco associado} \\ \midrule
+  $< 18{,}5$ & Abaixo do peso & Baixo (outros riscos) \\
+  $18{,}5$ -- $24{,}9$ & \textcolor{ecogreen}{\bfseries Peso normal} & Médio \\
+  $25{,}0$ -- $29{,}9$ & Sobrepeso & Aumentado \\
+  $30{,}0$ -- $34{,}9$ & Obesidade Grau I & Alto \\
+  $35{,}0$ -- $39{,}9$ & Obesidade Grau II & Muito alto \\
+  $\geq 40{,}0$ & Obesidade Grau III (mórbida) & Extremamente alto \\ \bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+\textbf{Nota importante:} Para crianças e adolescentes (menores de 18 anos), o IMC
+é interpretado por meio de percentis por idade e sexo, não pelas faixas acima.
+Para idosos, os limites podem ser ligeiramente diferentes.
+
+\bigskip
+
+\subsection*{2.4 \ Limitações do IMC}
+
+O IMC é uma medida útil de triagem, porém possui limitações conhecidas:
+\begin{itemize}
+  \item \textbf{Não distingue massa muscular de gordura:} Atletas com alta massa
+  muscular podem ter IMC elevado sem excesso de gordura.
+  \item \textbf{Não indica distribuição de gordura:} A gordura abdominal (visceral)
+  é mais perigosa que a gordura subcutânea, mas o IMC não as diferencia.
+  \item \textbf{Variações étnicas:} Algumas populações (asiáticas, por exemplo)
+  apresentam maior risco cardiometabólico com IMC mais baixo.
+\end{itemize}
+
+\bigskip
+
+\subsection*{2.5 \ Algoritmo para a Calculadora de IMC (preparação para o Capítulo~2)}
+
+O exercício menciona que o Capítulo~2 pedirá que você \textit{programe} sua calculadora
+de IMC. Veja o algoritmo que o futuro programa C deverá seguir:
+
+\begin{algoritmo}
+\textbf{Algoritmo: Calculadora de IMC}
+
+\begin{enumerate}
+  \item Exibir mensagem pedindo o peso do usuário em quilogramas.
+  \item Ler o valor do peso (número real positivo).
+  \item Exibir mensagem pedindo a altura do usuário em metros.
+  \item Ler o valor da altura (número real positivo).
+  \item Calcular o IMC:
+  \[
+    imc \leftarrow peso \div (altura \times altura)
+  \]
+  \item Exibir o valor calculado do IMC.
+  \item Comparar o IMC com os limites de classificação e exibir a categoria:
+  \begin{itemize}
+    \item Se $imc < 18{,}5$ $\rightarrow$ exibir ``Abaixo do peso''
+    \item Se $18{,}5 \leq imc < 25{,}0$ $\rightarrow$ exibir ``Peso normal''
+    \item Se $25{,}0 \leq imc < 30{,}0$ $\rightarrow$ exibir ``Sobrepeso''
+    \item Se $imc \geq 30{,}0$ $\rightarrow$ exibir ``Obesidade''
+  \end{itemize}
+  \item Exibir recomendação de consultar um profissional de saúde.
+\end{enumerate}
+\end{algoritmo}
+
+\begin{boaprática}
+  Este algoritmo será implementado em C no Capítulo~2, usando os comandos
+  \texttt{printf} (para exibir mensagens), \texttt{scanf} (para ler dados) e
+  a estrutura de decisão \texttt{if/else} (para classificar o IMC), que você
+  aprenderá no Capítulo~3. Ao entender o problema completamente \textit{antes}
+  de programar, você estará seguindo a melhor prática de engenharia de software:
+  \textit{``Pense antes de codificar''}.
+\end{boaprática}
+
+\subsection*{2.6 \ Exemplo de Saída Esperada do Futuro Programa}
+
+Quando implementado nos capítulos seguintes, o programa produzirá uma saída similar a:
+
+\begin{tcolorbox}[colback=black!90, colframe=deitelblue, fontupper=\ttfamily\small\color{green!70}]
+Digite seu peso em kg: \textcolor{white}{75.0}\\
+Digite sua altura em metros: \textcolor{white}{1.75}\\
+\\
+Seu IMC e: 24.49\\
+Classificacao: Peso normal\\
+Parabens! Seu peso esta dentro da faixa saudavel recomendada pela OMS.\\
+Consulte sempre um profissional de saude para orientacoes personalizadas.
+\end{tcolorbox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 1.12 -- Neutralidade de Gênero na Linguagem}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado]
+\textbf{Neutralidade de gênero.} Muitas pessoas desejam eliminar o sexismo em todas
+as formas de comunicação. Foi pedido que você crie um programa que possa processar
+um parágrafo de texto e substituir palavras com gênero específico por outras sem
+gênero. Supondo que você tenha recebido uma lista de palavras de gênero específico
+e suas substitutas com gênero neutro (por exemplo, ``esposa'' por ``cônjuge'',
+``homem'' por ``pessoa'', ``filha'' por ``prole'', e assim por diante), explique
+o \textbf{procedimento} que você usaria para ler um parágrafo de texto e realizar
+essas substituições manualmente. Como seu procedimento trataria um termo como
+``super-homem''? Você descobrirá no Capítulo~4 que o termo mais formal para
+``procedimento'' é \textbf{algoritmo}, e que um algoritmo especifica as etapas a
+serem cumpridas e a ordem em que se deve realizá-las.
+\end{enunciadoBox}
+
+\bigskip
+
+\subsection*{3.1 \ Contexto e Motivação}
+
+Este exercício aborda um problema de \textbf{processamento de texto} -- uma das
+aplicações mais comuns da programação. Embora o Capítulo~1 não nos ensine a
+escrever código C, ele nos pede para pensar algoritmicamente: como um ser humano
+\textit{(ou futuramente um programa)} leria um texto e realizaria substituições
+de palavras sensíveis ao gênero?
+
+Este tipo de problema é relevante em:
+\begin{itemize}
+  \item Processadores de texto e corretores automáticos
+  \item Ferramentas de revisão de documentos corporativos e acadêmicos
+  \item Sistemas de tradução e localização de software
+\end{itemize}
+
+\bigskip
+
+\subsection*{3.2 \ O Dicionário de Substituições}
+
+O primeiro passo é ter um \textbf{dicionário de substituições} -- uma lista de pares
+\textit{(palavra\_original $\to$ palavra\_neutra)}. Exemplo:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{l l}
+  \toprule
+  \textbf{Palavra com gênero} & \textbf{Substituta neutra} \\ \midrule
+  esposa / marido & cônjuge \\
+  homem / mulher & pessoa \\
+  filho / filha & filho(a) / prole \\
+  pai / mãe & progenitor(a) / responsável \\
+  ator / atriz & artista \\
+  presidente / presidenta & presidente \\
+  homens & pessoas \\
+  super-homem & super-herói / pessoa extraordinária \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\bigskip
+
+\subsection*{3.3 \ O Procedimento (Algoritmo) de Substituição Manual}
+
+Veja o algoritmo que uma pessoa (ou futuramente um programa C) seguiria:
+
+\begin{algoritmo}
+\textbf{Algoritmo: Substituição de Palavras com Gênero -- Versão Simples}
+
+\begin{enumerate}
+  \item \textbf{Preparar o dicionário:} Ter em mãos (ou na memória do computador)
+  a lista completa de pares \textit{(palavra\_original $\to$ palavra\_neutra)}.
+
+  \item \textbf{Ler o texto:} Ler o parágrafo de texto do início ao fim,
+  palavra por palavra (ou caractere por caractere, no caso de um computador).
+
+  \item \textbf{Para cada palavra do texto, repetir:}
+  \begin{enumerate}[label=\arabic*.]
+    \item Isolar a palavra atual (identificar onde ela começa e termina --
+    delimitada por espaços, pontuação, quebras de linha).
+    \item \textit{Remover} a pontuação temporariamente (vírgulas, pontos, etc.)
+    para comparar apenas as letras.
+    \item Comparar a palavra (em letras minúsculas, para ignorar maiúsculas)
+    com cada entrada no dicionário de substituições.
+    \item \textbf{Se houver correspondência:} substituir a palavra pela sua
+    versão neutra correspondente. Preservar maiúsculas/minúsculas originais
+    (ex.: se estava em maiúscula no início de frase, manter maiúscula).
+    \item \textbf{Se não houver correspondência:} manter a palavra original.
+    \item Recolocar a pontuação no lugar.
+    \item Avançar para a próxima palavra.
+  \end{enumerate}
+
+  \item \textbf{Exibir o texto substituído:} Após processar todas as palavras,
+  o texto resultante é apresentado com as substituições aplicadas.
+\end{enumerate}
+\end{algoritmo}
+
+\bigskip
+
+\subsection*{3.4 \ O Problema do ``Super-Homem'': Correspondência Parcial}
+
+O enunciado faz uma pergunta muito perspicaz: \textit{``Como seu procedimento trataria
+um termo como `super-homem'?''}
+
+Este é um dos desafios clássicos de processamento de texto, chamado de
+\textbf{problema de correspondência parcial} (\textit{substring matching}):
+a palavra ``homem'' aparece \textit{dentro} de ``super-homem'', mas
+``super-homem'' é uma palavra composta com significado próprio.
+
+\textbf{Cenário 1 -- Algoritmo ingênuo (PROBLEMÁTICO):}
+
+Se o algoritmo simplesmente procurar pela sequência de caracteres ``homem'' em
+qualquer posição do texto e a substituir por ``pessoa'', o resultado seria:
+\begin{center}
+``super-homem'' $\to$ ``super-pessoa''
+\end{center}
+Isso pode ser aceitável em alguns contextos, mas perde o significado específico
+da palavra composta.
+
+\bigskip
+\textbf{Cenário 2 -- Algoritmo aprimorado com correspondência por palavra completa:}
+
+Um algoritmo mais sofisticado verificaria se a correspondência ocorre em uma
+\textbf{palavra completa} (delimitada por espaços ou pontuação), não dentro de
+outra palavra. Assim:
+\begin{center}
+Texto: ``O homem foi ao mercado'' $\to$ ``A pessoa foi ao mercado'' \\[4pt]
+Texto: ``Ele é um super-homem'' $\to$ Reconhece ``super-homem'' como palavra
+composta e consulta uma entrada específica no dicionário.
+\end{center}
+
+\textbf{Cenário 3 -- Dicionário com entradas compostas (MELHOR SOLUÇÃO):}
+
+A melhor abordagem é incluir \textit{explicitamente} palavras compostas no dicionário
+de substituições. A busca deve priorizar as entradas mais longas:
+
+\begin{enumerate}
+  \item Primeiro, verificar se a palavra/expressão atual corresponde a uma entrada
+  composta no dicionário (ex.: ``super-homem'' $\to$ ``super-herói'').
+  \item Somente se não houver correspondência composta, verificar palavras simples.
+\end{enumerate}
+
+\begin{atencao}
+  O problema da correspondência parcial é um exemplo de por que a programação
+  raramente é trivial. Soluções aparentemente simples frequentemente escondem
+  casos especiais que precisam ser tratados. No Capítulo~8, você aprenderá as
+  funções de manipulação de strings de C (\texttt{strstr}, \texttt{strcmp},
+  \texttt{strcpy}), que tornam possível implementar esse algoritmo.
+\end{atencao}
+
+\bigskip
+
+\subsection*{3.5 \ Algoritmo Completo Aprimorado}
+
+\begin{algoritmo}
+\textbf{Algoritmo: Substituição de Palavras com Gênero -- Versão Aprimorada}
+
+\begin{enumerate}
+  \item Carregar o dicionário de substituições na memória, organizando as entradas
+  do \textit{maior} para o \textit{menor} número de palavras (para que palavras
+  compostas sejam verificadas primeiro).
+
+  \item Ler o parágrafo de texto completo do usuário.
+
+  \item Percorrer o texto da esquerda para a direita, posição por posição.
+
+  \item Para cada posição:
+  \begin{enumerate}[label=\arabic*.]
+    \item Tentar encontrar a \textbf{entrada mais longa} do dicionário que comece
+    nessa posição.
+    \item Verificar se a correspondência é com uma \textbf{palavra completa}
+    (precedida e seguida por espaço, pontuação, início ou fim de texto).
+    \item Se encontrar: realizar a substituição e avançar o número de posições
+    correspondente ao tamanho da palavra encontrada.
+    \item Se não encontrar: copiar o caractere atual para a saída e avançar
+    uma posição.
+  \end{enumerate}
+
+  \item Exibir o texto resultante com todas as substituições aplicadas.
+\end{enumerate}
+\end{algoritmo}
+
+\bigskip
+
+\subsection*{3.6 \ Exemplo de Execução do Algoritmo}
+
+\textbf{Entrada:}
+
+\begin{tcolorbox}[colback=black!10, colframe=deitelblue, fontupper=\small]
+``O homem e sua esposa foram ao mercado. Seu filho mais velho, que e um
+verdadeiro super-homem, carregou todas as sacolas.''
+\end{tcolorbox}
+
+\textbf{Dicionário aplicado:}
+``homem'' $\to$ ``pessoa''; \; ``esposa'' $\to$ ``cônjuge''; \;
+``filho'' $\to$ ``filho(a)''; \; ``super-homem'' $\to$ ``super-herói''
+
+\textbf{Saída esperada:}
+
+\begin{tcolorbox}[colback=black!10, colframe=ecogreen, fontupper=\small]
+``A pessoa e seu(sua) cônjuge foram ao mercado. Seu filho(a) mais velho, que e um
+verdadeiro super-herói, carregou todas as sacolas.''
+\end{tcolorbox}
+
+\textbf{Observe} que ``super-homem'' foi tratado como uma única entrada do dicionário,
+\textit{diferente} da entrada ``homem'', resolvendo exatamente o problema levantado
+pelo enunciado.
+
+\bigskip
+
+\subsection*{3.7 \ Conexão com os Capítulos Futuros}
+
+O enunciado menciona que você aprenderá no \textbf{Capítulo~4} que o termo formal
+para ``procedimento'' é \textbf{algoritmo}. De fato:
+
+\begin{tcolorbox}[colback=deitellightblue, colframe=deitelblue]
+\textbf{Definição (antecipação do Capítulo~4):} Um \textbf{algoritmo} é uma sequência
+finita e ordenada de passos bem-definidos que, quando executada, resolve um problema
+específico em tempo finito.
+\end{tcolorbox}
+
+O processamento de substituições que descrevemos neste exercício é um algoritmo completo.
+Ele especifica:
+\begin{itemize}
+  \item \textbf{O que fazer:} verificar cada posição do texto
+  \item \textbf{A ordem:} da esquerda para a direita, entradas longas antes das curtas
+  \item \textbf{A condição de parada:} ao atingir o fim do texto
+\end{itemize}
+
+Nos \textbf{Capítulos~3 e~4} você aprenderá a expressar algoritmos em pseudocódigo;
+nos \textbf{Capítulos~7 e~8} você aprenderá ponteiros e manipulação de strings,
+respectivamente -- as ferramentas de C necessárias para implementar este algoritmo
+de forma eficiente.
+
+\newpage
+
+% ============================================================
+\section*{Reflexão Final -- O Valor dos Exercícios ``Fazendo a Diferença''}
+% ============================================================
+
+\begin{tcolorbox}[colback=ecolightgreen, colframe=ecogreen,
+  title={\bfseries Por que esses exercícios importam?}]
+
+Os três exercícios deste capítulo -- a calculadora de emissão de carbono, a
+calculadora de IMC e a neutralidade de gênero -- compartilham uma característica
+essencial: são problemas \textbf{reais}, que afetam a vida real de pessoas reais.
+
+\begin{itemize}
+  \item \textbf{Exercício 1.10 (Carbono):} O aquecimento global é um dos maiores
+  desafios da humanidade. Programas de computador são ferramentas poderosas para
+  conscientizar e motivar mudanças de comportamento.
+
+  \item \textbf{Exercício 1.11 (IMC):} A obesidade é uma epidemia global. Uma
+  calculadora de IMC bem projetada pode ajudar milhões de pessoas a monitorarem
+  sua saúde.
+
+  \item \textbf{Exercício 1.12 (Gênero):} A linguagem molda a percepção social.
+  Ferramentas de processamento de texto que promovem linguagem inclusiva contribuem
+  para uma sociedade mais igualitária.
+\end{itemize}
+
+Esses problemas serão progressivamente implementados em C ao longo do livro.
+O que você fez no Capítulo~1 foi \textbf{compreender o problema} -- a etapa mais
+importante de qualquer projeto de software. Agora você está pronto para o
+Capítulo~2, onde começará a escrever seus primeiros programas em C.
+\end{tcolorbox}
+
+\bigskip
+
+\begin{boaprática}
+  Um programador experiente compreende profundamente o problema que está resolvendo
+  \textit{antes} de escrever uma única linha de código. Os exercícios ``Fazendo a
+  Diferença'' treinam exatamente essa habilidade: a capacidade de analisar, modelar
+  e planejar a solução -- independentemente da linguagem de programação usada.
+\end{boaprática}
+
+\end{document}

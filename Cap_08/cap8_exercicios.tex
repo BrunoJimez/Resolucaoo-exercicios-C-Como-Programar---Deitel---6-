@@ -1,0 +1,1378 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 8 -- Caracteres e Strings em C
+%  EXERCÍCIOS (8.5 -- 8.42)
+%  Abordagem incremental: Caps. 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array,amsmath}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},
+  title={\small\color{white}Saída do programa},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 8 -- Exercícios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 8}\\[0.3cm]
+  {\Large\color{deitelblue!80}Caracteres e Strings em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios (8.5--8.42)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, com código completo}
+  \end{tcolorbox}
+\end{titlepage}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 8.5 -- Teste de Caracteres}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.5: teste_caracteres.c
+   Aplica todas as funcoes de <ctype.h> a um caractere */
+#include <stdio.h>
+#include <ctype.h>
+
+int main( void )
+{
+    int c;
+
+    printf( "Digite um caractere: " );
+    c = getchar();
+
+    printf( "\nResultados para o caractere '%c' (ASCII %d):\n", c, c );
+    printf( "isdigit  : %d\n", isdigit( c ) );
+    printf( "isalpha  : %d\n", isalpha( c ) );
+    printf( "isalnum  : %d\n", isalnum( c ) );
+    printf( "isxdigit : %d\n", isxdigit( c ) );
+    printf( "islower  : %d\n", islower( c ) );
+    printf( "isupper  : %d\n", isupper( c ) );
+    printf( "isspace  : %d\n", isspace( c ) );
+    printf( "iscntrl  : %d\n", iscntrl( c ) );
+    printf( "isprint  : %d\n", isprint( c ) );
+    printf( "ispunct  : %d\n", ispunct( c ) );
+    printf( "tolower  : '%c'\n", tolower( c ) );
+    printf( "toupper  : '%c'\n", toupper( c ) );
+
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.6 -- Maiúsculas e Minúsculas}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.6: maiusculas_minusculas.c */
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+int main( void )
+{
+    char s[ 100 ];
+    int i;
+
+    printf( "Digite uma linha de texto: " );
+    fgets( s, 100, stdin );
+
+    printf( "Maiusculas: " );
+    for ( i = 0; s[ i ] != '\0'; ++i ) {
+        putchar( toupper( s[ i ] ) );
+    }
+
+    printf( "Minusculas: " );
+    for ( i = 0; s[ i ] != '\0'; ++i ) {
+        putchar( tolower( s[ i ] ) );
+    }
+
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.7 -- Conversão de Strings em Inteiros}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.7: soma_inteiros_string.c */
+#include <stdio.h>
+#include <stdlib.h>
+
+int main( void )
+{
+    char s1[ 20 ], s2[ 20 ], s3[ 20 ], s4[ 20 ];
+    int v1, v2, v3, v4, total;
+
+    printf( "Digite 4 strings com inteiros (uma por linha):\n" );
+    scanf( "%s%s%s%s", s1, s2, s3, s4 );
+
+    v1 = atoi( s1 );
+    v2 = atoi( s2 );
+    v3 = atoi( s3 );
+    v4 = atoi( s4 );
+
+    total = v1 + v2 + v3 + v4;
+    printf( "Soma: %d + %d + %d + %d = %d\n", v1, v2, v3, v4, total );
+
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.8 -- Conversão para \texttt{double}}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.8: soma_double_string.c */
+#include <stdio.h>
+#include <stdlib.h>
+
+int main( void )
+{
+    char s1[ 20 ], s2[ 20 ], s3[ 20 ], s4[ 20 ];
+    double v1, v2, v3, v4, total;
+
+    printf( "Digite 4 strings com valores double:\n" );
+    scanf( "%s%s%s%s", s1, s2, s3, s4 );
+
+    v1 = atof( s1 );
+    v2 = atof( s2 );
+    v3 = atof( s3 );
+    v4 = atof( s4 );
+
+    total = v1 + v2 + v3 + v4;
+    printf( "Soma: %.2f + %.2f + %.2f + %.2f = %.2f\n",
+            v1, v2, v3, v4, total );
+
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.9 -- Comparação de Strings}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.9: compara_strings.c */
+#include <stdio.h>
+#include <string.h>
+
+int main( void )
+{
+    char s1[ 100 ], s2[ 100 ];
+    int resultado;
+
+    printf( "Digite a primeira string: " );
+    fgets( s1, 100, stdin );
+    s1[ strcspn( s1, "\n" ) ] = '\0';  /* remove \n do fgets */
+
+    printf( "Digite a segunda string: " );
+    fgets( s2, 100, stdin );
+    s2[ strcspn( s2, "\n" ) ] = '\0';
+
+    resultado = strcmp( s1, s2 );
+
+    if ( resultado < 0 ) {
+        printf( "\"%s\" e menor que \"%s\"\n", s1, s2 );
+    }
+    else if ( resultado == 0 ) {
+        printf( "As strings sao iguais.\n" );
+    }
+    else {
+        printf( "\"%s\" e maior que \"%s\"\n", s1, s2 );
+    }
+
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.10 -- \texttt{strncmp}}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.10: compara_n_chars.c */
+#include <stdio.h>
+#include <string.h>
+
+int main( void )
+{
+    char s1[ 100 ], s2[ 100 ];
+    int n, resultado;
+
+    printf( "Primeira string: " );
+    fgets( s1, 100, stdin );
+    s1[ strcspn( s1, "\n" ) ] = '\0';
+
+    printf( "Segunda string: " );
+    fgets( s2, 100, stdin );
+    s2[ strcspn( s2, "\n" ) ] = '\0';
+
+    printf( "Numero de caracteres a comparar: " );
+    scanf( "%d", &n );
+
+    resultado = strncmp( s1, s2, n );
+
+    if ( resultado < 0 )
+        printf( "Primeira %d chars de s1 sao MENORES.\n", n );
+    else if ( resultado == 0 )
+        printf( "Primeira %d chars sao IGUAIS.\n", n );
+    else
+        printf( "Primeira %d chars de s1 sao MAIORES.\n", n );
+
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.11 -- Sentenças Aleatórias}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.11: sentencas_aleatorias.c */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <time.h>
+
+int main( void )
+{
+    const char *artigo[]      = { "o", "a", "um", "uma", "algum", "alguma" };
+    const char *substantivo[] = { "menino", "menina", "cao", "cidade", "carro" };
+    const char *verbo[]       = { "dirigiu", "saltou", "correu", "caminhou", "pulou" };
+    const char *preposicao[]  = { "para", "de", "sobre", "sob", "em" };
+
+    char sentenca[ 200 ];
+    int i, frase;
+
+    srand( time( NULL ) );
+
+    for ( frase = 1; frase <= 20; ++frase ) {
+        sentenca[ 0 ] = '\0';  /* string vazia */
+
+        strcat( sentenca, artigo[      rand() % 6 ] );  strcat( sentenca, " " );
+        strcat( sentenca, substantivo[ rand() % 5 ] );  strcat( sentenca, " " );
+        strcat( sentenca, verbo[       rand() % 5 ] );  strcat( sentenca, " " );
+        strcat( sentenca, preposicao[  rand() % 5 ] );  strcat( sentenca, " " );
+        strcat( sentenca, artigo[      rand() % 6 ] );  strcat( sentenca, " " );
+        strcat( sentenca, substantivo[ rand() % 5 ] );
+        strcat( sentenca, "." );
+
+        /* Capitaliza primeira letra */
+        sentenca[ 0 ] = toupper( sentenca[ 0 ] );
+
+        printf( "%s\n", sentenca );
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Exemplo de saída:}
+\begin{saida}
+Um menino correu sobre a cidade.\\
+Alguma menina dirigiu para o cao.\\
+O carro caminhou em uma menina.\\
+\ldots
+\end{saida}
+
+\textbf{Conceito-chave:} usamos um \textbf{array de ponteiros para \texttt{char}}
+(arrays de strings literais), técnica do Cap.~7 que dispensa pré-alocação de
+matrizes 2D.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.12 -- Limericks}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Estratégia:} Generalizar o Ex.~8.11 com 5 conjuntos de palavras agrupados
+por padrão de rima (A-A-B-B-A). Cada linha do limerick tem estrutura própria.
+
+\begin{lstlisting}
+/* Esqueleto de limerick generator */
+const char *linhasA[] = { /* terminam em rima A */
+    "Conheci uma menina chamada Sue",
+    "Vivia num lugar que era cru",
+    /* ... mais opcoes ... */
+};
+const char *linhasB[] = { /* rima B */
+    "Tinha um cao que rosnava",
+    "Andava sem ter mapa",
+    /* ... */
+};
+
+/* Imprime: linhaA1, linhaA2, linhaB1, linhaB2, linhaA3 */
+\end{lstlisting}
+
+\textit{Desafio:} fazer as rimas funcionarem requer cuidado linguístico. Esta é
+uma das tarefas mais difíceis em geração de texto -- até IA moderna luta para
+fazer limericks consistentes em português.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.13 -- Falso Latim (Pig Latin)}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Algoritmo:} Para cada palavra, passar a primeira letra para o final e
+adicionar ``ei''. Exemplo: ``salto'' $\to$ ``altosei''.
+
+\begin{lstlisting}
+/* Ex8.13: pig_latin.c */
+#include <stdio.h>
+#include <string.h>
+
+void printLatinWord( char *palavra );
+
+int main( void )
+{
+    char frase[ 200 ];
+    char *token;
+
+    printf( "Digite uma frase: " );
+    fgets( frase, 200, stdin );
+    frase[ strcspn( frase, "\n" ) ] = '\0';
+
+    token = strtok( frase, " " );
+    while ( token != NULL ) {
+        printLatinWord( token );
+        printf( " " );
+        token = strtok( NULL, " " );
+    }
+    printf( "\n" );
+
+    return 0;
+}
+
+void printLatinWord( char *palavra )
+{
+    char primeira = palavra[ 0 ];
+    int  tam      = strlen( palavra );
+    int  i;
+
+    /* Imprime a partir do segundo caractere */
+    for ( i = 1; i < tam; ++i ) {
+        putchar( palavra[ i ] );
+    }
+
+    /* Adiciona a primeira letra + "ei" */
+    putchar( primeira );
+    printf( "ei" );
+}
+\end{lstlisting}
+
+\textbf{Exemplo:} \texttt{"o computador salta"} $\to$ \texttt{"oei omputadorcei altasei"}.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.14 -- Tokenização de Telefone}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.14: tokens_telefone.c
+   Le "(55) 5555-5555" e extrai DDD e numero */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main( void )
+{
+    char telefone[ 30 ];
+    char numero[ 9 ] = { 0 };
+    char *token;
+    int  ddd;
+    long numTel;
+
+    printf( "Digite o telefone como (DD) XXXX-XXXX: " );
+    fgets( telefone, 30, stdin );
+
+    /* Primeiro token: depois de '(' */
+    token = strtok( telefone, "() -\n" );  /* DDD */
+    ddd = atoi( token );
+
+    token = strtok( NULL, "() -\n" );  /* primeira parte */
+    strcat( numero, token );
+
+    token = strtok( NULL, "() -\n" );  /* segunda parte */
+    strcat( numero, token );
+
+    numTel = atol( numero );
+
+    printf( "DDD: %d\n", ddd );
+    printf( "Numero: %ld\n", numTel );
+
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.15 -- Inverter Ordem das Palavras}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Estratégia:} extrair tokens, armazenar em array, imprimir em ordem inversa.
+
+\begin{lstlisting}
+/* Ex8.15: inverter_palavras.c */
+#include <stdio.h>
+#include <string.h>
+#define MAX_PALAVRAS 50
+
+int main( void )
+{
+    char texto[ 500 ];
+    char *palavras[ MAX_PALAVRAS ];
+    char *token;
+    int  n = 0, i;
+
+    printf( "Digite uma linha de texto: " );
+    fgets( texto, 500, stdin );
+
+    /* Extrai tokens */
+    token = strtok( texto, " \n" );
+    while ( token != NULL && n < MAX_PALAVRAS ) {
+        palavras[ n++ ] = token;
+        token = strtok( NULL, " \n" );
+    }
+
+    /* Imprime de tras para a frente */
+    printf( "Invertido: " );
+    for ( i = n - 1; i >= 0; --i ) {
+        printf( "%s ", palavras[ i ] );
+    }
+    printf( "\n" );
+
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.16 -- Procurar Substring}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.16: procura_substring.c */
+#include <stdio.h>
+#include <string.h>
+
+int main( void )
+{
+    char linha[ 200 ], procura[ 50 ];
+    char *searchPtr;
+
+    printf( "Digite a linha de texto: " );
+    fgets( linha, 200, stdin );
+
+    printf( "Digite a string de pesquisa: " );
+    fgets( procura, 50, stdin );
+    procura[ strcspn( procura, "\n" ) ] = '\0';
+
+    searchPtr = strstr( linha, procura );
+
+    if ( searchPtr != NULL ) {
+        printf( "Primeira ocorrencia em diante:\n%s\n", searchPtr );
+
+        /* Procura segunda ocorrencia */
+        searchPtr = strstr( searchPtr + 1, procura );
+        if ( searchPtr != NULL ) {
+            printf( "\nSegunda ocorrencia em diante:\n%s\n", searchPtr );
+        }
+        else {
+            printf( "\nNao ha segunda ocorrencia.\n" );
+        }
+    }
+    else {
+        printf( "String nao encontrada.\n" );
+    }
+
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.17 -- Total de Ocorrências de Substring}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.17: conta_substring.c */
+#include <stdio.h>
+#include <string.h>
+
+int main( void )
+{
+    char texto[ 500 ];
+    char procura[ 50 ];
+    int  total = 0;
+    char *p;
+
+    printf( "Digite o texto (em uma linha): " );
+    fgets( texto, 500, stdin );
+
+    printf( "Digite a substring a procurar: " );
+    fgets( procura, 50, stdin );
+    procura[ strcspn( procura, "\n" ) ] = '\0';
+
+    p = texto;
+    while ( ( p = strstr( p, procura ) ) != NULL ) {
+        ++total;
+        ++p;  /* avanca para procurar proxima ocorrencia */
+    }
+
+    printf( "Ocorrencias de '%s': %d\n", procura, total );
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.18 -- Total de Ocorrências de Caractere}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.18: conta_caractere.c */
+#include <stdio.h>
+#include <string.h>
+
+int main( void )
+{
+    char texto[ 500 ];
+    char ch;
+    int  total = 0;
+    char *p;
+
+    printf( "Digite o texto: " );
+    fgets( texto, 500, stdin );
+
+    printf( "Digite o caractere a procurar: " );
+    scanf( " %c", &ch );
+
+    p = texto;
+    while ( ( p = strchr( p, ch ) ) != NULL ) {
+        ++total;
+        ++p;
+    }
+
+    printf( "'%c' ocorre %d vezes.\n", ch, total );
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.19 -- Frequência das Letras do Alfabeto}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.19: frequencia_letras.c */
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+int main( void )
+{
+    char texto[ 500 ];
+    int  frequencia[ 26 ] = { 0 };
+    int  i;
+    char letra;
+
+    printf( "Digite o texto: " );
+    fgets( texto, 500, stdin );
+
+    /* Conta cada letra (case-insensitive) */
+    for ( i = 0; texto[ i ] != '\0'; ++i ) {
+        if ( isalpha( texto[ i ] ) ) {
+            letra = tolower( texto[ i ] );
+            ++frequencia[ letra - 'a' ];
+        }
+    }
+
+    /* Exibe tabela */
+    printf( "\nLetra | Frequencia\n" );
+    printf( "------|----------\n" );
+    for ( i = 0; i < 26; ++i ) {
+        if ( frequencia[ i ] > 0 ) {
+            printf( "  %c   |   %d\n", 'a' + i, frequencia[ i ] );
+        }
+    }
+
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.20 -- Total de Palavras}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.20: conta_palavras.c */
+#include <stdio.h>
+#include <string.h>
+
+int main( void )
+{
+    char texto[ 500 ];
+    int  contador = 0;
+    char *token;
+
+    printf( "Digite o texto: " );
+    fgets( texto, 500, stdin );
+
+    token = strtok( texto, " \n\t" );
+    while ( token != NULL ) {
+        ++contador;
+        token = strtok( NULL, " \n\t" );
+    }
+
+    printf( "Total de palavras: %d\n", contador );
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.21 -- Ordenação Alfabética de Strings}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.21: ordena_strings.c
+   Bubble sort de strings usando strcmp */
+#include <stdio.h>
+#include <string.h>
+#define N 10
+
+int main( void )
+{
+    char *cidades[ N ] = {
+        "Sao Paulo", "Campinas", "Santos", "Sorocaba", "Ribeirao Preto",
+        "Sao Jose do Rio Preto", "Bauru", "Marilia", "Piracicaba", "Jundiai"
+    };
+
+    int i, j;
+    char *temp;
+
+    /* Bubble sort (Cap. 6) com strcmp */
+    for ( i = 0; i < N - 1; ++i ) {
+        for ( j = 0; j < N - 1 - i; ++j ) {
+            if ( strcmp( cidades[ j ], cidades[ j + 1 ] ) > 0 ) {
+                temp = cidades[ j ];
+                cidades[ j ] = cidades[ j + 1 ];
+                cidades[ j + 1 ] = temp;
+            }
+        }
+    }
+
+    printf( "Cidades em ordem alfabetica:\n" );
+    for ( i = 0; i < N; ++i ) {
+        printf( "  %s\n", cidades[ i ] );
+    }
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Detalhe importante:} no array de ponteiros, trocamos os \textit{ponteiros}
+(não os conteúdos das strings). Trocar ponteiros é $O(1)$; copiar strings seria
+$O(\text{comprimento})$.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.22 -- ASCII (V/F)}
+% ============================================================
+
+\begin{respostabox}
+Consultando o Apêndice B (tabela ASCII), onde \texttt{'0'}=48, \texttt{'9'}=57,
+\texttt{'A'}=65, \texttt{'Z'}=90, \texttt{'a'}=97, \texttt{'z'}=122,
+\texttt{'+'}=43, \texttt{'('}=40, \texttt{')'}=41:
+
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \texttt{'A'} antes de \texttt{'B'}? $65 < 66$ -- \textcolor{deitelgreen}{\textbf{Verdadeiro.}}
+
+\item \texttt{'9'} antes de \texttt{'0'}? $57 > 48$ -- \textcolor{deitelred}{\textbf{Falso.}}
+Os dígitos estão em ordem crescente, com \texttt{'0'} primeiro.
+
+\item Símbolos aritméticos antes dos dígitos? \texttt{'+'}=43, \texttt{'-'}=45,
+\texttt{'*'}=42, \texttt{'/'}=47, todos $< 48$ (\texttt{'0'}). \textcolor{deitelgreen}{\textbf{Verdadeiro.}}
+
+\item Dígitos antes das letras? \texttt{'9'}=57, \texttt{'A'}=65. \textcolor{deitelgreen}{\textbf{Verdadeiro.}}
+
+\item Parêntese direito antes do esquerdo em ordem crescente? \texttt{'('}=40,
+\texttt{')'}=41. Em ordem crescente, primeiro \texttt{(}, depois \texttt{)}.
+Então \texttt{)} aparece \textit{depois} do \texttt{(}, não antes.
+\textcolor{deitelred}{\textbf{Falso.}}
+
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.23 -- Strings que começam com 'b'}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.23: comeca_b.c */
+#include <stdio.h>
+#include <string.h>
+#define N 10
+
+int main( void )
+{
+    char strings[ N ][ 50 ];
+    int  i;
+
+    printf( "Digite %d strings:\n", N );
+    for ( i = 0; i < N; ++i ) {
+        scanf( "%s", strings[ i ] );
+    }
+
+    printf( "\nStrings comecando com 'b':\n" );
+    for ( i = 0; i < N; ++i ) {
+        if ( strings[ i ][ 0 ] == 'b' || strings[ i ][ 0 ] == 'B' ) {
+            printf( "  %s\n", strings[ i ] );
+        }
+    }
+
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.24 -- Strings terminando em 'ed'}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.24: termina_ed.c */
+#include <stdio.h>
+#include <string.h>
+#define N 10
+
+int main( void )
+{
+    char strings[ N ][ 50 ];
+    int  i, tam;
+
+    printf( "Digite %d strings:\n", N );
+    for ( i = 0; i < N; ++i ) scanf( "%s", strings[ i ] );
+
+    printf( "\nStrings terminando em 'ed':\n" );
+    for ( i = 0; i < N; ++i ) {
+        tam = strlen( strings[ i ] );
+        if ( tam >= 2 &&
+             strings[ i ][ tam - 2 ] == 'e' &&
+             strings[ i ][ tam - 1 ] == 'd' ) {
+            printf( "  %s\n", strings[ i ] );
+        }
+    }
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.25 -- Tabela ASCII Completa}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.25: ascii_table.c */
+#include <stdio.h>
+
+int main( void )
+{
+    int codigo;
+    int c;
+
+    /* Versao 1: usuario digita um codigo */
+    printf( "Digite um codigo ASCII (0-255): " );
+    scanf( "%d", &codigo );
+    printf( "Codigo %d = '%c'\n", codigo, codigo );
+
+    /* Versao 2: tabela completa */
+    printf( "\nTabela completa de 32 a 126 (imprimiveis):\n" );
+    for ( c = 32; c <= 126; ++c ) {
+        printf( "%3d='%c'  ", c, c );
+        if ( ( c - 31 ) % 8 == 0 ) printf( "\n" );
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{O que acontece com códigos 0--31 e 128--255?} Os de 0--31 são caracteres
+de controle (\texttt{\textbackslash 0}, \texttt{\textbackslash t}, \texttt{\textbackslash n},
+beep, etc.) -- alguns afetam o terminal de formas estranhas. Os 128--255 dependem
+da codificação ativa (ISO-8859, Windows-1252, UTF-8), produzindo caracteres
+acentuados ou inválidos.
+\end{respostabox}
+
+% ============================================================
+\section{Exercícios 8.26 a 8.33 -- Reimplementar Funções da Biblioteca}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Visão geral:} estes exercícios pedem para reimplementar funções da biblioteca
+padrão. São excelentes para entender \textit{como} essas funções funcionam internamente.
+
+\textbf{Exemplo: 8.33 -- \texttt{strlen} próprio:}
+
+\begin{lstlisting}
+/* Versao com subscritos */
+size_t meu_strlen_v1( const char *s )
+{
+    size_t i = 0;
+    while ( s[ i ] != '\0' ) ++i;
+    return i;
+}
+
+/* Versao com aritmetica de ponteiros */
+size_t meu_strlen_v2( const char *s )
+{
+    const char *p = s;
+    while ( *p != '\0' ) ++p;
+    return p - s;  /* diferenca de ponteiros = numero de bytes */
+}
+\end{lstlisting}
+
+\textbf{Exemplo: 8.28 -- \texttt{strcpy} próprio:}
+\begin{lstlisting}
+/* Com subscritos */
+char *meu_strcpy_v1( char *dest, const char *src )
+{
+    int i = 0;
+    while ( src[ i ] != '\0' ) {
+        dest[ i ] = src[ i ];
+        ++i;
+    }
+    dest[ i ] = '\0';
+    return dest;
+}
+
+/* Com ponteiros (idiomatic C!) */
+char *meu_strcpy_v2( char *dest, const char *src )
+{
+    char *original = dest;
+    while ( ( *dest++ = *src++ ) != '\0' )
+        ;  /* tudo na condicao */
+    return original;
+}
+\end{lstlisting}
+
+\textbf{Exemplo: 8.30 -- \texttt{strcmp} próprio:}
+\begin{lstlisting}
+int meu_strcmp( const char *s1, const char *s2 )
+{
+    while ( *s1 != '\0' && *s1 == *s2 ) {
+        ++s1; ++s2;
+    }
+    return *s1 - *s2;  /* < 0, 0 ou > 0 */
+}
+\end{lstlisting}
+
+Os exercícios 8.26 (funções \texttt{<ctype.h>}), 8.27 (conversões), 8.29 (E/S),
+8.31 (busca) e 8.32 (memória) seguem a mesma filosofia: cada um aprofunda o
+domínio sobre uma família de funções específicas.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.34 -- Análise de Texto}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.34: analise_texto.c
+   Tres analises diferentes em um unico programa */
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#define MAX 1000
+
+int main( void )
+{
+    char texto[ MAX ];
+    int  freq_letra[ 26 ] = { 0 };
+    int  freq_tamanho[ 20 ] = { 0 };
+    int  i, tam;
+    char *token;
+    char copia[ MAX ];
+
+    printf( "Digite o texto (uma so linha): " );
+    fgets( texto, MAX, stdin );
+    strcpy( copia, texto );
+
+    /* (a) Frequencia de letras */
+    for ( i = 0; texto[ i ] != '\0'; ++i ) {
+        if ( isalpha( texto[ i ] ) ) {
+            ++freq_letra[ tolower( texto[ i ] ) - 'a' ];
+        }
+    }
+
+    printf( "\n=== (a) Frequencia de letras ===\n" );
+    for ( i = 0; i < 26; ++i ) {
+        if ( freq_letra[ i ] > 0 ) {
+            printf( "%c: %d   ", 'a' + i, freq_letra[ i ] );
+        }
+    }
+    printf( "\n" );
+
+    /* (b) Distribuicao de tamanhos */
+    token = strtok( texto, " .,;:\n" );
+    while ( token != NULL ) {
+        tam = strlen( token );
+        if ( tam < 20 ) ++freq_tamanho[ tam ];
+        token = strtok( NULL, " .,;:\n" );
+    }
+
+    printf( "\n=== (b) Distribuicao de tamanhos ===\n" );
+    printf( "Tamanho | Ocorrencias\n" );
+    for ( i = 1; i < 20; ++i ) {
+        if ( freq_tamanho[ i ] > 0 ) {
+            printf( "  %2d    |  %d\n", i, freq_tamanho[ i ] );
+        }
+    }
+
+    /* (c) Lista de palavras unicas */
+    printf( "\n=== (c) Palavras encontradas ===\n" );
+    token = strtok( copia, " .,;:\n" );
+    while ( token != NULL ) {
+        printf( "  %s\n", token );
+        token = strtok( NULL, " .,;:\n" );
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+\textit{Nota:} A análise mais sofisticada (item c com contagem de \textit{palavras
+únicas}) requer uma estrutura de dados como tabela hash ou árvore (Cap.~12+).
+Aqui apresentamos uma versão simplificada listando todas as palavras encontradas.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.35 -- Justificação de Texto}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Algoritmo:}
+\begin{enumerate}[noitemsep]
+  \item Ler palavra por palavra.
+  \item Acumular palavras enquanto couberem em 65 colunas.
+  \item Quando uma linha estiver cheia, distribuir os espaços extras
+  uniformemente entre as palavras.
+  \item Última linha: alinha à esquerda (sem distribuir espaços).
+\end{enumerate}
+
+\begin{lstlisting}
+/* Esqueleto */
+#define LARGURA 65
+
+void justificar( char *palavras[], int n, int espacoExtra )
+{
+    int gaps = n - 1;          /* numero de espacos entre palavras */
+    int base = espacoExtra / gaps;
+    int resto = espacoExtra % gaps;
+    int i, j;
+
+    for ( i = 0; i < n; ++i ) {
+        printf( "%s", palavras[ i ] );
+        if ( i < gaps ) {
+            int sp = base + 1;  /* pelo menos 1 espaco */
+            if ( i < resto ) ++sp;  /* distribui sobras */
+            for ( j = 0; j < sp; ++j ) putchar( ' ' );
+        }
+    }
+    putchar( '\n' );
+}
+\end{lstlisting}
+
+\textbf{Curiosidade:} A justificação de texto é um problema clássico em editoração
+eletrônica. Donald Knuth desenvolveu o algoritmo \textit{Knuth-Plass} para o
+\TeX{} -- usado para tipografar este próprio documento! -- que produz justificação
+``ótima'' globalmente, e não linha-por-linha.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.36 -- Datas em Vários Formatos}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.36: formato_datas.c */
+#include <stdio.h>
+
+int main( void )
+{
+    int dia, mes, ano;
+    const char *meses[] = {
+        "", "janeiro", "fevereiro", "marco", "abril",
+        "maio", "junho", "julho", "agosto",
+        "setembro", "outubro", "novembro", "dezembro"
+    };
+
+    printf( "Digite a data (DD/MM/AAAA): " );
+    scanf( "%d/%d/%d", &dia, &mes, &ano );
+
+    if ( mes >= 1 && mes <= 12 ) {
+        printf( "Formato extenso: %d de %s de %d\n",
+                dia, meses[ mes ], ano );
+    }
+    else {
+        printf( "Mes invalido!\n" );
+    }
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.37 -- Proteção de Cheque}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.37: protecao_cheque.c */
+#include <stdio.h>
+#include <string.h>
+
+int main( void )
+{
+    double valor;
+    char   bufferValor[ 20 ];
+    char   protegido[ 20 ];
+    int    n, asteriscos, i;
+
+    printf( "Digite o valor do cheque: " );
+    scanf( "%lf", &valor );
+
+    /* Converte para string com 2 casas decimais */
+    sprintf( bufferValor, "%.2f", valor );
+    n = strlen( bufferValor );
+
+    /* Calcula quantos asteriscos para totalizar 9 chars */
+    asteriscos = 9 - n;
+    if ( asteriscos < 0 ) asteriscos = 0;
+
+    /* Constroi string protegida: asteriscos + valor */
+    for ( i = 0; i < asteriscos; ++i ) protegido[ i ] = '*';
+    protegido[ asteriscos ] = '\0';
+    strcat( protegido, bufferValor );
+
+    printf( "Cheque: %s\n", protegido );
+    printf( "        123456789\n" );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Exemplo:} 99{,}87 $\to$ \texttt{****99.87}; 11230{,}60 $\to$ \texttt{11230.60} (já completo).
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.38 -- Valor de Cheque por Extenso}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Esquema:} converter \textit{centenas + dezenas + unidades + centavos}
+em palavras. Tabelas auxiliares para cada caso.
+
+\begin{lstlisting}
+/* Ex8.38: cheque_extenso.c -- esqueleto */
+const char *unidades[] = {
+    "", "um", "dois", "tres", "quatro", "cinco",
+    "seis", "sete", "oito", "nove"
+};
+const char *adolescentes[] = {
+    "dez", "onze", "doze", "treze", "catorze",
+    "quinze", "dezesseis", "dezessete", "dezoito", "dezenove"
+};
+const char *dezenas[] = {
+    "", "", "vinte", "trinta", "quarenta", "cinquenta",
+    "sessenta", "setenta", "oitenta", "noventa"
+};
+const char *centenas[] = {
+    "", "cento", "duzentos", "trezentos", "quatrocentos",
+    "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos"
+};
+
+/* Funcao recursiva para converter 0-999 em palavras */
+void converte( int n, char *resultado ) {
+    if ( n == 100 ) {
+        strcat( resultado, "cem" );
+        return;
+    }
+    if ( n >= 100 ) {
+        strcat( resultado, centenas[ n / 100 ] );
+        strcat( resultado, " e " );
+        n %= 100;
+    }
+    /* ... continuar para dezenas e unidades ... */
+}
+\end{lstlisting}
+
+\textbf{Atenção:} as regras de português têm peculiaridades (``cem'' vs.\
+``cento e cinco'', ``e'' entre dezenas e unidades, etc.) que tornam essa conversão
+mais complexa do que parece. Esse exercício é excelente para praticar muitos
+\texttt{if/else} em strings.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.39 -- Código Morse}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex8.39: morse.c */
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+const char *morse[] = {
+    ".-",   "-...", "-.-.", "-..",  ".",
+    "..-.", "--.",  "....", "..",   ".---",
+    "-.-",  ".-..", "--",   "-.",   "---",
+    ".--.", "--.-", ".-.",  "...",  "-",
+    "..-",  "...-", ".--",  "-..-", "-.--", "--.."
+};
+
+const char *morseDig[] = {
+    "-----", ".----", "..---", "...--", "....-",
+    ".....", "-....", "--...", "---..", "----."
+};
+
+void codifica( const char *frase )
+{
+    int i;
+    for ( i = 0; frase[ i ] != '\0'; ++i ) {
+        char c = toupper( frase[ i ] );
+        if ( c >= 'A' && c <= 'Z' ) {
+            printf( "%s ", morse[ c - 'A' ] );
+        }
+        else if ( c >= '0' && c <= '9' ) {
+            printf( "%s ", morseDig[ c - '0' ] );
+        }
+        else if ( c == ' ' ) {
+            printf( "  " );  /* 3 espacos entre palavras (mais o anterior) */
+        }
+    }
+    printf( "\n" );
+}
+
+int main( void )
+{
+    char frase[ 200 ];
+
+    printf( "Digite uma frase: " );
+    fgets( frase, 200, stdin );
+    frase[ strcspn( frase, "\n" ) ] = '\0';
+
+    printf( "Morse: " );
+    codifica( frase );
+
+    return 0;
+}
+\end{lstlisting}
+
+A descodificação (Morse $\to$ texto) é o processo inverso: separar por espaços
+duplos (palavras), depois por espaços simples (letras), e mapear de volta com
+busca em uma tabela.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 8.40 -- Conversor Métrico}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Estratégia:} cada unidade tem (a) uma \textit{categoria} (comprimento, massa,
+volume, etc.) e (b) um \textit{fator} em relação a uma unidade-base. Conversões
+só fazem sentido entre unidades da mesma categoria.
+
+\begin{lstlisting}
+/* Esqueleto */
+typedef struct {
+    const char *nome;
+    int   categoria;  /* 0=comprimento, 1=massa, 2=volume */
+    double fator;     /* em relacao a unidade-base da categoria */
+} Unidade;
+
+Unidade tabela[] = {
+    /* Comprimento, base = metro */
+    { "metro",     0, 1.0 },
+    { "centimetro", 0, 0.01 },
+    { "polegada",  0, 0.0254 },
+    { "pe",        0, 0.3048 },
+    /* Massa, base = kg */
+    { "kilograma", 1, 1.0 },
+    { "grama",     1, 0.001 },
+    { "libra",     1, 0.4535 },
+    /* Volume, base = litro */
+    { "litro",     2, 1.0 },
+    { "quarto",    2, 0.9463 },
+    /* ... */
+};
+
+double converte( double valor, const char *origem, const char *destino ) {
+    /* buscar origem e destino na tabela; checar mesma categoria;
+       converter valor para base e da base para destino */
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.41 -- Cartas de Cobrança}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Estratégia:} 5 templates de carta (do mais gentil ao mais ameaçador), com
+``placeholders'' substituídos por dados do devedor.
+
+\begin{lstlisting}
+const char *templates[ 5 ] = {
+    /* 1 mes: amigavel */
+    "Prezado(a) %s,\nNotamos que sua conta %d, no valor de R$ %.2f\n"
+    "esta com 1 mes em aberto. Por favor, considere regularizar.\n",
+
+    /* 2 meses: mais firme */
+    "Prezado(a) %s,\nSua conta %d, no valor de R$ %.2f, esta vencida\n"
+    "ha 2 meses. Solicitamos pagamento imediato.\n",
+
+    /* ... ate cinco niveis ... */
+};
+
+int main( void ) {
+    char nome[ 100 ], endereco[ 200 ];
+    int  conta, atraso;
+    double valor;
+    /* ... ler dados, escolher template apropriado, imprimir ... */
+}
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 8.42 -- Gerador de Palavras Cruzadas}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Por que é um projeto difícil?} Envolve:
+\begin{itemize}[noitemsep]
+  \item \textbf{Representação:} grade $N \times N$ como matriz de \texttt{char},
+  com \texttt{'.'} para vazio e \texttt{'\#'} para bloqueio.
+  \item \textbf{Dicionário:} milhares de palavras em arquivo (Cap.~11), indexadas
+  por comprimento e padrão (ex.: \texttt{"C\_S\_"}).
+  \item \textbf{Backtracking:} tenta encaixar palavras horizontal/verticalmente;
+  retrocede se nenhuma cabe.
+  \item \textbf{Geração de dicas:} requer banco de dados de definições para
+  cada palavra.
+\end{itemize}
+
+Este é um \textbf{projeto de final de período} -- pode levar 2--3 semanas em
+laboratório. Recomenda-se começar com versões simplificadas: grade pequena
+($5 \times 5$), dicionário compacto (100 palavras), sem dicas.
+\end{respostabox}
+
+\end{document}

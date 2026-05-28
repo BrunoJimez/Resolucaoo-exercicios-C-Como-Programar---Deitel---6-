@@ -1,0 +1,1625 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 3 -- Desenvolvimento Estruturado de Programas em C
+%  EXERCÍCIOS (3.11 -- 3.46)
+%  Abordagem incremental: Caps. 1 + 2 + 3
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array,amsmath}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},
+  title={\small\color{white}Saída do programa},breakable,#1}
+\newtcolorbox{pseudo}[1][]{colback=yellow!8,colframe=deitellorange,
+  fonttitle=\bfseries\small\color{deitellorange},title={Pseudocódigo},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 3 -- Exercícios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 3}\\[0.3cm]
+  {\Large\color{deitelblue!80}Desenvolvimento Estruturado de Programas em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios (3.11--3.46)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, com código completo\\
+    Abordagem incremental Deitel}
+  \end{tcolorbox}
+\end{titlepage}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 3.11 -- Identificar e Corrigir Erros}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Código com erro:}
+\begin{lstlisting}
+if ( idade >= 65 );
+    printf( "Idade e maior ou igual a 65\n" );
+else
+    printf( "Idade e menor que 65\n" );
+\end{lstlisting}
+\textbf{Erro:} Ponto e vírgula após \texttt{)} do \texttt{if} cria um corpo vazio,
+e o \texttt{else} fica sem um \texttt{if} associado, gerando erro de sintaxe.\\
+\textbf{Correção:}
+\begin{lstlisting}
+if ( idade >= 65 ) {
+    printf( "Idade e maior ou igual a 65\n" );
+}
+else {
+    printf( "Idade e menor que 65\n" );
+}
+\end{lstlisting}
+
+\item \textbf{Código com erro:}
+\begin{lstlisting}
+int x = 1, total;
+while ( x <= 10 ) {
+    total += x;
+    ++x;
+}
+\end{lstlisting}
+\textbf{Erro:} A variável \texttt{total} não foi inicializada -- contém ``lixo''.
+A soma incluirá esse valor desconhecido.\\
+\textbf{Correção:}
+\begin{lstlisting}
+int x = 1, total = 0;  /* inicializa total em 0 */
+while ( x <= 10 ) {
+    total += x;
+    ++x;
+}
+\end{lstlisting}
+
+\item \textbf{Código com erro:}
+\begin{lstlisting}
+while ( x <= 100 )
+    total += x;
+    ++x;
+\end{lstlisting}
+\textbf{Erros:} (1) Sem chaves, apenas a primeira instrução faz parte do laço;
+\texttt{++x} fica fora do \texttt{while}, criando loop infinito.\\
+\textbf{Correção:}
+\begin{lstlisting}
+while ( x <= 100 ) {
+    total += x;
+    ++x;
+}
+\end{lstlisting}
+
+\item \textbf{Código com erro:}
+\begin{lstlisting}
+while ( y > 0 ) {
+    printf( "%d\n", y );
+    ++y;
+}
+\end{lstlisting}
+\textbf{Erro:} \texttt{++y} aumenta \texttt{y} -- a condição \texttt{y > 0} nunca
+se tornará falsa para \texttt{y} positivo. Loop infinito.\\
+\textbf{Correção:} Trocar \texttt{++y} por \texttt{--y}.
+\begin{lstlisting}
+while ( y > 0 ) {
+    printf( "%d\n", y );
+    --y;     /* decrementa em vez de incrementar */
+}
+\end{lstlisting}
+
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.12 -- Preenchimento de Lacunas}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+\item Uma série de ações em uma \textbf{ordem} específica.
+\item Sinônimo de procedimento: \textbf{algoritmo}.
+\item Variável que acumula soma de números: \textbf{total} (ou acumulador).
+\item Definir variáveis com valores específicos no início: \textbf{inicialização}.
+\item Valor especial para indicar fim de entrada: \textbf{sentinela}, \textbf{sinalizador}, \textbf{artificial}, \textbf{flag}.
+\item Representação gráfica de um algoritmo: \textbf{fluxograma}.
+\item Em fluxograma, ordem indicada por \textbf{linhas de fluxo} (setas).
+\item Símbolo de finalização indica \textbf{início} e \textbf{fim} de cada algoritmo.
+\item Cálculos por instruções de atribuição; entrada/saída por \textbf{\texttt{scanf}} e \textbf{\texttt{printf}}.
+\item Item escrito dentro de símbolo de decisão: \textbf{condição}.
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.13 -- O que o programa imprime?}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 3.13]
+Determine a saída do programa que calcula \texttt{y = x * x} para \texttt{x} de 1 a 10
+e acumula \texttt{total}.
+\end{enunciadoBox}
+
+\begin{respostabox}
+O programa calcula os quadrados de 1 a 10 e exibe cada um em uma linha. Ao final,
+imprime a soma de todos os quadrados.
+
+\textbf{Cálculo da soma:} $1^2 + 2^2 + \ldots + 10^2 = 1+4+9+16+25+36+49+64+81+100 = 385$.
+
+\begin{saida}
+1\\2\\
+\hspace{-0.2em}\hphantom{0}4\\9\\
+16\\25\\36\\49\\64\\81\\100\\
+Total is 385
+\end{saida}
+
+\textit{Nota:} A mensagem final tem ``\texttt{Total is}'' (em inglês) tal como aparece
+no código original do exercício.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.14 -- Instruções em Pseudocódigo}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+\item \textbf{Apresentar mensagem 'Digite dois números':}
+\begin{pseudo}\textit{Imprimir ``Digite dois números''}\end{pseudo}
+
+\item \textbf{Atribuir soma de \texttt{x}, \texttt{y}, \texttt{z} a \texttt{p}:}
+\begin{pseudo}\textit{Definir p como a soma de x, y e z}\end{pseudo}
+
+\item \textbf{Testar se \texttt{m > 2v} em estrutura \texttt{if...else}:}
+\begin{pseudo}
+\textit{Se m for maior que duas vezes o valor atual de v}\\
+\textit{\hphantom{Se}\ldots ações se verdadeiro}\\
+\textit{senão}\\
+\textit{\hphantom{Se}\ldots ações se falso}
+\end{pseudo}
+
+\item \textbf{Obter valores para \texttt{s}, \texttt{r}, \texttt{t} pelo teclado:}
+\begin{pseudo}\textit{Ler s, r e t do teclado}\end{pseudo}
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.15 -- Algoritmos em Pseudocódigo}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Soma de dois números:}
+\begin{pseudo}
+\textit{Imprimir ``Digite dois números:''}\\
+\textit{Ler n1 e n2 do teclado}\\
+\textit{Definir soma como n1 + n2}\\
+\textit{Imprimir soma}
+\end{pseudo}
+
+\item \textbf{Maior de dois números:}
+\begin{pseudo}
+\textit{Imprimir ``Digite dois números:''}\\
+\textit{Ler n1 e n2 do teclado}\\
+\textit{Se n1 > n2}\\
+\textit{\hphantom{Se}Imprimir ``O maior é'' n1}\\
+\textit{senão se n2 > n1}\\
+\textit{\hphantom{Se}Imprimir ``O maior é'' n2}\\
+\textit{senão}\\
+\textit{\hphantom{Se}Imprimir ``Os números são iguais''}
+\end{pseudo}
+
+\item \textbf{Soma de série positiva com sentinela $-1$:}
+\begin{pseudo}
+\textit{Definir total como zero}\\
+\textit{Imprimir ``Digite o primeiro número (-1 para terminar):''}\\
+\textit{Ler número do teclado}\\
+\textit{Enquanto número for diferente de $-1$}\\
+\textit{\hphantom{En}Somar número ao total}\\
+\textit{\hphantom{En}Imprimir ``Digite o próximo número (-1 para terminar):''}\\
+\textit{\hphantom{En}Ler próximo número}\\
+\textit{Imprimir ``A soma é'' total}
+\end{pseudo}
+
+\end{enumerate}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 3.16 -- Verdadeiro ou Falso}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textcolor{deitelred}{\textbf{Falso.}} A parte mais difícil é \textit{compreender o
+problema} e \textit{desenvolver o algoritmo}. A escrita do código em C é geralmente
+a parte mais simples, uma vez que o algoritmo está bem definido.
+
+\item \textcolor{deitelgreen}{\textbf{Verdadeiro.}} O valor de sentinela deve ser
+escolhido de modo a nunca poder ser confundido com um dado válido.
+
+\item \textcolor{deitelred}{\textbf{Falso.}} Linhas de fluxo \textit{não} indicam ações;
+elas indicam a \textit{ordem} em que as ações (representadas por retângulos) são executadas.
+Ações são indicadas pelos símbolos retangulares.
+
+\item \textcolor{deitelred}{\textbf{Falso.}} Condições em símbolos de decisão contêm
+operadores \textit{relacionais} (\texttt{<}, \texttt{>}, \texttt{<=}, \texttt{>=}) e
+\textit{de igualdade} (\texttt{==}, \texttt{!=}), \textit{não} aritméticos. Também podem
+ser qualquer expressão que avalie para zero (falso) ou diferente de zero (verdadeiro).
+
+\item \textcolor{deitelgreen}{\textbf{Verdadeiro.}} Cada nível de refinamento top-down
+é uma representação completa do algoritmo -- apenas o nível de detalhe varia.
+
+\end{enumerate}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.17 -- Consumo de Gasolina}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Algoritmo (pseudocódigo):}
+\begin{pseudo}
+Inicializar km\_total e litros\_total como zero\\
+Solicitar litros do primeiro abastecimento\\
+Enquanto litros não for $-1$\\
+\hphantom{En}Solicitar km dirigidos\\
+\hphantom{En}Calcular km/litro do abastecimento atual\\
+\hphantom{En}Imprimir consumo atual\\
+\hphantom{En}Acumular km\_total e litros\_total\\
+\hphantom{En}Solicitar litros do próximo abastecimento\\
+Se litros\_total $> 0$\\
+\hphantom{En}Imprimir consumo geral = km\_total / litros\_total
+\end{pseudo}
+
+\begin{lstlisting}
+/* Ex3.17: consumo_gasolina.c
+   Calcula consumo de combustivel por abastecimento e total */
+#include <stdio.h>
+
+int main( void )
+{
+    float litros;        /* litros de cada abastecimento  */
+    float km;            /* km dirigidos por abastecimento */
+    float kmTotal = 0.0; /* km totais dirigidos            */
+    float litrosTotal = 0.0; /* litros totais consumidos   */
+    float consumoAtual;  /* km/L do abastecimento atual    */
+    float consumoGeral;  /* km/L do total                  */
+
+    printf( "Informe quantos litros abasteceu (-1 para terminar): " );
+    scanf( "%f", &litros );
+
+    while ( litros != -1.0 ) {
+        printf( "Informe quantos km dirigiu: " );
+        scanf( "%f", &km );
+
+        consumoAtual = km / litros;
+        printf( "O consumo atual e de %f km/l\n", consumoAtual );
+
+        kmTotal     += km;
+        litrosTotal += litros;
+
+        printf( "Informe quantos litros abasteceu (-1 para terminar): " );
+        scanf( "%f", &litros );
+    } /* fim do while */
+
+    if ( litrosTotal > 0.0 ) {
+        consumoGeral = kmTotal / litrosTotal;
+        printf( "O consumo geral foi de %f km/l\n", consumoGeral );
+    }
+    else {
+        printf( "Nenhum abastecimento foi informado.\n" );
+    }
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\textbf{Observação:} Note o uso de \texttt{float} (Cap.~3) para permitir valores como
+\texttt{25.6} litros. Também, evitamos divisão por zero testando \texttt{litrosTotal > 0}
+antes de calcular o consumo geral.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 3.18 -- Limite de Crédito}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex3.18: limite_credito.c
+   Verifica se cliente excedeu o limite de credito */
+#include <stdio.h>
+
+int main( void )
+{
+    int conta;             /* numero da conta             */
+    float saldoInicial;    /* saldo no inicio do mes      */
+    float encargos;        /* total de encargos           */
+    float creditos;        /* total de creditos           */
+    float limite;          /* limite de credito           */
+    float novoSaldo;       /* novo saldo apos calculos    */
+
+    printf( "Informe o numero da conta (-1 para terminar): " );
+    scanf( "%d", &conta );
+
+    while ( conta != -1 ) {
+        printf( "Informe o saldo inicial: " );
+        scanf( "%f", &saldoInicial );
+
+        printf( "Informe o total de encargos: " );
+        scanf( "%f", &encargos );
+
+        printf( "Informe o total de creditos: " );
+        scanf( "%f", &creditos );
+
+        printf( "Informe o limite de credito: " );
+        scanf( "%f", &limite );
+
+        novoSaldo = saldoInicial + encargos - creditos;
+
+        if ( novoSaldo > limite ) {
+            printf( "Conta: %d\n", conta );
+            printf( "Limite de credito: %.2f\n", limite );
+            printf( "Saldo: %.2f\n", novoSaldo );
+            printf( "Limite de credito ultrapassado.\n" );
+        } /* fim do if */
+
+        printf( "\nInforme o numero da conta (-1 para terminar): " );
+        scanf( "%d", &conta );
+    } /* fim do while */
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.19 -- Comissão de Vendas}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex3.19: comissao_vendas.c
+   Calcula salario semanal de vendedor com 9% de comissao */
+#include <stdio.h>
+
+int main( void )
+{
+    float vendas;     /* vendas brutas da semana       */
+    float salario;    /* salario total a receber       */
+    float salarioBase = 200.00; /* salario fixo semanal */
+    float comissao   = 0.09;    /* taxa de comissao 9%  */
+
+    printf( "Informe a venda em reais (-1 para terminar): " );
+    scanf( "%f", &vendas );
+
+    while ( vendas != -1.0 ) {
+        salario = salarioBase + ( vendas * comissao );
+        printf( "O pagamento e de: R$ %.2f\n", salario );
+
+        printf( "\nInforme a venda em reais (-1 para terminar): " );
+        scanf( "%f", &vendas );
+    } /* fim do while */
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.20 -- Calculadora de Juros Simples}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Fórmula:} \quad
+$\text{juros} = \dfrac{\text{principal} \times \text{taxa} \times \text{dias}}{365}$
+
+\begin{lstlisting}
+/* Ex3.20: juros_simples.c
+   Calcula juros simples para varios emprestimos */
+#include <stdio.h>
+
+int main( void )
+{
+    float principal;    /* valor do emprestimo                */
+    float taxa;         /* taxa de juros anual (decimal)      */
+    int   dias;         /* prazo do emprestimo em dias        */
+    float juros;        /* juros calculados                   */
+
+    printf( "Informe o valor principal do emprestimo "
+            "(-1 para terminar): " );
+    scanf( "%f", &principal );
+
+    while ( principal != -1.0 ) {
+        printf( "Informe a taxa de juros: " );
+        scanf( "%f", &taxa );
+
+        printf( "Informe o prazo do emprestimo em dias: " );
+        scanf( "%d", &dias );
+
+        juros = principal * taxa * dias / 365.0;
+        printf( "O valor dos juros e de R$ %.2f\n", juros );
+
+        printf( "\nInforme o valor principal do emprestimo "
+                "(-1 para terminar): " );
+        scanf( "%f", &principal );
+    } /* fim do while */
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 3.21 -- Calculadora de Salário com Hora Extra}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Regra de pagamento:}
+\begin{itemize}[noitemsep]
+  \item Até 40 horas: salário = horas $\times$ valor\_hora
+  \item Acima de 40 horas: salário = (40 $\times$ valor\_hora) + (extras $\times$ 1{,}5 $\times$ valor\_hora)
+\end{itemize}
+
+\begin{lstlisting}
+/* Ex3.21: salario.c
+   Calcula salario semanal com hora extra (1,5x acima de 40h) */
+#include <stdio.h>
+
+int main( void )
+{
+    float horas;          /* horas trabalhadas na semana   */
+    float valorHora;      /* valor do salario por hora     */
+    float salario;        /* salario calculado             */
+
+    printf( "Digite # de horas trabalhadas (-1 para terminar): " );
+    scanf( "%f", &horas );
+
+    while ( horas != -1.0 ) {
+        printf( "Digite o salario por hora do funcionario "
+                "(R$00,00): " );
+        scanf( "%f", &valorHora );
+
+        if ( horas <= 40.0 ) {
+            salario = horas * valorHora;
+        } /* fim do if */
+        else {
+            /* Horas normais (40) + horas extras (1,5x) */
+            salario = ( 40.0 * valorHora ) +
+                      ( ( horas - 40.0 ) * valorHora * 1.5 );
+        } /* fim do else */
+
+        printf( "Salario e de R$ %.2f\n", salario );
+
+        printf( "\nDigite # de horas trabalhadas "
+                "(-1 para terminar): " );
+        scanf( "%f", &horas );
+    } /* fim do while */
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.22 -- Pré vs. Pós-Decremento}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex3.22: pre_vs_pos_decremento.c
+   Demonstra a diferenca entre --x (pre) e x-- (pos) */
+#include <stdio.h>
+
+int main( void )
+{
+    int c;
+
+    /* === Demonstracao do POS-decremento === */
+    c = 5;
+    printf( "=== Pos-decremento ===\n" );
+    printf( "Valor inicial de c: %d\n", c );
+    printf( "Imprime c-- (usa o valor 5, depois decrementa): %d\n", c-- );
+    printf( "Valor de c agora: %d\n\n", c );
+
+    /* === Demonstracao do PRE-decremento === */
+    c = 5;
+    printf( "=== Pre-decremento ===\n" );
+    printf( "Valor inicial de c: %d\n", c );
+    printf( "Imprime --c (decrementa, depois usa o valor 4): %d\n", --c );
+    printf( "Valor de c agora: %d\n", c );
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\begin{saida}
+=== Pos-decremento ===\\
+Valor inicial de c: 5\\
+Imprime c-- (usa o valor 5, depois decrementa): 5\\
+Valor de c agora: 4\\[4pt]
+=== Pre-decremento ===\\
+Valor inicial de c: 5\\
+Imprime --c (decrementa, depois usa o valor 4): 4\\
+Valor de c agora: 4
+\end{saida}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.23 -- Imprimindo 1 a 10 com Loop}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex3.23: numeros_1_a_10_lado_a_lado.c
+   Imprime 1 a 10 lado a lado, separados por 3 espacos */
+#include <stdio.h>
+
+int main( void )
+{
+    int i = 1;
+
+    while ( i <= 10 ) {
+        printf( "%d   ", i );  /* numero seguido de 3 espacos */
+        ++i;
+    } /* fim do while */
+
+    printf( "\n" );  /* nova linha ao final */
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\begin{saida}
+1\ \ \ 2\ \ \ 3\ \ \ 4\ \ \ 5\ \ \ 6\ \ \ 7\ \ \ 8\ \ \ 9\ \ \ 10
+\end{saida}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 3.24 -- Achar o Maior de 10 Números}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Pseudocódigo:}
+\begin{pseudo}
+Inicializar contador como 1\\
+Ler o primeiro número e armazenar em maior\\
+Enquanto contador for menor que 10\\
+\hphantom{En}Ler próximo número\\
+\hphantom{En}Se número > maior\\
+\hphantom{Enxx}Atribuir número a maior\\
+\hphantom{En}Incrementar contador\\
+Imprimir o valor de maior
+\end{pseudo}
+
+\begin{lstlisting}
+/* Ex3.24: maior_de_10.c
+   Encontra o maior valor entre 10 numeros lidos */
+#include <stdio.h>
+
+int main( void )
+{
+    int contador = 1;  /* conta numeros lidos (1 a 10) */
+    int numero;        /* numero da entrada atual      */
+    int maior;         /* maior valor encontrado       */
+
+    printf( "Digite o 1o numero: " );
+    scanf( "%d", &maior );  /* primeiro e o maior inicial */
+
+    while ( contador < 10 ) {
+        ++contador;
+        printf( "Digite o %do numero: ", contador );
+        scanf( "%d", &numero );
+
+        if ( numero > maior ) {
+            maior = numero;
+        } /* fim do if */
+    } /* fim do while */
+
+    printf( "\nO maior numero e: %d\n", maior );
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.25 -- Tabela N, 10N, 100N, 1000N}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex3.25: tabela_potencias_10.c
+   Imprime tabela com N, 10*N, 100*N, 1000*N para N de 1 a 10 */
+#include <stdio.h>
+
+int main( void )
+{
+    int n = 1;
+
+    printf( "N\t10*N\t100*N\t1000*N\n" );  /* cabecalho com tabulacoes */
+
+    while ( n <= 10 ) {
+        printf( "%d\t%d\t%d\t%d\n", n, 10 * n, 100 * n, 1000 * n );
+        ++n;
+    } /* fim do while */
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\begin{saida}
+N\textbackslash{}t10*N\textbackslash{}t100*N\textbackslash{}t1000*N\\
+1\ \ \ \ \ 10\ \ \ \ 100\ \ \ \ \ 1000\\
+2\ \ \ \ \ 20\ \ \ \ 200\ \ \ \ \ 2000\\
+\ldots\\
+10\ \ \ \ 100\ \ \ \ 1000\ \ \ \ \ 10000
+\end{saida}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.26 -- Tabela A, A+2, A+4, A+6}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex3.26: tabela_progressao.c
+   Imprime tabela com A, A+2, A+4, A+6 para A = 3, 6, 9, 12, 15 */
+#include <stdio.h>
+
+int main( void )
+{
+    int a = 3;
+
+    printf( "A\tA+2\tA+4\tA+6\n" );
+
+    while ( a <= 15 ) {
+        printf( "%d\t%d\t%d\t%d\n", a, a + 2, a + 4, a + 6 );
+        a += 3;     /* incrementa A em 3 */
+    } /* fim do while */
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 3.27 -- Os Dois Maiores de 10}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Estratégia:} Manter duas variáveis -- \texttt{maior} (1º lugar) e
+\texttt{segundoMaior} (2º lugar). Para cada novo número:
+\begin{itemize}[noitemsep]
+  \item Se for maior que \texttt{maior}: o antigo \texttt{maior} vira \texttt{segundoMaior},
+  e o novo número vira \texttt{maior}.
+  \item Senão, se for maior que \texttt{segundoMaior}: substitui \texttt{segundoMaior}.
+\end{itemize}
+
+\begin{lstlisting}
+/* Ex3.27: dois_maiores.c
+   Encontra os dois maiores entre 10 numeros */
+#include <stdio.h>
+
+int main( void )
+{
+    int contador = 1;
+    int numero;
+    int maior;
+    int segundoMaior;
+
+    printf( "Digite o 1o numero: " );
+    scanf( "%d", &maior );
+
+    printf( "Digite o 2o numero: " );
+    scanf( "%d", &numero );
+
+    /* Inicializa os dois maiores comparando os dois primeiros */
+    if ( numero > maior ) {
+        segundoMaior = maior;
+        maior = numero;
+    }
+    else {
+        segundoMaior = numero;
+    }
+
+    contador = 2;
+    while ( contador < 10 ) {
+        ++contador;
+        printf( "Digite o %do numero: ", contador );
+        scanf( "%d", &numero );
+
+        if ( numero > maior ) {
+            segundoMaior = maior;
+            maior = numero;
+        }
+        else if ( numero > segundoMaior ) {
+            segundoMaior = numero;
+        }
+    } /* fim do while */
+
+    printf( "\nO maior e: %d\n", maior );
+    printf( "O segundo maior e: %d\n", segundoMaior );
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.28 -- Validação de Entrada}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Conceito:} ``Looping defensivo'' -- continuar pedindo a entrada até que o usuário
+forneça um valor válido (1 ou 2).
+
+\begin{lstlisting}
+/* Ex3.28: valida_entrada.c
+   Valida que o usuario digite apenas 1 ou 2 */
+#include <stdio.h>
+
+int main( void )
+{
+    int resultado;
+
+    printf( "Digite o resultado (1=aprovado, 2=reprovado): " );
+    scanf( "%d", &resultado );
+
+    /* Continua pedindo enquanto a entrada for invalida */
+    while ( resultado != 1 && resultado != 2 ) {
+        printf( "Entrada invalida! Digite 1 ou 2: " );
+        scanf( "%d", &resultado );
+    } /* fim do while */
+
+    if ( resultado == 1 ) {
+        printf( "Aluno aprovado.\n" );
+    }
+    else {
+        printf( "Aluno reprovado.\n" );
+    }
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\textit{Nota:} O operador \texttt{\&\&} (``e'' lógico) será estudado formalmente no
+Capítulo~4. Ele combina duas condições -- ambas precisam ser verdadeiras.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 3.29 -- Saída do Programa (Operador Condicional)}
+% ============================================================
+
+\begin{respostabox}
+O programa usa o operador condicional \texttt{?:} para alternar entre duas strings:
+\texttt{contador \% 2 ? "****" : "++++++++"}.
+
+\begin{itemize}[noitemsep]
+  \item Quando \texttt{contador} é \textbf{ímpar}, \texttt{contador \% 2} é 1
+  (verdadeiro) $\Rightarrow$ imprime \texttt{****}
+  \item Quando \texttt{contador} é \textbf{par}, \texttt{contador \% 2} é 0
+  (falso) $\Rightarrow$ imprime \texttt{++++++++}
+\end{itemize}
+
+\begin{saida}
+****\\
+++++++++\\
+****\\
+++++++++\\
+****\\
+++++++++\\
+****\\
+++++++++\\
+****\\
+++++++++
+\end{saida}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.30 -- Saída do Programa (Loops Aninhados)}
+% ============================================================
+
+\begin{respostabox}
+O programa tem dois \texttt{while} aninhados. O externo controla \texttt{linha}
+(de 10 a 1, decrementando); o interno controla \texttt{coluna} (de 1 a 10).
+
+Para cada linha:
+\begin{itemize}[noitemsep]
+  \item Se \texttt{linha} é ímpar: imprime \texttt{<} 10 vezes
+  \item Se \texttt{linha} é par: imprime \texttt{>} 10 vezes
+\end{itemize}
+
+Como \texttt{linha} começa em 10 (par) e decrementa:
+
+\begin{saida}
+{>}{>}{>}{>}{>}{>}{>}{>}{>}{>}\\
+{<}{<}{<}{<}{<}{<}{<}{<}{<}{<}\\
+{>}{>}{>}{>}{>}{>}{>}{>}{>}{>}\\
+{<}{<}{<}{<}{<}{<}{<}{<}{<}{<}\\
+{>}{>}{>}{>}{>}{>}{>}{>}{>}{>}\\
+{<}{<}{<}{<}{<}{<}{<}{<}{<}{<}\\
+{>}{>}{>}{>}{>}{>}{>}{>}{>}{>}\\
+{<}{<}{<}{<}{<}{<}{<}{<}{<}{<}\\
+{>}{>}{>}{>}{>}{>}{>}{>}{>}{>}\\
+{<}{<}{<}{<}{<}{<}{<}{<}{<}{<}
+\end{saida}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 3.31 -- Problema do Else Pendurado}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 3.31]
+Determine a saída do código para (\texttt{x=9}, \texttt{y=11}) e (\texttt{x=11}, \texttt{y=9}).
+\textit{Regra:} o compilador associa o \texttt{else} ao \texttt{if} \textbf{anterior},
+a menos que chaves indiquem o contrário.
+\end{enunciadoBox}
+
+\begin{respostabox}
+
+\textbf{Item (a):} Sem chaves, o \texttt{else} é associado ao \texttt{if} interno
+(\texttt{if (y > 10)}), independente do recuo. Reescrevendo com a estrutura real:
+
+\begin{lstlisting}
+if ( x < 10 ) {
+    if ( y > 10 ) {
+        printf( "*****\n" );
+    } else {
+        printf( "#####\n" );
+    }
+}
+printf( "$$$$$\n" );  /* SEMPRE executa! Esta fora dos ifs */
+\end{lstlisting}
+
+\textbf{Caso x=9, y=11:} \texttt{x<10} verdadeiro $\to$ entra no if externo.
+\texttt{y>10} verdadeiro $\to$ imprime \texttt{*****}. Depois, sempre imprime \texttt{\$\$\$\$\$}.
+\begin{saida}
+*****\\
+\$\$\$\$\$
+\end{saida}
+
+\textbf{Caso x=11, y=9:} \texttt{x<10} falso $\to$ pula todo o if externo.
+Imprime apenas \texttt{\$\$\$\$\$}.
+\begin{saida}
+\$\$\$\$\$
+\end{saida}
+
+\bigskip
+\textbf{Item (b):} As chaves mudam a estrutura. Agora o \texttt{else} pertence
+ao \texttt{if} \textit{externo} (\texttt{if (x < 10)}):
+
+\begin{lstlisting}
+if ( x < 10 ) {
+    if ( y > 10 ) {
+        printf( "*****\n" );
+    }
+}
+else {
+    printf( "#####\n" );
+    printf( "$$$$$\n" );
+}
+\end{lstlisting}
+
+\textbf{Caso x=9, y=11:} \texttt{x<10} verdadeiro, \texttt{y>10} verdadeiro $\to$ \texttt{*****}.
+\begin{saida}
+*****
+\end{saida}
+
+\textbf{Caso x=11, y=9:} \texttt{x<10} falso $\to$ entra no \texttt{else}.
+\begin{saida}
+\#\#\#\#\#\\
+\$\$\$\$\$
+\end{saida}
+
+\begin{boaprática}
+  Sempre use chaves \texttt{\{\ \}} ao redor dos corpos de \texttt{if} e
+  \texttt{else}, mesmo quando contêm uma única instrução. Isso elimina
+  ambiguidades, evita o problema do ``\textit{dangling else}'' e facilita
+  modificações futuras.
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 3.32 -- Outro Problema do Else Pendurado}
+% ============================================================
+
+\begin{respostabox}
+Para cada saída desejada, o código deve ser estruturado com chaves apropriadas
+(o \texttt{else} liga-se ao \texttt{if} anterior por padrão):
+
+\textbf{Caso (a) -- x=5, y=8 deve produzir} \texttt{@@@@@ \$\$\$\$\$ \&\&\&\&\&}:
+\begin{lstlisting}
+if ( y == 8 ) {
+    if ( x == 5 ) {
+        printf( "@@@@@\n" );
+    } else {
+        printf( "#####\n" );
+    }
+    printf( "$$$$$\n" );
+    printf( "&&&&&\n" );
+}
+\end{lstlisting}
+
+\textbf{Caso (b) -- x=5, y=8 deve produzir apenas} \texttt{@@@@@}:
+\begin{lstlisting}
+if ( y == 8 ) {
+    if ( x == 5 ) {
+        printf( "@@@@@\n" );
+    } else {
+        printf( "#####\n" );
+        printf( "$$$$$\n" );
+        printf( "&&&&&\n" );
+    }
+}
+\end{lstlisting}
+
+\textbf{Caso (c) -- x=5, y=8 deve produzir} \texttt{@@@@@ \&\&\&\&\&}:
+\begin{lstlisting}
+if ( y == 8 ) {
+    if ( x == 5 ) {
+        printf( "@@@@@\n" );
+    } else {
+        printf( "#####\n" );
+        printf( "$$$$$\n" );
+    }
+    printf( "&&&&&\n" );
+}
+\end{lstlisting}
+
+\textbf{Caso (d) -- x=5, y=7 deve produzir} \texttt{\#\#\#\#\# \$\$\$\$\$ \&\&\&\&\&}:
+\begin{lstlisting}
+if ( y == 8 ) {
+    if ( x == 5 ) {
+        printf( "@@@@@\n" );
+    }
+} else {
+    printf( "#####\n" );
+    printf( "$$$$$\n" );
+    printf( "&&&&&\n" );
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 3.33 -- Quadrado de Asteriscos}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex3.33: quadrado_asteriscos.c
+   Imprime quadrado solido de asteriscos com lado n */
+#include <stdio.h>
+
+int main( void )
+{
+    int lado;       /* tamanho do lado */
+    int linha;      /* contador de linhas   */
+    int coluna;     /* contador de colunas  */
+
+    printf( "Digite o lado do quadrado (1 a 20): " );
+    scanf( "%d", &lado );
+
+    linha = 1;
+    while ( linha <= lado ) {       /* loop externo: linhas */
+        coluna = 1;
+        while ( coluna <= lado ) {  /* loop interno: colunas */
+            printf( "*" );
+            ++coluna;
+        }
+        printf( "\n" );             /* nova linha ao final  */
+        ++linha;
+    }
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.34 -- Quadrado Vazio}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex3.34: quadrado_vazio.c
+   Imprime quadrado oco de asteriscos com lado n */
+#include <stdio.h>
+
+int main( void )
+{
+    int lado, linha, coluna;
+
+    printf( "Digite o lado do quadrado (1 a 20): " );
+    scanf( "%d", &lado );
+
+    linha = 1;
+    while ( linha <= lado ) {
+        coluna = 1;
+        while ( coluna <= lado ) {
+            /* Imprime * apenas nas bordas; espaco no interior */
+            if ( linha == 1 || linha == lado ||
+                 coluna == 1 || coluna == lado ) {
+                printf( "*" );
+            }
+            else {
+                printf( " " );
+            }
+            ++coluna;
+        }
+        printf( "\n" );
+        ++linha;
+    }
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\textit{Nota:} O operador \texttt{||} (``ou'' lógico) será estudado no Cap.~4.
+Aqui, ele testa se a posição atual está em alguma das 4 bordas.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 3.35 -- Testador de Palíndromo}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Estratégia:} Extrair os 5 dígitos de um inteiro de 5 dígitos usando
+divisão e módulo. Comparar 1º com 5º, e 2º com 4º. O 3º (do meio) não importa.
+
+\begin{lstlisting}
+/* Ex3.35: palindromo.c
+   Verifica se um numero de 5 digitos e palindromo */
+#include <stdio.h>
+
+int main( void )
+{
+    int numero;
+    int d1, d2, d3, d4, d5;  /* os 5 digitos individuais */
+
+    printf( "Digite um inteiro de 5 digitos: " );
+    scanf( "%d", &numero );
+
+    /* Extracao dos digitos (mesma tecnica do Ex 2.30) */
+    d1 = numero / 10000;          /* dezena de milhar       */
+    d2 = ( numero / 1000 ) % 10;  /* unidade de milhar       */
+    d3 = ( numero / 100 ) % 10;   /* centena                 */
+    d4 = ( numero / 10 ) % 10;    /* dezena                  */
+    d5 = numero % 10;             /* unidade                 */
+
+    /* Palindromo: 1o == 5o E 2o == 4o */
+    if ( d1 == d5 && d2 == d4 ) {
+        printf( "%d e palindromo\n", numero );
+    }
+    else {
+        printf( "%d NAO e palindromo\n", numero );
+    }
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.36 -- Binário para Decimal}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Estratégia:} Extrair cada dígito binário (0 ou 1) da direita para a esquerda
+(usando \texttt{\% 10} e \texttt{/ 10}). Multiplicar cada dígito pelo seu valor
+posicional ($1, 2, 4, 8, 16, \ldots$) e somar.
+
+\begin{lstlisting}
+/* Ex3.36: binario_para_decimal.c
+   Converte um numero "binario" (composto de 0s e 1s) para decimal */
+#include <stdio.h>
+
+int main( void )
+{
+    int binario;            /* numero "binario" digitado */
+    int decimal = 0;        /* equivalente decimal       */
+    int valorPosicao = 1;   /* 1, 2, 4, 8, 16, ...       */
+    int digito;             /* digito atual (0 ou 1)     */
+
+    printf( "Digite um numero binario: " );
+    scanf( "%d", &binario );
+
+    while ( binario > 0 ) {
+        digito = binario % 10;     /* extrai o ultimo digito */
+        decimal += digito * valorPosicao;
+        valorPosicao *= 2;          /* proxima potencia de 2 */
+        binario /= 10;              /* descarta o ultimo digito */
+    }
+
+    printf( "Equivalente decimal: %d\n", decimal );
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\textbf{Exemplo: \texttt{1101}}
+\begin{itemize}[noitemsep]
+  \item Iter 1: dígito=1, decimal=$1 \times 1=1$; binario=110, valor=2
+  \item Iter 2: dígito=0, decimal=$1 + 0 \times 2 = 1$; binario=11, valor=4
+  \item Iter 3: dígito=1, decimal=$1 + 1 \times 4 = 5$; binario=1, valor=8
+  \item Iter 4: dígito=1, decimal=$5 + 1 \times 8 = 13$; binario=0
+\end{itemize}
+Resultado: \texttt{1101}$_2$ = \texttt{13}$_{10}$. \checkmark
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 3.37 -- Velocidade do Computador}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex3.37: velocidade_computador.c
+   Conta de 1 a 300 milhoes, exibindo cada multiplo de 100 milhoes */
+#include <stdio.h>
+
+int main( void )
+{
+    int contador = 1;
+
+    while ( contador <= 300000000 ) {
+        if ( contador % 100000000 == 0 ) {
+            printf( "%d\n", contador );
+        }
+        ++contador;
+    }
+
+    printf( "Concluido!\n" );
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\textbf{Como medir:} Use o cronômetro do celular (ou o comando \texttt{time ./a.out}
+no Linux). Em CPUs modernas, esse loop deve completar em poucos segundos.
+
+\textit{Reflexão:} Esse é um excelente exercício para sentir o quão rápido o
+processador realmente é. Bilhões de operações por segundo!
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.38 -- 100 Asteriscos com Quebra a cada 10}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex3.38: cem_asteriscos.c
+   Imprime 100 asteriscos, com quebra de linha a cada 10 */
+#include <stdio.h>
+
+int main( void )
+{
+    int contador = 1;
+
+    while ( contador <= 100 ) {
+        printf( "*" );
+        if ( contador % 10 == 0 ) {  /* a cada 10 asteriscos */
+            printf( "\n" );
+        }
+        ++contador;
+    }
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+A saída será uma matriz de $10 \times 10$ asteriscos.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.39 -- Contando Dígitos 7}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex3.39: conta_setes.c
+   Conta quantos digitos do numero sao 7 */
+#include <stdio.h>
+
+int main( void )
+{
+    int numero;
+    int contador = 0;
+    int digito;
+
+    printf( "Digite um inteiro positivo: " );
+    scanf( "%d", &numero );
+
+    while ( numero > 0 ) {
+        digito = numero % 10;
+        if ( digito == 7 ) {
+            ++contador;
+        }
+        numero /= 10;
+    }
+
+    printf( "Quantidade de 7s: %d\n", contador );
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 3.40 -- Padrão de Tabuleiro de Xadrez}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Restrição:} usar apenas \texttt{printf("* ")}, \texttt{printf(" ")} e
+\texttt{printf("\textbackslash n")}.
+
+\begin{lstlisting}
+/* Ex3.40: tabuleiro_xadrez.c
+   Imprime padrao de tabuleiro com asteriscos alternados */
+#include <stdio.h>
+
+int main( void )
+{
+    int linha = 1;
+    int coluna;
+
+    while ( linha <= 8 ) {
+        coluna = 1;
+
+        /* Linhas pares: comecar com espaco */
+        if ( linha % 2 == 0 ) {
+            printf( " " );
+        }
+
+        while ( coluna <= 8 ) {
+            printf( "* " );
+            ++coluna;
+        }
+
+        printf( "\n" );
+        ++linha;
+    }
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.41 -- Múltiplos de 2 com Loop Infinito}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex3.41: multiplos_2_infinito.c
+   ATENCAO: este programa contem um loop infinito intencional
+   (para fins didaticos). Pressione Ctrl+C para interromper.    */
+#include <stdio.h>
+
+int main( void )
+{
+    int x = 2;
+
+    while ( 1 ) {            /* condicao sempre verdadeira */
+        printf( "%d\n", x );
+        x *= 2;
+    }
+
+    return 0;  /* nunca alcancado */
+} /* fim da funcao main */
+\end{lstlisting}
+
+\textbf{O que acontece?} O programa imprime 2, 4, 8, 16, 32, \ldots indefinidamente,
+até que o valor \texttt{x} \textbf{transborde} (\textit{overflow}) os limites do
+tipo \texttt{int}. Em sistemas de 32 bits, após 31 dobras (cerca de
+$2^{30} = 1.073.741.824$), \texttt{x} ultrapassa o máximo de \texttt{int}
+(\(\approx 2{,}1\) bilhões), passando a apresentar valores negativos ou erráticos.
+
+Eventualmente, o loop continua ``infinitamente'', mas com valores incorretos -- até
+o usuário interromper com Ctrl+C.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.42 -- Círculo com \texttt{float}}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex3.42: circulo_float.c
+   Calcula diametro, circunferencia e area com precisao */
+#include <stdio.h>
+
+int main( void )
+{
+    float raio;
+    float diametro, circunferencia, area;
+    float pi = 3.14159f;
+
+    printf( "Digite o raio do circulo: " );
+    scanf( "%f", &raio );
+
+    diametro       = 2.0f * raio;
+    circunferencia = 2.0f * pi * raio;
+    area           = pi * raio * raio;
+
+    printf( "Diametro:       %.3f\n", diametro );
+    printf( "Circunferencia: %.3f\n", circunferencia );
+    printf( "Area:           %.3f\n", area );
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 3.43 -- O Que Está Errado}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 3.43]
+\texttt{printf( "\%d", ++( x + y ) );}
+\end{enunciadoBox}
+
+\begin{respostabox}
+\textbf{Erro:} O operador de incremento \texttt{++} só pode ser aplicado a um
+\textbf{nome de variável simples} -- \textit{não} a uma expressão. \texttt{(x + y)}
+é uma expressão, não uma variável; portanto, \texttt{++(x + y)} é um \textbf{erro de sintaxe}.
+
+\medskip\textbf{Provável intenção:} O programador queria imprimir o valor de
+\texttt{x + y + 1}. Reescrita correta:
+\begin{lstlisting}
+printf( "%d", x + y + 1 );
+\end{lstlisting}
+
+Ou, se quiser \textit{também} incrementar \texttt{x} ou \texttt{y}:
+\begin{lstlisting}
+++x;             /* incrementa x */
+printf( "%d", x + y );
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.44 -- Lados de um Triângulo}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Critério (desigualdade triangular):} Três lados $a$, $b$, $c$ podem formar
+um triângulo se, e somente se, a soma de quaisquer dois lados é maior que o terceiro:
+$a+b > c$ \textbf{e} $a+c > b$ \textbf{e} $b+c > a$.
+
+\begin{lstlisting}
+/* Ex3.44: lados_triangulo.c
+   Verifica se 3 valores podem formar lados de um triangulo */
+#include <stdio.h>
+
+int main( void )
+{
+    float a, b, c;
+
+    printf( "Digite tres valores nao zero: " );
+    scanf( "%f%f%f", &a, &b, &c );
+
+    if ( a + b > c && a + c > b && b + c > a ) {
+        printf( "Sim, podem formar um triangulo.\n" );
+    }
+    else {
+        printf( "Nao formam um triangulo.\n" );
+    }
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 3.45 -- Triângulo Retângulo}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Critério (Teorema de Pitágoras):} Em um triângulo retângulo, o quadrado da
+hipotenusa é igual à soma dos quadrados dos catetos. Como não sabemos qual lado é a
+hipotenusa, testamos as três possibilidades:
+
+\begin{lstlisting}
+/* Ex3.45: triangulo_retangulo.c
+   Verifica se 3 inteiros formam um triangulo retangulo */
+#include <stdio.h>
+
+int main( void )
+{
+    int a, b, c;
+
+    printf( "Digite tres inteiros nao zero: " );
+    scanf( "%d%d%d", &a, &b, &c );
+
+    if ( a*a + b*b == c*c ||
+         a*a + c*c == b*b ||
+         b*b + c*c == a*a ) {
+        printf( "Sim, podem formar um triangulo retangulo.\n" );
+    }
+    else {
+        printf( "Nao formam triangulo retangulo.\n" );
+    }
+
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\textbf{Exemplos clássicos (ternos pitagóricos):} (3, 4, 5), (5, 12, 13), (8, 15, 17).
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 3.46 -- Fatorial, Constante \texttt{e} e $e^x$}
+% ============================================================
+
+\subsection*{Item (a) -- Fatorial}
+
+\begin{respostabox}
+\textbf{Definição:} $n! = n \cdot (n-1) \cdot (n-2) \cdots 1$, com $0! = 1$.
+
+\begin{lstlisting}
+/* Ex3.46(a): fatorial.c
+   Calcula n! para n nao negativo */
+#include <stdio.h>
+
+int main( void )
+{
+    int n;
+    int fatorial = 1;
+    int i = 1;
+
+    printf( "Digite um inteiro nao negativo: " );
+    scanf( "%d", &n );
+
+    while ( i <= n ) {
+        fatorial *= i;
+        ++i;
+    }
+
+    printf( "%d! = %d\n", n, fatorial );
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\textbf{Atenção:} \texttt{int} suporta no máximo $12!$ ($\approx 4{,}79 \times 10^8$).
+Para fatoriais maiores, será preciso usar \texttt{long} (Cap.~4) ou \texttt{double}.
+\end{respostabox}
+
+\subsection*{Item (b) -- Constante \texttt{e}}
+
+\begin{respostabox}
+\textbf{Fórmula:} $e = 1 + \dfrac{1}{1!} + \dfrac{1}{2!} + \dfrac{1}{3!} + \cdots$
+
+\begin{lstlisting}
+/* Ex3.46(b): constante_e.c
+   Calcula a constante matematica e */
+#include <stdio.h>
+
+int main( void )
+{
+    float e = 1.0f;     /* termo inicial */
+    float termo = 1.0f; /* 1/n! atual    */
+    int n = 1;
+
+    while ( n <= 20 ) {  /* somar 20 termos para boa precisao */
+        termo /= n;      /* divide pelo proximo n para gerar 1/n! */
+        e += termo;
+        ++n;
+    }
+
+    printf( "e = %.6f\n", e );
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\textbf{Resultado:} $e \approx 2{,}718282$ (valor real: $2{,}71828182\ldots$).
+\end{respostabox}
+
+\subsection*{Item (c) -- $e^x$}
+
+\begin{respostabox}
+\textbf{Fórmula:} $e^x = 1 + \dfrac{x}{1!} + \dfrac{x^2}{2!} + \dfrac{x^3}{3!} + \cdots$
+
+\begin{lstlisting}
+/* Ex3.46(c): e_x.c
+   Calcula e elevado a x usando serie de Taylor */
+#include <stdio.h>
+
+int main( void )
+{
+    float x;
+    float resultado = 1.0f;
+    float termo = 1.0f;
+    int n = 1;
+
+    printf( "Digite x: " );
+    scanf( "%f", &x );
+
+    while ( n <= 20 ) {
+        termo = termo * x / n;     /* gera x^n / n! incrementalmente */
+        resultado += termo;
+        ++n;
+    }
+
+    printf( "e^%.2f = %.6f\n", x, resultado );
+    return 0;
+} /* fim da funcao main */
+\end{lstlisting}
+
+\textbf{Truque:} Em vez de calcular $x^n$ e $n!$ separadamente (custoso), geramos cada
+termo a partir do anterior: $\frac{x^n}{n!} = \frac{x^{n-1}}{(n-1)!} \cdot \frac{x}{n}$.
+\end{respostabox}
+
+\end{document}
