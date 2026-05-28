@@ -1,0 +1,984 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+\definecolor{portabcolor}{RGB}{102,46,145}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekeyword}{RGB}{0,0,180}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codecomment}{RGB}{0,128,0}
+\definecolor{terminalbg}{RGB}{30,30,30}
+\definecolor{terminalfg}{RGB}{220,220,220}
+
+\lstdefinestyle{cppcode}{
+  language=C++,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=8pt,
+  backgroundcolor=\color{codebg}, frame=single, framesep=4pt,
+  rulecolor=\color{deitelblue!50}, breaklines=true,
+  showstringspaces=false, tabsize=4,
+  morekeywords={string, size_t, cin, cout, endl, inline, template, typename,
+                bool, true, false, nullptr, override, final, public, private,
+                protected, explicit, friend, virtual, this, static, operator,
+                dynamic_cast, typeid, unique_ptr, vector, reference_wrapper},
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+           {Ã}{{\~A}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Ê}{{\^E}}1 {Í}{{\'I}}1
+           {Ó}{{\'O}}1 {Ô}{{\^O}}1 {Õ}{{\~O}}1 {Ú}{{\'U}}1 {Ç}{{\c{C}}}1
+}
+
+\lstdefinestyle{terminal}{
+  basicstyle=\ttfamily\footnotesize\color{terminalfg},
+  backgroundcolor=\color{terminalbg},
+  frame=single, framesep=6pt, rulecolor=\color{deitelblue!50},
+  breaklines=true, showstringspaces=false,
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+}
+
+\hypersetup{colorlinks=true, linkcolor=deitelblue, urlcolor=deitelblue,
+  pdftitle={C: Como Programar - Cap. 22 - Exercicios}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Cap.~22}
+\fancyhead[R]{\small Exerc\'icios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+\newtcolorbox{boaprat}{enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Boa Pr\'atica de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{errocomum}{enhanced, breakable, colback=errocolor!8, colframe=errocolor,
+  fonttitle=\bfseries, title={\textbf{Erro Comum de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{obseng}{enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao de Engenharia de Software}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{dicadesemp}{enhanced, breakable, colback=desempcolor!8, colframe=desempcolor,
+  fonttitle=\bfseries, title={\textbf{Dica de Desempenho}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{enunciado}{enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{saidabox}{enhanced, breakable, colback=gray!8, colframe=gray!50,
+  boxrule=0.6pt, fonttitle=\bfseries\small,
+  title={\textbf{Sa\'ida da execu\c{c}\~ao}},
+  left=6pt, right=6pt, top=3pt, bottom=3pt}
+\newtcolorbox{resposta}{enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Cap\'itulo 22}\\[0.3em]
+  {\Large\bfseries Templates}\\[0.8em]
+  {\large\itshape Exerc\'icios --- Resolu\c{c}\~ao Did\'atica}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``Resolvemos os 18 exerc\'icios 22.3 a 22.20. Cinco s\~ao de programa\c{c}\~ao (22.3 \texttt{selectionSort}, 22.4 \texttt{printArray} com range, 22.5 sobrecarga n\~ao-template para C-strings, 22.6 \texttt{isEqualTo} em tr\^es cen\'arios, 22.7 \texttt{Array} parametrizado com especializa\c{c}\~ao para \texttt{float}); os demais s\~ao conceituais, formando o vocabul\'ario completo de templates em C++. Todos os c\'odigos compilam com \texttt{g++ -Wall -Wextra -std=c++14} sem warnings.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+% ============================================================
+\section{Exerc\'icio 22.3 --- Template de \texttt{selectionSort}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Escreva uma fun\c{c}\~ao \texttt{selectionSort} usando template. Escreva um programa controlador que insira, classifique e imprima um array de \texttt{int} e um array de \texttt{float}.
+\end{enunciado}
+
+\subsection*{Algoritmo}
+
+O \emph{selection sort} \'e um dos algoritmos mais simples de ordena\c{c}\~ao. A cada passo:
+
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+  \item Encontra o menor elemento da parte n\~ao-ordenada;
+  \item Troca-o com o primeiro elemento dessa parte;
+  \item Repete para a parte restante.
+\end{enumerate}
+
+A complexidade \'e $O(n^2)$ comparac\~oes e $O(n)$ trocas (pior que \emph{insertion sort} em arrays quase-ordenados, mas com menos escritas em mem\'oria --- vantagem em sistemas onde escrita \'e cara).
+
+\subsection*{Implementa\c{c}\~ao}
+
+\lstinputlisting[style=cppcode]{codigos/selectionSort.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Teste com array de int ===
+Antes:   64 25 12 22 11 90 1 33
+Depois:  1 11 12 22 25 33 64 90
+
+=== Teste com array de float ===
+Antes:   3.140 1.410 2.710 0.577 1.618
+Depois:  0.577 1.410 1.618 2.710 3.140
+
+=== Teste com array de char ===
+Antes:   h e l l o
+Depois:  e h l l o
+\end{lstlisting}
+\end{saidabox}\normalcolor
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{O mesmo c\'odigo, tr\^es tipos diferentes.} \texttt{selectionSort<int>}, \texttt{selectionSort<float>} e \texttt{selectionSort<char>} s\~ao tr\^es especializa\c{c}\~oes geradas pelo compilador. Cada uma vira c\'odigo de m\'aquina \'unico, otimizado para o tipo.
+  \item \textbf{Dedu\c{c}\~ao autom\'atica de tipos.} N\~ao \'e necess\'ario escrever \texttt{selectionSort<int>(vi, N1)}; o compilador deduz \texttt{T = int} a partir do argumento. Esse \'e o ``\emph{template argument deduction}''.
+  \item \textbf{Requisito impl\'icito sobre T.} O template assume que \texttt{T} suporta \texttt{operator<} e \texttt{operator=}. Tipos que n\~ao suportam (como uma classe sem comparac\~ao definida) causariam erro de compilac\~ao na instancia\c{c}\~ao.
+\end{itemize}
+
+\begin{obseng}
+Em C++20, o conceito de \emph{Concepts} formalizou esses requisitos impl\'icitos:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T>
+requires std::totally_ordered<T>    // C++20
+void selectionSort(T arr[], int tamanho);
+\end{lstlisting}
+
+Mensagens de erro de compila\c{c}\~ao tornam-se muito mais claras com Concepts. No nosso \texttt{-std=c++14}, ainda dependemos das mensagens cr\'ipticas do compilador.
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 22.4 --- \texttt{printArray} com intervalo (\emph{range})}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Sobrecarregue o template \texttt{printArray} para receber tamb\'em \texttt{int lowSubscript} e \texttt{int highSubscript}. Valide os \'indices: retorne 0 se inv\'alidos, sen\~ao retorne o n\'umero de elementos impressos.
+\end{enunciado}
+
+\subsection*{An\'alise}
+
+A nova sobrecarga \'e tamb\'em um template, com mais dois par\^ametros. As verifica\c{c}\~oes pedidas no enunciado:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{lowSubscript} ou \texttt{highSubscript} fora dos limites $\to$ retorna 0;
+  \item \texttt{highSubscript $\leq$ lowSubscript} $\to$ retorna 0.
+\end{itemize}
+
+\subsection*{Implementa\c{c}\~ao}
+
+Veja o arquivo completo no Exerc\'icio~22.5, que combina ambas (e mais a vers\~ao n\~ao-template). Aqui destacamos s\'o a vers\~ao com range:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T>
+int printArray(const T arr[], int tamanho,
+               int lowSubscript, int highSubscript) {
+    if (tamanho < 0 || lowSubscript < 0 || highSubscript < 0
+        || lowSubscript >= tamanho || highSubscript >= tamanho
+        || highSubscript <= lowSubscript) {
+        return 0;
+    }
+    int contador = 0;
+    for (int i = lowSubscript; i <= highSubscript; ++i) {
+        cout << arr[i] << " ";
+        ++contador;
+    }
+    cout << endl;
+    return contador;
+}
+\end{lstlisting}
+
+\subsection*{Testes do enunciado}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Intervalo v\'alido (\texttt{a[1..3]}): imprime e retorna 3.
+  \item Intervalo \emph{degenerate} (\texttt{a[2..2]}): retorna 0 porque \texttt{high $\leq$ low}.
+  \item Intervalo \emph{invertido} (\texttt{a[4..1]}): retorna 0.
+  \item \texttt{high} fora dos limites (\texttt{a[0..10]} num array de 5): retorna 0.
+\end{itemize}
+
+(Veja a sa\'ida na execu\c{c}\~ao do Ex.~22.5.)
+
+% ============================================================
+\section{Exerc\'icio 22.5 --- Sobrecarga n\~ao-template para C-strings}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Sobrecarregue \texttt{printArray} com uma vers\~ao \emph{n\~ao-template} que imprima um array de strings de caracteres em formato organizado, em colunas.
+\end{enunciado}
+
+\subsection*{An\'alise}
+
+Por que precisamos de uma vers\~ao especial para C-strings? Porque o template gen\'erico, ao receber \texttt{const char*[]}, imprimiria os ponteiros \emph{como ponteiros} (endere\c{c}os de mem\'oria), n\~ao como strings, em raz\~ao de uma sutileza de C: arrays de \texttt{char*} n\~ao se ``desreferenciam'' automaticamente.
+
+(Na verdade, com \texttt{std::cout}, \texttt{char*} \emph{j\'a} se converte para a string apontada por uma sobrecarga existente do \texttt{operator<<} --- mas isso n\~ao nos ajuda a obter \emph{colunas alinhadas}. A sobrecarga n\~ao-template oferece exatamente esse controle.)
+
+\subsection*{Implementa\c{c}\~ao completa (junta os 3 \texttt{printArray})}
+
+\lstinputlisting[style=cppcode]{codigos/printArray.cpp}
+
+\subsection*{Execu\c{c}\~ao (completa, cobrindo Ex.~22.4 e 22.5)}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== printArray (versao original): ===
+a: 1 2 3 4 5
+b: 1.1 2.2 3.3 4.4 5.5
+c: O L A
+
+=== printArray com range (Ex. 22.4): ===
+a[1..3]: 2 3 4
+  (imprimiu 3 elementos)
+b[0..4]: 1.1 2.2 3.3 4.4 5.5
+  (imprimiu 5 elementos)
+Tentativa intervalo invalido (low=4 > high=1):
+  retornou 0 (sem impressao)
+Tentativa fora dos limites (high=10):
+  retornou 0 (sem impressao)
+Tentativa low = high (degenerado):
+  retornou 0 (sem impressao porque high <= low)
+
+=== printArray para strings (Ex. 22.5): ===
+Alice          Bob            Carlos         Daniela
+Eduardo        Fernanda       Gabriel        Helena
+Igor           Julia
+\end{lstlisting}
+\end{saidabox}\normalcolor
+
+\subsection*{Discuss\~ao --- precedence de sobrecarga em C++}
+
+Quando o compilador encontra uma chamada como \texttt{printArray(nomes, 10)} com \texttt{nomes} sendo \texttt{const char*[]}, ele:
+
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+  \item Primeiro busca fun\c{c}\~oes \emph{n\~ao-template} que se encaixem.
+  \item S\'o se nenhuma se encaixar, considera templates.
+\end{enumerate}
+
+Como temos \texttt{void printArray(const char *const arr[], int)} (n\~ao-template), ela ``ganha'' do template gen\'erico --- por isso a formata\c{c}\~ao em colunas \'e usada.
+
+\begin{boaprat}
+\textbf{Quando preferir n\~ao-template a especializa\c{c}\~ao expl\'icita:} a vers\~ao n\~ao-template \'e mais simples de escrever e tem regras de resolu\c{c}\~ao de overload mais previs\'iveis. Especializa\c{c}\~oes expl\'icitas (\texttt{template<>}) t\^em sutilezas em C++ que muitas vezes surpreendem programadores. Por essa raz\~ao, comunidades como ISO C++ Core Guidelines recomendam \emph{evitar} especializa\c{c}\~oes expl\'icitas de templates de fun\c{c}\~ao --- prefira sobrecarga.
+\end{boaprat}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 22.6 --- \texttt{isEqualTo} em tr\^es cen\'arios}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Escreva um template simples \texttt{isEqualTo} que compare dois argumentos com \texttt{==}. Use com tipos fundamentais (\textbf{cen\'ario A}). Depois, escreva uma vers\~ao que use uma classe sem \texttt{operator==} (\textbf{cen\'ario B}) --- o que acontece? Finalmente, sobrecarregue \texttt{operator==} (\textbf{cen\'ario C}) --- o que acontece agora?
+\end{enunciado}
+
+\subsection*{Template}
+
+Em todos os tr\^es cen\'arios, o template \'e o mesmo:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T>
+bool isEqualTo(const T &a, const T &b) {
+    return a == b;
+}
+\end{lstlisting}
+
+\subsection*{Cen\'ario A --- tipos fundamentais (sucesso)}
+
+\lstinputlisting[style=cppcode]{codigos/isEqualTo_primitivos.cpp}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Testes com tipos primitivos ===
+isEqualTo(10, 10)      = true
+isEqualTo(10, 20)      = false
+isEqualTo(3.14, 3.14)  = true
+isEqualTo('a', 'a')    = true
+isEqualTo('a', 'b')    = false
+isEqualTo(s1, s2)      = true
+isEqualTo(s1, s3)      = false
+\end{lstlisting}
+\end{saidabox}\normalcolor
+
+\subsection*{Cen\'ario B --- classe SEM \texttt{operator==} (falha de compila\c{c}\~ao)}
+
+\lstinputlisting[style=cppcode]{codigos/isEqualTo_classeSem.cpp}
+
+Quando descomentamos a linha \texttt{cout << isEqualTo(p1, p2)}, o compilador gera:
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+isEqualTo_classeSem.cpp:9:51: error: no match for 'operator=='
+  (operand types are 'const Ponto' and 'const Ponto')
+    9 | bool isEqualTo(const T &a, const T &b) { return a == b; }
+      |                                                 ~~^~~~
+note: in instantiation of 'bool isEqualTo(const T&, const T&)
+      [with T = Ponto]'
+\end{lstlisting}
+\end{saidabox}\normalcolor
+
+\textbf{O programa \emph{n\~ao compila}.} A mensagem identifica:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Onde falhou: \texttt{return a == b}.
+  \item Por qu\^e: ``\texttt{no match for operator==}''.
+  \item Contexto: ``\texttt{in instantiation of isEqualTo... with T = Ponto}''.
+\end{itemize}
+
+\subsection*{Cen\'ario C --- classe COM \texttt{operator==} (sucesso)}
+
+\lstinputlisting[style=cppcode]{codigos/isEqualTo_classeCom.cpp}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Cenario C: classe Ponto AGORA com operator== ===
+isEqualTo(p1, p2) = true   (esperado true: ambos (1,2))
+isEqualTo(p1, p3) = false   (esperado false)
+isEqualTo(p2, p2) = true   (esperado true)
+\end{lstlisting}
+\end{saidabox}\normalcolor
+
+\subsection*{Discuss\~ao --- requisitos impl\'icitos em templates}
+
+Esses tr\^es cen\'arios ilustram a \textbf{caracter\'istica mais sutil de templates}: eles imp\~oem \emph{requisitos impl\'icitos} sobre o tipo \texttt{T}. \texttt{isEqualTo} requer que \texttt{T} suporte \texttt{operator==}. Esse requisito s\'o aparece \emph{na hora da instancia\c{c}\~ao}.
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Vantagem:} \'e ``duck typing'' em tempo de compila\c{c}\~ao. Qualquer tipo que ``quack'' como esperado funciona.
+  \item \textbf{Desvantagem:} mensagens de erro podem ser long\'issimas e cr\'ipticas (especialmente em c\'odigo da STL).
+\end{itemize}
+
+\begin{obseng}
+A introdu\c{c}\~ao de \emph{Concepts} em C++20 resolve esse problema permitindo declarar requisitos explicitamente:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <std::equality_comparable T>
+bool isEqualTo(const T &a, const T &b) { return a == b; }
+\end{lstlisting}
+
+Agora, a mensagem de erro fica clara: ``\texttt{Ponto does not satisfy std::equality\_comparable}''.
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 22.7 --- Template \texttt{Array} com especializa\c{c}\~ao}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Use \texttt{template<int numeroDeElementos, typename tipoElemento>} para criar um template \texttt{Array}. Sobreponha com uma defini\c{c}\~ao espec\'ifica para \texttt{Array<float>}. Mostre instancia\c{c}\~ao de \texttt{Array} de \texttt{int} pelo template, e que \texttt{Array} de \texttt{float} usa a defini\c{c}\~ao espec\'ifica.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+Aqui aparecem dois recursos especialmente interessantes:
+
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Par\^ametro n\~ao-tipo:} \texttt{int numeroDeElementos} \'e um \emph{valor} (n\~ao um tipo). O tamanho do array \'e fixado \emph{em tempo de compila\c{c}\~ao}.
+  \item \textbf{Especializa\c{c}\~ao parcial:} \texttt{Array<float, N>} tem comportamento distinto do template gen\'erico.
+\end{enumerate}
+
+\subsection*{Cabe\c{c}alho \texttt{Array.h}}
+
+\lstinputlisting[style=cppcode]{codigos/Array.h}
+
+\subsection*{Programa de teste}
+
+\lstinputlisting[style=cppcode]{codigos/main_Array.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Array<int, 5> (usa template geral) ===
+[Array geral] 10 20 30 40 50
+
+=== Array<double, 3> (usa template geral) ===
+[Array geral] 1.5 2.5 3.5
+
+=== Array<float, 4> (usa ESPECIALIZACAO!) ===
+[Array<float> especializado] [ 3.142, 2.718, 1.414, 0.577 ]
+
+Tamanho de cada array:
+  arrInt:   5 elementos
+  arrDbl:   3 elementos
+  arrFloat: 4 elementos
+\end{lstlisting}
+\end{saidabox}\normalcolor
+
+\subsection*{Discuss\~ao --- por que par\^ametro n\~ao-tipo?}
+
+\textbf{O tamanho fica embutido no tipo}: \texttt{Array<int, 5>} e \texttt{Array<int, 10>} s\~ao \emph{tipos diferentes}. O compilador pode:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Alocar o tamanho em \emph{tempo de compila\c{c}\~ao} (sem \texttt{new}).
+  \item Detectar erros de \emph{tamanho} em tempo de compila\c{c}\~ao (n\~ao \'e poss\'ivel atribuir \texttt{Array<int, 5>} a \texttt{Array<int, 10>}).
+  \item Aplicar otimiza\c{c}\~oes baseadas no tamanho conhecido (unroll de loops, alinhamento, etc.).
+\end{itemize}
+
+Compare com a abordagem \texttt{std::vector<int>}, em que o tamanho \'e din\^amico (e o array vive no heap). Ambas as abordagens t\^em valor; \texttt{std::array<int, N>} da STL combina template-tamanho com a interface moderna.
+
+\subsection*{Sobre a sintaxe \texttt{template<int N> class Array<float, N>}}
+
+A especializa\c{c}\~ao \emph{n\~ao} \'e do tipo ``\texttt{template<>}'' (\emph{full specialization}), e sim parcial: especializamos s\'o o tipo (para \texttt{float}), mantendo o tamanho \texttt{N} ainda como par\^ametro. C++ permite essa especializa\c{c}\~ao parcial em templates de classe (mas n\~ao em templates de fun\c{c}\~ao, no qual usar\'iamos sobrecarga, como no 22.5).
+
+\begin{obseng}
+\textbf{Diferen\c{c}as t\'ecnicas entre as duas vers\~oes do nosso \texttt{Array}:}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Vers\~ao geral: \texttt{imprimir()} chama \texttt{cout << dados[i]}, com o formato default.
+  \item Vers\~ao especializada para \texttt{float}: usa \texttt{fixed} + \texttt{setprecision(3)} para mostrar exatamente 3 casas decimais, e formato \texttt{[ a, b, c ]} mais visual.
+\end{itemize}
+
+A escolha de \emph{como} se diferenciar \'e do programador. O importante \'e que a especializa\c{c}\~ao seja usada \emph{automaticamente} pelo compilador na presen\c{c}a do tipo certo.
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 22.8 --- Template de fun\c{c}\~ao vs especializa\c{c}\~ao}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Fa\c{c}a a distin\c{c}\~ao entre \emph{template de fun\c{c}\~ao} e \emph{especializa\c{c}\~ao de template de fun\c{c}\~ao}.
+\end{enunciado}
+
+\subsection*{Defini\c{c}\~oes}
+
+\textbf{Template de fun\c{c}\~ao:} \'e a \emph{forma gen\'erica} com par\^ametros de tipo. N\~ao \'e c\'odigo execut\'avel por si s\'o --- \'e uma \emph{receita} que o compilador segue para gerar fun\c{c}\~oes concretas.
+
+\textbf{Especializa\c{c}\~ao de template de fun\c{c}\~ao:} \'e uma \emph{fun\c{c}\~ao concreta} gerada a partir do template para tipos espec\'ificos.
+
+\subsection*{Compara\c{c}\~ao}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|p{4cm}|p{4.5cm}|p{4.5cm}|}
+\hline
+\textbf{Aspecto} & \textbf{Template} & \textbf{Especializa\c{c}\~ao} \\
+\hline
+\'E c\'odigo execut\'avel? & N\~AO (s\'o uma receita) & SIM (compilada e execut\'avel) \\
+\hline
+Quantas existem? & Uma defini\c{c}\~ao & V\'arias (uma por tipo usado) \\
+\hline
+Quando \'e gerada? & --- & Em compila\c{c}\~ao, sob demanda \\
+\hline
+Exemplo de sintaxe & \texttt{template <typename T>} \texttt{T menor(T a, T b);} & (Impl\'icita ao usar:) \texttt{menor<int>(\ldots)} \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{Analogia}
+
+Pense em um template como um \emph{molde para biscoitos}, e cada especializa\c{c}\~ao como um \emph{biscoito} feito desse molde, mas com sabor pr\'oprio (chocolate, baunilha, manteiga \ldots). O molde n\~ao se come; os biscoitos sim.
+
+% ============================================================
+\section{Exerc\'icio 22.9 --- Template como est\^encil}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} O que \'e mais semelhante a um est\^encil: um template de classe ou uma especializa\c{c}\~ao de template de classe?
+\end{enunciado}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Um template de classe} \'e mais semelhante a um est\^encil.\end{resposta}
+
+\subsection*{Justificativa}
+
+Um \emph{est\^encil} \'e um molde vazado: voc\^e pinta sobre ele com uma cor (par\^ametro) e obt\'em uma figura concreta. \textbf{N\~ao se exibe o est\^encil} na parede; \textbf{exibe-se as figuras pintadas atrav\'es dele}.
+
+Analogamente:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Template de classe} (o ``est\^encil''): \texttt{template <typename T> class Array}.
+  \item \textbf{Especializa\c{c}\~oes} (as ``figuras pintadas''): \texttt{Array<int>}, \texttt{Array<double>}, \texttt{Array<Forma>}.
+\end{itemize}
+
+O programa s\'o usa as especializa\c{c}\~oes (objetos concretos com tipo conhecido); o template em si \'e um construto auxiliar do compilador.
+
+% ============================================================
+\section{Exerc\'icio 22.10 --- Templates e sobrecarga}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Qual \'e a rela\c{c}\~ao entre templates de fun\c{c}\~ao e sobrecarga?
+\end{enunciado}
+
+\subsection*{Tr\^es n\'iveis de rela\c{c}\~ao}
+
+\subsubsection*{1. Templates \emph{geram} fun\c{c}\~oes sobrecarregadas}
+
+Cada especializa\c{c}\~ao gerada (\texttt{selectionSort<int>}, \texttt{selectionSort<float>}, \ldots) \'e uma fun\c{c}\~ao distinta, com o mesmo nome. \'E sobrecarga ``\emph{de gra\c{c}a}'' pelo template.
+
+\subsubsection*{2. Templates podem \emph{coexistir} com fun\c{c}\~oes n\~ao-template}
+
+Foi o caso do nosso 22.5: \texttt{printArray} tem (a) o template gen\'erico e (b) a vers\~ao para \texttt{const char**}. Quando o compilador encontra \texttt{printArray(nomes, 10)}, escolhe entre ambas pelas regras de sobrecarga.
+
+\subsubsection*{3. Templates podem \emph{sobrecarregar entre si}}
+
+Templates podem coexistir se diferem em n\'umero ou tipo de par\^ametros. Foi o caso do 22.4: \texttt{printArray(arr, n)} e \texttt{printArray(arr, n, low, high)} s\~ao templates distintos.
+
+\subsection*{Regra de prefer\^encia na resolu\c{c}\~ao}
+
+Quando o compilador tem op\c{c}\~oes em todos os tr\^es n\'iveis, ele segue a \textbf{regra do mais espec\'ifico}:
+
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Mais espec\'ifico:} fun\c{c}\~ao n\~ao-template com tipo exato.
+  \item \textbf{Especializa\c{c}\~ao expl\'icita} de um template (\texttt{template<>}).
+  \item \textbf{Template gen\'erico} (instanciado para o tipo).
+\end{enumerate}
+
+% ============================================================
+\section{Exerc\'icio 22.11 --- Template vs macro}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Por que voc\^e usaria um template de fun\c{c}\~ao no lugar de uma macro?
+\end{enunciado}
+
+\subsection*{O problema de macros}
+
+Macros (\texttt{\#define}) s\~ao substitui\c{c}\~oes textuais cegas, processadas pelo \emph{pr\'e-processador} antes da compila\c{c}\~ao. Famosa armadilha:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+#define QUADRADO(x) x * x
+
+int y = QUADRADO(2 + 3);
+// expande para:    2 + 3 * 2 + 3 = 11 (deveria ser 25!)
+\end{lstlisting}
+
+A solu\c{c}\~ao parcial (par\^enteses obsessivos) \'e:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+#define QUADRADO(x) ((x) * (x))
+\end{lstlisting}
+
+Mas isso ainda tem problemas:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+int y = QUADRADO(++i);
+// expande para:    ((++i) * (++i))   <-- comportamento indefinido!
+\end{lstlisting}
+
+\subsection*{Vantagens dos templates sobre macros}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{6cm}|c|c|}
+\hline
+\textbf{Caracter\'istica} & \textbf{Macro} & \textbf{Template} \\
+\hline
+Verifica\c{c}\~ao de tipos & N\~AO & SIM \\
+\hline
+Avalia\c{c}\~ao consistente de argumentos & N\~AO (pode duplicar efeitos) & SIM \\
+\hline
+Mensagens de erro com contexto & N\~AO (referem-se ao c\'odigo expandido) & SIM (referem-se ao c\'odigo original) \\
+\hline
+Compat\'ivel com \emph{debuggers} & RUIM & BOM \\
+\hline
+Acesso a membros privados? & N\~AO & SIM (se \texttt{friend}) \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{Exemplo equivalente com template}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T>
+T quadrado(T x) {
+    return x * x;
+}
+
+int y = quadrado(++i);    // ++i avaliado UMA vez; comportamento bem definido
+\end{lstlisting}
+
+\begin{boaprat}
+\textbf{Em C++ moderno, evite macros para definir fun\c{c}\~oes ou constantes.} Use \texttt{template} para fun\c{c}\~oes gen\'ericas, \texttt{constexpr} para constantes computadas, e \texttt{inline} para sugest\~oes de expans\~ao em linha. As \'unicas situa\c{c}\~oes em que macros ainda fazem sentido s\~ao guardas de inclus\~ao (\texttt{\#ifndef}/\texttt{\#define}/\texttt{\#endif}) e configura\c{c}\~ao condicional de compila\c{c}\~ao.
+\end{boaprat}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 22.12 --- Problema de desempenho com templates}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Que problema de desempenho pode resultar do uso de templates?
+\end{enunciado}
+
+\subsection*{O problema: code bloat}
+
+\textbf{Cada especializa\c{c}\~ao usada gera c\'odigo distinto.} Se um programa usa \texttt{std::vector<int>}, \texttt{std::vector<double>}, \texttt{std::vector<string>}, \texttt{std::vector<Funcionario>}, \ldots, o compilador gera 4 vers\~oes completas de cada m\'etodo do \texttt{vector}. Isso pode resultar em:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Bin\'ario maior} (megabytes a mais em casos extremos).
+  \item \textbf{Cache de instru\c{c}\~oes mais poluido}, que paradoxalmente pode \emph{piorar} o desempenho geral.
+  \item \textbf{Tempo de compila\c{c}\~ao longo} (templates s\~ao notoriamente lentos de compilar).
+\end{itemize}
+
+\subsection*{Como mitigar}
+
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Fatorar c\'odigo} para retirar do template tudo que n\~ao depende de \texttt{T} (chamando uma fun\c{c}\~ao auxiliar n\~ao-template).
+  \item \textbf{Compilac\~ao precompiled headers} (cabe\c{c}alhos pr\'e-compilados) para acelerar a compila\c{c}\~ao.
+  \item \textbf{Usar \texttt{extern template}} (C++11) para evitar gerar a especializa\c{c}\~ao em m\'ultiplos arquivos.
+  \item \textbf{\texttt{type erasure}} para problemas em que o overhead de virtuais \'e aceit\'avel mas o bloat n\~ao \'e (ex.: \texttt{std::function}).
+\end{enumerate}
+
+\begin{dicadesemp}
+A bibliotecas STL e Boost s\~ao not\'orias por usar templates pesadamente. Compilar projetos que usam Boost.Spirit ou Eigen pode levar minutos por arquivo. \'E o trade-off cl\'assico: rapidez em tempo de execu\c{c}\~ao vs.\ rapidez em tempo de compila\c{c}\~ao.
+\end{dicadesemp}
+
+% ============================================================
+\section{Exerc\'icio 22.13 --- Quando a correspond\^encia falha}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} O compilador realiza correspond\^encia para escolher qual especializa\c{c}\~ao chamar. Sob que circunst\^ancias isso resulta em erro de compila\c{c}\~ao?
+\end{enunciado}
+
+\subsection*{Tr\^es categorias de falha}
+
+\subsubsection*{1. N\~ao existe especializa\c{c}\~ao compat\'ivel com os argumentos}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T> T menor(T a, T b);
+
+// Chamada:
+menor(5, "ola");      // ERRO: T nao pode ser int E string simultaneamente
+\end{lstlisting}
+
+\subsubsection*{2. Os requisitos impl\'icitos sobre \texttt{T} n\~ao s\~ao satisfeitos}
+
+Exatamente o cen\'ario B do nosso 22.6: a classe \texttt{Ponto} sem \texttt{operator==} causa erro ao instanciar \texttt{isEqualTo<Ponto>}.
+
+\subsubsection*{3. Ambig\"{u}idade entre m\'ultiplas especializa\c{c}\~oes/sobrecargas}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T>          void f(T x);
+template <typename T>          void f(T *x);
+
+int a = 5;
+f(&a);    // AMBIGUO: poderia ser f<int*>(int*) ou f<int>(int*)
+\end{lstlisting}
+
+\subsection*{Estrat\'egia para evitar}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Em C++20: \emph{Concepts} para tornar requisitos expl\'icitos.
+  \item Em C++14: \texttt{static\_assert} dentro do template:
+\end{itemize}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T>
+void selectionSort(T arr[], int n) {
+    static_assert(std::is_default_constructible<T>::value,
+                  "T precisa ser default-constructible");
+    // ...
+}
+\end{lstlisting}
+
+% ============================================================
+\section{Exerc\'icio 22.14 --- Tipo parametrizado}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Por que \'e apropriado referir-se a um template de classe como um ``tipo parametrizado''?
+\end{enunciado}
+
+\begin{resposta}\textbf{Resposta:} porque um template de classe \emph{descreve uma fam\'ilia de tipos}, indexada por par\^ametros. Cada combina\c{c}\~ao de par\^ametros gera um \emph{tipo} distinto.\end{resposta}
+
+\subsection*{Exemplificando}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T, int N> class Array;
+
+Array<int, 5>     a;   // TIPO 1
+Array<int, 10>    b;   // TIPO 2 (distinto do Tipo 1, ainda que parecido)
+Array<double, 5>  c;   // TIPO 3
+Array<Forma*, 100> d;  // TIPO 4
+\end{lstlisting}
+
+A frase ``\texttt{Array<int, 5>}'' \'e o nome \emph{completo} do tipo. O compilador trata \texttt{Array<int, 5>} e \texttt{Array<int, 10>} como tipos \emph{n\~ao-relacionados}.
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+Array<int, 5>  a;
+Array<int, 10> b;
+a = b;   // ERRO: tipos diferentes!
+\end{lstlisting}
+
+% ============================================================
+\section{Exerc\'icio 22.15 --- \texttt{Array<Funcionario> lista(100)}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Explique por que um programa em C++ usaria \texttt{Array<Funcionario> listaTrabalhador(100);}
+\end{enunciado}
+
+\subsection*{Decifrando a instru\c{c}\~ao}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{Array} \'e um template de classe.
+  \item \texttt{<Funcionario>} especifica o par\^ametro de tipo: o array conter\'a objetos \texttt{Funcionario}.
+  \item \texttt{listaTrabalhador} \'e o nome do objeto criado.
+  \item \texttt{(100)} \'e argumento para o construtor: especifica o tamanho do array (note: \emph{n\~ao} \'e par\^ametro do template, mas do construtor!).
+\end{itemize}
+
+\subsection*{Por que usar isso?}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Voc\^e precisa de uma cole\c{c}\~ao homog\^enea de funcion\'arios.
+  \item O tamanho \emph{m\'aximo} \'e conhecido em runtime (n\~ao em compila\c{c}\~ao), por isso o argumento \texttt{100} no construtor.
+  \item Voc\^e quer beneficios do encapsulamento da classe \texttt{Array} (provavelmente verifica\c{c}\~ao de limites, atribui\c{c}\~ao com checagem de tamanho, etc.).
+\end{itemize}
+
+% ============================================================
+\section{Exerc\'icio 22.16 --- \texttt{Array<Funcionario> lista;}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Por que um programa usaria \texttt{Array<Funcionario> listaTrabalhador;}?
+\end{enunciado}
+
+\subsection*{Diferen\c{c}a em rela\c{c}\~ao a 22.15}
+
+A \'unica diferen\c{c}a: \emph{n\~ao} h\'a argumento para o construtor. Se a classe \texttt{Array} fornece um construtor \emph{default} (sem argumentos), \texttt{listaTrabalhador} ser\'a criado com tamanho default --- talvez 0, talvez algum tamanho razo\'avel (10, por exemplo, como em muitas implementa\c{c}\~oes did\'aticas).
+
+\subsection*{Por que voc\^e faria isso?}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Tamanho desconhecido no momento da declara\c{c}\~ao --- vai crescer dinamicamente.
+  \item Confia no comportamento default da classe.
+  \item \'E mais conciso quando n\~ao \'e preciso especificar tamanho.
+\end{itemize}
+
+\subsection*{Em conjunto com 22.15}
+
+A combina\c{c}\~ao mostra um caso comum: uma classe \texttt{Array} oferece v\'arios construtores (com e sem argumento). Esse \'e o padr\~ao de fato em cont\^einers padr\~ao (\texttt{std::vector}):
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+std::vector<Funcionario> a;          // vazio, capacidade inicial 0
+std::vector<Funcionario> b(100);     // 100 funcionarios default
+std::vector<Funcionario> c(100, f);  // 100 funcionarios copia de f
+\end{lstlisting}
+
+% ============================================================
+\section{Exerc\'icio 22.17 --- Sintaxe \texttt{Array<T>::Array(int s)}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Explique o uso da seguinte nota\c{c}\~ao:
+
+\texttt{template< typename T > Array< T >::Array ( int s )}
+\end{enunciado}
+
+\subsection*{Decifrando linha por linha}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T>      // (1) Cabecalho: somos um template parametrizado por T
+Array<T>::                 // (2) Definimos uma funcao da classe Array<T>
+Array(int s)               // (3) Especificamente, o construtor Array(int s)
+{
+    // implementacao do construtor
+}
+\end{lstlisting}
+
+\subsection*{Contexto: defini\c{c}\~ao fora da classe}
+
+Isto aparece quando o programador separa \emph{declara\c{c}\~ao} e \emph{defini\c{c}\~ao} em arquivos diferentes (ou simplesmente quer manter o corpo dos m\'etodos fora da declara\c{c}\~ao da classe):
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+// No header (.h):
+template <typename T>
+class Array {
+public:
+    Array(int s);                // <-- so' declaracao
+    // ...
+};
+
+// Em outro lugar (mesmo .h, ou .cpp se nao fosse template):
+template <typename T>
+Array<T>::Array(int s) {         // <-- definicao
+    // ...
+}
+\end{lstlisting}
+
+\subsection*{Pontos sutis}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{O cabe\c{c}alho \texttt{template <typename T>} se repete} (\emph{cada} fun\c{c}\~ao-membro definida fora precisa do seu pr\'oprio cabe\c{c}alho).
+  \item \textbf{Sob a sintaxe \texttt{Array<T>::Array}}, o segundo \texttt{Array} \'e o nome do construtor (sem tipo de retorno, como qualquer construtor).
+  \item \textbf{Defini\c{c}\~ao em \texttt{.cpp}? Geralmente n\~ao funciona com templates.} Como o compilador precisa do c\'odigo no ponto de instancia\c{c}\~ao, geralmente colocamos templates inteiramente em arquivos \texttt{.h}.
+\end{itemize}
+
+\begin{errocomum}
+Tentar separar template entre \texttt{.h} e \texttt{.cpp} \'e uma fonte cl\'assica de erros do tipo ``undefined reference''. A solu\c{c}\~ao mais simples \'e manter todo o template no header (eventualmente em um \texttt{.tpp} inclu\'ido pelo \texttt{.h}).
+\end{errocomum}
+
+% ============================================================
+\section{Exerc\'icio 22.18 --- Por que par\^ametros n\~ao-tipo em cont\^einers?}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Por que voc\^e usaria um par\^ametro n\~ao-tipo com um template de classe para um cont\^einer como um array ou uma pilha?
+\end{enunciado}
+
+\subsection*{Tr\^es vantagens de tamanho como par\^ametro}
+
+\subsubsection*{1. Aloca\c{c}\~ao na pilha}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T, int N> class Array {
+    T dados[N];                    // alocado NA PILHA
+};
+
+Array<int, 100> a;                 // 400 bytes na pilha; nada de malloc/new
+\end{lstlisting}
+
+Compare com \texttt{std::vector<int>} que aloca dinamicamente. Em c\'odigo de baix\'issimo overhead (sistemas embarcados, c\'odigo cr\'itico), aloca\c{c}\~ao na pilha \'e drasticamente mais r\'apida que no heap.
+
+\subsubsection*{2. Verifica\c{c}\~ao de limites em compila\c{c}\~ao}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T, int N> class Array {
+    template <int I>
+    T &get() {
+        static_assert(I < N, "indice fora dos limites");
+        return dados[I];
+    }
+};
+
+Array<int, 5> a;
+a.get<2>();    // OK
+a.get<10>();   // erro DE COMPILACAO!
+\end{lstlisting}
+
+\subsubsection*{3. Tipos distintos para tamanhos distintos}
+
+\texttt{Array<int, 5>} e \texttt{Array<int, 10>} s\~ao tipos \emph{diferentes}. Imposs\'ivel atribuir um ao outro acidentalmente.
+
+\subsection*{Quando \emph{n\~ao} usar par\^ametro de tamanho}
+
+Quando o tamanho varia em runtime --- \texttt{std::vector} faz exatamente isso. Cada paradigma serve a um cen\'ario distinto.
+
+% ============================================================
+\section{Exerc\'icio 22.19 --- Rela\c{c}\~oes de \texttt{friend}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} O template \texttt{template< typename T > class Ct1} cont\'em uma das declara\c{c}\~oes \texttt{friend} abaixo. Descreva a rela\c{c}\~ao estabelecida.
+\end{enunciado}
+
+\subsection*{(a) \texttt{friend void f1();}}
+
+Declara que a \emph{fun\c{c}\~ao livre} \texttt{f1} (n\~ao-template, sem par\^ametros) \'e amiga de \emph{todas} as especializa\c{c}\~oes de \texttt{Ct1}. Ou seja, \texttt{f1} pode acessar membros privados de \texttt{Ct1<int>}, \texttt{Ct1<double>}, \texttt{Ct1<Funcionario>}, etc.
+
+\subsection*{(b) \texttt{friend void f2(Ct1<T>\&);}}
+
+Declara que \texttt{f2}, que aceita uma refer\^encia a \texttt{Ct1<T>}, \'e amiga da \emph{especializa\c{c}\~ao corrente} (a do mesmo \texttt{T}). Isto \'e, \texttt{f2(Ct1<int>\&)} \'e amiga de \texttt{Ct1<int>}; \texttt{f2(Ct1<double>\&)} \'e amiga de \texttt{Ct1<double>}.
+
+\subsection*{(c) \texttt{friend void C2::f3();}}
+
+Declara que o \emph{m\'etodo} \texttt{f3} da \emph{classe} \texttt{C2} (n\~ao-template) \'e amigo de \texttt{Ct1}. Apenas esse m\'etodo, n\~ao o restante de \texttt{C2}.
+
+\subsection*{(d) \texttt{friend void Ct3<T>::f4(Ct1<T>\&);}}
+
+Declara que o m\'etodo \texttt{f4} da classe \texttt{Ct3<T>} (para o mesmo \texttt{T}) \'e amigo da \texttt{Ct1<T>} correspondente. Exemplo: \texttt{Ct3<int>::f4} \'e amigo de \texttt{Ct1<int>}.
+
+\subsection*{(e) \texttt{friend da classe C4;}} 
+
+(Sintaxe completa: \texttt{friend class C4;}.) Declara que \emph{toda} a classe \texttt{C4} (n\~ao-template) \'e amiga --- todos os seus m\'etodos podem acessar membros privados de \texttt{Ct1}.
+
+\subsection*{(f) \texttt{friend da classe Ct5<T>;}}
+
+(Sintaxe completa: \texttt{friend class Ct5<T>;}.) Declara que a \emph{especializa\c{c}\~ao} \texttt{Ct5<T>} (para o mesmo \texttt{T}) \'e amiga de \texttt{Ct1<T>}.
+
+% ============================================================
+\section{Exerc\'icio 22.20 --- \texttt{static} em template de classe}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Suponha que \texttt{Funcionario} (template de classe) tenha um dado-membro \texttt{static contador}. Tr\^es especializa\c{c}\~oes do template s\~ao instanciadas. Quantas c\'opias do \texttt{static} existir\~ao? Como o acesso a cada uma \'e restrito?
+\end{enunciado}
+
+\subsection*{Resposta}
+
+\textbf{Tr\^es c\'opias --- uma para cada especializa\c{c}\~ao.} Cada especializa\c{c}\~ao \'e um \emph{tipo distinto}, ent\~ao cada uma tem sua pr\'opria \emph{vari\'avel est\'atica}.
+
+\subsection*{Exemplo expl\'icito}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T>
+class Funcionario {
+public:
+    static int contador;
+};
+
+template <typename T>
+int Funcionario<T>::contador = 0;     // definicao no namespace global
+
+// Codigo cliente:
+Funcionario<int>::contador      = 5;   // contador SO de Funcionario<int>
+Funcionario<double>::contador   = 10;  // contador SO de Funcionario<double>
+Funcionario<string>::contador   = 15;  // contador SO de Funcionario<string>
+
+cout << Funcionario<int>::contador    << endl;  // 5
+cout << Funcionario<double>::contador << endl;  // 10
+cout << Funcionario<string>::contador << endl;  // 15
+\end{lstlisting}
+
+\subsection*{Restri\c{c}\~ao de acesso}
+
+\textbf{Cada \texttt{contador} \'e acess\'ivel apenas pelo nome qualificado completo} (\texttt{Funcionario<TIPO>::contador}). N\~ao se pode acessar ``\texttt{Funcionario::contador}'' (sem \texttt{<TIPO>}); o compilador exige que voc\^e especifique de qual especializa\c{c}\~ao quer falar.
+
+\begin{obseng}
+Essa \'e uma das diferen\c{c}as mais sutis de templates: comportam-se como \emph{tipos distintos} para todos os efeitos. Inclusive: \texttt{Funcionario<int>} e \texttt{Funcionario<double>} podem ter inclusive m\'etodos com assinaturas diferentes (especializa\c{c}\~oes podem reescrever a interface). N\~ao existe um ``\texttt{Funcionario}'' gen\'erico --- existe um template gen\'erico, mas n\~ao um \emph{tipo} gen\'erico.
+\end{obseng}
+
+% ============================================================
+\section*{Encerramento}
+% ============================================================
+
+Os 18 exerc\'icios deste cap\'itulo cobriram todo o territ\'orio de templates em C++:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Templates de fun\c{c}\~ao} com dedu\c{c}\~ao de tipos (22.3 \texttt{selectionSort}; 22.4 \texttt{printArray} com range).
+  \item \textbf{Sobrecarga de templates com fun\c{c}\~oes n\~ao-template} (22.5).
+  \item \textbf{Requisitos impl\'icitos sobre \texttt{T}} (22.6).
+  \item \textbf{Templates de classe com par\^ametros mistos} (tipo + n\~ao-tipo) (22.7).
+  \item \textbf{Especializa\c{c}\~ao parcial} (22.7).
+  \item \textbf{Conceito de tipo parametrizado, est\^encil, biscoito} (22.8, 22.9, 22.14).
+  \item \textbf{Templates vs macros, vs sobrecarga} (22.10, 22.11).
+  \item \textbf{Code bloat e desempenho} (22.12).
+  \item \textbf{Resolu\c{c}\~ao de overload e ambig\"{u}idades} (22.13).
+  \item \textbf{Sintaxe de defini\c{c}\~ao externa, par\^ametros n\~ao-tipo, friends, statics} (22.15--22.20).
+\end{itemize}
+
+Templates s\~ao o \emph{polimorfismo est\'atico} de C++ --- um complemento poderoso ao polimorfismo din\^amico do Cap.~21. Em conjunto, oferecem solu\c{c}\~oes elegantes para a maioria dos problemas de generalidade em sistemas reais. O Cap\'itulo 23 cobrir\'a \textbf{tratamento de exce\c{c}\~oes}, a t\'ecnica fundamental para lidar com erros em c\'odigo gen\'erico.
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}

@@ -1,0 +1,491 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+
+\hypersetup{colorlinks=true, linkcolor=deitelblue, urlcolor=deitelblue,
+  pdftitle={C: Como Programar - Apendice C - Exercicios}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Ap\^endice~C}
+\fancyhead[R]{\small Exerc\'icios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+\newtcolorbox{obseng}{enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{boaprat}{enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Dica}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{resposta}{enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{enunciado}{enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Ap\^endice C}\\[0.3em]
+  {\Large\bfseries Sistemas de Numera\c{c}\~ao}\\[0.8em]
+  {\large\itshape Exerc\'icios --- Resolu\c{c}\~ao Did\'atica}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``Resolvemos os 11 exerc\'icios C.16 a C.26. Eles cobrem o mesmo terreno da autorrevis\~ao --- convers\~oes entre bases e representa\c{c}\~ao de negativos --- mas com novos valores e duas curiosidades: a base 12 (C.16) e as bases 6, 13 e 3 (C.17). Cada resposta inclui verifica\c{c}\~ao matem\'atica cruzada.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+% ============================================================
+\section{Exerc\'icio C.16 --- Sistema base 12}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} A base 12 seria mais f\'acil porque 12 \'e divis\'ivel por mais n\'umeros que 10. Qual o menor d\'igito da base 12? Qual o maior? Quais os valores posicionais das 4 posi\c{c}\~oes da direita?
+\end{enunciado}
+
+\subsection*{Menor d\'igito}
+
+\begin{resposta}\textbf{0} (zero), assim como em \emph{qualquer} sistema posicional.\end{resposta}
+
+\subsection*{Maior d\'igito}
+
+\begin{resposta}\textbf{Um a menos que a base, ou seja, 11.}\end{resposta}
+
+Como n\~ao temos um \'unico s\'imbolo decimal para 10 e 11, precisamos inventar novos s\'imbolos. Conven\c{c}\~oes hist\'oricas e duozimais propuseram:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Valor} & \textbf{S\'imbolo do livro Deitel} & \textbf{S\'imbolos duozimais hist\'oricos} \\
+\hline
+10 & A & X (Pitman) ou T (Bell) \\
+11 & B & E (Pitman) ou L (Bell) \\
+\hline
+\end{tabular}
+\end{center}
+
+Adotamos as letras A e B no estilo hexadecimal.
+
+\subsection*{Valores posicionais das 4 posi\c{c}\~oes da direita}
+
+S\~ao pot\^encias de 12:
+
+\[
+12^0 = \boxed{1}, \quad 12^1 = \boxed{12}, \quad 12^2 = \boxed{144}, \quad 12^3 = \boxed{1728}
+\]
+
+\begin{resposta}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+P3 & P2 & P1 & P0 \\
+\hline
+1728 & 144 & 12 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+\end{resposta}
+
+\begin{obseng}
+\textbf{Por que duod\'ecimo seria mais conveniente?} 12 tem divisores 1, 2, 3, 4, 6, 12 (6 divisores), enquanto 10 tem apenas 1, 2, 5, 10 (4 divisores). Em base 12, a divis\~ao por 3 e 4 d\'a resultado exato e simples (sem d\'izimas), o que ajudaria muito em c\'alculos cotidianos. O sistema sexagesimal (60), usado pelos sumerios para tempo e \^angulos, leva a ideia ainda mais longe: 60 tem 12 divisores.
+\end{obseng}
+
+% ============================================================
+\section{Exerc\'icio C.17 --- Tabela de valores posicionais (bases 6, 13, 3)}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Complete a tabela de valores posicionais.
+\end{enunciado}
+
+\begin{resposta}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Sistema} & \textbf{P3} & \textbf{P2} & \textbf{P1} & \textbf{P0} \\
+\hline
+Decimal & 1000 & 100 & 10 & 1 \\
+Base 6  & \textbf{216} & \textbf{36}  & 6  & \textbf{1} \\
+Base 13 & \textbf{2197} & 169 & \textbf{13} & \textbf{1} \\
+Base 3  & 27   & \textbf{9}   & \textbf{3}  & \textbf{1} \\
+\hline
+\end{tabular}
+\end{center}
+\end{resposta}
+
+\subsection*{C\'alculos}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Base 6:} $6^0=1$, $6^1=6$, $6^2=36$, $6^3=216$.
+  \item \textbf{Base 13:} $13^0=1$, $13^1=13$, $13^2=169$, $13^3=2197$.
+  \item \textbf{Base 3:} $3^0=1$, $3^1=3$, $3^2=9$, $3^3=27$.
+\end{itemize}
+
+% ============================================================
+\section{Exerc\'icio C.18 --- Bin\'ario 100101111010 para octal e hex}
+% ============================================================
+
+\subsection*{Para octal: agrupe de 3 em 3 (a partir da direita)}
+
+\[
+\underbrace{100}_{4} \, \underbrace{101}_{5} \, \underbrace{111}_{7} \, \underbrace{010}_{2}
+\]
+
+\begin{resposta}\textbf{Octal: 4572.}\end{resposta}
+
+\subsection*{Para hexadecimal: agrupe de 4 em 4 (a partir da direita)}
+
+\[
+\underbrace{1001}_{9} \, \underbrace{0111}_{7} \, \underbrace{1010}_{A=10}
+\]
+
+\begin{resposta}\textbf{Hexadecimal: 97A.}\end{resposta}
+
+\subsection*{Verifica\c{c}\~ao}
+
+$100101111010_2 = 2426_{10}$.
+
+Conferindo octal: $4572_8 = 4 \times 512 + 5 \times 64 + 7 \times 8 + 2 = 2048 + 320 + 56 + 2 = 2426$. ✓
+
+Conferindo hex: $\text{97A}_{16} = 9 \times 256 + 7 \times 16 + 10 = 2304 + 112 + 10 = 2426$. ✓
+
+\newpage
+% ============================================================
+\section{Exerc\'icio C.19 --- Hexadecimal 3A7D em bin\'ario}
+% ============================================================
+
+\[
+\underbrace{3}_{0011} \, \underbrace{A}_{1010} \, \underbrace{7}_{0111} \, \underbrace{D}_{1101}
+\]
+
+\begin{resposta}\textbf{Bin\'ario: 0011 1010 0111 1101.}\end{resposta}
+
+\subsection*{Verifica\c{c}\~ao}
+
+$\text{3A7D}_{16} = 3 \times 4096 + 10 \times 256 + 7 \times 16 + 13 = 12288 + 2560 + 112 + 13 = 14973_{10}$.
+
+% ============================================================
+\section{Exerc\'icio C.20 --- Hexadecimal 765F em octal}
+% ============================================================
+
+\textbf{Dica do livro:} converta primeiro para bin\'ario.
+
+\subsection*{Etapa 1: hex 765F para bin\'ario}
+
+\[
+\underbrace{7}_{0111} \, \underbrace{6}_{0110} \, \underbrace{5}_{0101} \, \underbrace{F}_{1111}
+\]
+
+Bin\'ario: \texttt{0111 0110 0101 1111}.
+
+\subsection*{Etapa 2: bin\'ario para octal (agrupando de 3 em 3)}
+
+S\~ao 16 bits ao todo; precisamos completar com zeros \`a esquerda para totalizar um m\'ultiplo de 3 (18 bits, 6 grupos):
+
+\[
+\underbrace{000}_{0} \, \underbrace{111}_{7} \, \underbrace{011}_{3} \, \underbrace{001}_{1} \, \underbrace{011}_{3} \, \underbrace{111}_{7}
+\]
+
+\begin{resposta}\textbf{Octal: 073137 (ou simplesmente 73137).}\end{resposta}
+
+\subsection*{Verifica\c{c}\~ao}
+
+$\text{765F}_{16} = 7 \times 4096 + 6 \times 256 + 5 \times 16 + 15 = 28672 + 1536 + 80 + 15 = 30303_{10}$.
+
+E $73137_8 = 7 \times 4096 + 3 \times 512 + 1 \times 64 + 3 \times 8 + 7 = 28672 + 1536 + 64 + 24 + 7 = 30303$. ✓
+
+% ============================================================
+\section{Exerc\'icio C.21 --- Bin\'ario 1011110 em decimal}
+% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+Posi\c{c}\~ao    & 6   & 5  & 4  & 3 & 2 & 1 & 0 \\
+\hline
+Valor pos. & 64  & 32 & 16 & 8 & 4 & 2 & 1 \\
+\hline
+D\'igito    & 1   & 0  & 1  & 1 & 1 & 1 & 0 \\
+\hline
+Produto   & 64  & 0  & 16 & 8 & 4 & 2 & 0 \\
+\hline
+\end{tabular}
+\end{center}
+
+\[
+64 + 16 + 8 + 4 + 2 = \boxed{94_{10}}
+\]
+
+\begin{resposta}\textbf{Decimal: 94.}\end{resposta}
+
+% ============================================================
+\section{Exerc\'icio C.22 --- Octal 426 em decimal}
+% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Posi\c{c}\~ao    & 2   & 1  & 0 \\
+\hline
+Valor pos. & 64  & 8  & 1 \\
+\hline
+D\'igito    & 4   & 2  & 6 \\
+\hline
+Produto   & 256 & 16 & 6 \\
+\hline
+\end{tabular}
+\end{center}
+
+\[
+256 + 16 + 6 = \boxed{278_{10}}
+\]
+
+\begin{resposta}\textbf{Decimal: 278.}\end{resposta}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio C.23 --- Hexadecimal FFFF em decimal}
+% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Posi\c{c}\~ao        & 3      & 2     & 1   & 0 \\
+\hline
+Valor pos.     & 4096   & 256   & 16  & 1 \\
+\hline
+D\'igito        & F (15) & F (15)& F (15) & F (15) \\
+\hline
+Produto       & 61440  & 3840  & 240 & 15 \\
+\hline
+\end{tabular}
+\end{center}
+
+\[
+61440 + 3840 + 240 + 15 = \boxed{65535_{10}}
+\]
+
+\begin{resposta}\textbf{Decimal: 65535.}\end{resposta}
+
+\begin{obseng}
+$65535 = 2^{16} - 1$ \'e o maior inteiro \emph{sem sinal} represent\'avel em 16 bits. \'E o limite superior de \texttt{unsigned short} em muitas implementa\c{c}\~oes. Tamb\'em conhecido como ``portas TCP/IP m\'aximas'' (65535 portas dispon\'iveis). E \'e um divisor de Mersenne: $2^{16} - 1 = 3 \times 5 \times 17 \times 257$.
+\end{obseng}
+
+% ============================================================
+\section{Exerc\'icio C.24 --- Decimal 299 em bin, oct, hex}
+% ============================================================
+
+\subsection*{Bin\'ario}
+
+$299 = 256 + 32 + 8 + 2 + 1$:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+Valor pos. & 256 & 128 & 64 & 32 & 16 & 8 & 4 & 2 & 1 \\
+\hline
+D\'igito    & 1   & 0   & 0  & 1  & 0  & 1 & 0 & 1 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{resposta}\textbf{Bin\'ario: 100101011.}\end{resposta}
+
+\subsection*{Octal: agrupando o bin\'ario de 3 em 3}
+
+\[
+\underbrace{100}_{4} \, \underbrace{101}_{5} \, \underbrace{011}_{3}
+\]
+
+\begin{resposta}\textbf{Octal: 453.}\end{resposta}
+
+\subsection*{Hexadecimal: agrupando o bin\'ario de 4 em 4}
+
+(Completamos com 3 zeros \`a esquerda para fechar 12 bits = 3 grupos.)
+
+\[
+\underbrace{0001}_{1} \, \underbrace{0010}_{2} \, \underbrace{1011}_{B=11}
+\]
+
+\begin{resposta}\textbf{Hexadecimal: 12B.}\end{resposta}
+
+\subsection*{Verifica\c{c}\~ao}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Bin: $256+32+8+2+1 = 299$. ✓
+  \item Oct: $4 \times 64 + 5 \times 8 + 3 = 256+40+3 = 299$. ✓
+  \item Hex: $1 \times 256 + 2 \times 16 + 11 = 256+32+11 = 299$. ✓
+\end{itemize}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio C.25 --- Complemento de 1 e 2 de 779}
+% ============================================================
+
+\subsection*{Etapa 1: 779 em bin\'ario}
+
+$779 = 512 + 256 + 8 + 2 + 1$:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\hline
+Valor pos. & 512 & 256 & 128 & 64 & 32 & 16 & 8 & 4 & 2 & 1 \\
+\hline
+D\'igito    & 1   & 1   & 0   & 0  & 0  & 0  & 1 & 0 & 1 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{resposta}\textbf{Bin\'ario: 1100001011} (10 bits).\end{resposta}
+
+\subsection*{Etapa 2: complemento de UM (inverte todos os bits)}
+
+\begin{center}
+\begin{tabular}{r|cccccccccc}
+779             & 1 & 1 & 0 & 0 & 0 & 0 & 1 & 0 & 1 & 1 \\
+\hline
+$\sim 779$ (C1) & 0 & 0 & 1 & 1 & 1 & 1 & 0 & 1 & 0 & 0
+\end{tabular}
+\end{center}
+
+\begin{resposta}\textbf{Complemento de UM: 0011110100.}\end{resposta}
+
+\subsection*{Etapa 3: complemento de DOIS (C1 + 1)}
+
+\[
+0011110100 + 1 = 0011110101
+\]
+
+\begin{resposta}\textbf{Complemento de DOIS: 0011110101.}\end{resposta}
+
+\subsection*{Verifica\c{c}\~ao}
+
+\begin{center}
+\begin{tabular}{r}
+$\phantom{+}1100001011$ \\
+$+ \, 0011110101$ \\
+\hline
+$\phantom{+}\mathbf{(1)}\,0000000000$
+\end{tabular}
+\end{center}
+
+O bit transbordado fora dos 10 bits \'e descartado: resultado $0000000000 = 0$. ✓
+
+% ============================================================
+\section{Exerc\'icio C.26 --- Complemento de dois de $-1$ em 32 bits}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Mostre o complemento de dois do valor inteiro $-1$ em uma m\'aquina com inteiros de 32 bits.
+\end{enunciado}
+
+\subsection*{Etapa 1: $+1$ em bin\'ario de 32 bits}
+
+\[
++1 = \underbrace{0000\,0000\,0000\,0000\,0000\,0000\,0000\,0001}_{32 \text{ bits}}
+\]
+
+\subsection*{Etapa 2: complemento de UM (inverte todos os bits)}
+
+\[
+\sim 1 = \underbrace{1111\,1111\,1111\,1111\,1111\,1111\,1111\,1110}_{32 \text{ bits}}
+\]
+
+\subsection*{Etapa 3: complemento de DOIS (C1 + 1)}
+
+\[
+\sim 1 + 1 = \underbrace{1111\,1111\,1111\,1111\,1111\,1111\,1111\,1111}_{32 \text{ bits}}
+\]
+
+\begin{resposta}
+\textbf{Complemento de dois de $-1$ em 32 bits: 32 bits 1 (todos)}, ou seja:
+
+\[
+\text{1111 1111 1111 1111 1111 1111 1111 1111}_2
+\]
+
+Em hexadecimal: \textbf{0xFFFFFFFF}. Em decimal sem sinal: \textbf{4294967295} ($= 2^{32} - 1$).
+\end{resposta}
+
+\subsection*{Verifica\c{c}\~ao}
+
+\begin{center}
+\begin{tabular}{r}
+$\phantom{+}0000\,0000\,0000\,0000\,0000\,0000\,0000\,0001$ \quad ($+1$)\\
+$+ \, 1111\,1111\,1111\,1111\,1111\,1111\,1111\,1111$ \quad ($-1$ em C2)\\
+\hline
+$\phantom{+}\mathbf{(1)}\,0000\,0000\,0000\,0000\,0000\,0000\,0000\,0000$
+\end{tabular}
+\end{center}
+
+O bit transbordado \'e descartado; o resultado em 32 bits \'e zero. ✓ Confirma que estamos somando o oposto.
+
+\begin{obseng}
+\textbf{Por que \texttt{(unsigned)(-1) == UINT\_MAX} em C/C++:} quando voc\^e converte $-1$ (\texttt{int}) para \texttt{unsigned}, n\~ao h\'a convers\~ao real --- s\'o reinterpreta\c{c}\~ao dos mesmos bits. E os bits de $-1$ em C2 s\~ao 1's. Logo, \texttt{(unsigned)(-1)} \'e o maior \texttt{unsigned} poss\'ivel:
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Em 32 bits: \texttt{UINT\_MAX} $= 4{.}294{.}967{.}295$
+  \item Em 64 bits: \texttt{UINT64\_MAX} $= 18{.}446{.}744{.}073{.}709{.}551{.}615$
+\end{itemize}
+Esse truque \'e \emph{idiomatico} em C: por exemplo, \texttt{string::npos} \'e definido como \texttt{(size\_t)(-1)}.
+\end{obseng}
+
+% ============================================================
+\section*{Encerramento}
+% ============================================================
+
+Resolvemos os 11 exerc\'icios deste ap\^endice. Todas as convers\~oes foram verificadas matematicamente. Sintetizando:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Em qualquer base $b$, d\'igitos v\~ao de 0 a $b-1$; valores posicionais s\~ao $b^0, b^1, b^2, \ldots$
+  \item Bin\'ario $\leftrightarrow$ octal: grupos de 3 bits. Bin\'ario $\leftrightarrow$ hex: grupos de 4 bits.
+  \item Para outras bases, multiplique d\'igitos por valores posicionais.
+  \item Complemento de 2: inverta os bits e some 1.
+  \item Em C++: \texttt{cout << oct << n}, \texttt{<< hex << n}, \texttt{<< dec << n} (Cap.~23).
+\end{itemize}
+
+Com este ap\^endice, o livro Deitel encerra o material sobre C++. Pr\'oximos ap\^endices (D, E, F) cobrem outros aspectos t\'ecnicos da linguagem.
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}

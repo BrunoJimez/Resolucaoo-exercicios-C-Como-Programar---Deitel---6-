@@ -1,0 +1,2000 @@
+% =====================================================================
+% Resolução dos Desafios de Programação — Apêndice D
+% "C: Como Programar" — Paul Deitel, Harvey Deitel, 6ª edição
+% Programação de Jogos: Solução de Sudoku
+% =====================================================================
+\documentclass[11pt,a4paper,oneside]{report}
+
+% --- Codificação e idioma ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{lmodern}
+
+% --- Layout ---
+\usepackage[a4paper,margin=2.4cm,headheight=22pt]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{microtype}
+\usepackage{parskip}
+
+% --- Cores, gráficos e boxes ---
+\usepackage{xcolor}
+\definecolor{deitelblue}{RGB}{0,82,147}
+\definecolor{deitellightblue}{RGB}{210,232,250}
+\definecolor{deitelgreen}{RGB}{34,120,57}
+\definecolor{deitellightgreen}{RGB}{220,240,225}
+\definecolor{deitelred}{RGB}{170,30,30}
+\definecolor{deitellightred}{RGB}{250,225,225}
+\definecolor{deitelorange}{RGB}{200,110,15}
+\definecolor{deitellightorange}{RGB}{252,235,210}
+\definecolor{deitelgray}{RGB}{75,75,75}
+\definecolor{codebg}{RGB}{248,248,245}
+\definecolor{codekw}{RGB}{0,82,147}
+\definecolor{codecomment}{RGB}{0,128,0}
+\definecolor{codestring}{RGB}{170,30,30}
+\definecolor{codenum}{RGB}{120,120,120}
+
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{listings,skins,breakable}
+
+% --- Listings (estilo de código C no espírito Deitel) ---
+\usepackage{listings}
+\lstset{
+    language=C,
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{codekw}\bfseries,
+    commentstyle=\color{codecomment}\itshape,
+    stringstyle=\color{codestring},
+    numberstyle=\tiny\color{codenum},
+    numbers=left,
+    numbersep=8pt,
+    stepnumber=1,
+    showstringspaces=false,
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    captionpos=b,
+    frame=single,
+    rulecolor=\color{deitelblue!50},
+    framesep=4pt,
+    xleftmargin=14pt,
+    xrightmargin=4pt,
+    aboveskip=10pt,
+    belowskip=10pt,
+    inputencoding=utf8,
+    extendedchars=true,
+    literate=
+        {á}{{\'a}}1 {à}{{\`a}}1 {â}{{\^a}}1 {ã}{{\~a}}1
+        {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+        {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1
+        {ú}{{\'u}}1 {ç}{{\c{c}}}1
+        {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1
+        {Ó}{{\'O}}1 {Ú}{{\'U}}1 {Ç}{{\c{C}}}1
+}
+
+% --- Caixas pedagógicas estilo Deitel ---
+\newtcolorbox{boapratica}{
+    enhanced, breakable,
+    colback=deitellightgreen, colframe=deitelgreen,
+    boxrule=0.6pt, arc=2pt,
+    fonttitle=\bfseries\color{white},
+    coltitle=white,
+    title=\faIconHack{check} Boa Prática de Programação,
+    fontupper=\small,
+    left=8pt, right=8pt, top=4pt, bottom=4pt,
+}
+\newtcolorbox{erro}{
+    enhanced, breakable,
+    colback=deitellightred, colframe=deitelred,
+    boxrule=0.6pt, arc=2pt,
+    fonttitle=\bfseries\color{white},
+    coltitle=white,
+    title=\faIconHack{warning} Erro Comum de Programação,
+    fontupper=\small,
+    left=8pt, right=8pt, top=4pt, bottom=4pt,
+}
+\newtcolorbox{desempenho}{
+    enhanced, breakable,
+    colback=deitellightorange, colframe=deitelorange,
+    boxrule=0.6pt, arc=2pt,
+    fonttitle=\bfseries\color{white},
+    coltitle=white,
+    title=\faIconHack{bolt} Dica de Desempenho,
+    fontupper=\small,
+    left=8pt, right=8pt, top=4pt, bottom=4pt,
+}
+\newtcolorbox{engenharia}{
+    enhanced, breakable,
+    colback=deitellightblue, colframe=deitelblue,
+    boxrule=0.6pt, arc=2pt,
+    fonttitle=\bfseries\color{white},
+    coltitle=white,
+    title=\faIconHack{gear} Observação de Engenharia de Software,
+    fontupper=\small,
+    left=8pt, right=8pt, top=4pt, bottom=4pt,
+}
+\newtcolorbox{enunciado}{
+    enhanced, breakable,
+    colback=white, colframe=deitelblue,
+    boxrule=1pt, arc=3pt,
+    fonttitle=\bfseries\color{white},
+    coltitle=white,
+    title=Enunciado do desafio,
+    fontupper=\small,
+    left=8pt, right=8pt, top=4pt, bottom=4pt,
+}
+
+% Implementação simples de "ícones" via texto entre colchetes (sem font-awesome para evitar dependência)
+\newcommand{\faIconHack}[1]{[\textsc{#1}]}
+
+% --- Capítulos e seções ---
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+    {\normalfont\huge\bfseries\color{deitelblue}}
+    {\filright\Large APÊNDICE \thechapter}
+    {18pt}
+    {\Huge}
+\titleformat{\section}
+    {\normalfont\Large\bfseries\color{deitelblue}}
+    {\thesection}{0.8em}{}
+\titleformat{\subsection}
+    {\normalfont\large\bfseries\color{deitelgray}}
+    {\thesubsection}{0.7em}{}
+
+\renewcommand{\thechapter}{D}
+\renewcommand{\thesection}{D.\arabic{section}}
+
+% --- Cabeçalhos e rodapés ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{deitelgray}\textit{Resolução — Apêndice D}}
+\fancyhead[R]{\small\color{deitelgray}\textit{C: Como Programar — Deitel \& Deitel, 6ª ed.}}
+\fancyfoot[C]{\small\color{deitelgray}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{deitelblue}\leaders\hrule height \headrulewidth\hfill}}
+
+% --- Hyperref por último ---
+\usepackage[colorlinks=true,
+    linkcolor=deitelblue,
+    citecolor=deitelblue,
+    urlcolor=deitelblue,
+    pdftitle={Resolução do Apêndice D - C Como Programar - Deitel},
+    pdfauthor={Resolução em estilo Deitel},
+    pdfsubject={Programação de Jogos: Solução de Sudoku em C}
+]{hyperref}
+
+% --- Comandos auxiliares ---
+\newcommand{\codigo}[1]{\texttt{\color{deitelblue}#1}}
+\newcommand{\funcao}[1]{\texttt{\color{deitelblue}\textbf{#1}}}
+
+\begin{document}
+
+% =====================================================================
+% CAPA
+% =====================================================================
+\begin{titlepage}
+\centering
+\vspace*{1.5cm}
+{\Huge\bfseries\color{deitelblue} Resolução Comentada}\\[0.5cm]
+{\LARGE\bfseries\color{deitelblue} Apêndice D}\\[0.4cm]
+{\Large\color{deitelgray} Programação de Jogos:}\\[0.2cm]
+{\Large\color{deitelgray} Solução de Sudoku}\\[1.5cm]
+\rule{0.7\textwidth}{1pt}\\[0.8cm]
+{\large\textit{Baseado na obra}}\\[0.4cm]
+{\Large\bfseries C: Como Programar}\\[0.2cm]
+{\large Paul Deitel \quad$\bullet$\quad Harvey Deitel}\\[0.2cm]
+{\normalsize 6\textsuperscript{a} edição --- Pearson Prentice Hall, 2011}\\[1.2cm]
+\rule{0.7\textwidth}{1pt}\\[1.5cm]
+
+\begin{tcolorbox}[
+    colback=deitellightblue,
+    colframe=deitelblue,
+    width=0.85\textwidth,
+    arc=4pt,
+    boxrule=1pt
+]
+\small
+\textbf{Sobre esta resolução.} Este documento apresenta a resolução completa
+e didática dos oito desafios de programação propostos no Apêndice D da obra
+\textit{C: Como Programar}. Cada desafio é desenvolvido no estilo
+incremental característico dos autores --- enunciado, análise, algoritmo,
+implementação comentada em C, saída esperada e observações pedagógicas
+(boas práticas, erros comuns, dicas de desempenho). Como o Apêndice D
+sintetiza conceitos que vão de arrays bidimensionais (Cap. 6) até recursão
+e ponteiros (Caps. 5 e 7), o material aqui apresentado utiliza apenas
+recursos da linguagem C apresentados até esses capítulos.
+\end{tcolorbox}
+
+\vfill
+{\small\color{deitelgray}\today}
+\end{titlepage}
+
+% =====================================================================
+% SUMÁRIO
+% =====================================================================
+\tableofcontents
+\thispagestyle{fancy}
+\newpage
+
+% =====================================================================
+% APÊNDICE D
+% =====================================================================
+\chapter{Programação de Jogos: Solução de Sudoku}
+
+\section{Visão geral e infraestrutura comum}
+
+O Apêndice~D apresenta um conjunto de desafios de programação cujo objetivo
+é, ao mesmo tempo, divertir o leitor e exercitar todos os mecanismos que
+foram introduzidos nos capítulos anteriores: arrays bidimensionais, funções,
+ponteiros, estruturas de iteração aninhadas, geração de números pseudoaleatórios
+e --- onde o problema exigir --- recursão. Antes de atacarmos cada desafio
+individualmente, é prudente construir uma pequena infraestrutura comum a
+todos eles. Essa estratégia é, aliás, a mesma adotada em todo o livro:
+identificamos as funcionalidades reutilizáveis, programamo-las uma única vez
+e, a partir daí, compomos soluções cada vez mais sofisticadas.
+
+\begin{engenharia}
+Reaproveitar funções utilitárias é a essência da boa engenharia de software.
+Em vez de duplicar a verificação ``este movimento é válido?'' em cada
+solucionador, escrevemos a função uma única vez e a invocamos onde for
+necessário. Quando uma falha aparecer (ou um aprimoramento for desejado),
+basta corrigir um único ponto do código.
+\end{engenharia}
+
+\subsection{Convenções de representação do tabuleiro}
+
+Seguindo a recomendação do Apêndice~D, representamos o tabuleiro como um
+array bidimensional de inteiros de dimensões $10 \times 10$, ignorando a
+\emph{linha~0} e a \emph{coluna~0}. Assim, a célula da $i$-ésima linha e
+$j$-ésima coluna corresponde a \codigo{s[i][j]} com $1 \le i,j \le 9$,
+em conformidade com a numeração tradicional da comunidade do Sudoku. Uma
+célula vazia é representada pelo valor \codigo{0}; uma célula preenchida
+contém um dos dígitos \codigo{1} a \codigo{9}.
+
+\begin{boapratica}
+Definir constantes simbólicas (\textit{macros}) para o tamanho do tabuleiro
+elimina ``números mágicos'' espalhados pelo código. Caso desejássemos, no
+futuro, generalizar para um tabuleiro $16 \times 16$, alteraríamos apenas
+as macros.
+\end{boapratica}
+
+\subsection{Função utilitária \texttt{ehMovimentoValido}}
+
+Praticamente todos os solucionadores precisarão responder à pergunta:
+``\emph{Se eu colocar o dígito $d$ na célula \codigo{s[i][j]}, isso violará
+alguma regra do Sudoku?}'' Em vez de reverificar o tabuleiro inteiro a cada
+tentativa, é muito mais eficiente verificar apenas a linha~$i$, a coluna~$j$
+e a grade de $3 \times 3$ à qual \codigo{s[i][j]} pertence. A
+Listagem~\ref{lst:infra} apresenta o cabeçalho do programa, as constantes
+e essa função auxiliar.
+
+\begin{lstlisting}[caption={Macros, cabeçalhos e a função \texttt{ehMovimentoValido}.},label={lst:infra}]
+/* sudoku_infra.h -- infraestrutura comum aos desafios do Apêndice D. */
+#ifndef SUDOKU_INFRA_H
+#define SUDOKU_INFRA_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define LADO       9   /* dimensão do Sudoku padrão */
+#define DIM        10  /* dimensão do array; ignoramos índice 0 */
+#define VAZIO      0   /* valor que indica célula em branco */
+#define BLOCO      3   /* dimensão das sub-grades 3x3 */
+
+/* Verifica se colocar o dígito d em s[linha][col] mantém o tabuleiro */
+/* consistente com as regras do Sudoku. Retorna 1 se sim, 0 se não.   */
+int ehMovimentoValido(int s[DIM][DIM], int linha, int col, int d)
+{
+    int k, i, j;
+    int inicioL, inicioC;
+
+    /* 1) o dígito já apareceu na linha? */
+    for (k = 1; k <= LADO; k++)
+        if (s[linha][k] == d) return 0;
+
+    /* 2) o dígito já apareceu na coluna? */
+    for (k = 1; k <= LADO; k++)
+        if (s[k][col] == d) return 0;
+
+    /* 3) o dígito já apareceu na grade 3x3 que contém [linha][col]? */
+    inicioL = ((linha - 1) / BLOCO) * BLOCO + 1;
+    inicioC = ((col   - 1) / BLOCO) * BLOCO + 1;
+    for (i = inicioL; i < inicioL + BLOCO; i++)
+        for (j = inicioC; j < inicioC + BLOCO; j++)
+            if (s[i][j] == d) return 0;
+
+    return 1;   /* nenhum conflito */
+}
+#endif
+\end{lstlisting}
+
+A aritmética para localizar a grade $3 \times 3$ merece atenção. A expressão
+\codigo{((linha - 1) / 3) * 3 + 1} faz exatamente o que precisamos: subtraímos
+$1$ para que as linhas $1, 2, 3$ caiam em $0, 1, 2$; dividimos por $3$ (divisão
+inteira) para obter o índice do bloco ($0$, $1$ ou $2$); multiplicamos por $3$
+e somamos $1$ para voltar à numeração de $1$ a $9$, obtendo a primeira linha
+da grade ($1$, $4$ ou $7$, respectivamente). O mesmo raciocínio se aplica à
+coluna.
+
+\begin{erro}
+Um erro frequente é escrever \codigo{(linha / 3) * 3 + 1} sem o ajuste
+\codigo{- 1}. Para \codigo{linha == 3}, isso produziria $4$, quando o início
+correto do bloco é $1$. Sempre teste a aritmética de bloco com os valores
+de fronteira $1$, $3$, $4$, $6$, $7$ e $9$.
+\end{erro}
+
+\subsection{Função utilitária \texttt{imprimirTabuleiro}}
+
+Como o padrão da linguagem C não inclui recursos gráficos, optamos por uma
+representação textual cuidadosa, com separadores que destacam as sub-grades
+de $3 \times 3$. A Listagem~\ref{lst:print} apresenta a implementação.
+
+\begin{lstlisting}[caption={Impressão formatada do tabuleiro.},label={lst:print}]
+/* Imprime o tabuleiro com separadores entre as sub-grades 3x3. */
+void imprimirTabuleiro(int s[DIM][DIM])
+{
+    int i, j;
+
+    printf("\n    1 2 3 | 4 5 6 | 7 8 9\n");
+    printf("  +-------+-------+-------+\n");
+    for (i = 1; i <= LADO; i++) {
+        printf("%d | ", i);
+        for (j = 1; j <= LADO; j++) {
+            if (s[i][j] == VAZIO)
+                printf(". ");
+            else
+                printf("%d ", s[i][j]);
+            if (j % 3 == 0) printf("| ");
+        }
+        printf("\n");
+        if (i % 3 == 0)
+            printf("  +-------+-------+-------+\n");
+    }
+}
+\end{lstlisting}
+
+Com essa pequena infraestrutura --- macros de domínio, função de validação
+incremental e função de impressão --- estamos prontos para enfrentar cada
+um dos desafios. Nas seções a seguir, supomos que essas funções já estão
+disponíveis (em um cabeçalho \codigo{sudoku\_infra.h} incluído em cada
+programa).
+
+% =====================================================================
+\section{Desafio 1: a função \texttt{validSudoku}}
+
+\begin{enunciado}
+Crie a função \texttt{int validSudoku( int sudokuBoard[10][10] )} que recebe
+um tabuleiro de Sudoku como um array bidimensional de inteiros (ignorando a
+linha 0 e a coluna 0). A função deve retornar \texttt{1} se um tabuleiro
+\emph{completo} for válido, \texttt{2} se um tabuleiro \emph{parcialmente
+completo} for válido e \texttt{0} se o tabuleiro for \emph{inválido}.
+\end{enunciado}
+
+\subsection{Análise do problema}
+
+Antes de escrever uma única linha de código, é essencial entender com
+precisão o que ``válido'' significa neste contexto. Um Sudoku é válido
+quando, ao mesmo tempo:
+
+\begin{enumerate}
+    \item \textbf{Todas as células contêm valores em $\{0, 1, 2, \ldots, 9\}$.}
+        O valor $0$ representa célula vazia; qualquer outro valor fora desse
+        intervalo é, por si só, um erro.
+    \item \textbf{Em cada linha, cada dígito de 1 a 9 aparece, no máximo, uma vez.}
+        Em um tabuleiro completo, todos os nove dígitos devem aparecer
+        exatamente uma vez; em um tabuleiro parcial, basta que não haja
+        repetição entre as células já preenchidas.
+    \item \textbf{O mesmo vale para cada coluna.}
+    \item \textbf{O mesmo vale para cada uma das nove grades de $3 \times 3$.}
+\end{enumerate}
+
+A distinção entre ``completo e válido'' (retorno \codigo{1}), ``parcial e
+válido'' (retorno \codigo{2}) e ``inválido'' (retorno \codigo{0}) sugere
+naturalmente o seguinte plano: percorremos todas as células para detectar
+duplicatas; ao mesmo tempo, registramos se existe pelo menos uma célula
+vazia. Ao final, se algum conflito foi detectado, retornamos \codigo{0};
+se nenhum conflito foi detectado e existem células vazias, retornamos
+\codigo{2}; se nenhum conflito foi detectado e todas as 81 células estão
+preenchidas, retornamos \codigo{1}.
+
+\subsection{Algoritmo}
+
+\begin{enumerate}
+    \item \textbf{Validar o domínio dos valores.} Percorra todas as células.
+        Se alguma célula contiver valor fora de $\{0, 1, \ldots, 9\}$,
+        retorne \codigo{0}. Caso contrário, marque \codigo{temVazio = 1}
+        se encontrar pelo menos uma célula com valor \codigo{0}.
+    \item \textbf{Verificar repetições nas nove linhas.} Para cada linha,
+        utilize um array auxiliar \codigo{presente[10]} (índices 1 a 9)
+        para marcar quais dígitos já apareceram. Se um dígito já estiver
+        marcado, retorne \codigo{0}.
+    \item \textbf{Verificar repetições nas nove colunas.} Procedimento
+        análogo ao das linhas, trocando os papéis de linha e coluna.
+    \item \textbf{Verificar repetições nas nove sub-grades $3 \times 3$.}
+        Use dois laços externos (sobre os blocos $0,1,2$) e dois internos
+        (sobre as três linhas e três colunas dentro do bloco).
+    \item \textbf{Determinar o veredito.} Se chegamos até aqui, não há
+        conflito. Retorne \codigo{2} se \codigo{temVazio == 1}, ou
+        \codigo{1} se o tabuleiro estiver completo.
+\end{enumerate}
+
+\begin{boapratica}
+Reinicializar o vetor \codigo{presente} a cada linha (ou coluna, ou bloco)
+é o passo mais facilmente esquecido nessa rotina. Se o array não for zerado,
+um dígito que apareceu na linha~1 pode ser interpretado como repetição na
+linha~2, gerando falsos positivos.
+\end{boapratica}
+
+\subsection{Implementação}
+
+\begin{lstlisting}[caption={Implementação completa da função \texttt{validSudoku}.},label={lst:valid}]
+/* validSudoku.c -- desafio 1 do Apêndice D.                       */
+/* Retorna: 1 se completo e válido, 2 se parcial e válido,         */
+/*          0 se houver qualquer violação das regras.              */
+#include "sudoku_infra.h"
+
+int validSudoku(int sudokuBoard[DIM][DIM])
+{
+    int i, j, k, valor;
+    int presente[DIM];   /* presente[d] != 0 se d já foi visto */
+    int temVazio = 0;
+    int blocoLinha, blocoCol;
+
+    /* 1) Validação de domínio dos valores. */
+    for (i = 1; i <= LADO; i++) {
+        for (j = 1; j <= LADO; j++) {
+            valor = sudokuBoard[i][j];
+            if (valor < 0 || valor > LADO)
+                return 0;             /* valor inválido */
+            if (valor == VAZIO)
+                temVazio = 1;
+        }
+    }
+
+    /* 2) Verificação das nove linhas. */
+    for (i = 1; i <= LADO; i++) {
+        for (k = 0; k < DIM; k++) presente[k] = 0;
+        for (j = 1; j <= LADO; j++) {
+            valor = sudokuBoard[i][j];
+            if (valor != VAZIO) {
+                if (presente[valor])  /* já apareceu */
+                    return 0;
+                presente[valor] = 1;
+            }
+        }
+    }
+
+    /* 3) Verificação das nove colunas. */
+    for (j = 1; j <= LADO; j++) {
+        for (k = 0; k < DIM; k++) presente[k] = 0;
+        for (i = 1; i <= LADO; i++) {
+            valor = sudokuBoard[i][j];
+            if (valor != VAZIO) {
+                if (presente[valor])
+                    return 0;
+                presente[valor] = 1;
+            }
+        }
+    }
+
+    /* 4) Verificação das nove sub-grades 3x3. */
+    for (blocoLinha = 0; blocoLinha < BLOCO; blocoLinha++) {
+        for (blocoCol = 0; blocoCol < BLOCO; blocoCol++) {
+            for (k = 0; k < DIM; k++) presente[k] = 0;
+            for (i = 1; i <= BLOCO; i++) {
+                for (j = 1; j <= BLOCO; j++) {
+                    valor = sudokuBoard[blocoLinha*BLOCO + i]
+                                       [blocoCol  *BLOCO + j];
+                    if (valor != VAZIO) {
+                        if (presente[valor])
+                            return 0;
+                        presente[valor] = 1;
+                    }
+                }
+            }
+        }
+    }
+
+    /* 5) Veredito final. */
+    return temVazio ? 2 : 1;
+}
+\end{lstlisting}
+
+\subsection{Programa de teste e saída esperada}
+
+A Listagem~\ref{lst:valid_test} apresenta um pequeno programa que constrói
+três tabuleiros --- um inválido, um parcial e um completo --- e invoca
+\codigo{validSudoku} em cada um deles.
+
+\begin{lstlisting}[caption={Programa de teste para \texttt{validSudoku}.},label={lst:valid_test}]
+int main(void)
+{
+    /* Tabuleiro completo e VÁLIDO. */
+    int completo[DIM][DIM] = {
+        { 0 },
+        { 0, 5,3,4, 6,7,8, 9,1,2 },
+        { 0, 6,7,2, 1,9,5, 3,4,8 },
+        { 0, 1,9,8, 3,4,2, 5,6,7 },
+        { 0, 8,5,9, 7,6,1, 4,2,3 },
+        { 0, 4,2,6, 8,5,3, 7,9,1 },
+        { 0, 7,1,3, 9,2,4, 8,5,6 },
+        { 0, 9,6,1, 5,3,7, 2,8,4 },
+        { 0, 2,8,7, 4,1,9, 6,3,5 },
+        { 0, 3,4,5, 2,8,6, 1,7,9 }
+    };
+    /* Tabuleiro parcial e válido (várias células vazias). */
+    int parcial[DIM][DIM] = {
+        { 0 },
+        { 0, 5,3,0, 0,7,0, 0,0,0 },
+        { 0, 6,0,0, 1,9,5, 0,0,0 },
+        { 0, 0,9,8, 0,0,0, 0,6,0 },
+        { 0, 8,0,0, 0,6,0, 0,0,3 },
+        { 0, 4,0,0, 8,0,3, 0,0,1 },
+        { 0, 7,0,0, 0,2,0, 0,0,6 },
+        { 0, 0,6,0, 0,0,0, 2,8,0 },
+        { 0, 0,0,0, 4,1,9, 0,0,5 },
+        { 0, 0,0,0, 0,8,0, 0,7,9 }
+    };
+    /* Tabuleiro INVÁLIDO: dois 5 na primeira linha. */
+    int invalido[DIM][DIM] = {
+        { 0 },
+        { 0, 5,5,0, 0,7,0, 0,0,0 },  /* erro proposital */
+        { 0, 6,0,0, 1,9,5, 0,0,0 },
+        { 0, 0,9,8, 0,0,0, 0,6,0 },
+        { 0, 8,0,0, 0,6,0, 0,0,3 },
+        { 0, 4,0,0, 8,0,3, 0,0,1 },
+        { 0, 7,0,0, 0,2,0, 0,0,6 },
+        { 0, 0,6,0, 0,0,0, 2,8,0 },
+        { 0, 0,0,0, 4,1,9, 0,0,5 },
+        { 0, 0,0,0, 0,8,0, 0,7,9 }
+    };
+
+    printf("Tabuleiro completo  -> validSudoku = %d\n",
+           validSudoku(completo));
+    printf("Tabuleiro parcial   -> validSudoku = %d\n",
+           validSudoku(parcial));
+    printf("Tabuleiro invalido  -> validSudoku = %d\n",
+           validSudoku(invalido));
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Saída esperada:}
+\begin{lstlisting}[language=,basicstyle=\ttfamily\small]
+Tabuleiro completo  -> validSudoku = 1
+Tabuleiro parcial   -> validSudoku = 2
+Tabuleiro invalido  -> validSudoku = 0
+\end{lstlisting}
+
+\begin{desempenho}
+A complexidade dessa função é $\Theta(n^2)$, com $n = 9$ --- ou seja, um
+custo constante na prática. Como ela será invocada milhões de vezes pelos
+solucionadores por força bruta, ainda assim vale a pena evitar trabalho
+desnecessário. Em situações em que apenas \emph{uma} célula foi alterada,
+a função \codigo{ehMovimentoValido} (apresentada na Seção D.1) faz a mesma
+verificação examinando apenas $27$ células, e por isso é claramente
+preferível dentro de laços de busca.
+\end{desempenho}
+
+% =====================================================================
+\section{Desafio 2: solucionador por força bruta com retrocesso}
+
+\begin{enunciado}
+A versão mais inteligente da técnica de força bruta consiste em verificar
+cada dígito antes de colocá-lo: se o tabuleiro permanece válido, prossiga
+para a próxima célula; se não, experimente outro dígito; se nenhum dos nove
+dígitos funcionar, retorne à célula anterior e troque seu valor. Implemente
+um solucionador com essa estratégia.
+\end{enunciado}
+
+\subsection{Análise do problema}
+
+A descrição acima é a definição clássica do algoritmo de \emph{retrocesso}
+(em inglês, \textit{backtracking}). A ideia é simples e poderosa: tentamos
+construir uma solução um passo de cada vez; sempre que percebemos que o
+caminho atual é inviável, ``voltamos atrás'' e tentamos outro. Como cada
+tentativa é validada antes de prosseguirmos, podamos enormes porções do
+espaço de busca --- $9^{81}$ possibilidades cegas tornam-se algumas dezenas
+de milhares de tentativas inteligentes em um Sudoku típico.
+
+A recursão é, sem dúvida, a forma mais elegante de expressar esse algoritmo.
+Aprendemos no Capítulo~5 que uma função recursiva resolve um problema
+maior reduzindo-o a uma versão menor de si mesmo. Aqui o ``problema menor''
+é o tabuleiro com \emph{uma célula a mais} preenchida.
+
+\begin{engenharia}
+O retrocesso é onipresente em problemas combinatórios: o Passeio do Cavalo,
+as Oito Rainhas, palavras cruzadas, geração de permutações --- todos seguem
+o mesmo esqueleto: ``tente, valide, recurse, desfaça''. Reconhecer esse
+padrão é o primeiro passo para resolver dezenas de problemas aparentemente
+distintos com o mesmo arcabouço mental.
+\end{engenharia}
+
+\subsection{Algoritmo}
+
+\begin{enumerate}
+    \item \textbf{Encontre a primeira célula vazia.} Percorra o tabuleiro
+        nas direções natural (linhas crescentes e, dentro de cada linha,
+        colunas crescentes).
+    \item \textbf{Caso-base.} Se não houver célula vazia, o tabuleiro está
+        completo e válido (pois cada dígito foi validado ao ser colocado).
+        Retorne sucesso.
+    \item \textbf{Passo recursivo.} Para cada dígito $d$ de $1$ a $9$:
+        \begin{enumerate}
+            \item Use \codigo{ehMovimentoValido} para verificar se $d$ pode
+                  ser colocado na célula corrente.
+            \item Em caso afirmativo, atribua \codigo{s[i][j] = d} e chame
+                  recursivamente o solucionador.
+            \item Se a chamada recursiva retornar sucesso, propague sucesso.
+            \item Caso contrário, \textbf{desfaça} a atribuição
+                  (\codigo{s[i][j] = VAZIO}) e tente o próximo dígito.
+        \end{enumerate}
+    \item Se nenhum dígito funcionou, retorne falha (isso obriga a chamada
+        anterior a tentar outro dígito).
+\end{enumerate}
+
+\begin{erro}
+Esquecer de \emph{desfazer} a atribuição (\codigo{s[i][j] = VAZIO}) antes
+de tentar o próximo dígito é o erro mais comum em algoritmos de retrocesso.
+Sem essa restauração, o tabuleiro acumula valores ``fantasmas'' das
+tentativas anteriores, e o algoritmo simplesmente falha em todos os
+caminhos subsequentes.
+\end{erro}
+
+\subsection{Implementação}
+
+\begin{lstlisting}[caption={Solucionador por força bruta com retrocesso.},label={lst:bt}]
+/* sudoku_backtracking.c -- desafio 2 do Apêndice D.            */
+/* Resolve o tabuleiro modificando-o in place. Retorna 1 se uma */
+/* solução foi encontrada, 0 caso contrário.                     */
+#include "sudoku_infra.h"
+
+int resolverBacktracking(int s[DIM][DIM])
+{
+    int i, j, d;
+
+    /* 1) Localiza a primeira célula vazia em ordem linha-coluna. */
+    for (i = 1; i <= LADO; i++) {
+        for (j = 1; j <= LADO; j++) {
+            if (s[i][j] == VAZIO) {
+
+                /* 2) Tenta cada dígito de 1 a 9. */
+                for (d = 1; d <= LADO; d++) {
+                    if (ehMovimentoValido(s, i, j, d)) {
+                        s[i][j] = d;                /* tente   */
+                        if (resolverBacktracking(s))/* recurse */
+                            return 1;
+                        s[i][j] = VAZIO;            /* desfaça */
+                    }
+                }
+                /* Nenhum dígito serviu: avisa o nível anterior. */
+                return 0;
+            }
+        }
+    }
+    /* Nenhuma célula vazia: tabuleiro completo (caso-base). */
+    return 1;
+}
+
+int main(void)
+{
+    /* Quebra-cabeça clássico publicado pelo The Times (Londres). */
+    int s[DIM][DIM] = {
+        { 0 },
+        { 0, 5,3,0, 0,7,0, 0,0,0 },
+        { 0, 6,0,0, 1,9,5, 0,0,0 },
+        { 0, 0,9,8, 0,0,0, 0,6,0 },
+        { 0, 8,0,0, 0,6,0, 0,0,3 },
+        { 0, 4,0,0, 8,0,3, 0,0,1 },
+        { 0, 7,0,0, 0,2,0, 0,0,6 },
+        { 0, 0,6,0, 0,0,0, 2,8,0 },
+        { 0, 0,0,0, 4,1,9, 0,0,5 },
+        { 0, 0,0,0, 0,8,0, 0,7,9 }
+    };
+
+    printf("Tabuleiro inicial:");
+    imprimirTabuleiro(s);
+
+    if (resolverBacktracking(s)) {
+        printf("\nSolucao encontrada:");
+        imprimirTabuleiro(s);
+    } else {
+        printf("\nNao ha solucao para esse tabuleiro.\n");
+    }
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Saída esperada}
+
+\begin{lstlisting}[language=,basicstyle=\ttfamily\footnotesize]
+Tabuleiro inicial:
+    1 2 3 | 4 5 6 | 7 8 9
+  +-------+-------+-------+
+1 | 5 3 . | . 7 . | . . . |
+2 | 6 . . | 1 9 5 | . . . |
+3 | . 9 8 | . . . | . 6 . |
+  +-------+-------+-------+
+4 | 8 . . | . 6 . | . . 3 |
+5 | 4 . . | 8 . 3 | . . 1 |
+6 | 7 . . | . 2 . | . . 6 |
+  +-------+-------+-------+
+7 | . 6 . | . . . | 2 8 . |
+8 | . . . | 4 1 9 | . . 5 |
+9 | . . . | . 8 . | . 7 9 |
+  +-------+-------+-------+
+
+Solucao encontrada:
+    1 2 3 | 4 5 6 | 7 8 9
+  +-------+-------+-------+
+1 | 5 3 4 | 6 7 8 | 9 1 2 |
+2 | 6 7 2 | 1 9 5 | 3 4 8 |
+3 | 1 9 8 | 3 4 2 | 5 6 7 |
+  +-------+-------+-------+
+4 | 8 5 9 | 7 6 1 | 4 2 3 |
+5 | 4 2 6 | 8 5 3 | 7 9 1 |
+6 | 7 1 3 | 9 2 4 | 8 5 6 |
+  +-------+-------+-------+
+7 | 9 6 1 | 5 3 7 | 2 8 4 |
+8 | 2 8 7 | 4 1 9 | 6 3 5 |
+9 | 3 4 5 | 2 8 6 | 1 7 9 |
+  +-------+-------+-------+
+\end{lstlisting}
+
+\begin{desempenho}
+Este solucionador resolve, em frações de segundo, virtualmente qualquer
+Sudoku publicado em jornais. Sudokus considerados ``mais difíceis do mundo''
+podem exigir centenas de milhares de chamadas recursivas, mas mesmo nesses
+casos o tempo total é tipicamente inferior a um segundo em um computador
+moderno. A simplicidade desse algoritmo --- uma única função de cerca de
+20 linhas --- contrasta com as estratégias heurísticas elaboradas, e
+ilustra um princípio importante: \emph{quando o hardware é farto, a
+simplicidade vence}.
+\end{desempenho}
+
+\subsection{Comparação com a versão ``ingênua'' de 81 laços aninhados}
+
+O Apêndice~D menciona uma técnica alternativa: aninhar 81 laços \codigo{for},
+cada um varrendo de $1$ a $9$. O número total de combinações é $9^{81}$,
+ou aproximadamente $1{,}97 \times 10^{77}$. Para se ter ideia da escala,
+mesmo a $10^{12}$ tentativas por segundo --- desempenho de um
+supercomputador --- testar todas elas levaria cerca de $6 \times 10^{57}$
+anos, muitas ordens de magnitude superior à idade estimada do universo.
+
+A versão com retrocesso ``poda'' esse espaço de busca explorando apenas
+caminhos viáveis. Em termos práticos, o número de combinações efetivamente
+visitadas cai para a faixa de algumas dezenas de milhares. Esse é o poder
+de uma decisão arquitetural correta.
+
+% =====================================================================
+\section{Desafio 3: gerador por permutações aleatórias}
+
+\begin{enunciado}
+Escreva a função \texttt{void permutations(int sudokuBoard[10][10])} que
+recebe um array bidimensional de $10 \times 10$ e preenche cada uma das
+nove linhas da grade $9 \times 9$ com uma permutação selecionada
+aleatoriamente dos dígitos de $1$ a $9$. Em seguida, use \texttt{validSudoku}
+em laço até obter um Sudoku válido. Inclua uma opção em \texttt{validSudoku}
+que a faça verificar apenas colunas e sub-grades de $3 \times 3$.
+\end{enunciado}
+
+\subsection{Análise do problema}
+
+Esta abordagem tem um forte sabor de \emph{Monte Carlo}: tentamos
+configurações aleatórias até que uma delas, por sorte, seja válida. A
+probabilidade de uma única tentativa produzir um Sudoku válido é
+extremamente baixa, mas \emph{não nula}; com tempo suficiente, o gerador
+eventualmente terá sucesso.
+
+A ideia, descrita no apêndice, é gerar uma permutação dos dígitos de $1$
+a $9$ para cada linha. Como cada linha é, por construção, uma permutação,
+não há repetições \emph{dentro de uma mesma linha}. A função
+\codigo{validSudoku} só precisa, portanto, verificar duas coisas: que não
+há repetições nas colunas e que não há repetições nas sub-grades $3 \times 3$.
+Daí a opção adicional que vamos introduzir.
+
+\begin{desempenho}
+A probabilidade de uma combinação aleatória de nove permutações constituir
+um Sudoku válido é da ordem de $10^{-21}$. Ou seja, na prática, este
+gerador é didático --- ilustra perfeitamente o que ``força bruta'' significa
+--- mas é absolutamente impraticável como gerador real. Em programas sérios,
+combina-se este método com retrocesso (vide Seção D.8).
+\end{desempenho}
+
+\subsection{Geração de uma permutação aleatória}
+
+O Apêndice~D descreve o método ingênuo: ``escolha um dígito; para o próximo,
+escolha repetidamente até que seja diferente do anterior; e assim por
+diante''. Implementamos exatamente esse método na Listagem~\ref{lst:perm}.
+
+\begin{lstlisting}[caption={Geração de uma linha como permutação aleatória.},label={lst:perm}]
+/* Preenche linha[1..9] com uma permutação aleatória de 1..9.   */
+void permutaLinha(int linha[DIM])
+{
+    int usado[DIM];
+    int pos, d;
+
+    /* Marca todos os dígitos como ainda não utilizados. */
+    for (d = 0; d < DIM; d++) usado[d] = 0;
+
+    /* Para cada posição 1..9, sorteia repetidamente até obter  */
+    /* um dígito ainda não utilizado.                           */
+    for (pos = 1; pos <= LADO; pos++) {
+        do {
+            d = (rand() % LADO) + 1;   /* sorteia em [1, 9] */
+        } while (usado[d]);
+        usado[d] = 1;
+        linha[pos] = d;
+    }
+}
+
+/* Aplica permutaLinha a cada uma das nove linhas do tabuleiro. */
+void permutations(int sudokuBoard[DIM][DIM])
+{
+    int i;
+    for (i = 1; i <= LADO; i++)
+        permutaLinha(sudokuBoard[i]);
+}
+\end{lstlisting}
+
+\begin{boapratica}
+O laço \codigo{do...while} aqui é justo: \emph{precisamos} executar o sorteio
+pelo menos uma vez antes de testar a condição. Esse é o critério clássico
+para escolher entre \codigo{while} e \codigo{do...while} --- se o teste
+deve ocorrer \emph{depois} da primeira execução do corpo, use
+\codigo{do...while}.
+\end{boapratica}
+
+\subsection{Variante de \texttt{validSudoku} com verificação seletiva}
+
+O apêndice nos pede para introduzir uma opção que faça a função verificar
+\emph{apenas} colunas e sub-grades. Há várias maneiras de implementar isso;
+optamos por uma flag inteira que recebe um padrão de bits (estilo clássico
+de C): bit~0 ativa a verificação de linhas, bit~1 a de colunas, bit~2 a de
+sub-grades. Para verificar todas as três, passamos \codigo{0x7}; para
+verificar apenas colunas e sub-grades, passamos \codigo{0x6}.
+
+\begin{lstlisting}[caption={\texttt{validSudoku} com flags de verificação seletiva.},label={lst:valid_flags}]
+#define VERIFICA_LINHAS  0x1
+#define VERIFICA_COLUNAS 0x2
+#define VERIFICA_BLOCOS  0x4
+#define VERIFICA_TUDO    (VERIFICA_LINHAS|VERIFICA_COLUNAS|VERIFICA_BLOCOS)
+
+int validSudokuSel(int s[DIM][DIM], int opcoes)
+{
+    int i, j, k, valor;
+    int presente[DIM];
+    int temVazio = 0;
+    int bl, bc;
+
+    /* Domínio dos valores (sempre verificado). */
+    for (i = 1; i <= LADO; i++)
+        for (j = 1; j <= LADO; j++) {
+            valor = s[i][j];
+            if (valor < 0 || valor > LADO) return 0;
+            if (valor == VAZIO) temVazio = 1;
+        }
+
+    if (opcoes & VERIFICA_LINHAS)
+        for (i = 1; i <= LADO; i++) {
+            for (k = 0; k < DIM; k++) presente[k] = 0;
+            for (j = 1; j <= LADO; j++) {
+                valor = s[i][j];
+                if (valor != VAZIO) {
+                    if (presente[valor]) return 0;
+                    presente[valor] = 1;
+                }
+            }
+        }
+
+    if (opcoes & VERIFICA_COLUNAS)
+        for (j = 1; j <= LADO; j++) {
+            for (k = 0; k < DIM; k++) presente[k] = 0;
+            for (i = 1; i <= LADO; i++) {
+                valor = s[i][j];
+                if (valor != VAZIO) {
+                    if (presente[valor]) return 0;
+                    presente[valor] = 1;
+                }
+            }
+        }
+
+    if (opcoes & VERIFICA_BLOCOS)
+        for (bl = 0; bl < BLOCO; bl++)
+            for (bc = 0; bc < BLOCO; bc++) {
+                for (k = 0; k < DIM; k++) presente[k] = 0;
+                for (i = 1; i <= BLOCO; i++)
+                    for (j = 1; j <= BLOCO; j++) {
+                        valor = s[bl*BLOCO+i][bc*BLOCO+j];
+                        if (valor != VAZIO) {
+                            if (presente[valor]) return 0;
+                            presente[valor] = 1;
+                        }
+                    }
+            }
+    return temVazio ? 2 : 1;
+}
+\end{lstlisting}
+
+\subsection{Programa gerador completo}
+
+\begin{lstlisting}[caption={Gerador por permutações aleatórias --- prova de conceito.},label={lst:gerador_perm}]
+int main(void)
+{
+    int s[DIM][DIM] = {{0}};
+    long tentativas = 0;
+    const long LIMITE = 5000000L;  /* limite prático */
+
+    srand((unsigned) time(NULL));
+
+    do {
+        permutations(s);
+        tentativas++;
+    } while (validSudokuSel(s, VERIFICA_COLUNAS | VERIFICA_BLOCOS) != 1
+             && tentativas < LIMITE);
+
+    if (tentativas < LIMITE) {
+        printf("Sudoku gerado apos %ld tentativas:\n", tentativas);
+        imprimirTabuleiro(s);
+    } else {
+        printf("Limite de %ld tentativas atingido sem sucesso.\n", LIMITE);
+        printf("(Isso e esperado: a probabilidade e da ordem de 10^-21.)\n");
+    }
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Discussão do experimento}
+
+Executar este programa é instrutivo: na esmagadora maioria das execuções,
+o limite de tentativas é atingido sem sucesso. Esse comportamento, longe
+de ser uma falha do código, é uma \emph{característica fundamental} do
+método: por isso é chamado de ``força bruta''. O número aproximado de
+arranjos cuja primeira linha é qualquer permutação fixa e cujas demais
+linhas constituem um Sudoku válido é, segundo cálculos publicados na
+literatura, $6{,}67 \times 10^{21}$. Como existem $9!^9 \approx 1{,}1 \times 10^{50}$
+combinações de nove permutações independentes, a probabilidade de ``acerto
+ao acaso'' é da ordem de $6 \times 10^{-29}$ --- isto é, virtualmente zero.
+
+\begin{engenharia}
+Algoritmos puros de Monte Carlo, sem nenhuma poda, são úteis apenas como
+\emph{baseline} pedagógico. O próximo passo natural é combinar o sorteio
+aleatório com algum mecanismo de poda --- exatamente o que faremos quando
+unirmos esta ideia ao retrocesso, no gerador de quebra-cabeças (Seção D.8).
+\end{engenharia}
+
+\subsection{Variante prática --- usando retrocesso para construir um Sudoku válido}
+
+Como exercício adicional, observe que podemos construir Sudokus válidos
+de modo \emph{determinístico} embaralhando a ordem em que o solucionador
+do Desafio~2 testa os dígitos. Em vez de tentar sempre $1, 2, \ldots, 9$,
+geramos uma permutação aleatória da sequência $\{1, 2, \ldots, 9\}$ para
+cada célula vazia. O resultado é um Sudoku completo e \emph{aleatório},
+gerado em milissegundos. Esta é a abordagem realmente útil na prática;
+a função \codigo{permutations} pura, com retorno via \codigo{validSudoku},
+serve para demonstrar o conceito de força bruta.
+
+% =====================================================================
+\section{Desafio 4: solucionador ``fácil'' --- estratégia dos singletons}
+
+\begin{enunciado}
+Implemente um solucionador para Sudokus ``fáceis'' baseado na repetição
+das estratégias humanas: para cada célula vazia, mantenha a lista de
+dígitos ainda possíveis (com base nos valores já fixados na linha, coluna
+e sub-grade); identifique singletons (célula com uma única possibilidade
+restante) e singletons ocultos (dígito que só cabe em uma célula da unidade)
+e os fixe; repita até que nenhuma estratégia produza progresso.
+\end{enunciado}
+
+\subsection{Análise do problema}
+
+As estratégias descritas no apêndice --- singletons, duplas, duplas ocultas,
+triplas, triplas ocultas --- podem ser implementadas em qualquer ordem,
+porque qualquer uma delas, ao agir, simplifica o tabuleiro para as demais.
+Vamos concentrar nossa atenção nas duas mais produtivas: o singleton
+``nu'' (célula com uma única possibilidade) e o singleton ``oculto''
+(dígito que aparece como possível em apenas uma célula de uma linha, coluna
+ou sub-grade). Essas duas estratégias resolvem, sozinhas, a grande maioria
+dos Sudokus de níveis fácil e médio.
+
+\textbf{Representação das possibilidades.} Para cada célula vazia, queremos
+um conjunto de dígitos. A representação clássica em C é uma \emph{máscara
+de bits}: usamos um \codigo{int} em que o bit $(d - 1)$ está ligado se, e
+somente se, o dígito $d$ ainda é possível para aquela célula. Isso permite
+operações conjuntivas elegantes:
+\begin{itemize}
+    \item \codigo{(mask \& (1 << (d-1)))} testa se $d$ pertence ao conjunto;
+    \item \codigo{mask |= (1 << (d-1))} adiciona $d$ ao conjunto;
+    \item \codigo{mask \&= \~{}(1 << (d-1))} remove $d$ do conjunto;
+    \item contar quantos bits estão ligados conta o tamanho do conjunto.
+\end{itemize}
+
+\begin{engenharia}
+Máscaras de bits são onipresentes em C quando precisamos manipular
+``conjuntos de até 32 (ou 64) elementos''. O custo de memória é mínimo,
+as operações são triviais e tudo cabe em registradores do processador.
+Em situações didáticas pode-se usar um array de 9 inteiros booleanos por
+célula, mas o ganho de clareza paga-se com perda de desempenho. Para
+Sudoku, a máscara é a escolha natural.
+\end{engenharia}
+
+\subsection{Algoritmo}
+
+\begin{enumerate}
+    \item \textbf{Calcule as possibilidades.} Para cada célula vazia,
+        examine sua linha, sua coluna e sua sub-grade; o conjunto dos
+        dígitos ausentes desses três conjuntos é a lista de possibilidades.
+    \item \textbf{Aplique singletons nus.} Se a lista de alguma célula
+        contém um único dígito, fixe esse dígito na célula.
+    \item \textbf{Aplique singletons ocultos.} Para cada linha, cada coluna
+        e cada sub-grade, e para cada dígito $d$ de $1$ a $9$, conte em
+        quantas células vazias dessa unidade o dígito $d$ é possível.
+        Se a contagem for $1$, fixe $d$ naquela célula.
+    \item \textbf{Repita.} Após qualquer alteração no tabuleiro, recalcule
+        as possibilidades e reaplique as estratégias. Pare quando uma
+        iteração completa não produzir nenhuma alteração.
+    \item \textbf{Veredito.} Se o tabuleiro está completo, sucesso. Caso
+        contrário, este Sudoku exige técnicas mais avançadas (vide
+        Seções D.5 e D.6).
+\end{enumerate}
+
+\subsection{Implementação}
+
+\begin{lstlisting}[caption={Funções auxiliares para manipulação de bitmasks.},label={lst:bitmask}]
+/* Retorna o número de bits ligados em mask. */
+int contarBits(int mask)
+{
+    int n = 0;
+    while (mask) {
+        n += mask & 1;
+        mask >>= 1;
+    }
+    return n;
+}
+
+/* Se mask tem exatamente um bit ligado, retorna o dígito       */
+/* correspondente (1..9); caso contrário, retorna 0.            */
+int unicoDigito(int mask)
+{
+    int d;
+    if (contarBits(mask) != 1) return 0;
+    for (d = 1; d <= LADO; d++)
+        if (mask & (1 << (d - 1))) return d;
+    return 0;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Cálculo da matriz de possibilidades para cada célula.},label={lst:poss}]
+/* Para cada célula vazia, registra em possib[i][j] uma máscara */
+/* de bits dos dígitos ainda permitidos.                        */
+void calcularPossibilidades(int s[DIM][DIM], int possib[DIM][DIM])
+{
+    int i, j, d;
+    for (i = 1; i <= LADO; i++)
+        for (j = 1; j <= LADO; j++) {
+            if (s[i][j] != VAZIO) {
+                possib[i][j] = 0;        /* já preenchida */
+                continue;
+            }
+            possib[i][j] = 0;
+            for (d = 1; d <= LADO; d++)
+                if (ehMovimentoValido(s, i, j, d))
+                    possib[i][j] |= (1 << (d - 1));
+        }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Aplicação dos singletons nus.},label={lst:singleton_nu}]
+/* Percorre o tabuleiro fixando toda célula que tenha exatamente */
+/* uma possibilidade. Retorna 1 se houve mudança, 0 se não.       */
+int aplicarSingletonsNus(int s[DIM][DIM], int possib[DIM][DIM])
+{
+    int i, j, d, mudou = 0;
+    for (i = 1; i <= LADO; i++)
+        for (j = 1; j <= LADO; j++)
+            if (s[i][j] == VAZIO) {
+                d = unicoDigito(possib[i][j]);
+                if (d != 0) {
+                    s[i][j] = d;
+                    possib[i][j] = 0;
+                    mudou = 1;
+                }
+            }
+    return mudou;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Aplicação dos singletons ocultos.},label={lst:singleton_oculto}]
+/* Para cada linha, coluna ou bloco, procura um dígito que só    */
+/* pode ser colocado em uma única célula da unidade --- e o fixa.*/
+int aplicarSingletonsOcultos(int s[DIM][DIM], int possib[DIM][DIM])
+{
+    int i, j, d, mudou = 0;
+    int contagem, ii, jj, posI = 0, posJ = 0, br, bc;
+
+    /* Singletons ocultos em LINHAS. */
+    for (i = 1; i <= LADO; i++)
+        for (d = 1; d <= LADO; d++) {
+            contagem = 0;
+            for (j = 1; j <= LADO; j++)
+                if (s[i][j] == VAZIO
+                    && (possib[i][j] & (1 << (d - 1)))) {
+                    contagem++;
+                    posJ = j;
+                }
+            if (contagem == 1) {
+                s[i][posJ] = d;
+                possib[i][posJ] = 0;
+                mudou = 1;
+            }
+        }
+
+    /* Singletons ocultos em COLUNAS. */
+    for (j = 1; j <= LADO; j++)
+        for (d = 1; d <= LADO; d++) {
+            contagem = 0;
+            for (i = 1; i <= LADO; i++)
+                if (s[i][j] == VAZIO
+                    && (possib[i][j] & (1 << (d - 1)))) {
+                    contagem++;
+                    posI = i;
+                }
+            if (contagem == 1) {
+                s[posI][j] = d;
+                possib[posI][j] = 0;
+                mudou = 1;
+            }
+        }
+
+    /* Singletons ocultos em SUB-GRADES 3x3. */
+    for (br = 0; br < BLOCO; br++)
+        for (bc = 0; bc < BLOCO; bc++)
+            for (d = 1; d <= LADO; d++) {
+                contagem = 0;
+                for (ii = 1; ii <= BLOCO; ii++)
+                    for (jj = 1; jj <= BLOCO; jj++) {
+                        i = br * BLOCO + ii;
+                        j = bc * BLOCO + jj;
+                        if (s[i][j] == VAZIO
+                            && (possib[i][j] & (1 << (d - 1)))) {
+                            contagem++;
+                            posI = i; posJ = j;
+                        }
+                    }
+                if (contagem == 1) {
+                    s[posI][posJ] = d;
+                    possib[posI][posJ] = 0;
+                    mudou = 1;
+                }
+            }
+    return mudou;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Solucionador completo para Sudokus fáceis.},label={lst:solver_facil}]
+/* Aplica as estratégias repetidamente, recalculando             */
+/* possibilidades após cada rodada de alterações.                */
+/* Retorna 1 se o tabuleiro foi totalmente resolvido.            */
+int resolverFacil(int s[DIM][DIM])
+{
+    int possib[DIM][DIM];
+    int progresso, i, j, vazias;
+
+    do {
+        calcularPossibilidades(s, possib);
+        progresso = aplicarSingletonsNus(s, possib);
+
+        /* Recalcule antes da próxima estratégia para refletir   */
+        /* as células recém-fixadas.                              */
+        calcularPossibilidades(s, possib);
+        progresso |= aplicarSingletonsOcultos(s, possib);
+    } while (progresso);
+
+    /* Conta células ainda vazias. */
+    vazias = 0;
+    for (i = 1; i <= LADO; i++)
+        for (j = 1; j <= LADO; j++)
+            if (s[i][j] == VAZIO) vazias++;
+
+    return vazias == 0;
+}
+\end{lstlisting}
+
+\subsection{Discussão e limitações}
+
+Esta versão resolve, sem qualquer suposição ou retrocesso, virtualmente
+todos os Sudokus rotulados como ``fácil'' por jornais e revistas. Para
+Sudokus médios, ela costuma ficar muito próxima da solução --- frequentemente
+deixa apenas duas ou três células sem decisão. Para Sudokus difíceis,
+porém, ela trava muito antes do fim.
+
+\begin{boapratica}
+Recalcular as possibilidades \emph{antes} de cada estratégia evita que
+informações estagnadas levem o algoritmo a deduções inválidas. O custo é
+pequeno (algumas dezenas de operações), e a robustez aumenta enormemente.
+\end{boapratica}
+
+\subsection{Comentário sobre duplas, triplas e suas versões ocultas}
+
+As estratégias de duplas, triplas, duplas ocultas e triplas ocultas
+descritas no Apêndice~D são extensões naturais do raciocínio dos
+singletons: em vez de procurar ``uma célula com uma possibilidade'',
+procuramos ``duas células que dividem exatamente duas possibilidades'',
+ou ``dois dígitos que só cabem em duas células de uma unidade''. A lógica
+de implementação é mais elaborada, mas sempre se reduz a percorrer cada
+unidade (linha, coluna ou sub-grade) e, dentro dela, examinar combinações
+de tamanho $2$ ou $3$. Para os propósitos pedagógicos deste apêndice, os
+singletons (nus e ocultos) capturam a essência da técnica; deixamos
+duplas e triplas como extensão recomendada ao leitor.
+
+% =====================================================================
+\section{Desafio 5: heurística ``esperar antes de tomar uma decisão''}
+
+\begin{enunciado}
+Implemente a heurística do tipo \emph{esperar antes de tomar uma decisão}:
+$(i)$ associe a cada célula vazia uma lista de possibilidades; $(ii)$
+caracterize o estado do tabuleiro contando o total de posicionamentos
+ainda possíveis; $(iii)$ para cada movimento candidato, avalie a contagem
+do tabuleiro \emph{após} esse movimento; $(iv)$ escolha o movimento que
+deixar a contagem mais alta (em caso de empate, sorteie).
+\end{enunciado}
+
+\subsection{Análise do problema}
+
+A heurística é exatamente a oposta da intuição comum. Quando o problema é
+puramente combinatório --- como no Passeio do Cavalo do Capítulo~6 e nas
+Oito Rainhas --- a tentação é avançar rapidamente fechando opções. A
+filosofia ``mantenha suas opções abertas'' diz o contrário: \emph{prefira
+a jogada que preserve o maior número de futuros possíveis}. A justificativa
+é simples: cada jogada que ``fecha'' o tabuleiro aumenta a probabilidade
+de que, mais adiante, alguma célula fique sem nenhum dígito viável ---
+um beco sem saída.
+
+A medida quantitativa proposta é a soma, sobre todas as células vazias do
+tabuleiro, do número de dígitos ainda permitidos. Essa contagem dá um
+``orçamento de liberdade'' para o tabuleiro. Entre dois movimentos
+candidatos, preferimos o que deixar a contagem \emph{maior}.
+
+\begin{engenharia}
+Heurísticas, por natureza, não oferecem garantias. Esta, em particular,
+não é sempre superior ao retrocesso ingênuo --- mas é especialmente eficaz
+em Sudokus de dificuldade intermediária, onde reduz dramaticamente o
+número de jogadas hipotéticas. É também uma excelente ferramenta de
+estudo: ela ilustra como uma decisão simples (qual jogada fazer agora?)
+pode ser informada por uma medida global do estado do problema.
+\end{engenharia}
+
+\subsection{Algoritmo}
+
+\begin{enumerate}
+    \item Defina \codigo{contarPossibilidades(s)} que soma, para cada
+        célula vazia, o número de dígitos $d \in \{1, \ldots, 9\}$
+        admissíveis (via \codigo{ehMovimentoValido}).
+    \item Para cada par (célula vazia, dígito admissível):
+        \begin{enumerate}
+            \item Atribua hipoteticamente o dígito à célula.
+            \item Compute a contagem global resultante.
+            \item Restaure a célula a vazio.
+        \end{enumerate}
+    \item Selecione o movimento de maior contagem. Em caso de empate,
+        sorteie um dos empatados.
+    \item Efetue o movimento escolhido (definitivamente).
+    \item Repita até que o tabuleiro esteja completo ou até que algum
+        movimento leve a contagem a zero (beco sem saída).
+    \item Em becos sem saída, retroceda ao último ponto de decisão ---
+        ou seja, combine a heurística com retrocesso.
+\end{enumerate}
+
+\subsection{Implementação}
+
+\begin{lstlisting}[caption={Contagem global de possibilidades.},label={lst:cnt}]
+/* Soma, sobre cada célula vazia, o número de dígitos válidos.   */
+int contarPossibilidades(int s[DIM][DIM])
+{
+    int i, j, d, total = 0;
+    for (i = 1; i <= LADO; i++)
+        for (j = 1; j <= LADO; j++)
+            if (s[i][j] == VAZIO)
+                for (d = 1; d <= LADO; d++)
+                    if (ehMovimentoValido(s, i, j, d))
+                        total++;
+    return total;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Heurística ``esperar antes de tomar uma decisão''.},label={lst:wait}]
+/* Estrutura para representar um movimento candidato. */
+typedef struct {
+    int i, j, d, contagem;
+} Movimento;
+
+/* Tenta cada movimento possível e elege o que preserva a maior */
+/* contagem global de possibilidades. Retorna 1 se conseguiu    */
+/* efetuar um movimento; 0 se não há mais movimentos válidos.    */
+int escolherMovimentoEspera(int s[DIM][DIM])
+{
+    Movimento empate[729];     /* no máximo 81 * 9 movimentos */
+    int nEmpate = 0;
+    int melhor = -1;
+    int i, j, d, c;
+
+    for (i = 1; i <= LADO; i++)
+        for (j = 1; j <= LADO; j++)
+            if (s[i][j] == VAZIO)
+                for (d = 1; d <= LADO; d++)
+                    if (ehMovimentoValido(s, i, j, d)) {
+                        s[i][j] = d;
+                        c = contarPossibilidades(s);
+                        s[i][j] = VAZIO;
+
+                        if (c > melhor) {
+                            melhor = c;
+                            nEmpate = 0;
+                            empate[nEmpate].i = i;
+                            empate[nEmpate].j = j;
+                            empate[nEmpate].d = d;
+                            empate[nEmpate].contagem = c;
+                            nEmpate++;
+                        } else if (c == melhor) {
+                            empate[nEmpate].i = i;
+                            empate[nEmpate].j = j;
+                            empate[nEmpate].d = d;
+                            empate[nEmpate].contagem = c;
+                            nEmpate++;
+                        }
+                    }
+
+    if (nEmpate == 0)
+        return 0;   /* nenhum movimento válido */
+
+    /* Em caso de empate, sorteia. */
+    int idx = rand() % nEmpate;
+    s[ empate[idx].i ][ empate[idx].j ] = empate[idx].d;
+    return 1;
+}
+
+int resolverHeuristica(int s[DIM][DIM])
+{
+    int i, j, vazias;
+
+    do {
+        if (!escolherMovimentoEspera(s))
+            return 0;          /* beco sem saída */
+
+        vazias = 0;
+        for (i = 1; i <= LADO; i++)
+            for (j = 1; j <= LADO; j++)
+                if (s[i][j] == VAZIO) vazias++;
+    } while (vazias > 0);
+
+    return 1;
+}
+\end{lstlisting}
+
+\subsection{Discussão de complexidade}
+
+A cada movimento, examinamos no máximo $81 \times 9 = 729$ candidatos e,
+para cada um, recomputamos uma contagem que custa também $81 \times 9$
+operações. O custo de uma única decisão é, portanto, da ordem de
+$729 \times 729 \approx 5{,}3 \times 10^5$ operações. Como cada Sudoku
+exige até $81$ decisões, o custo total fica em torno de $4{,}3 \times 10^7$
+operações no pior caso --- ainda perfeitamente factível em um computador
+moderno.
+
+\begin{desempenho}
+O laço de contagem é o ponto quente do algoritmo. Em produção, vale a
+pena manter uma matriz de possibilidades (vide Desafio~4) e atualizá-la
+incrementalmente: quando colocamos $d$ em \codigo{s[i][j]}, basta remover
+o bit correspondente das máscaras das células da mesma linha, coluna e
+bloco. Isso reduz o custo por movimento a $O(27)$ em vez de $O(729)$.
+\end{desempenho}
+
+\begin{erro}
+Esquecer de restaurar a célula a \codigo{VAZIO} após a avaliação hipotética
+é um bug particularmente difícil de diagnosticar: o tabuleiro vai
+acumulando movimentos fantasmas, e o algoritmo passa a ``ver'' contagens
+sistematicamente mais baixas, levando a escolhas erradas. Use sempre o
+padrão ``\textbf{tente, meça, desfaça}''.
+\end{erro}
+
+\subsection{Combinando heurística e retrocesso}
+
+A heurística pura, sem retrocesso, é capaz de resolver Sudokus difíceis
+em muitas execuções, mas eventualmente atinge becos sem saída. A forma
+robusta é manter uma pilha de pontos de decisão: cada vez que escolhemos
+entre vários candidatos empatados, salvamos o estado do tabuleiro. Se
+mais adiante chegamos a um beco sem saída, restauramos o estado salvo
+mais recente e tentamos outro empatado. Em essência, transformamos a
+heurística em um guia para o retrocesso: ela diz \emph{qual ramo} explorar
+primeiro, enquanto o retrocesso garante a corretude.
+
+% =====================================================================
+\section{Desafio 6: heurística da antecipação (look-ahead)}
+
+\begin{enunciado}
+A heurística da antecipação é um aprimoramento da heurística de
+``esperar antes de tomar uma decisão''. No caso de empate, antecipe
+mais uma colocação: para cada movimento empatado, avalie qual seria
+a contagem do tabuleiro após \emph{duas} jogadas e prefira aquele cujo
+melhor desdobramento for o mais alto.
+\end{enunciado}
+
+\subsection{Análise do problema}
+
+A heurística da Seção D.6 às vezes não consegue distinguir entre vários
+movimentos com o mesmo número de possibilidades imediatas. Quando isso
+ocorre, fazer um sorteio é honesto, mas ingênuo --- estamos ignorando
+informação que está apenas ``um passo mais à frente''. A heurística da
+antecipação propõe: para cada candidato empatado, simule a próxima
+jogada (a melhor possível, segundo o mesmo critério) e use a contagem
+\emph{após dois movimentos} como critério de desempate.
+
+\begin{engenharia}
+Estamos aplicando, em pequena escala, um princípio universal de
+inteligência artificial: \emph{busca em profundidade limitada}. O xadrez,
+o Go e dezenas de outros jogos usam a mesma ideia, geralmente em
+profundidades muito maiores e com poda (alfa-beta) para evitar explorar
+ramos óbvios. A diferença é que, no Sudoku, a função de avaliação é
+simples e exata (a contagem global), enquanto em jogos adversariais ela
+é apenas uma estimativa.
+\end{engenharia}
+
+\subsection{Algoritmo}
+
+\begin{enumerate}
+    \item Compute todos os movimentos candidatos como antes, registrando
+        sua contagem imediata.
+    \item Identifique a melhor contagem imediata.
+    \item Filtre apenas os movimentos empatados nesse máximo.
+    \item Para cada empatado, simule a jogada e, no tabuleiro resultante,
+        compute a melhor contagem imediata da próxima jogada (sem
+        efetivamente jogá-la --- apenas avalie). Esse valor é a
+        \emph{contagem antecipada} do candidato.
+    \item Restaure a célula simulada.
+    \item Selecione o candidato com a maior contagem antecipada. Em caso
+        de novo empate, sorteie.
+\end{enumerate}
+
+\subsection{Implementação}
+
+\begin{lstlisting}[caption={Heurística com antecipação de uma jogada.},label={lst:lookahead}]
+/* Dado um tabuleiro, encontra a melhor contagem imediata        */
+/* alcançável por algum movimento (sem efetuá-lo).                */
+int melhorContagemImediata(int s[DIM][DIM])
+{
+    int i, j, d, c, melhor = -1;
+    for (i = 1; i <= LADO; i++)
+        for (j = 1; j <= LADO; j++)
+            if (s[i][j] == VAZIO)
+                for (d = 1; d <= LADO; d++)
+                    if (ehMovimentoValido(s, i, j, d)) {
+                        s[i][j] = d;
+                        c = contarPossibilidades(s);
+                        s[i][j] = VAZIO;
+                        if (c > melhor) melhor = c;
+                    }
+    return melhor;
+}
+
+/* Substitui escolherMovimentoEspera com critério de antecipação. */
+int escolherMovimentoAntecipacao(int s[DIM][DIM])
+{
+    Movimento empate[729];
+    int nEmpate = 0;
+    int melhorImediata = -1;
+    int i, j, d, c;
+
+    /* Fase 1: coletar empatados na melhor contagem imediata.    */
+    for (i = 1; i <= LADO; i++)
+        for (j = 1; j <= LADO; j++)
+            if (s[i][j] == VAZIO)
+                for (d = 1; d <= LADO; d++)
+                    if (ehMovimentoValido(s, i, j, d)) {
+                        s[i][j] = d;
+                        c = contarPossibilidades(s);
+                        s[i][j] = VAZIO;
+
+                        if (c > melhorImediata) {
+                            melhorImediata = c;
+                            nEmpate = 0;
+                        }
+                        if (c == melhorImediata) {
+                            empate[nEmpate].i = i;
+                            empate[nEmpate].j = j;
+                            empate[nEmpate].d = d;
+                            empate[nEmpate].contagem = c;
+                            nEmpate++;
+                        }
+                    }
+
+    if (nEmpate == 0)
+        return 0;
+
+    /* Fase 2: se houver um único empatado, jogue-o.             */
+    if (nEmpate == 1) {
+        s[empate[0].i][empate[0].j] = empate[0].d;
+        return 1;
+    }
+
+    /* Fase 3: desempate por antecipação.                         */
+    Movimento finalistas[729];
+    int nFinalistas = 0;
+    int melhorAntecipada = -1;
+
+    for (int k = 0; k < nEmpate; k++) {
+        s[empate[k].i][empate[k].j] = empate[k].d;
+        int antecipada = melhorContagemImediata(s);
+        s[empate[k].i][empate[k].j] = VAZIO;
+
+        if (antecipada > melhorAntecipada) {
+            melhorAntecipada = antecipada;
+            nFinalistas = 0;
+        }
+        if (antecipada == melhorAntecipada) {
+            finalistas[nFinalistas++] = empate[k];
+        }
+    }
+
+    int idx = rand() % nFinalistas;
+    s[finalistas[idx].i][finalistas[idx].j] = finalistas[idx].d;
+    return 1;
+}
+\end{lstlisting}
+
+\subsection{Custo e benefício}
+
+A antecipação custa caro: para cada empatado, examinamos novamente
+todos os movimentos candidatos. No pior caso, isso eleva o custo por
+decisão a $O(n^4)$, com $n = 9$. Na prática, porém, o número de empatados
+costuma ser pequeno (de $2$ a $5$ na maioria dos tabuleiros), de modo que
+o tempo extra é tolerável. O benefício é uma redução notável no número
+de becos sem saída: tabuleiros que exigiriam retrocesso resolvem-se,
+muitas vezes, sem qualquer back-up.
+
+\begin{boapratica}
+Heurísticas com look-ahead profundo são, em geral, sujeitas à lei dos
+rendimentos decrescentes: olhar dois movimentos à frente compensa quase
+sempre; olhar três compensa às vezes; olhar quatro raramente paga seu
+custo. Comece simples; aprofunde apenas se medições indicarem benefício.
+\end{boapratica}
+
+% =====================================================================
+\section{Desafio 7: criando quebra-cabeças com células vazias}
+
+\begin{enunciado}
+Com um Sudoku completo em mãos, esvazie algumas células para criar um
+quebra-cabeça. Considere duas estratégias: $(i)$ escolha aleatória de
+células a esvaziar; $(ii)$ esvaziamento simétrico, usando a célula
+``reflexiva'' --- definida como $s[10 - i][10 - j]$ para a célula
+$s[i][j]$ --- de modo a deixar o tabuleiro com simetria visual.
+\end{enunciado}
+
+\subsection{Análise do problema}
+
+A geração de Sudokus completos é o que fizemos no Desafio~2 (com
+retrocesso) ou no Desafio~3 (com permutações aleatórias). A criação de
+um \emph{quebra-cabeça} é o passo seguinte: removemos algumas células,
+deixando para o jogador o trabalho de redescobri-las. O número de
+células removidas é um \emph{proxy} da dificuldade: tabuleiros mais
+``vazios'' tendem a ser mais difíceis, embora a relação não seja estrita
+(há Sudokus com poucos espaços que são surpreendentemente difíceis e
+vice-versa).
+
+\textbf{Simetria reflexiva.} Sudokus publicados em jornais quase sempre
+apresentam um padrão simétrico de células fixas, por estética. A célula
+``reflexiva'' de $s[i][j]$ é $s[10 - i][10 - j]$ --- esta é a
+involução $i \mapsto 10 - i$, $j \mapsto 10 - j$, equivalente a uma
+rotação de $180^\circ$ em torno do centro do tabuleiro. Note dois casos
+importantes:
+\begin{itemize}
+    \item Se $i = 5$ e $j = 5$, a célula é seu próprio reflexo (centro).
+    \item Se $(i, j)$ e $(10 - i, 10 - j)$ são distintas, esvaziar uma
+        obriga a esvaziar a outra para preservar a simetria.
+\end{itemize}
+
+\subsection{Algoritmo (esvaziamento aleatório simples)}
+
+\begin{enumerate}
+    \item Receba um Sudoku completo e uma quantidade-alvo
+        \codigo{numCelulasParaEsvaziar}.
+    \item Enquanto o número de células esvaziadas for menor que o alvo:
+    \begin{enumerate}
+        \item Sorteie aleatoriamente $i, j \in \{1, \ldots, 9\}$.
+        \item Se \codigo{s[i][j]} ainda estiver preenchida, esvazie-a.
+    \end{enumerate}
+\end{enumerate}
+
+\subsection{Algoritmo (esvaziamento simétrico)}
+
+\begin{enumerate}
+    \item Sorteie $i, j \in \{1, \ldots, 9\}$.
+    \item Calcule $i' = 10 - i$ e $j' = 10 - j$.
+    \item Se ambas \codigo{s[i][j]} e \codigo{s[i'][j']} estão preenchidas:
+        esvazie ambas. Trate o caso especial $i = i'$ e $j = j'$ (centro)
+        como um único esvaziamento.
+\end{enumerate}
+
+\subsection{Implementação}
+
+\begin{lstlisting}[caption={Dois esquemas de esvaziamento de células.},label={lst:gerador_puzzle}]
+/* Esvazia aleatoriamente n células de um Sudoku completo.       */
+void esvaziarAleatorio(int s[DIM][DIM], int n)
+{
+    int esvaziadas = 0;
+    int i, j;
+    while (esvaziadas < n) {
+        i = (rand() % LADO) + 1;
+        j = (rand() % LADO) + 1;
+        if (s[i][j] != VAZIO) {
+            s[i][j] = VAZIO;
+            esvaziadas++;
+        }
+    }
+}
+
+/* Esvazia n células de modo a preservar a simetria reflexiva.   */
+/* n é o número-alvo de células esvaziadas; o algoritmo pode      */
+/* parar com até n+1 esvaziadas (quando o último par é central). */
+void esvaziarSimetrico(int s[DIM][DIM], int n)
+{
+    int esvaziadas = 0;
+    int i, j, i2, j2;
+    while (esvaziadas < n) {
+        i = (rand() % LADO) + 1;
+        j = (rand() % LADO) + 1;
+        i2 = (LADO + 1) - i;   /* 10 - i */
+        j2 = (LADO + 1) - j;   /* 10 - j */
+
+        if (s[i][j] != VAZIO && s[i2][j2] != VAZIO) {
+            if (i == i2 && j == j2) {
+                /* Célula central: conta como um único esvaziamento. */
+                s[i][j] = VAZIO;
+                esvaziadas++;
+            } else {
+                s[i][j]   = VAZIO;
+                s[i2][j2] = VAZIO;
+                esvaziadas += 2;
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+\begin{erro}
+A inicialização do gerador de números aleatórios com \codigo{srand} é
+frequentemente esquecida. Sem ela, \codigo{rand()} produz a mesma
+sequência em cada execução --- e o programa gera sempre o mesmo
+``Sudoku aleatório''. Use \codigo{srand( (unsigned) time(NULL) )} logo
+no início de \codigo{main}.
+\end{erro}
+
+\subsection{Sobre dificuldade e solvibilidade}
+
+Um detalhe sutil: o esvaziamento desimpedido pode gerar tabuleiros com
+\emph{mais de uma} solução. Por exemplo, se removermos todas as células
+de uma sub-grade, ela ficará vazia, e quaisquer duas atribuições
+permutáveis das nove células gerarão Sudokus distintos. Para gerar
+quebra-cabeças ``apropriados'', o ideal é, após cada esvaziamento,
+verificar se o tabuleiro ainda tem solução única (vide Seção D.9); se
+não, restaurar a última remoção. Esse aprimoramento transforma o gerador
+em uma ferramenta verdadeiramente útil.
+
+% =====================================================================
+\section{Desafio 8: demonstrando que um Sudoku tem solução única}
+
+\begin{enunciado}
+Os Sudokus publicados em geral têm exatamente uma solução. Desenvolva um
+meio de demonstrar que um jogo específico tem exatamente uma solução.
+\end{enunciado}
+
+\subsection{Análise do problema}
+
+A primeira tentação é tentar gerar \emph{todas} as soluções e contar.
+Para Sudokus mal definidos com poucas pistas, isso pode levar tempo
+proibitivo --- existem Sudokus mal definidos com mais de $10^{15}$
+soluções. Felizmente, a pergunta que precisamos responder é mais
+modesta: ``há exatamente uma solução?''. Isso significa que basta
+descobrir se há \emph{pelo menos duas}; ao encontrar a segunda, podemos
+parar imediatamente.
+
+A estratégia é adaptar o solucionador por retrocesso do Desafio~2: em
+vez de retornar logo após encontrar uma solução, ele continua a busca
+e conta. Como só nos interessa a distinção ``uma solução / mais de uma'',
+abortamos a busca assim que a contagem atinge $2$. Essa poda é o que
+torna o algoritmo prático.
+
+\begin{engenharia}
+Este é um exemplo clássico de \emph{poda baseada no objetivo}: não
+precisamos da resposta exata para uma pergunta caríssima; bastaria
+distinguir entre ``zero'', ``um'' e ``dois ou mais''. Reformular a
+pergunta para que esse limiar seja pequeno transforma um problema
+intratável em um problema rotineiro.
+\end{engenharia}
+
+\subsection{Algoritmo}
+
+\begin{enumerate}
+    \item Receba o tabuleiro a verificar.
+    \item Copie-o (a verificação não deve alterar o original).
+    \item Execute uma busca por retrocesso na cópia, contando soluções.
+    \item Aborte a busca assim que o contador atinja $2$.
+    \item Retorne ``única'' se o contador for $1$; ``múltiplas'' se for
+        $2$; ``sem solução'' se for $0$.
+\end{enumerate}
+
+\subsection{Implementação}
+
+\begin{lstlisting}[caption={Contagem limitada de soluções e teste de unicidade.},label={lst:unique}]
+/* Conta soluções até o limite indicado. Modifica s (caller deve copiar). */
+int contarSolucoes(int s[DIM][DIM], int limite)
+{
+    int i, j, d, total = 0;
+    for (i = 1; i <= LADO; i++) {
+        for (j = 1; j <= LADO; j++) {
+            if (s[i][j] == VAZIO) {
+                for (d = 1; d <= LADO; d++)
+                    if (ehMovimentoValido(s, i, j, d)) {
+                        s[i][j] = d;
+                        total += contarSolucoes(s, limite - total);
+                        s[i][j] = VAZIO;
+                        if (total >= limite)
+                            return total;     /* poda */
+                    }
+                return total;
+            }
+        }
+    }
+    /* Sem células vazias: encontramos uma solução completa. */
+    return 1;
+}
+
+/* Verifica se o tabuleiro tem exatamente uma solução.           */
+/* Retorna:                                                       */
+/*   0 -> sem solução                                             */
+/*   1 -> exatamente uma solução                                  */
+/*   2 -> duas ou mais soluções                                   */
+int contarUnicidade(int original[DIM][DIM])
+{
+    int copia[DIM][DIM];
+    int i, j;
+
+    /* Copia o tabuleiro para preservar o original. */
+    for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++)
+            copia[i][j] = original[i][j];
+
+    return contarSolucoes(copia, 2);
+}
+\end{lstlisting}
+
+\subsection{Discussão da poda}
+
+A chave dessa solução está na linha \codigo{if (total >= limite) return total}.
+Note que ``$\codigo{limite} = 2$'' significa: ``conte até no máximo duas
+soluções; assim que achar a segunda, pare''. A passagem
+\codigo{limite - total} na chamada recursiva propaga o ``orçamento de
+soluções'' restante. Isso transforma o algoritmo, que no pior caso é
+exponencial, em algo cujo custo escala apenas com a árvore necessária
+para encontrar até duas soluções.
+
+\begin{boapratica}
+Sempre copiar a entrada antes de executar uma operação destrutiva
+permite que o chamador continue a usar o tabuleiro original. A regra
+geral é: ``funções de consulta não devem modificar seus argumentos''.
+Quando a modificação é inevitável (por eficiência), documente
+explicitamente esse contrato.
+\end{boapratica}
+
+\subsection{Aplicação prática: refinando o gerador de quebra-cabeças}
+
+Vamos integrar este teste de unicidade ao gerador do Desafio~7 para
+produzir Sudokus que tenham, por construção, solução única.
+
+\begin{lstlisting}[caption={Gerador de Sudokus com solução única garantida.},label={lst:gerador_unico}]
+/* Gera um quebra-cabeça com simetria reflexiva e solução única.    */
+/* Retorna o número efetivo de células esvaziadas (pode ser menor    */
+/* que o solicitado se o algoritmo esgotar tentativas).               */
+int gerarSudokuValido(int s[DIM][DIM],
+                      int completo[DIM][DIM],
+                      int numAlvo)
+{
+    int i, j;
+    int esvaziadas = 0;
+    int tentativas = 0;
+    const int MAX_TENT = 200;
+
+    /* Começa com o tabuleiro completo. */
+    for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++)
+            s[i][j] = completo[i][j];
+
+    while (esvaziadas < numAlvo && tentativas < MAX_TENT) {
+        tentativas++;
+        int ii = (rand() % LADO) + 1;
+        int jj = (rand() % LADO) + 1;
+        int i2 = (LADO + 1) - ii;
+        int j2 = (LADO + 1) - jj;
+
+        if (s[ii][jj] == VAZIO || s[i2][j2] == VAZIO)
+            continue;
+
+        /* Salva os valores antes de esvaziar. */
+        int salvoA = s[ii][jj];
+        int salvoB = s[i2][j2];
+
+        s[ii][jj] = VAZIO;
+        s[i2][j2] = VAZIO;
+
+        /* Verifica unicidade. */
+        if (contarUnicidade(s) == 1) {
+            /* Pode manter o esvaziamento. */
+            esvaziadas += (ii == i2 && jj == j2) ? 1 : 2;
+            tentativas = 0;
+        } else {
+            /* Restaura para preservar unicidade. */
+            s[ii][jj] = salvoA;
+            s[i2][j2] = salvoB;
+        }
+    }
+    return esvaziadas;
+}
+\end{lstlisting}
+
+\begin{desempenho}
+Este gerador é, deliberadamente, ``conservador'': prefere manter um
+quebra-cabeça com solução única do que se arriscar a um Sudoku ambíguo.
+O contador \codigo{tentativas} é zerado a cada esvaziamento bem-sucedido
+e atinge \codigo{MAX\_TENT} apenas quando o algoritmo conclui que
+remoções adicionais provocariam ambiguidade. O resultado típico contém
+de $50$ a $60$ células preenchidas, faixa que abrange Sudokus de
+dificuldade média a difícil.
+\end{desempenho}
+
+% =====================================================================
+\section{Programa integrado e demonstração}
+
+A Listagem~\ref{lst:demo} reúne os componentes principais em um único
+\codigo{main} que demonstra o ciclo completo: geramos um Sudoku
+completo via retrocesso randomizado, esvaziamos células simetricamente
+preservando solução única e, ao final, resolvemos o quebra-cabeça
+gerado.
+
+\begin{lstlisting}[caption={Programa integrado.},label={lst:demo}]
+/* Versão de resolverBacktracking que tenta dígitos em ordem        */
+/* aleatória, produzindo Sudokus completos aleatórios.               */
+int gerarCompletoAleatorio(int s[DIM][DIM])
+{
+    int i, j, k, d, tmp;
+    int ordem[DIM];
+
+    for (i = 1; i <= LADO; i++)
+        for (j = 1; j <= LADO; j++)
+            if (s[i][j] == VAZIO) {
+
+                /* Constrói e embaralha a ordem dos dígitos 1..9. */
+                for (k = 1; k <= LADO; k++) ordem[k] = k;
+                for (k = LADO; k > 1; k--) {
+                    int r = (rand() % k) + 1;
+                    tmp = ordem[k]; ordem[k] = ordem[r]; ordem[r] = tmp;
+                }
+
+                for (k = 1; k <= LADO; k++) {
+                    d = ordem[k];
+                    if (ehMovimentoValido(s, i, j, d)) {
+                        s[i][j] = d;
+                        if (gerarCompletoAleatorio(s)) return 1;
+                        s[i][j] = VAZIO;
+                    }
+                }
+                return 0;
+            }
+    return 1;
+}
+
+int main(void)
+{
+    int completo[DIM][DIM] = {{0}};
+    int puzzle[DIM][DIM];
+    int copia[DIM][DIM];
+    int i, j, n;
+
+    srand((unsigned) time(NULL));
+
+    /* 1) Gera um Sudoku completo aleatório. */
+    if (!gerarCompletoAleatorio(completo)) {
+        printf("Falha ao gerar Sudoku completo.\n");
+        return 1;
+    }
+    printf("Sudoku completo gerado:");
+    imprimirTabuleiro(completo);
+
+    /* 2) Esvazia 50 células com simetria, preservando unicidade. */
+    n = gerarSudokuValido(puzzle, completo, 50);
+    printf("\nQuebra-cabeca com %d celulas esvaziadas:", n);
+    imprimirTabuleiro(puzzle);
+
+    /* 3) Resolve o quebra-cabeca para confirmar. */
+    for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++) copia[i][j] = puzzle[i][j];
+
+    if (resolverBacktracking(copia)) {
+        printf("\nSolucao reconstruida:");
+        imprimirTabuleiro(copia);
+    } else {
+        printf("\nERRO: o quebra-cabeca nao tem solucao.\n");
+    }
+    return 0;
+}
+\end{lstlisting}
+
+\begin{boapratica}
+Manter cópias separadas para ``solução de referência'' e ``cópia de
+trabalho'' é a única forma robusta de verificar se um quebra-cabeça é
+consistente. Tentar economizar memória reaproveitando o mesmo array
+para os dois propósitos costuma se traduzir em horas de depuração.
+\end{boapratica}
+
+% =====================================================================
+\section{Conclusão}
+
+Neste apêndice, partimos da definição de um quebra-cabeça aparentemente
+simples --- preencher uma grade de $9 \times 9$ com os dígitos de $1$
+a $9$ obedecendo a três restrições --- e construímos, passo a passo,
+soluções que vão da força bruta cega à programação de heurísticas
+sofisticadas e à geração automática de novos quebra-cabeças. Mais que
+um exercício de jogo, o Sudoku serviu como um campo de provas para
+diversos paradigmas que serão utilizados ao longo de todo o livro:
+
+\begin{itemize}
+    \item \textbf{Encapsulamento via funções utilitárias.} Funções como
+        \codigo{ehMovimentoValido} e \codigo{validSudoku} foram escritas
+        \emph{uma única vez} e reaproveitadas em todos os solucionadores.
+    \item \textbf{Recursão como ferramenta natural.} O retrocesso ficou
+        elegantemente expresso por uma função recursiva curta.
+        Voltaremos a esse padrão ao tratarmos do Passeio do Cavalo, das
+        Oito Rainhas, da Torre de Hanói e da travessia de árvores.
+    \item \textbf{Estruturas de iteração aninhadas.} O domínio bidimensional
+        do Sudoku exigiu o uso disciplinado dos laços \codigo{for},
+        \codigo{while} e \codigo{do...while} aprendidos no Capítulo~4.
+    \item \textbf{Geração de números pseudoaleatórios.} A função \codigo{rand}
+        permite explorar técnicas \textit{Monte Carlo} e introduzir variação
+        nos geradores --- mas requer cuidado com a inicialização da semente.
+    \item \textbf{Manipulação eficiente de conjuntos.} As máscaras de bits
+        do Desafio~4 são um padrão idiomático em C, especialmente útil
+        quando o universo é pequeno e fixo.
+    \item \textbf{Heurísticas.} A heurística da Seção D.6 e a antecipação
+        da Seção D.7 oferecem um primeiro contato com técnicas que dominam
+        a inteligência artificial moderna.
+    \item \textbf{Poda baseada no objetivo.} O Desafio~8 mostra como
+        reformular uma pergunta cara em uma pergunta barata, decisão
+        arquitetural que faz toda a diferença em problemas combinatórios.
+\end{itemize}
+
+\begin{engenharia}
+A história da computação contém numerosos exemplos em que problemas
+considerados ``insolúveis'' tornaram-se rotineiros graças não apenas
+ao avanço do hardware, mas à invenção de algoritmos mais inteligentes.
+O Sudoku é uma metáfora em miniatura desse processo: a força bruta
+cega ($9^{81}$ possibilidades) jamais terminaria, ao passo que o
+retrocesso bem implementado resolve qualquer Sudoku publicado em
+milissegundos.
+\end{engenharia}
+
+Os recursos de programação aqui exercitados constituem, todos eles,
+ferramentas com as quais o leitor já se tornou íntimo nos Capítulos~1
+a~7. Cabe ao leitor agora estender este material: implementar duplas,
+duplas ocultas, triplas e triplas ocultas; medir empiricamente quais
+combinações de estratégias produzem os solucionadores mais eficientes;
+gerar quebra-cabeças classificados por dificuldade; e --- por que não? ---
+adicionar uma interface gráfica usando a biblioteca \textit{Allegro}
+apresentada no Apêndice~E, que escapa do padrão da linguagem C mas
+recompensa o trabalho com programas verdadeiramente bonitos.
+
+Bom Sudoku!
+
+\end{document}

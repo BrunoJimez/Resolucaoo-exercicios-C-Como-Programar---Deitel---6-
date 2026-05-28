@@ -1,0 +1,482 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+
+\hypersetup{colorlinks=true, linkcolor=deitelblue, urlcolor=deitelblue,
+  pdftitle={C: Como Programar - Apendice C - Autorrevisao}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Ap\^endice~C}
+\fancyhead[R]{\small Exerc\'icios de Autorrevis\~ao}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+\newtcolorbox{obseng}{enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{boaprat}{enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Dica}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{resposta}{enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Ap\^endice C}\\[0.3em]
+  {\Large\bfseries Sistemas de Numera\c{c}\~ao}\\[0.8em]
+  {\large\itshape Exerc\'icios de Autorrevis\~ao --- Resolu\c{c}\~ao Did\'atica}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``Computadores armazenam tudo em bin\'ario (base 2). N\'os humanos pensamos em decimal (base 10). Octal (base 8) e hexadecimal (base 16) s\~ao bases auxiliares, escolhidas porque s\~ao pot\^encias de 2 e oferecem representa\c{c}\~oes mais curtas dos n\'umeros bin\'arios. Este ap\^endice consolida convers\~oes entre essas quatro bases e a representa\c{c}\~ao de inteiros negativos via \emph{complemento de dois}.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+% ============================================================
+\section{Exerc\'icio C.1 --- Lacunas sobre bases}
+% ============================================================
+
+\subsection*{(a) Bases dos sistemas decimal, bin\'ario, octal e hexadecimal}
+
+\begin{resposta}\textbf{10}, \textbf{2}, \textbf{8} e \textbf{16}, respectivamente.\end{resposta}
+
+\subsection*{(b) Valor posicional do d\'igito mais \`a direita}
+
+\begin{resposta}\textbf{1} (a base elevada \`a pot\^encia zero, $b^0 = 1$ para qualquer base $b$).\end{resposta}
+
+\subsection*{(c) Valor posicional do d\'igito imediatamente \`a esquerda}
+
+\begin{resposta}\textbf{A base do sistema num\'erico} ($b^1 = b$).\end{resposta}
+
+% ============================================================
+\section{Exerc\'icio C.2 --- Verdadeiro ou Falso}
+% ============================================================
+
+\subsection*{(a) Decimal abrevia bin\'arios em grupos de 4 bits}
+
+\begin{resposta}\textbf{Falso}. Quem faz isso \'e o sistema \textbf{hexadecimal}.\end{resposta}
+
+Cada d\'igito hexadecimal corresponde a exatamente 4 bits porque $16 = 2^4$:
+
+\[
+\underbrace{1111}_{F} \, \underbrace{1010}_{A} \, \underbrace{1100}_{C} \, \underbrace{1110}_{E} \quad = \quad \text{FACE}_{16}
+\]
+
+\subsection*{(b) O d\'igito mais alto \'e ``um a mais que a base''}
+
+\begin{resposta}\textbf{Falso}. O d\'igito mais alto \'e \textbf{um a menos} que a base.\end{resposta}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Decimal (base 10): d\'igitos 0 a 9 (mais alto = 9 = 10 - 1).
+  \item Bin\'ario (base 2): d\'igitos 0 e 1 (mais alto = 1 = 2 - 1).
+  \item Octal (base 8): d\'igitos 0 a 7 (mais alto = 7 = 8 - 1).
+  \item Hexadecimal (base 16): d\'igitos 0 a F (mais alto = F = 15 = 16 - 1).
+\end{itemize}
+
+\subsection*{(c) O d\'igito mais baixo \'e ``um a menos que a base''}
+
+\begin{resposta}\textbf{Falso}. O d\'igito mais baixo em qualquer base \'e sempre \textbf{0}.\end{resposta}
+
+% ============================================================
+\section{Exerc\'icio C.3 --- N\'umero de d\'igitos}
+% ============================================================
+
+\begin{resposta}\textbf{MENOS}. As representa\c{c}\~oes decimal, octal e hexadecimal cont\^em menos d\'igitos do que a bin\'aria.\end{resposta}
+
+\textbf{Por qu\^e?} Quanto maior a base, mais ``informa\c{c}\~ao'' cada d\'igito carrega. Um d\'igito hexadecimal carrega informa\c{c}\~ao de 4 bits, um d\'igito decimal carrega cerca de 3.32 bits (j\'a que $\log_2 10 \approx 3.32$), um d\'igito octal carrega 3 bits e um d\'igito bin\'ario carrega s\'o 1 bit.
+
+\textbf{Exemplo:} o n\'umero 255 em quatro bases:
+
+\[
+255_{10} = 11111111_2 = 377_8 = \text{FF}_{16}
+\]
+
+3 d\'igitos em decimal, 8 em bin\'ario, 3 em octal, 2 em hexadecimal.
+
+% ============================================================
+\section{Exerc\'icio C.4 --- Representa\c{c}\~ao mais concisa}
+% ============================================================
+
+\begin{resposta}\textbf{HEXADECIMAL.}\end{resposta}
+
+Entre as alternativas (octal, hexadecimal, decimal), a base 16 \'e a mais concisa por ter o maior conjunto de d\'igitos. Por isso \'e usada para representar endere\c{c}os de mem\'oria, c\'odigos de cor RGB (\texttt{\#FFFFFF}), valores hash (MD5, SHA-256), etc.
+
+% ============================================================
+\section{Exerc\'icio C.5 --- Tabela de valores posicionais}
+% ============================================================
+
+\textbf{Preencha os valores faltantes.}
+
+\begin{resposta}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Sistema} & \textbf{P3} & \textbf{P2} & \textbf{P1} & \textbf{P0} \\
+\hline
+Decimal     & 1000 & 100 & 10 & 1 \\
+Hexadecimal & \textbf{4096} & 256 & \textbf{16} & \textbf{1} \\
+Bin\'ario    & \textbf{8} & \textbf{4} & \textbf{2} & \textbf{1} \\
+Octal       & 512 & \textbf{64} & 8 & \textbf{1} \\
+\hline
+\end{tabular}
+\end{center}
+\end{resposta}
+
+\subsection*{Por qu\^e?}
+
+Em cada sistema, os valores posicionais s\~ao pot\^encias da base, come\c{c}ando por $b^0 = 1$ \`a direita:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Decimal:} $10^0=1$, $10^1=10$, $10^2=100$, $10^3=1000$.
+  \item \textbf{Hexadecimal:} $16^0=1$, $16^1=16$, $16^2=256$, $16^3=4096$.
+  \item \textbf{Bin\'ario:} $2^0=1$, $2^1=2$, $2^2=4$, $2^3=8$.
+  \item \textbf{Octal:} $8^0=1$, $8^1=8$, $8^2=64$, $8^3=512$.
+\end{itemize}
+
+% ============================================================
+\section{Exerc\'icio C.6 --- Bin\'ario 110101011000 para octal e hex}
+% ============================================================
+
+\subsection*{Para octal: agrupe de 3 em 3 (a partir da direita)}
+
+\[
+\underbrace{110}_{6} \, \underbrace{101}_{5} \, \underbrace{011}_{3} \, \underbrace{000}_{0} \quad = \quad \boxed{6530_8}
+\]
+
+\begin{resposta}\textbf{Octal: 6530.}\end{resposta}
+
+\subsection*{Para hexadecimal: agrupe de 4 em 4 (a partir da direita)}
+
+\[
+\underbrace{1101}_{D=13} \, \underbrace{0101}_{5} \, \underbrace{1000}_{8} \quad = \quad \boxed{\text{D58}_{16}}
+\]
+
+\begin{resposta}\textbf{Hexadecimal: D58.}\end{resposta}
+
+\subsection*{Verifica\c{c}\~ao}
+
+$110101011000_2 = 3416_{10}$. Conferindo: $6530_8 = 6 \times 512 + 5 \times 64 + 3 \times 8 + 0 = 3072 + 320 + 24 = 3416$. ✓
+E $\text{D58}_{16} = 13 \times 256 + 5 \times 16 + 8 = 3328 + 80 + 8 = 3416$. ✓
+
+\newpage
+% ============================================================
+\section{Exerc\'icio C.7 --- Hexadecimal FACE em bin\'ario}
+% ============================================================
+
+Substitua cada d\'igito hex pelos seus 4 bits:
+
+\[
+\underbrace{F}_{1111} \, \underbrace{A}_{1010} \, \underbrace{C}_{1100} \, \underbrace{E}_{1110}
+\]
+
+\begin{resposta}\textbf{Bin\'ario: 1111 1010 1100 1110.}\end{resposta}
+
+% ============================================================
+\section{Exerc\'icio C.8 --- Octal 7316 em bin\'ario}
+% ============================================================
+
+Substitua cada d\'igito octal pelos seus 3 bits:
+
+\[
+\underbrace{7}_{111} \, \underbrace{3}_{011} \, \underbrace{1}_{001} \, \underbrace{6}_{110}
+\]
+
+\begin{resposta}\textbf{Bin\'ario: 111 011 001 110.}\end{resposta}
+
+% ============================================================
+\section{Exerc\'icio C.9 --- Hexadecimal 4FEC em octal}
+% ============================================================
+
+\textbf{Dica do livro:} primeiro converta para bin\'ario, depois para octal.
+
+\subsection*{Etapa 1: hex 4FEC para bin\'ario (4 bits por d\'igito)}
+
+\[
+\underbrace{4}_{0100} \, \underbrace{F}_{1111} \, \underbrace{E}_{1110} \, \underbrace{C}_{1100}
+\]
+
+Bin\'ario: \texttt{0100 1111 1110 1100}.
+
+\subsection*{Etapa 2: bin\'ario para octal (3 bits por d\'igito, da direita)}
+
+Agrupando de 3 em 3 a partir da direita: \texttt{100 111 111 101 100}, preenchendo a posi\c{c}\~ao mais \`a esquerda com zero (a quantidade total de bits \'e 16, n\~ao m\'ultiplo de 3, ent\~ao adicionamos 2 bits zero \`a esquerda para totalizar 18, formando 6 grupos de 3 bits).
+
+\[
+\underbrace{000}_{0} \, \underbrace{100}_{4} \, \underbrace{111}_{7} \, \underbrace{111}_{7} \, \underbrace{101}_{5} \, \underbrace{100}_{4}
+\]
+
+\begin{resposta}\textbf{Octal: 047754 (ou simplesmente 47754).}\end{resposta}
+
+\subsection*{Verifica\c{c}\~ao}
+
+$\text{4FEC}_{16} = 4 \times 4096 + 15 \times 256 + 14 \times 16 + 12 = 16384 + 3840 + 224 + 12 = 20460_{10}$.
+
+E $47754_8 = 4 \times 4096 + 7 \times 512 + 7 \times 64 + 5 \times 8 + 4 = 16384 + 3584 + 448 + 40 + 4 = 20460$. ✓
+
+% ============================================================
+\section{Exerc\'icio C.10 --- Bin\'ario 1101110 em decimal}
+% ============================================================
+
+Multiplique cada d\'igito pelo seu valor posicional (pot\^encias de 2):
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+Posi\c{c}\~ao    & 6   & 5  & 4  & 3 & 2 & 1 & 0 \\
+\hline
+Valor pos. & 64  & 32 & 16 & 8 & 4 & 2 & 1 \\
+\hline
+D\'igito    & 1   & 1  & 0  & 1 & 1 & 1 & 0 \\
+\hline
+Produto   & 64  & 32 & 0  & 8 & 4 & 2 & 0 \\
+\hline
+\end{tabular}
+\end{center}
+
+\[
+64 + 32 + 0 + 8 + 4 + 2 + 0 = \boxed{110_{10}}
+\]
+
+\begin{resposta}\textbf{Decimal: 110.}\end{resposta}
+
+% ============================================================
+\section{Exerc\'icio C.11 --- Octal 317 em decimal}
+% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Posi\c{c}\~ao    & 2   & 1  & 0 \\
+\hline
+Valor pos. & 64  & 8  & 1 \\
+\hline
+D\'igito    & 3   & 1  & 7 \\
+\hline
+Produto   & 192 & 8  & 7 \\
+\hline
+\end{tabular}
+\end{center}
+
+\[
+192 + 8 + 7 = \boxed{207_{10}}
+\]
+
+\begin{resposta}\textbf{Decimal: 207.}\end{resposta}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio C.12 --- Hexadecimal EFD4 em decimal}
+% ============================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Posi\c{c}\~ao        & 3      & 2     & 1   & 0 \\
+\hline
+Valor pos.     & 4096   & 256   & 16  & 1 \\
+\hline
+D\'igito        & E (14) & F (15)& D (13) & 4 \\
+\hline
+Produto       & 57344  & 3840  & 208 & 4 \\
+\hline
+\end{tabular}
+\end{center}
+
+\[
+57344 + 3840 + 208 + 4 = \boxed{61396_{10}}
+\]
+
+\begin{resposta}\textbf{Decimal: 61396.}\end{resposta}
+
+% ============================================================
+\section{Exerc\'icio C.13 --- Decimal 177 em bin, oct, hex}
+% ============================================================
+
+\subsection*{Bin\'ario: estrat\'egia das pot\^encias subtra\'idas}
+
+Encontramos a maior pot\^encia de 2 menor ou igual a 177 ($128 = 2^7$) e seguimos:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+Valor pos. & 128 & 64 & 32 & 16 & 8 & 4 & 2 & 1 \\
+\hline
+Cabe?      & SIM, sobra 49 & N\~AO & SIM, sobra 17 & SIM, sobra 1 & N\~AO & N\~AO & N\~AO & SIM, sobra 0 \\
+\hline
+D\'igito    & 1   & 0  & 1  & 1  & 0 & 0 & 0 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\[
+177 = 128 + 32 + 16 + 1
+\]
+
+\begin{resposta}\textbf{Bin\'ario: 10110001.}\end{resposta}
+
+\subsection*{Octal: usando valores 64, 8, 1}
+
+\[
+177 = 2 \times 64 + 6 \times 8 + 1 = 128 + 48 + 1
+\]
+
+\begin{resposta}\textbf{Octal: 261.}\end{resposta}
+
+\subsection*{Hexadecimal: usando valores 16 e 1}
+
+\[
+177 = 11 \times 16 + 1 = 176 + 1
+\]
+
+Lembrando que $11 = \text{B}_{16}$:
+
+\begin{resposta}\textbf{Hexadecimal: B1.}\end{resposta}
+
+\subsection*{Verifica\c{c}\~ao cruzada}
+
+Conferindo se as 3 representa\c{c}\~oes batem:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Bin\'ario agrupado em 3: $10110001 = \underbrace{010}_{2}\underbrace{110}_{6}\underbrace{001}_{1} = 261_8$. ✓
+  \item Bin\'ario agrupado em 4: $10110001 = \underbrace{1011}_{B}\underbrace{0001}_{1} = \text{B1}_{16}$. ✓
+\end{itemize}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio C.14 --- Complemento de 1 e 2 de 417}
+% ============================================================
+
+\subsection*{Etapa 1: 417 em bin\'ario}
+
+$417 = 256 + 128 + 32 + 1$:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+Valor pos. & 256 & 128 & 64 & 32 & 16 & 8 & 4 & 2 & 1 \\
+\hline
+D\'igito    & 1   & 1   & 0  & 1  & 0  & 0 & 0 & 0 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{resposta}\textbf{Bin\'ario: 110100001} (9 bits).\end{resposta}
+
+\subsection*{Etapa 2: complemento de UM}
+
+Inverte cada bit (0 vira 1 e vice-versa):
+
+\begin{center}
+\begin{tabular}{r|ccccccccc}
+417            & 1 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 1 \\
+\hline
+$\sim 417$ (C1)& 0 & 0 & 1 & 0 & 1 & 1 & 1 & 1 & 0
+\end{tabular}
+\end{center}
+
+\begin{resposta}\textbf{Complemento de UM: 001011110.}\end{resposta}
+
+\subsection*{Etapa 3: complemento de DOIS}
+
+Some 1 ao complemento de UM:
+
+\[
+001011110 + 1 = 001011111
+\]
+
+\begin{resposta}\textbf{Complemento de DOIS: 001011111.}\end{resposta}
+
+\subsection*{Verifica\c{c}\~ao: $n + (-n) = 0$ em complemento de dois}
+
+\begin{center}
+\begin{tabular}{r}
+$\phantom{+}110100001$ \\
+$+ \, 001011111$ \\
+\hline
+$\phantom{+}\mathbf{(1)}\,000000000$
+\end{tabular}
+\end{center}
+
+O ``1'' transbordado fora dos 9 bits \'e \emph{descartado} pela aritm\'etica de complemento de dois. O resultado \'e $000000000$, ou seja, \textbf{zero}. ✓
+
+% ============================================================
+\section{Exerc\'icio C.15 --- Soma de um n\'umero com seu C2}
+% ============================================================
+
+\begin{resposta}\textbf{ZERO.}\end{resposta}
+
+\subsection*{Justificativa}
+
+Em complemento de dois com $n$ bits, define-se $-x = 2^n - x$ (m\'odulo $2^n$). Logo:
+
+\[
+x + (-x) = x + (2^n - x) = 2^n \equiv 0 \pmod{2^n}
+\]
+
+O bit que ``vaza'' na posi\c{c}\~ao $n+1$ \'e simplesmente descartado pela aritm\'etica modular.
+
+\begin{obseng}
+\'E exatamente este comportamento que torna a aritm\'etica em complemento de dois t\~ao elegante: a mesma circuiteria que faz adi\c{c}\~ao tamb\'em faz subtra\c{c}\~ao (basta adicionar o complemento). Por isso processadores modernos usam C2 universalmente para representar inteiros com sinal.
+\end{obseng}
+
+% ============================================================
+\section*{S\'intese conceitual}
+% ============================================================
+
+A autorrevis\~ao consolidou as t\'ecnicas centrais:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Bases:} bin\'aria (2), octal (8), decimal (10), hexadecimal (16). Cada uma com $b$ d\'igitos (de 0 a $b-1$).
+  \item \textbf{Convers\~oes entre pot\^encias de 2:} bin\'ario $\leftrightarrow$ octal usa grupos de 3 bits; bin\'ario $\leftrightarrow$ hex usa grupos de 4 bits.
+  \item \textbf{Convers\~ao para decimal:} multiplique cada d\'igito pelo seu valor posicional e some.
+  \item \textbf{Convers\~ao do decimal:} extraia repetidamente o resto da divis\~ao pela base (ou monte pot\^encias subtraindo).
+  \item \textbf{Complemento de UM:} inverter todos os bits.
+  \item \textbf{Complemento de DOIS:} C1 + 1. Representa\c{c}\~ao padr\~ao de inteiros negativos.
+  \item \textbf{Propriedade fundamental:} $x + (-x) = 0$ em C2 (com transborda\-mento descartado).
+\end{itemize}
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}
