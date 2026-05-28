@@ -1,0 +1,690 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+\definecolor{portabcolor}{RGB}{102,46,145}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekeyword}{RGB}{0,0,180}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codecomment}{RGB}{0,128,0}
+\definecolor{terminalbg}{RGB}{30,30,30}
+\definecolor{terminalfg}{RGB}{220,220,220}
+
+\lstdefinestyle{cppcode}{
+  language=C++,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=8pt,
+  backgroundcolor=\color{codebg}, frame=single, framesep=4pt,
+  rulecolor=\color{deitelblue!50}, breaklines=true,
+  showstringspaces=false, tabsize=4,
+  morekeywords={string, size_t, cin, cout, endl, inline, template, typename,
+                bool, true, false, nullptr, override, final, public, private,
+                protected, explicit, friend, virtual, this, static, operator},
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+           {Ã}{{\~A}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Ê}{{\^E}}1 {Í}{{\'I}}1
+           {Ó}{{\'O}}1 {Ô}{{\^O}}1 {Õ}{{\~O}}1 {Ú}{{\'U}}1 {Ç}{{\c{C}}}1
+}
+
+\lstdefinestyle{terminal}{
+  basicstyle=\ttfamily\footnotesize\color{terminalfg},
+  backgroundcolor=\color{terminalbg},
+  frame=single, framesep=6pt, rulecolor=\color{deitelblue!50},
+  breaklines=true, showstringspaces=false,
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+}
+
+\hypersetup{colorlinks=true, linkcolor=deitelblue, urlcolor=deitelblue,
+  pdftitle={C: Como Programar - Cap. 19 - Exercicios}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Cap.~19}
+\fancyhead[R]{\small Exerc\'icios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+\newtcolorbox{boaprat}{enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Boa Pr\'atica de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{errocomum}{enhanced, breakable, colback=errocolor!8, colframe=errocolor,
+  fonttitle=\bfseries, title={\textbf{Erro Comum de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{obseng}{enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao de Engenharia de Software}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{dicadesemp}{enhanced, breakable, colback=desempcolor!8, colframe=desempcolor,
+  fonttitle=\bfseries, title={\textbf{Dica de Desempenho}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{enunciado}{enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{saidabox}{enhanced, breakable, colback=gray!8, colframe=gray!50,
+  boxrule=0.6pt, fonttitle=\bfseries\small,
+  title={\textbf{Sa\'ida da execu\c{c}\~ao}},
+  left=6pt, right=6pt, top=3pt, bottom=3pt}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Cap\'itulo 19}\\[0.3em]
+  {\Large\bfseries Sobrecarga de Operadores; Classe \texttt{string}}\\[0.8em]
+  {\large\itshape Exerc\'icios --- Resolu\c{c}\~ao Did\'atica com C\'odigo C++}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``Neste documento resolvemos os seis exerc\'icios 19.6 a 19.11 do Cap\'itulo 19, sendo o primeiro conceitual e os cinco restantes de programa\c{c}\~ao. Os c\'odigos exploram as tr\^es categorias principais de sobrecarga: (i) operadores aritm\'eticos para tipos matem\'aticos (\texttt{Complex}, \texttt{Rational}, \texttt{Polynomial}); (ii) operadores de I/O (\texttt{<<} e \texttt{>>}) que se integram \`a infraestrutura de \texttt{cin}/\texttt{cout}; (iii) operadores de acesso (\texttt{operator()} para indexa\c{c}\~ao bidimensional). Todos os c\'odigos compilam com \texttt{g++ -Wall -Wextra -std=c++14} sem warnings.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+% ============================================================
+\section{Exerc\'icio 19.6 --- Comparando \texttt{new}, \texttt{new[]}, \texttt{delete} e \texttt{delete[]}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Compare os operadores de aloca\c{c}\~ao e desaloca\c{c}\~ao de mem\'oria din\^amica \texttt{new}, \texttt{new[]}, \texttt{delete} e \texttt{delete[]}.
+\end{enunciado}
+
+\subsection*{Vis\~ao panor\^amica}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|l|p{4.5cm}|p{6.5cm}|}
+\hline
+\textbf{Operador} & \textbf{O que faz} & \textbf{Exemplo} \\
+\hline
+\texttt{new T} & Aloca um \'unico objeto, chama o construtor & \texttt{Time *t = new Time(12,0,0);} \\
+\hline
+\texttt{new T[n]} & Aloca array de \texttt{n} objetos, chama construtor default para cada um & \texttt{int *v = new int[100];} \\
+\hline
+\texttt{delete p} & Chama o destrutor do objeto e libera a mem\'oria & \texttt{delete t;} \\
+\hline
+\texttt{delete[] p} & Chama os destrutores de todos os elementos e libera o array inteiro & \texttt{delete[] v;} \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{Discuss\~ao detalhada}
+
+\subsubsection*{\texttt{new T} e \texttt{delete p} (singular)}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+Time *t = new Time(12, 0, 0);     // (1) aloca mem. p/ um Time
+                                   // (2) chama Time(12,0,0)
+                                   // (3) atribui o endereco a t
+// ... usa t ...
+delete t;                          // (1) chama ~Time()
+                                   // (2) devolve mem. ao heap
+\end{lstlisting}
+
+A diferen\c{c}a fundamental do \texttt{new} em rela\c{c}\~ao ao \texttt{malloc} de C \'e que \emph{ele tamb\'em chama o construtor}. Reciprocamente, \texttt{delete} \emph{tamb\'em} chama o destrutor.
+
+\subsubsection*{\texttt{new T[n]} e \texttt{delete[] p} (array)}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+Time *vt = new Time[10];          // 10 Times default-construidos
+// ... usa o array ...
+delete[] vt;                       // chama ~Time() em CADA um
+                                   // e libera o array inteiro
+\end{lstlisting}
+
+\subsubsection*{O erro classico: confundir as duas formas}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+int *v = new int[100];
+delete v;        // <-- BUG SUTIL: comportamento INDEFINIDO
+                 //                deveria ser delete[] v
+\end{lstlisting}
+
+\begin{errocomum}
+\textbf{Usar \texttt{delete} no que foi alocado com \texttt{new[]}, ou \texttt{delete[]} no que foi alocado com \texttt{new}, \'e comportamento indefinido}. O programa pode crashar, ou vazar mem\'oria, ou parecer funcionar (o pior dos cen\'arios). A regra mnem\^onica: \emph{forma do \texttt{new}, forma do \texttt{delete}}. Se uma p\^os colchetes, a outra tamb\'em deve p\^or.
+\end{errocomum}
+
+\subsection*{O custo do gerenciamento manual}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Vazamento (\emph{memory leak}):} esquecer \texttt{delete}. A mem\'oria fica reservada at\'e o fim do programa. Programas que vazam constantemente acabam derrubando o sistema.
+  \item \textbf{Duplo \texttt{delete}:} chamar \texttt{delete} duas vezes no mesmo ponteiro. Comportamento indefinido --- frequentemente trava o programa.
+  \item \textbf{Ponteiro pendurado (\emph{dangling pointer}):} usar um ponteiro depois de o objeto ter sido deletado. Outra fonte cl\'assica de crashes ou pior, sil^enciosa corrup\c{c}\~ao de dados.
+\end{itemize}
+
+\begin{boaprat}
+\textbf{Em C++ moderno (C++11+), evite \texttt{new}/\texttt{delete} diretos.} As alternativas:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{std::vector<T>} em vez de \texttt{new T[N]} + \texttt{delete[]}.
+  \item \texttt{std::unique\_ptr<T>} em vez de \texttt{new T()} + \texttt{delete}.
+  \item \texttt{std::shared\_ptr<T>} para propriedade compartilhada.
+  \item \texttt{std::make\_unique<T>(args\ldots)} (C++14) ou \texttt{std::make\_shared<T>(args\ldots)} para constru\c{c}\~ao segura.
+\end{itemize}
+
+Essas abstra\c{c}\~oes implementam o idioma \emph{RAII} (\emph{Resource Acquisition Is Initialization}): a aloca\c{c}\~ao acontece no construtor, a desaloca\c{c}\~ao no destrutor, e o c\'odigo cliente n\~ao precisa se preocupar com \texttt{delete}. Para os exerc\'icios deste cap\'itulo, contudo, usamos \texttt{new}/\texttt{delete} crus para aprender o mecanismo de baixo n\'ivel.
+\end{boaprat}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 19.7 --- Array bidimensional com \texttt{operator()}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Crie a classe \texttt{DoubleSubscriptedArray} que substitua \texttt{tabuleiroXadrez[linha][coluna]} por \texttt{tabuleiroXadrez(linha, coluna)}. Implemente: \texttt{operator()} em duas vers\~oes (uma para \emph{lvalue} e outra \texttt{const}), \texttt{==}, \texttt{!=}, \texttt{=}, \texttt{<<} (sa\'ida em formato matricial), \texttt{>>} (entrada de todo o conte\'udo). A representa\c{c}\~ao interna deve ser um array linear de \texttt{linhas * colunas} elementos com aritm\'etica de ponteiro adequada.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A id\'eia central: armazenamos uma matriz logicamente bidimensional como um \emph{array linear} de tamanho $\text{linhas} \times \text{colunas}$. O elemento $(i, j)$ corresponde ao \'indice linear $i \cdot \text{colunas} + j$ no array.
+
+A sobrecarga de \texttt{operator()} merece duas vers\~oes:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Uma n\~ao-\texttt{const} que retorna \texttt{int \&} --- permite \texttt{a(1,3) = 99}.
+  \item Uma \texttt{const} que retorna \texttt{const int \&} --- permite ler de um objeto \texttt{const}.
+\end{itemize}
+
+\subsection*{Cabe\c{c}alho \texttt{DoubleSubscriptedArray.h}}
+
+\lstinputlisting[style=cppcode]{codigos/DoubleSubscriptedArray.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{DoubleSubscriptedArray.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/DoubleSubscriptedArray.cpp}
+
+\subsection*{Programa de teste}
+
+\lstinputlisting[style=cppcode]{codigos/main_DoubleSub.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Construtor (3 linhas x 5 colunas, todos zero) ===
+     0     0     0     0     0
+     0     0     0     0     0
+     0     0     0     0     0
+
+=== Atribuindo valores via operator(linha, coluna) ===
+     1     2     3     4     5
+     6     7     8     9    10
+    11    12    13    14    15
+
+=== Acessando a(1, 3) ===
+a(1, 3) = 9
+
+=== Modificando a(2, 0) = 99 ===
+     1     2     3     4     5
+     6     7     8     9    10
+    99    12    13    14    15
+
+=== Teste de == e construtor de copia ===
+a == b ? SIM
+a != b ? NAO
+
+Apos b(0,0)=777:
+a == b ? NAO
+
+=== Teste de atribuicao (=) com tamanhos diferentes ===
+c apos c = a (c agora tem 3x5):
+     1     2     3     4     5
+     6     7     8     9    10
+    99    12    13    14    15
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Por que duas vers\~oes de \texttt{operator()}?} A vers\~ao n\~ao-\texttt{const} retorna refer\^encia ao elemento --- permite modific\'a-lo (\texttt{a(1,3) = 9}). A vers\~ao \texttt{const} retorna \texttt{const int\&} --- permite leitura mas n\~ao modifica\c{c}\~ao. Para uma fun\c{c}\~ao que recebe \texttt{const DoubleSubscriptedArray\&}, somente a segunda \'e chamavel.
+  \item \textbf{Aritm\'etica de ponteiro:} \texttt{dados[linha * colunas + coluna]}. \'E equivalente a \texttt{*(dados + linha * colunas + coluna)} --- o pr\'oprio operador \texttt{[]} de C ja \'e a\c{c}\'ucar sint\'atico para isso.
+  \item \textbf{Regra dos tr\^es:} a classe gerencia mem\'oria din\^amica (\texttt{dados = new int[\ldots]}). Por isso precisa de construtor de c\'opia, operador de atribui\c{c}\~ao e destrutor pr\'oprios --- a chamada \emph{Big Three} de C++03.
+\end{itemize}
+
+\begin{obseng}
+A capacidade de retornar uma \emph{refer\^encia} de uma fun\c{c}\~ao permite usar a chamada como \emph{lvalue}: \texttt{a(1,3) = 99} \'e \texttt{a.operator()(1,3) = 99}, que \'e \texttt{int\& = 99} --- atribui 99 ao elemento aludido. Sem esse mecanismo, voc\^e ter\'ia que escrever \texttt{a.set(1,3,99)}. A sobrecarga torna a interface mais elegante.
+\end{obseng}
+
+\begin{boaprat}
+\textbf{Verifique limites em opera\c{c}\~oes de indexa\c{c}\~ao.} Nossa implementa\c{c}\~ao chama \texttt{cerr} e \texttt{exit(1)} se o \'indice estiver fora dos limites. Em c\'odigo de produ\c{c}\~ao, prefere-se \emph{lan\c{c}ar uma exce\c{c}\~ao} (\texttt{throw std::out\_of\_range(\ldots)}) --- t\'ecnica que veremos no Cap\'itulo~22.
+\end{boaprat}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 19.8 --- Classe \texttt{Complex} com sobrecarga total}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Modifique a classe \texttt{Complex} para: (a) entrada/sa\'ida via \texttt{>>} e \texttt{<<} sobrecarregados (remova \texttt{print}); (b) operador de multiplica\c{c}\~ao; (c) \texttt{==} e \texttt{!=}.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+Trasplantamos a classe \texttt{Complex} do Cap.~17 para o paradigma de operadores sobrecarregados. As mudan\c{c}as principais:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{c1.add(c2)} $\rightarrow$ \texttt{c1 + c2}
+  \item \texttt{c.print()} $\rightarrow$ \texttt{cout << c}
+  \item Nova multiplica\c{c}\~ao: $(a+bi)(c+di) = (ac-bd) + (ad+bc)i$
+\end{itemize}
+
+A sobrecarga de \texttt{<<} e \texttt{>>} requer que sejam \emph{fun\c{c}\~oes amigas} (\texttt{friend}), porque o operando \`a esquerda \'e um \texttt{ostream}/\texttt{istream} --- n\~ao um \texttt{Complex}. Como n\~ao podemos colocar essas fun\c{c}\~oes como m\'etodos de \texttt{Complex}, e elas precisam acessar membros privados, declaramo-las \texttt{friend}.
+
+\subsection*{Cabe\c{c}alho \texttt{Complex.h}}
+
+\lstinputlisting[style=cppcode]{codigos/Complex.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{Complex.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/Complex.cpp}
+
+\subsection*{Programa de teste}
+
+\lstinputlisting[style=cppcode]{codigos/main_Complex.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+x: (0, 0)
+y: (4.3, 8.2)
+z: (3.3, 1.1)
+
+x = y + z:
+(7.6, 9.3) = (4.3, 8.2) + (3.3, 1.1)
+
+x = y - z:
+(1, 7.1) = (4.3, 8.2) - (3.3, 1.1)
+
+x = y * z:
+(5.17, 31.79) = (4.3, 8.2) * (3.3, 1.1)
+
+=== Comparacoes ===
+y == w ? SIM
+y != w ? NAO
+y == z ? NAO
+y != z ? SIM
+
+=== Teste de operator>> (extracao de stream) ===
+Apos >> lendo '2.5 -1.7': c = (2.5, -1.7)
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Confer\^encia matem\'atica da multiplica\c{c}\~ao}
+
+$(4{,}3 + 8{,}2i)(3{,}3 + 1{,}1i) = (4{,}3 \cdot 3{,}3 - 8{,}2 \cdot 1{,}1) + (4{,}3 \cdot 1{,}1 + 8{,}2 \cdot 3{,}3)i = (14{,}19 - 9{,}02) + (4{,}73 + 27{,}06)i = 5{,}17 + 31{,}79i.$ ✓
+
+\subsection*{Discuss\~ao --- amigas para I/O}
+
+A \emph{conven\c{c}\~ao firme} em C++ \'e:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+ostream& operator<<(ostream &out, const T &valor);  // sempre nesta forma
+istream& operator>>(istream &in,  T &valor);        // sempre nesta forma
+\end{lstlisting}
+
+\textbf{Por que retornar \texttt{ostream\&} e n\~ao \texttt{void}?} Para permitir o encadeamento:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+cout << x << " = " << y << " + " << z << endl;
+//   ~~~~~^ retornou cout
+//          ~~~~~~~~~^ retornou cout
+//                    ~~~~~~~~~^ retornou cout
+//                              [...]
+\end{lstlisting}
+
+Cada chamada de \texttt{<<} retorna \texttt{cout} para que a pr\'oxima possa ser aplicada. Sem isso, ter\'iamos que escrever cada inser\c{c}\~ao numa linha separada.
+
+\begin{obseng}
+A sobrecarga de \texttt{<<} e \texttt{>>} \'e \emph{o exemplo paradigm\'atico} do uso leg\'itimo de \texttt{friend}. Tem que ser fun\c{c}\~ao livre (porque o operando esquerdo \'e \texttt{ostream}, n\~ao o tipo definido pelo usu\'ario), mas precisa acessar os membros privados para formatar. Sem \texttt{friend}, ter\'iamos que oferecer \emph{getters} para \emph{cada} membro --- expondo a representa\c{c}\~ao interna ao c\'odigo cliente.
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 19.9 --- Classe \texttt{HugeInt} expandida}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Considere a classe \texttt{HugeInt} das figuras 19.23--19.25. (a) Descreva como ela opera. (b) Que restri\c{c}\~oes ela tem? (c) Sobrecarregue \texttt{*}. (d) Sobrecarregue \texttt{/}. (e) Sobrecarregue todos os operadores relacionais.
+\end{enunciado}
+
+\subsection*{(a) Como a classe \texttt{HugeInt} opera}
+
+A classe armazena um inteiro de at\'e 30 d\'igitos como um array de \texttt{short[30]}, onde \texttt{integer[i]} cont\'em o $i$-\'esimo d\'igito --- mais especificamente, \texttt{integer[digits-1]} \'e a unidade, \texttt{integer[digits-2]} \'e a dezena, e assim por diante. \'E uma representa\c{c}\~ao ``big-endian'' em decimal.
+
+A soma percorre o array da direita para a esquerda (do menos significativo para o mais), efetuando a aritm\'etica escolar com \emph{carry} de 1 sempre que o resultado parcial exceder 9.
+
+H\'a t\^res sobrecargas do \texttt{operator+}: \texttt{HugeInt + HugeInt}, \texttt{HugeInt + int}, \texttt{HugeInt + string}. As duas \'ultimas funcionam convertendo o operando direito em \texttt{HugeInt} e chamando a primeira recursivamente.
+
+A sa\'ida via \texttt{operator<<} \'e fun\c{c}\~ao amiga: percorre o array da esquerda para a direita, pulando zeros iniciais.
+
+\subsection*{(b) Restri\c{c}\~oes}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Capacidade m\'axima:} 30 d\'igitos. Resultados que ultrapassem (e.g., \texttt{999\ldots9 + 1}, com 30 noves) sofrem \emph{overflow silencioso} --- o \emph{carry} final \'e descartado.
+  \item \textbf{Apenas n\'umeros n\~ao-negativos:} a classe original n\~ao representa sinais; n\~ao h\'a opera\c{c}\~ao de subtra\c{c}\~ao na figura 19.24.
+  \item \textbf{Sem opera\c{c}\~oes de compara\c{c}\~ao} (na vers\~ao original do livro). Vamos adicion\'a-las no item (e).
+  \item \textbf{Sem multiplica\c{c}\~ao nem divis\~ao} (idem). Vamos adicion\'a-las nos itens (c) e (d).
+  \item \textbf{Custo de mem\'oria fixo:} cada \texttt{HugeInt} ocupa 30 \texttt{short}s (60 bytes em arquiteturas tipicas), independente do n\'umero de d\'igitos efetivamente usados.
+\end{itemize}
+
+\subsection*{(c)-(e) Cabe\c{c}alho \texttt{HugeInt.h} expandido}
+
+\lstinputlisting[style=cppcode]{codigos/HugeInt.h}
+
+\subsection*{Implementa\c{c}\~ao expandida}
+
+\lstinputlisting[style=cppcode]{codigos/HugeInt.cpp}
+
+\subsection*{Programa de teste}
+
+\lstinputlisting[style=cppcode]{codigos/main_HugeInt.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Soma (livro) ===
+n1 = 7654321
+n2 = 7891234
+n3 = 99999999999999999999999999999
+7654321 + 7891234 = 15545555
+99999999999999999999999999999 + 1
+  = 100000000000000000000000000000
+
+=== Multiplicacao ===
+123 * 456 = 56088   (esperado 56088)
+1000000000000 * 1000000000000
+  = 1000000000000000000000000   (esperado 10^24)
+
+=== Divisao ===
+1000 / 7 = 142   (esperado 142)
+1000000 / 1000 = 1000   (esperado 1000)
+
+=== Operadores relacionais ===
+x=100 y=200 z=100
+x == z ? SIM
+x != y ? SIM
+x <  y ? SIM
+x >  y ? NAO
+x <= z ? SIM
+y >= x ? SIM
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Confer\^encia matem\'atica}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item $123 \times 456 = 56088$. ✓
+  \item $10^{12} \times 10^{12} = 10^{24}$. Confere com a sa\'ida (24 zeros ap\'os o 1).
+  \item $1000 \div 7 = 142$ (parte inteira, pois $7 \times 142 = 994$ e $7 \times 143 = 1001$). ✓
+  \item $1000000 \div 1000 = 1000$. ✓
+\end{itemize}
+
+\subsection*{Discuss\~ao did\'atica das implementa\c{c}\~oes}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Multiplica\c{c}\~ao:} algoritmo escolar $O(n^2)$. Para cada par de d\'igitos $(i, j)$, computa-se o produto e adiciona-se na posi\c{c}\~ao apropriada do resultado, com propaga\c{c}\~ao de \emph{carry}. Para inteiros maiores, h\'a algoritmos mais eficientes (Karatsuba $O(n^{1{,}585})$, Toom-Cook, FFT). Para 30 d\'igitos, o algoritmo escolar \'e adequado.
+  \item \textbf{Divis\~ao:} implementamos por \emph{subtra\c{c}\~oes repetidas} --- conta-se quantas vezes o divisor cabe no dividendo. \'E concei\-tualmente claro mas \emph{terrivelmente ineficiente} para divis\~oes onde o quociente \'e grande. Por exemplo, $10^{20} / 1$ exigiria $10^{20}$ subtra\c{c}\~oes. Em produ\c{c}\~ao, usar-se-ia a divis\~ao escolar (\emph{long division}) ou m\'etodos com aproxima\c{c}\~oes sucessivas.
+  \item \textbf{Subtra\c{c}\~ao:} foi necess\'aria para a divis\~ao. Assumimos $a \geq b$ (resultado n\~ao-negativo); caso contr\'ario, comportamento indefinido.
+\end{itemize}
+
+\begin{dicadesemp}
+Para \texttt{HugeInt}s pequenos como os do programa de teste, o algoritmo simples \'e r\'apido o suficiente. Para inteiros realmente grandes (milhares ou milh\~oes de d\'igitos, como os usados em criptografia RSA), usa-se bibliotecas como \texttt{GMP} ou \texttt{Boost.Multiprecision} que implementam algoritmos sofisticados em \emph{assembly} otimizado.
+\end{dicadesemp}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 19.10 --- Classe \texttt{RationalNumber}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Crie a classe \texttt{RationalNumber} (fra\c{c}\~oes) com: (a) construtor que impede denominador 0, reduz fra\c{c}\~oes e evita denominadores negativos; (b) sobrecarga de \texttt{+}, \texttt{-}, \texttt{*}, \texttt{/}; (c) sobrecarga dos operadores relacionais e de igualdade.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+Esta \'e a vers\~ao sobrecarregada da classe \texttt{Rational} do Cap.~17. As novidades:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{r1.add(r2)} $\rightarrow$ \texttt{r1 + r2}
+  \item \texttt{r1.printFraction()} $\rightarrow$ \texttt{cout << r1}
+  \item Adi\c{c}\~ao de \texttt{operator>>} para entrada
+  \item Operadores relacionais (\texttt{<}, \texttt{>}, \texttt{<=}, \texttt{>=}) que comparam corretamente sem perda de precis\~ao
+\end{itemize}
+
+\subsection*{Cabe\c{c}alho \texttt{RationalNumber.h}}
+
+\lstinputlisting[style=cppcode]{codigos/RationalNumber.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{RationalNumber.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/RationalNumber.cpp}
+
+\subsection*{Programa de teste}
+
+\lstinputlisting[style=cppcode]{codigos/main_RationalNumber.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Construtores: 2/4 e 3/9 sao reduzidos ===
+2/4 -> 1/2
+3/9 -> 1/3
+
+=== Aritmetica ===
+1/2 + 1/3 = 5/6
+1/2 - 1/3 = 1/6
+1/2 * 1/3 = 1/6
+1/2 / 1/3 = 3/2
+
+=== Comparacoes ===
+a = 1/2, b = 1/2, c = 1/3
+a == b ? SIM
+a != c ? SIM
+a >  c ? SIM  (1/2 > 1/3)
+a <  c ? NAO
+a >= b ? SIM
+c <= a ? SIM
+
+=== Validacao: denominador 0 ===
+Erro: denominador 0. Ajustado para 1.
+5/0 -> 5
+
+=== Sinal sempre no numerador ===
+2/-5 -> -2/5
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Confer\^encia matem\'atica}
+
+$\tfrac{1}{2} + \tfrac{1}{3} = \tfrac{3+2}{6} = \tfrac{5}{6}$ ✓; $\tfrac{1}{2} \cdot \tfrac{1}{3} = \tfrac{1}{6}$ ✓; $\tfrac{1}{2} \div \tfrac{1}{3} = \tfrac{3}{2}$ ✓.
+
+\subsection*{Discuss\~ao --- compara\c{c}\~ao de fra\c{c}\~oes sem perda de precis\~ao}
+
+A compara\c{c}\~ao $a/b < c/d$ poderia ser feita como \texttt{static\_cast<double>(num) / den < static\_cast<double>(o.num) / o.den}, mas isso introduz erros de ponto flutuante. A maneira matematicamente exata: como $b > 0$ e $d > 0$ (denominadores sempre positivos), multiplicar ambos os lados por $b \cdot d > 0$ preserva a desigualdade:
+
+\[ \frac{a}{b} < \frac{c}{d} \iff a \cdot d < c \cdot b. \]
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+bool operator<(const RationalNumber &o) const {
+    return num * o.den < o.num * den;       // aritmetica inteira pura
+}
+\end{lstlisting}
+
+\begin{errocomum}
+Compara\c{c}\~ao \texttt{a == b} para fra\c{c}\~oes \'e \emph{simples} se ambas est\~ao na forma reduzida: basta comparar \texttt{num == num \&\& den == den}. \'E uma das vantagens de manter sempre a forma reduzida: tornam-se v\'alidos atalhos sint\'aticos de igualdade.
+\end{errocomum}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 19.11 --- Classe \texttt{Polynomial}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Desenvolva a classe \texttt{Polynomial}. Representa\c{c}\~ao interna: array de termos, cada um com coeficiente e expoente. Sobrecarregue: (a) \texttt{+}; (b) \texttt{-}; (c) \texttt{=}; (d) \texttt{*}; (e) \texttt{+=}, \texttt{-=} e \texttt{*=}.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+O polin\^omio $3x^4 + 2x^2 - 5$ ser\'a armazenado como \emph{tr\^es} termos: $(3, 4), (2, 2), (-5, 0)$. Esta representa\c{c}\~ao \emph{esparsa} \'e mais eficiente que um array de coeficientes com \'indice = expoente, pois polin\^omios reais frequentemente t\^em muitos coeficientes zero.
+
+\textbf{Decis\~oes de design:}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Os termos s\~ao armazenados em ordem decrescente de expoente (forma canonica).
+  \item Termos com coeficiente 0 s\~ao removidos automaticamente (n\~ao aparecem na representa\c{c}\~ao).
+  \item Cada classe \texttt{Polynomial} possui um array \emph{din\^amico} de \texttt{Termo}s --- requer construtor de c\'opia, destrutor e \texttt{operator=}.
+\end{itemize}
+
+\subsection*{Cabe\c{c}alho \texttt{Polynomial.h}}
+
+\lstinputlisting[style=cppcode]{codigos/Polynomial.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{Polynomial.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/Polynomial.cpp}
+
+\subsection*{Programa de teste}
+
+\lstinputlisting[style=cppcode]{codigos/main_Polynomial.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+p1 = 3x^2 + 2x + 1
+p2 = x^3 - 4x + 7
+p3 = 5x^2 - 2x + 3
+
+=== Soma ===
+p1 + p2 = x^3 + 3x^2 - 2x + 8
+p1 + p3 = 8x^2 + 4   (esperado: 8x^2 + 4)
+
+=== Subtracao ===
+p1 - p3 = -2x^2 + 4x - 2   (esperado: -2x^2 + 4x - 2)
+
+=== Multiplicacao ===
+p1 * p3 = 15x^4 + 4x^3 + 10x^2 + 4x + 3
+   (esperado: 15x^4 + 4x^3 + 10x^2 + 4x + 3)
+
+=== Atribuicao composta ===
+q = p1 = 3x^2 + 2x + 1
+q += p3 => q = 8x^2 + 4   (= p1+p3)
+q -= p3 => q = 3x^2 + 2x + 1   (= p1 novamente)
+q *= p3 => q = 15x^4 + 4x^3 + 10x^2 + 4x + 3   (= p1*p3)
+
+=== Atribuicao = ===
+r (apos r = p2) = x^3 - 4x + 7
+
+=== setTermo ===
+s (4x^3 - x + 6) = 4x^3 - x + 6
+s apos setTermo(1, 0): 4x^3 + 6   (deve perder o x)
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Confer\^encia matem\'atica}
+
+\textbf{Multiplica\c{c}\~ao $p_1 \cdot p_3$.} Expans\~ao manual:
+\begin{align*}
+(3x^2 + 2x + 1)(5x^2 - 2x + 3) &= 15x^4 - 6x^3 + 9x^2 \\
+                                 &\quad + 10x^3 - 4x^2 + 6x \\
+                                 &\quad + 5x^2 - 2x + 3 \\
+                                 &= 15x^4 + 4x^3 + 10x^2 + 4x + 3. \quad \text{\checkmark}
+\end{align*}
+
+\subsection*{Discuss\~ao --- as compostas e a \emph{Regra dos Tr\^es}}
+
+\subsubsection*{Implementa\c{c}\~ao das compostas em termos das simples}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+const Polynomial &Polynomial::operator+=(const Polynomial &o) {
+    *this = *this + o;       // delega a operator+ e operator=
+    return *this;
+}
+\end{lstlisting}
+
+\noindent \'E o idioma can\^onico: \texttt{a += b} significa ``\texttt{a = a + b} e retorne uma refer\^encia a \texttt{a}''. Implementar dessa maneira garante que qualquer altera\c{c}\~ao no comportamento de \texttt{+} se propague automaticamente para \texttt{+=}.
+
+\subsubsection*{A \emph{Regra dos Tr\^es}}
+
+A classe \texttt{Polynomial} tem um \texttt{Termo *termos} \emph{din\^amico}. Por isso \'e obrigat\'orio implementar manualmente:
+
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Construtor de c\'opia:} \texttt{Polynomial(const Polynomial \&)} --- aloca um novo array e copia os termos.
+  \item \textbf{Destrutor:} \texttt{\~{}Polynomial()} --- libera o array com \texttt{delete[]}.
+  \item \textbf{Operador de atribui\c{c}\~ao:} \texttt{operator=} --- libera o array antigo, aloca novo e copia.
+\end{enumerate}
+
+Esquecer qualquer um dos tr\^es seria desastroso. Se omiti\'ssemos o construtor de c\'opia, o compilador gerar\'ia um padr\~ao que copia o ponteiro \texttt{termos} membro-a-membro --- duas inst\^ancias compartilhariam o mesmo array, e a primeira a ser destru\'ida invalidaria a segunda (\emph{double delete}).
+
+\begin{obseng}
+A \emph{Regra dos Tr\^es} em C++03 tornou-se a \emph{Regra dos Cinco} em C++11 com a introdu\c{c}\~ao de \emph{move semantics}: \texttt{Polynomial(Polynomial \&\&)} (construtor de movimento) e \texttt{operator=(Polynomial \&\&)} (atribui\c{c}\~ao de movimento). Esses dois transferem propriedade de recursos em vez de copiar --- evitando aloca\c{c}\~oes redundantes em situa\c{c}\~oes como \texttt{p = p1 + p2}. C++ moderno gerencia isso automaticamente em muitos casos, mas em classes com recursos manuais (como \texttt{Polynomial}), \'e melhor implementar as cinco fun\c{c}\~oes explicitamente.
+\end{obseng}
+
+\begin{boaprat}
+A formata\c{c}\~ao de um polin\^omio para impress\~ao tem muitos casos especiais:
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Coeficiente 1 omite-se: $1x^2$ vira $x^2$.
+  \item Coeficiente -1 vira ``-'': $-1x$ vira $-x$.
+  \item Expoente 0 omite-se: $4x^0$ vira $4$.
+  \item Expoente 1 omite-se: $4x^1$ vira $4x$.
+  \item Sinal entre termos: ``$+$'' ou ``$-$'' precedido de espa\c{c}o.
+\end{itemize}
+Nossa implementa\c{c}\~ao trata todos esses casos. Vale destacar quanto trabalho est\'a por tr\'as de uma sa\'ida ``elegante''.
+\end{boaprat}
+
+% ============================================================
+\section*{Encerramento}
+% ============================================================
+
+Os seis exerc\'icios deste cap\'itulo nos fizeram exercitar todos os principais idiomas de sobrecarga em C++:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Operadores aritm\'eticos retornando objetos novos por valor (\texttt{Complex}, \texttt{Rational}, \texttt{HugeInt}, \texttt{Polynomial}).
+  \item Operadores compostos (\texttt{+=}, \texttt{-=}, \texttt{*=}) retornando refer\^encias para encadeamento.
+  \item Operadores relacionais retornando \texttt{bool}.
+  \item Operadores de I/O (\texttt{<<} e \texttt{>>}) como fun\c{c}\~oes amigas, retornando \texttt{ostream\&}/\texttt{istream\&} para encadeamento.
+  \item Operador de chamada de fun\c{c}\~ao (\texttt{operator()}) em duas vers\~oes para suportar leitura e escrita.
+  \item Gerenciamento manual de mem\'oria din\^amica com a \emph{Regra dos Tr\^es}.
+\end{itemize}
+
+Com isso encerramos o tratamento de classes em sua forma can\^onica. O Cap\'itulo~20 introduzir\'a \textbf{heran\c{c}a}, permitindo construir uma classe a partir de outra com m\'inima duplica\c{c}\~ao --- e finalmente realizar o cl\'assico relacionamento \emph{\'e-um} (em contraste com o \emph{tem-um} que vimos no Cap.~18 atrav\'es de composi\c{c}\~ao).
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}

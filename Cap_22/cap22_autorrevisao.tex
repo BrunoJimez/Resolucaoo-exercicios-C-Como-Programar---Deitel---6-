@@ -1,0 +1,301 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+\definecolor{portabcolor}{RGB}{102,46,145}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekeyword}{RGB}{0,0,180}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codecomment}{RGB}{0,128,0}
+
+\lstdefinestyle{cppcode}{
+  language=C++,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=8pt,
+  backgroundcolor=\color{codebg}, frame=single, framesep=4pt,
+  rulecolor=\color{deitelblue!50}, breaklines=true,
+  showstringspaces=false, tabsize=4,
+  morekeywords={string, size_t, cin, cout, endl, inline, template, typename,
+                bool, true, false, nullptr, override, final, public, private,
+                protected, explicit, friend, virtual, this, static, operator,
+                dynamic_cast, typeid},
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+}
+
+\hypersetup{colorlinks=true, linkcolor=deitelblue, urlcolor=deitelblue,
+  pdftitle={C: Como Programar - Cap. 22 - Autorrevisao}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Cap.~22}
+\fancyhead[R]{\small Exerc\'icios de Autorrevis\~ao}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+\newtcolorbox{boaprat}{enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Boa Pr\'atica de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{errocomum}{enhanced, breakable, colback=errocolor!8, colframe=errocolor,
+  fonttitle=\bfseries, title={\textbf{Erro Comum de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{obseng}{enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao de Engenharia de Software}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{resposta}{enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Cap\'itulo 22}\\[0.3em]
+  {\Large\bfseries Templates}\\[0.8em]
+  {\large\itshape Exerc\'icios de Autorrevis\~ao --- Resolu\c{c}\~ao Did\'atica}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``Templates s\~ao o \emph{polimorfismo est\'atico} de C++: permitem escrever c\'odigo gen\'erico que funciona para v\'arios tipos sem custo em tempo de execu\c{c}\~ao. Diferente do polimorfismo din\^amico (Cap.~21) --- onde a vtable resolve a chamada em tempo de execu\c{c}\~ao via heran\c{c}a ---, templates s\~ao resolvidos pelo \emph{compilador}, gerando c\'odigo especializado para cada tipo usado. Esse cap\'itulo introduz dois sabores: \texttt{template} de fun\c{c}\~ao (fun\c{c}\~oes parametrizadas por tipo) e \texttt{template} de classe (classes parametrizadas por tipo e/ou valores).''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+% ============================================================
+\section{Exerc\'icio 22.1 --- Verdadeiro ou Falso}
+% ============================================================
+
+\subsection*{(a) Par\^ametros de template podem ser usados para tipos de argumento, tipo de retorno e vari\'aveis locais}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Verdadeiro}.\end{resposta}
+
+Dentro do corpo de um template, o par\^ametro de tipo \texttt{T} \'e tratado como qualquer outro tipo:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T>
+T media(T a, T b) {        // T como tipo de retorno e de argumento
+    T soma = a + b;        // T como tipo de variavel local
+    return soma / 2;
+}
+\end{lstlisting}
+
+\subsection*{(b) \texttt{typename} e \texttt{class} em par\^ametro de template significam ``qualquer tipo de classe''}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Falso}.\end{resposta}
+
+\textbf{Corre\c{c}\~ao:} \texttt{typename} e \texttt{class} (intercambi\'aveis nesse contexto) representam \emph{qualquer tipo}, incluindo tipos primitivos como \texttt{int}, \texttt{double}, \texttt{char}, \texttt{bool}, e tamb\'em ponteiros, refer\^encias e tipos de classe. N\~ao se limitam a classes definidas pelo usu\'ario.
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+selectionSort<int>(arr, 10);       // T = int (primitivo, OK)
+selectionSort<double>(arr, 10);    // T = double (primitivo, OK)
+selectionSort<Funcionario>(arr,10); // T = Funcionario (classe, tambem OK)
+\end{lstlisting}
+
+\subsection*{(c) Um template de fun\c{c}\~ao pode ser sobrecarregado por outro com o mesmo nome}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Verdadeiro}.\end{resposta}
+
+Templates seguem as regras normais de sobrecarga --- desde que difiram em \emph{n\'umero ou tipos} de par\^ametros:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T>
+void printArray(const T arr[], int tamanho);
+
+template <typename T>
+int printArray(const T arr[], int tamanho,
+               int low, int high);    // sobrecarga: 2 args extras
+
+void printArray(const char *const arr[], int tamanho);  // tambem
+\end{lstlisting}
+
+Esse \'e exatamente o cen\'ario do Exerc\'icio~22.4.
+
+\subsection*{(d) Nomes de par\^ametros de template entre templates precisam ser \'unicos}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Falso}.\end{resposta}
+
+\textbf{Corre\c{c}\~ao:} cada template tem seu pr\'oprio \emph{escopo} de par\^ametros, ent\~ao pode-se reusar nomes:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T> T menor(T a, T b);          // T local a esta funcao
+template <typename T> T maior(T a, T b);          // outro T, ok!
+template <typename T> class Pilha { /* outro T */ };
+\end{lstlisting}
+
+\subsection*{(e) Toda fun\c{c}\~ao-membro fora de um template de classe precisa come\c{c}ar com cabe\c{c}alho \texttt{template}}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Verdadeiro}.\end{resposta}
+
+Quando uma fun\c{c}\~ao-membro \'e definida \emph{fora} da classe template, ela tamb\'em \'e um template:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T> class Array {
+public:
+    Array(int s);
+    // ...
+};
+
+// Definicao da funcao-membro fora da classe:
+template <typename T>           // <-- cabecalho template OBRIGATORIO
+Array<T>::Array(int s) {
+    // ...
+}
+\end{lstlisting}
+
+\subsection*{(f) Uma fun\c{c}\~ao \texttt{friend} de um template de classe precisa ser uma especializa\c{c}\~ao de template}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Falso}.\end{resposta}
+
+\textbf{Corre\c{c}\~ao:} uma \texttt{friend} de um template de classe pode ser:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Uma fun\c{c}\~ao n\~ao-template;
+  \item Uma especializa\c{c}\~ao de template de fun\c{c}\~ao;
+  \item Outra classe;
+  \item Outra especializa\c{c}\~ao de template de classe.
+\end{itemize}
+
+Ou seja, n\~ao h\'a obriga\c{c}\~ao de que seja template. Veremos exemplos no Exerc\'icio~22.19.
+
+\subsection*{(g) Templates de classe com \texttt{static} compartilham uma s\'o c\'opia desse \texttt{static}}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Falso}.\end{resposta}
+
+\textbf{Corre\c{c}\~ao:} cada \emph{especializa\c{c}\~ao} do template de classe \'e um \emph{tipo distinto} para todos os efeitos do compilador. Logo, cada uma tem sua \emph{pr\'opria} c\'opia de \texttt{static}.
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T> class Contador {
+public:
+    static int n;
+};
+template <typename T> int Contador<T>::n = 0;
+
+Contador<int>::n   = 5;
+Contador<float>::n = 10;
+// Contador<int>::n   continua = 5  (cada um tem sua copia!)
+// Contador<float>::n continua = 10
+\end{lstlisting}
+
+Este \'e o tema do Exerc\'icio~22.20.
+
+% ============================================================
+\section{Exerc\'icio 22.2 --- Vocabul\'ario}
+% ============================================================
+
+\textit{Preencha os espa\c{c}os.}
+
+\subsection*{(a) Templates geram \_\_\_\_ (de fun\c{c}\~ao) e \_\_\_\_ (de classe)}
+
+\begin{resposta}\textbf{Resposta:} \textbf{especializa\c{c}\~oes de template de fun\c{c}\~ao}; \textbf{especializa\c{c}\~oes de template de classe}.\end{resposta}
+
+Quando voc\^e escreve \texttt{selectionSort<int>(arr, n)}, o compilador \emph{gera} uma fun\c{c}\~ao concreta de \texttt{int} a partir do template. Essa fun\c{c}\~ao \'e uma \emph{especializa\c{c}\~ao}. O mesmo vale para \texttt{Array<float, 5>} --- \'e uma especializa\c{c}\~ao do template \texttt{Array}.
+
+\begin{obseng}
+A nomenclatura aqui pode confundir: ``especializa\c{c}\~ao'' tem dois significados sobrepostos em C++:
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \emph{Especializa\c{c}\~ao impl\'icita} (gerada pelo compilador): \texttt{Array<int, 5>} \'e uma especializa\c{c}\~ao impl\'icita.
+  \item \emph{Especializa\c{c}\~ao expl\'icita} (escrita pelo programador): \texttt{template<> class Array<float>} \'e uma especializa\c{c}\~ao expl\'icita.
+\end{itemize}
+O Exerc\'icio~22.7 cont\'em exemplos das duas formas.
+\end{obseng}
+
+\subsection*{(b) Templates come\c{c}am com \_\_\_\_ seguido de lista entre \_\_\_\_}
+
+\begin{resposta}\textbf{Resposta:} \texttt{template}; \textbf{sinais \texttt{<} e \texttt{>}}.\end{resposta}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T, int N>
+class Array { /* ... */ };
+//~~~~~~~~~~~~~~~~~~~~~
+//  cabecalho do template, com parametros entre < >
+\end{lstlisting}
+
+\subsection*{(c) Fun\c{c}\~oes geradas por template t\^em o mesmo nome; o compilador usa resolu\c{c}\~ao de \_\_\_\_ para chamar}
+
+\begin{resposta}\textbf{Resposta:} \textbf{sobrecarga}.\end{resposta}
+
+\texttt{selectionSort(vi, 5)} (com \texttt{vi} sendo \texttt{int[]}) e \texttt{selectionSort(vf, 3)} (com \texttt{vf} sendo \texttt{float[]}) chamam fun\c{c}\~oes \emph{distintas} (especializa\c{c}\~oes distintas). O compilador resolve qual chamar pelas regras de sobrecarga.
+
+\subsection*{(d) Templates de classe tamb\'em s\~ao chamados de tipos \_\_\_\_}
+
+\begin{resposta}\textbf{Resposta:} \textbf{parametrizados}.\end{resposta}
+
+Um ``tipo parametrizado'' \'e um tipo que aceita par\^ametros (de tipo ou de valor). \texttt{Array<int, 5>} \'e o tipo parametrizado por \texttt{int} e \texttt{5}. Esse \'e o tema do Exerc\'icio~22.14.
+
+\subsection*{(e) Operador para unir defini\c{c}\~ao de fun\c{c}\~ao-membro ao escopo do template de classe}
+
+\begin{resposta}\textbf{Resposta:} \texttt{::} (operador bin\'ario de resolu\c{c}\~ao de escopo).\end{resposta}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T>
+Array<T>::Array(int s) { /* ... */ }
+//      ~~ <-- operador ::
+\end{lstlisting}
+
+\subsection*{(f) Dados-membro \texttt{static} de especializa\c{c}\~oes de template devem ser definidos em escopo de \_\_\_\_}
+
+\begin{resposta}\textbf{Resposta:} \textbf{namespace global}.\end{resposta}
+
+Igual a qualquer \texttt{static} de classe, mas com o cabe\c{c}alho \texttt{template}:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+// No header da classe:
+template <typename T> class Pilha {
+public:
+    static int contador;
+};
+
+// No .cpp ou no header (definicao no namespace global):
+template <typename T> int Pilha<T>::contador = 0;
+\end{lstlisting}
+
+% ============================================================
+\section*{S\'intese conceitual}
+% ============================================================
+
+A autorrevisão estabeleceu os mecanismos centrais de templates em C++:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Sintaxe:} \texttt{template <typename T, ...>} introduz par\^ametros.
+  \item \textbf{Generalidade:} \texttt{typename}/\texttt{class} aceitam qualquer tipo (primitivos, ponteiros, classes).
+  \item \textbf{Sobrecarga:} templates de fun\c{c}\~ao podem coexistir entre si e com fun\c{c}\~oes n\~ao-template.
+  \item \textbf{Especializa\c{c}\~oes:} cada uso com tipos concretos gera uma especializa\c{c}\~ao distinta, com \texttt{static} pr\'oprio.
+  \item \textbf{Conse\-qu\^encia:} um template \'e um \emph{molde}; especializa\c{c}\~oes s\~ao \emph{c\'opias concretas} desse molde.
+\end{itemize}
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}

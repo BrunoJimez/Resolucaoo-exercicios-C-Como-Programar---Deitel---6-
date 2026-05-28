@@ -1,0 +1,314 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric}
+
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+\definecolor{portabcolor}{RGB}{102,46,145}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekeyword}{RGB}{0,0,180}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codecomment}{RGB}{0,128,0}
+\definecolor{terminalbg}{RGB}{30,30,30}
+\definecolor{terminalfg}{RGB}{220,220,220}
+\definecolor{verdeambiental}{RGB}{38,115,76}
+
+\lstdefinestyle{cppcode}{
+  language=C++,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=8pt,
+  backgroundcolor=\color{codebg}, frame=single, framesep=4pt,
+  rulecolor=\color{deitelblue!50}, breaklines=true,
+  showstringspaces=false, tabsize=4,
+  morekeywords={string, size_t, cin, cout, endl, inline, template, typename,
+                bool, true, false, nullptr, override, final, public, private,
+                protected, explicit, friend, virtual, this, static, operator,
+                dynamic_cast, typeid, unique_ptr, vector},
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+}
+
+\lstdefinestyle{terminal}{
+  basicstyle=\ttfamily\footnotesize\color{terminalfg},
+  backgroundcolor=\color{terminalbg},
+  frame=single, framesep=6pt, rulecolor=\color{deitelblue!50},
+  breaklines=true, showstringspaces=false,
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+}
+
+\hypersetup{colorlinks=true, linkcolor=deitelblue, urlcolor=deitelblue,
+  pdftitle={C: Como Programar - Cap. 21 - Fazendo a Diferenca}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Cap.~21}
+\fancyhead[R]{\small Fazendo a Diferen\c{c}a}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+\newtcolorbox{boaprat}{enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Boa Pr\'atica de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{errocomum}{enhanced, breakable, colback=errocolor!8, colframe=errocolor,
+  fonttitle=\bfseries, title={\textbf{Erro Comum de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{obseng}{enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao de Engenharia de Software}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{reflexao}{enhanced, breakable, colback=verdeambiental!8, colframe=verdeambiental,
+  fonttitle=\bfseries, title={\textbf{Reflex\~ao --- Fazendo a Diferen\c{c}a}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{enunciado}{enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{saidabox}{enhanced, breakable, colback=gray!8, colframe=gray!50,
+  boxrule=0.6pt, fonttitle=\bfseries\small,
+  title={\textbf{Sa\'ida da execu\c{c}\~ao}},
+  left=6pt, right=6pt, top=3pt, bottom=3pt}
+
+\tikzset{
+  uml/.style={rectangle, draw=deitelblue!70, very thick, fill=deitelblue!5,
+              text width=3.5cm, align=center, minimum height=0.9cm,
+              font=\small\bfseries},
+  umlSmall/.style={rectangle, draw=deitelblue!70, very thick, fill=deitelblue!5,
+              text width=2.0cm, align=center, minimum height=0.8cm,
+              font=\scriptsize\bfseries},
+  flecha/.style={-Triangle, draw=deitelblue!60, very thick}
+}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Cap\'itulo 21}\\[0.3em]
+  {\Large\bfseries Programa\c{c}\~ao Orientada a Objetos: Polimorfismo}\\[0.8em]
+  {\large\itshape Fazendo a Diferen\c{c}a --- EmissaoCarbono e o Clima}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``Este exerc\'icio combina o conceito t\'ecnico do cap\'itulo --- classes abstratas com somente fun\c{c}\~oes virtuais puras --- com a reflex\~ao social sobre emiss\~oes de carbono. Tr\^es classes \emph{n\~ao relacionadas por heran\c{c}a normal} (\texttt{Predio}, \texttt{Carro}, \texttt{Bicicleta}) compartilham o contrato de uma classe abstrata pura \texttt{EmissaoCarbono}. \'E o exemplo prot\'otipo da diferen\c{c}a entre `heran\c{c}a de interface' (Ex.~21.5) e heran\c{c}a de implementa\c{c}\~ao: aqui n\~ao h\'a c\'odigo compartilhado, s\'o um \emph{contrato} de comportamento.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+% ============================================================
+\section{Exerc\'icio 21.17 --- Classe abstrata \texttt{EmissaoCarbono}: polimorfismo}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Usando uma classe abstrata com apenas fun\c{c}\~oes virtuais puras, voc\^e pode especificar comportamentos semelhantes de classes possivelmente divergentes. Governos e empresas est\~ao cada vez mais preocupados com as emiss\~oes de carbono.
+
+Crie tr\^es classes pequenas n\~ao relacionadas por heran\c{c}a: \texttt{Predio}, \texttt{Carro} e \texttt{Bicicleta}. Escreva uma classe abstrata \texttt{EmissaoCarbono} com apenas um m\'etodo virtual puro \texttt{retEmissaoCarbono}. Fa\c{c}a com que cada uma de suas classes herde dessa classe abstrata e implemente o m\'etodo. Crie objetos das tr\^es classes, coloque-os em um vetor de ponteiros \texttt{EmissaoCarbono} e percorra polimorficamente.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+Tr\^es objetos sem \emph{nenhuma} rela\c{c}\~ao natural em termos de heran\c{c}a:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{Predio}: tem endere\c{c}o, consumo el\'etrico, gera emiss\~ao indireta via gera\c{c}\~ao de energia.
+  \item \texttt{Carro}: tem modelo, kilometragem, consumo de combust\'ivel, gera emiss\~ao direta por queima.
+  \item \texttt{Bicicleta}: tem modelo, vida \'util; gera emiss\~ao quase nula em uso, apenas pela fabrica\c{c}\~ao amortizada.
+\end{itemize}
+
+O que \emph{compartilham}? \textbf{Um conceito abstrato:} todos podem responder \emph{quanto CO\textsubscript{2} emitem por ano}. Esse \'e o ponto exato de inje\c{c}\~ao do polimorfismo --- uma fun\c{c}\~ao virtual pura no n\'ivel mais alto poss\'ivel.
+
+\subsection*{Estrutura proposta}
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.0cm and 0.6cm]
+  \node[uml] (e) {EmissaoCarbono\\\textit{(abstrata pura)}};
+  \node[umlSmall, below=of e, xshift=-3.5cm, text width=2.5cm] (p) {Predio};
+  \node[umlSmall, below=of e, xshift= 0.0cm, text width=2.5cm] (c) {Carro};
+  \node[umlSmall, below=of e, xshift= 3.5cm, text width=2.5cm] (b) {Bicicleta};
+  \draw[flecha] (p.north) -- (e.south);
+  \draw[flecha] (c.north) -- (e.south);
+  \draw[flecha] (b.north) -- (e.south);
+\end{tikzpicture}
+\end{center}
+
+A \textbf{ess\^encia da modelagem:} a heran\c{c}a aqui n\~ao expressa nenhuma rela\c{c}\~ao real ``\'e-um'' (uma bicicleta n\~ao \emph{\'e} uma emiss\~ao de carbono). \'E mais como ``cumpre o contrato de'' --- equivalente a uma \texttt{interface} em Java/C\#.
+
+\subsection*{Classe abstrata \texttt{EmissaoCarbono}}
+
+\lstinputlisting[style=cppcode]{codigos/EmissaoCarbono.h}
+
+\subsection*{Classe \texttt{Predio}}
+
+\lstinputlisting[style=cppcode]{codigos/Predio.h}
+\lstinputlisting[style=cppcode]{codigos/Predio.cpp}
+
+\subsubsection*{Fator de emiss\~ao adotado}
+
+A f\'ormula \texttt{consumoKWh * 0.4} kg de CO\textsubscript{2} \'e uma aproxima\c{c}\~ao da m\'edia americana (EPA: cerca de $0{,}4$ kg CO\textsubscript{2}/kWh para a matriz el\'etrica m\'edia dos EUA, que mistura carv\~ao, g\'as natural e fontes limpas). A m\'edia brasileira \'e \emph{muito menor} (cerca de $0{,}07$ kg/kWh, gra\c{c}as \`a hidreletricidade); por\'em, para um exerc\'icio compar\'avel ao livro original, mantemos o fator EPA.
+
+\subsection*{Classe \texttt{Carro}}
+
+\lstinputlisting[style=cppcode]{codigos/Carro.h}
+\lstinputlisting[style=cppcode]{codigos/Carro.cpp}
+
+\subsubsection*{Fator de emiss\~ao adotado}
+
+Uma queima completa de 1 litro de gasolina libera aproximadamente $2{,}3$ kg de CO\textsubscript{2} (resultado da combust\~ao estequiometrica de octano com oxig\^enio atmosf\'erico, valor confirmado por \'org\~aos como EPA e IPCC). Multiplicando pelo n\'umero de litros consumidos por ano ($\text{km/ano} \div \text{km/L}$), obtemos a emiss\~ao anual de cada carro.
+
+\subsection*{Classe \texttt{Bicicleta}}
+
+\lstinputlisting[style=cppcode]{codigos/Bicicleta.h}
+\lstinputlisting[style=cppcode]{codigos/Bicicleta.cpp}
+
+\subsubsection*{Por que uma bicicleta tem emiss\~ao maior que zero?}
+
+Em \emph{uso}, a bicicleta \'e literalmente zero-emiss\~ao (alimentada pelo pr\'oprio ciclista). Mas a sua \emph{fabrica\c{c}\~ao} consome energia e mat\'erias-primas, e isso resulta em uma ``pegada'' de aproximadamente $250$ kg de CO\textsubscript{2} por bicicleta produzida (estudos europeus). Para uma compara\c{c}\~ao justa, amortizamos esse custo pela vida \'util:
+
+\[
+\text{Emiss\~ao anual} = \frac{250 \text{ kg CO}_2}{\text{vida \'util em anos}}.
+\]
+
+Para uma bicicleta com vida \'util de 15 anos: $250/15 \approx 16{,}7$ kg/ano. Compare com um carro pequeno (centenas de kg/ano) --- a diferen\c{c}a \'e impressionante.
+
+\subsection*{Programa principal}
+
+\lstinputlisting[style=cppcode]{codigos/main_EmissaoCarbono.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Relatorio de Emissao de Carbono ===
+
+Predio em Av. Paulista, 1000 - Sao Paulo (consumo 50000 kWh/ano)
+  -> 20000.00 kg CO2/ano
+
+Predio em Rua Augusta, 200 - Sao Paulo (consumo 12000 kWh/ano)
+  -> 4800.00 kg CO2/ano
+
+Carro Honda Civic 1.5 (15000 km/ano, 12 km/L)
+  -> 2875.00 kg CO2/ano
+
+Carro Toyota Hilux 2.8 (20000 km/ano, 8 km/L)
+  -> 5750.00 kg CO2/ano
+
+Bicicleta Caloi 10 (vida util 15 anos)
+  -> 16.67 kg CO2/ano
+
+========================================
+TOTAL DE EMISSOES: 33441.67 kg CO2/ano
+                 = 33.44 toneladas CO2/ano
+========================================
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Confer\^encia matem\'atica}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Predio Av.\ Paulista: $50000 \times 0{,}4 = 20\,000$ kg. ✓
+  \item Predio Rua Augusta: $12000 \times 0{,}4 = 4\,800$ kg. ✓
+  \item Honda Civic: $\frac{15000}{12} \times 2{,}3 = 1250 \times 2{,}3 = 2\,875$ kg. ✓
+  \item Toyota Hilux: $\frac{20000}{8} \times 2{,}3 = 2500 \times 2{,}3 = 5\,750$ kg. ✓
+  \item Bicicleta: $\frac{250}{15} \approx 16{,}67$ kg. ✓
+  \item \textbf{Total:} $20000 + 4800 + 2875 + 5750 + 16{,}67 = 33\,441{,}67$ kg $\approx 33{,}44$ toneladas. ✓
+\end{itemize}
+
+\subsection*{Pontos t\'ecnicos do c\'odigo}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{\texttt{EmissaoCarbono} \'e \emph{puramente abstrata}.} Cont\'em apenas duas fun\c{c}\~oes virtuais puras (\texttt{retEmissaoCarbono} e \texttt{descricao}) e um destrutor virtual vazio. Nenhum dado-membro. \'E o equivalente C++ de uma \texttt{interface} em Java/C\#.
+  \item \textbf{Heran\c{c}a sem dados compartilhados.} As tr\^es derivadas n\~ao herdam nem nome, nem endere\c{c}o, nem qualquer outro dado. Compartilham apenas o \emph{contrato} de fornecer \texttt{retEmissaoCarbono()}.
+  \item \textbf{Loop polim\'orfico} (linha 22 do \texttt{main}): \texttt{obj->retEmissaoCarbono()} chama a vers\~ao correta para cada tipo, sem qualquer \texttt{switch} ou checagem de tipo.
+  \item \textbf{\texttt{unique\_ptr}} garante destrui\c{c}\~ao autom\'atica. \texttt{virtual \~{}EmissaoCarbono()} garante que o destrutor da derivada seja chamado corretamente atrav\'es do ponteiro \`a base.
+\end{itemize}
+
+% ============================================================
+\section{Reflex\~ao sobre o impacto ambiental}
+% ============================================================
+
+\begin{reflexao}
+\textbf{O que esses n\'umeros significam?}
+
+\smallskip
+Um \texttt{ToyotaHilux} (5\,750 kg CO\textsubscript{2}/ano) sozinho emite \emph{345 vezes} mais que uma \texttt{Bicicleta} de vida \'util 15 anos (16{,}67 kg/ano). Mesmo um \texttt{Honda Civic} (2\,875 kg/ano) emite \emph{172 vezes} mais que a bicicleta.
+
+\smallskip
+Comparativos para contexto:
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Emiss\~ao m\'edia per capita anual:
+    \begin{itemize}[itemsep=0pt]
+      \item Brasil: $\approx 2{,}3$ toneladas (uma das mais baixas, em fun\c{c}\~ao da matriz el\'etrica hidrel\'etrica).
+      \item EUA: $\approx 14{,}9$ toneladas.
+      \item Mundo: $\approx 4{,}7$ toneladas.
+    \end{itemize}
+  \item \textbf{Meta para 1{,}5\textdegree C} (Acordo de Paris): per capita global deve cair para $\approx 2{,}3$ toneladas at\'e 2030 e $\approx 1$ tonelada at\'e 2050.
+\end{itemize}
+
+\smallskip
+Os 33{,}44 toneladas do nosso exemplo (5 entidades) equivalem a aproximadamente o dobro do que \emph{1 norte-americano m\'edio} emite individualmente em um ano. Isso \emph{seria} a pegada de combina\c{c}\~ao familiar mais 2 carros + 2 predios pequenos.
+\end{reflexao}
+
+\subsection*{Limita\c{c}\~oes do modelo}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Fator de eletricidade depende da regi\~ao.} 0,4 kg/kWh \'e a m\'edia americana. No Brasil, com matriz limpa, seria $\approx 0{,}07$ kg/kWh; em pa\'ises que ainda usam predominantemente carv\~ao (\'India, Pol\^onia), pode chegar a $0{,}9$ kg/kWh.
+  \item \textbf{Carro: emiss\~ao varia com tipo de combust\'ivel.} Diesel emite $\approx 2{,}68$ kg/L (mais denso); etanol queimado em motor flex tem balanco quase-zero (o CO\textsubscript{2} liberado foi absorvido pela cana durante o crescimento); ve\'iculos el\'etricos jogam a emiss\~ao para a fonte de gera\c{c}\~ao el\'etrica.
+  \item \textbf{Bicicleta: a fabricacao varia.} Quadros de alum\'inio s\~ao mais ``pesados'' em carbono; quadros de a\c{c}o, mais leves; quadros de fibra de carbono, surpreendentemente, t\^em pegada significativa por causa do processamento.
+  \item \textbf{N\~ao inclui ciclo de vida completo.} N\~ao consideramos emiss\~oes na fabrica\c{c}\~ao de carros ou de pr\'edios (que tipicamente s\~ao \emph{enormes}, dezenas de toneladas por carro e milhares de toneladas por pr\'edio --- amortizadas em sua vida \'util).
+\end{itemize}
+
+\subsection*{Extens\~oes did\'aticas poss\'iveis}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Adicionar \texttt{Aviao} (vai \emph{disparar} qualquer outra emiss\~ao --- voos t\^em alto custo de CO\textsubscript{2}).
+  \item Adicionar \texttt{CarroEletrico} com par\^ametros distintos (kWh/100km, fator da rede).
+  \item Acrescentar \texttt{Floresta} com m\'etodo \texttt{retSequestroCarbono()} para subtrair emiss\~oes.
+  \item Computar emiss\~oes mensais ao inv\'es de anuais.
+\end{itemize}
+
+\begin{obseng}
+A escolha de uma \emph{interface pura} (\texttt{EmissaoCarbono}) em vez de uma classe-base com dados/c\'odigo compartilhado \'e particularmente apropriada quando os tipos a unificar n\~ao t\^em ess\^encia comum. Pr\'edios, carros e bicicletas n\~ao s\~ao ``tipos de emiss\~ao de carbono'' --- s\~ao \emph{entidades que casualmente emitem carbono}. A diferen\c{c}a \'e sutil mas crucial: usar uma classe-base com atributos comuns introduziria acoplamento artificial.
+
+\smallskip
+\textbf{Padr\~ao Strategy:} este exerc\'icio \'e um exemplo natural do \emph{padr\~ao Strategy} do livro do GoF: encapsular uma fam\'ilia de algoritmos (aqui, modos de calcular emiss\~ao) e torn\'a-los intercambi\'aveis. Cada classe ``\'e'' uma estrat\'egia de c\'alculo, e o c\'odigo cliente n\~ao distingue.
+\end{obseng}
+
+% ============================================================
+\section*{Encerramento}
+% ============================================================
+
+Este Fazendo a Diferen\c{c}a sintetiza a li\c{c}\~ao mais profunda do Cap\'itulo 21: \emph{polimorfismo \'e uma ferramenta de unifica\c{c}\~ao}. Permite tratar uniformemente coisas radicalmente diferentes, desde que compartilhem um contrato bem definido. Aplicada ao problema clim\'atico, a t\'ecnica oferece uma maneira limpa de modelar e somar emiss\~oes de fontes heterog\^eneas --- \texttt{Predio}s, ve\'iculos, processos industriais. Em c\'odigo de produ\c{c}\~ao real (calculadoras de pegada de carbono, sistemas de ESG corporativo), essa \'e exatamente a estrutura usada.
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}

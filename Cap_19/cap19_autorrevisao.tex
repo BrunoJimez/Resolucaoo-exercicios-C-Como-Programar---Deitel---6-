@@ -1,0 +1,301 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+\definecolor{portabcolor}{RGB}{102,46,145}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekeyword}{RGB}{0,0,180}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codecomment}{RGB}{0,128,0}
+
+\lstdefinestyle{cppcode}{
+  language=C++,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=8pt,
+  backgroundcolor=\color{codebg}, frame=single, framesep=4pt,
+  rulecolor=\color{deitelblue!50}, breaklines=true,
+  showstringspaces=false, tabsize=4,
+  morekeywords={string, size_t, cin, cout, endl, inline, template, typename,
+                bool, true, false, nullptr, override, final, public, private,
+                protected, explicit, friend, virtual, this, static, operator},
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+}
+
+\hypersetup{colorlinks=true, linkcolor=deitelblue, urlcolor=deitelblue,
+  pdftitle={C: Como Programar - Cap. 19 - Autorrevisao}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Cap.~19}
+\fancyhead[R]{\small Exerc\'icios de Autorrevis\~ao}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+\newtcolorbox{boaprat}{enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Boa Pr\'atica de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{errocomum}{enhanced, breakable, colback=errocolor!8, colframe=errocolor,
+  fonttitle=\bfseries, title={\textbf{Erro Comum de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{obseng}{enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao de Engenharia de Software}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{dicadesemp}{enhanced, breakable, colback=desempcolor!8, colframe=desempcolor,
+  fonttitle=\bfseries, title={\textbf{Dica de Desempenho}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{resposta}{enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Cap\'itulo 19}\\[0.3em]
+  {\Large\bfseries Sobrecarga de Operadores; Classe \texttt{string}}\\[0.8em]
+  {\large\itshape Exerc\'icios de Autorrevis\~ao --- Resolu\c{c}\~ao Did\'atica}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``Sobrecarga de operadores \'e um dos recursos mais distintivos de C++. Ele nos permite escrever \texttt{c1 + c2} no lugar de \texttt{c1.add(c2)}, \texttt{cout << minhaConta << endl} no lugar de \texttt{minhaConta.print()}, e \texttt{r[5] = 10} no lugar de \texttt{r.set(5, 10)}. \'E o coroamento sint\'atico do projeto de classes: o tipo definido pelo programador ganha cidadania de primeira classe na linguagem, com nota\c{c}\~ao operacional id\^entica \`a dos tipos primitivos.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+% ============================================================
+\section{Exerc\'icio 19.1 --- Vocabul\'ario do Cap\'itulo 19}
+% ============================================================
+
+\textit{Preencha os espa\c{c}os em cada uma das senten\c{c}as (a)--(g).}
+
+\subsection*{(a) \texttt{a + b} (inteiros) e \texttt{c + d} (\emph{floats}) usam o mesmo \texttt{+}, mas para fins diferentes. Isto \'e um exemplo de \_\_\_\_}
+
+\begin{resposta}\textbf{Resposta:} \textbf{sobrecarga de operador} (\emph{operator overloading}).\end{resposta}
+
+C++ vem com o \texttt{+} j\'a sobrecarregado \emph{para tipos primitivos}: \texttt{int + int} faz soma inteira (rapidamente, em hardware); \texttt{double + double} faz soma em ponto flutuante (com unidade de hardware distinta); \texttt{int + double} faz \emph{promo\c{c}\~ao} de \texttt{int} para \texttt{double} e soma em ponto flutuante. O mesmo \emph{s\'imbolo} (\texttt{+}) representa opera\c{c}\~oes \emph{conceitualmente an\'alogas}, mas implementadas distintamente. C++ permite ao programador estender essa polivalencia para seus pr\'oprios tipos.
+
+\subsection*{(b) Palavra-chave que apresenta uma fun\c{c}\~ao operador sobrecarregada}
+
+\begin{resposta}\textbf{Resposta:} \texttt{operator}.\end{resposta}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+Complex Complex::operator+(const Complex &o) const {
+//      ~~~~~~~~~~~~~~~~~
+    return Complex(parteReal + o.parteReal,
+                   parteImaginaria + o.parteImaginaria);
+}
+\end{lstlisting}
+
+O nome da fun\c{c}\~ao \'e literalmente \texttt{operator+} (sem espa\c{c}o); essa palavra-chave forma uma \emph{esp\'ecie de identificador} reconhecido pelo compilador.
+
+\subsection*{(c) Operadores que n\~ao precisam ser sobrecarregados}
+
+\begin{resposta}\textbf{Resposta:} atribui\c{c}\~ao (\texttt{=}), endere\c{c}o (\texttt{\&}) e v\'irgula (\texttt{,}).\end{resposta}
+
+C++ aplica esses tr\^es \emph{automaticamente} a todo tipo definido pelo programador:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{=}: o compilador gera uma atribui\c{c}\~ao \emph{membro-a-membro} (j\'a vista no Cap.~17). Funciona perfeitamente para classes sem gerenciamento de recursos; mas \emph{precisa} ser sobrecarregada para classes que cont\'em ponteiros para mem\'oria din\^amica (alvo cl\'assico da \emph{Regra dos Tr\^es}).
+  \item \texttt{\&}: retorna o endere\c{c}o do objeto. Raramente precisa ser sobrecarregado.
+  \item \texttt{,}: avalia os operandos da esquerda para a direita e retorna o da direita. Raramente sobrecarregado --- e quando o \'e, geralmente confunde mais do que ajuda.
+\end{itemize}
+
+\subsection*{(d) Tr\^es propriedades n\~ao alter\'aveis pela sobrecarga}
+
+\begin{resposta}\textbf{Resposta:} \textbf{preced\^encia}, \textbf{associatividade} e \textbf{aridade} (n\'umero de operandos).\end{resposta}
+
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Preced\^encia.} \texttt{*} sempre tem preced\^encia maior que \texttt{+}. Mesmo se voc\^e sobrecarregar ambos para uma classe \texttt{Matriz}, em \texttt{m1 + m2 * m3} a multiplica\c{c}\~ao ocorre primeiro --- voc\^e n\~ao pode alterar isso.
+  \item \textbf{Associatividade.} \texttt{a = b = c} \'e \texttt{a = (b = c)} (direita para esquerda); \texttt{a + b + c} \'e \texttt{(a + b) + c} (esquerda para direita). Tamb\'em imut\'avel.
+  \item \textbf{Aridade.} \texttt{+} sempre aceita dois operandos quando bin\'ario, um quando un\'ario (\texttt{+x}). Voc\^e n\~ao pode definir um \texttt{operator+} de tr\^es operandos.
+\end{itemize}
+
+\begin{obseng}
+Essas tr\^es restri\c{c}\~oes preservam a \emph{previsibilidade} sint\'atica de C++. O programador pode olhar uma express\~ao e saber a ordem de avalia\c{c}\~ao apenas pelas regras universais, sem precisar consultar a defini\c{c}\~ao das classes envolvidas. Sem essa garantia, ler c\'odigo C++ seria virtualmente imposs\'ivel.
+\end{obseng}
+
+\subsection*{(e) Operadores que \emph{n\~ao} podem ser sobrecarregados}
+
+\begin{resposta}\textbf{Resposta:} \texttt{.}, \texttt{?:}, \texttt{.*} e \texttt{::}.\end{resposta}
+
+Os cinco operadores ``sagrados'' de C++:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{.} (acesso a membro): sobrecarreg\'a-lo destruiria toda a sintaxe de acesso a membros.
+  \item \texttt{?:} (operador tern\'ario condicional): \'unico tern\'ario; permitir sobrecarga complicaria gravemente o analisador.
+  \item \texttt{.*} (acesso a membro via ponteiro-para-membro): raro mas necess\'ario para certas semanticas.
+  \item \texttt{::} (resolu\c{c}\~ao de escopo): em \texttt{std::cout}, \emph{precisa} ter significado est\'atico, n\~ao pode depender do tipo \`a esquerda.
+  \item \texttt{sizeof} (mencionado no livro como ``operador''): tamb\'em n\~ao sobrecarreg\'avel.
+\end{itemize}
+
+\subsection*{(f) Operador que libera mem\'oria alocada por \texttt{new}}
+
+\begin{resposta}\textbf{Resposta:} \texttt{delete}.\end{resposta}
+
+Para um objeto: \texttt{delete p;}. Para um array: \texttt{delete[] p;}. \textbf{Usar a forma errada}, ou esquecer-se de \texttt{delete}, s\~ao as duas principais fontes de \emph{vazamentos de mem\'oria} em C++.
+
+\subsection*{(g) Operador que aloca mem\'oria dinamicamente e retorna \_\_\_\_}
+
+\begin{resposta}\textbf{Resposta:} \texttt{new}; retorna um \textbf{ponteiro} para o tipo solicitado.\end{resposta}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+int   *p = new int(42);          // ponteiro para int alocado dinamicamente
+Time  *t = new Time(12, 0, 0);   // ponteiro para objeto Time
+int   *v = new int[100];         // ponteiro para array de 100 ints
+\end{lstlisting}
+
+\begin{boaprat}
+Em C++ moderno (C++11+), \textbf{evite \texttt{new}/\texttt{delete} diretos sempre que poss\'ivel}. Use:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{std::vector<T>} em vez de \texttt{new T[N]}.
+  \item \texttt{std::unique\_ptr<T>} em vez de \texttt{new T()} com responsabilidade \'unica de \texttt{delete}.
+  \item \texttt{std::shared\_ptr<T>} para propriedade compartilhada.
+\end{itemize}
+
+Essas abstra\c{c}\~oes eliminam quase todos os vazamentos. Mas para os exerc\'icios deste cap\'itulo, \texttt{new}/\texttt{delete} crus s\~ao usados para fins did\'aticos.
+\end{boaprat}
+
+% ============================================================
+\section{Exerc\'icio 19.2 --- Significados de \texttt{<<} e \texttt{>>}}
+% ============================================================
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{\texttt{<<}} significa:
+    \begin{itemize}[leftmargin=*,itemsep=0pt]
+      \item \textbf{Deslocamento de bits \`a esquerda}, quando aplicado a inteiros: \texttt{5 << 2} produz 20.
+      \item \textbf{Inser\c{c}\~ao de stream}, quando aplicado a \texttt{ostream} (como \texttt{cout}): \texttt{cout << "Ola"}.
+    \end{itemize}
+  \item \textbf{\texttt{>>}} significa:
+    \begin{itemize}[leftmargin=*,itemsep=0pt]
+      \item \textbf{Deslocamento de bits \`a direita}, quando aplicado a inteiros: \texttt{20 >> 2} produz 5.
+      \item \textbf{Extra\c{c}\~ao de stream}, quando aplicado a \texttt{istream} (como \texttt{cin}): \texttt{cin >> x}.
+    \end{itemize}
+\end{enumerate}
+
+\begin{resposta}
+A diferencia\c{c}\~ao depende do \textbf{contexto} --- mais especificamente, dos tipos dos operandos. C++ \emph{escolhe} a interpreta\c{c}\~ao adequada com base nas regras de sobrecarga. \texttt{int << int} dispara o significado bit-a-bit; \texttt{ostream << X} (para qualquer X) dispara a inser\c{c}\~ao.
+\end{resposta}
+
+\begin{obseng}
+Esse caso \'e particularmente interessante: a biblioteca-padr\~ao \emph{aproveitou} a sobrecarga para reinterpretar \emph{semanticamente} \texttt{<<}. Em sistemas Unix, \texttt{<<} no \emph{shell} significa \emph{here-document} (\texttt{cat << EOF}); em C++, foi reciclado para \emph{streaming}. A escolha foi mnemonica: visualmente, \texttt{<< "Ola"} ``empurra'' o texto para dentro de \texttt{cout}; \texttt{>> x} ``puxa'' do \texttt{cin} para \texttt{x}.
+\end{obseng}
+
+% ============================================================
+\section{Exerc\'icio 19.3 --- Em que contexto \texttt{operator/} pode aparecer?}
+% ============================================================
+
+\begin{resposta}
+Em sobrecarga de operador, \texttt{operator/} \'e o nome de uma fun\c{c}\~ao que oferece a vers\~ao sobrecarregada do operador \texttt{/} (divis\~ao) para uma classe espec\'ifica.
+\end{resposta}
+
+\subsection*{Exemplo}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+class Rational {
+public:
+    Rational operator/(const Rational &o) const {
+        return Rational(num * o.den, den * o.num);
+    }
+private:
+    int num, den;
+};
+
+// Uso:
+Rational r1(1, 2), r2(1, 3);
+Rational q = r1 / r2;        // q = 3/2 (chama r1.operator/(r2))
+\end{lstlisting}
+
+% ============================================================
+\section{Exerc\'icio 19.4 --- V/F: somente operadores existentes podem ser sobrecarregados}
+% ============================================================
+
+\begin{resposta}\textbf{Resposta:} \textbf{Verdadeiro}.\end{resposta}
+
+Voc\^e n\~ao pode \emph{inventar} um novo operador. Tentativas como \texttt{operator\&\&\&} (tr\^es \texttt{\&}s) ou \texttt{operator**} (potencia\c{c}\~ao, comum em Fortran e Python) n\~ao compilam. C++ permite reusar simbolos \emph{j\'a definidos pela linguagem}, mas n\~ao acrescentar novos s\'imbolos ao l\'exico.
+
+\subsection*{Por que essa restri\c{c}\~ao?}
+
+\begin{obseng}
+Permitir operadores customizados (como em algumas linguagens funcionais: Haskell, Scala) tornaria o \emph{lexer} de C++ ambiguamente vari\'avel: o significado de cada caractere \texttt{\$}, \texttt{?}, \texttt{@} dependeria do contexto. C++ optou pela conservacao --- o conjunto de operadores \'e \emph{fixo}, conhecido antecipadamente pelo compilador, e estende-se apenas o \emph{significado} para tipos definidos pelo usu\'ario.
+\end{obseng}
+
+% ============================================================
+\section{Exerc\'icio 19.5 --- Preced\^encia de operador sobrecarregado}
+% ============================================================
+
+\textit{Qual \'e a diferen\c{c}a entre a preced\^encia de um operador sobrecarregado e a preced\^encia do operador original?}
+
+\begin{resposta}
+\textbf{A preced\^encia \'e id\^entica.} A sobrecarga \emph{n\~ao} pode alterar a preced\^encia do operador.
+\end{resposta}
+
+\subsection*{Consequ\^encia pr\'atica}
+
+Em \texttt{m1 + m2 * m3} para matrizes (com \texttt{operator+} e \texttt{operator*} ambos sobrecarregados), C++ avalia \emph{primeiro} \texttt{m2 * m3}, \emph{depois} \texttt{m1 + (resultado)} --- exatamente como faria com inteiros. Isso reforce a \emph{intercambialidade conceitual} dos tipos primitivos com os definidos pelo usu\'ario.
+
+\subsection*{Como mudar a ordem?}
+
+Se voc\^e \emph{precisa} que a soma aconte\c{c}a primeiro, use par\^enteses --- como em qualquer express\~ao matem\'atica:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+(m1 + m2) * m3        // soma primeiro, depois multiplica
+\end{lstlisting}
+
+\begin{boaprat}
+Por essa raz\~ao, ao sobrecarregar operadores, \emph{respeite a sem\^antica natural} de cada um. Sobrecarregar \texttt{+} para fazer subtra\c{c}\~ao seria diabolicamente surpreendente; sobrecarregar \texttt{<<} para fazer multiplica\c{c}\~ao seria pior ainda. Os operadores devem manter consist\^encia com a opera\c{c}\~ao matem\'atica que tradicionalmente representam.
+\end{boaprat}
+
+% ============================================================
+\section*{S\'intese conceitual}
+% ============================================================
+
+Os cinco exerc\'icios de autorrevisão concentram os pontos-chave da sobrecarga de operadores em C++:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Conceito} (19.1a): a sobrecarga \'e a possibilidade de associar m\'ultiplas implementa\c{c}\~oes ao mesmo s\'imbolo.
+  \item \textbf{Sintaxe} (19.1b): a palavra-chave \texttt{operator} introduz a defini\c{c}\~ao.
+  \item \textbf{Restri\c{c}\~oes intransponiveis} (19.1c-e, 19.4, 19.5): preced\^encia, associatividade, aridade e o conjunto de s\'imbolos s\~ao fixos.
+  \item \textbf{Operadores especiais} (19.1f-g): \texttt{new}/\texttt{delete} para gerenciamento dinamico, fundamento para classes que cont\^em ponteiros.
+  \item \textbf{Significado contextual} (19.2): \texttt{<<} e \texttt{>>} mudam de comportamento conforme os operandos --- exemplo cl\'assico de polimorfismo est\'atico.
+\end{itemize}
+
+Esses cinco pontos formam a teoria; os exerc\'icios 19.6 a 19.11 d\~ao a pr\'atica.
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}

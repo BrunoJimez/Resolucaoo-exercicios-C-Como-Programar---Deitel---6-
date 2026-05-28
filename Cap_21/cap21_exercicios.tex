@@ -1,0 +1,1096 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric}
+
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+\definecolor{portabcolor}{RGB}{102,46,145}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekeyword}{RGB}{0,0,180}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codecomment}{RGB}{0,128,0}
+\definecolor{terminalbg}{RGB}{30,30,30}
+\definecolor{terminalfg}{RGB}{220,220,220}
+
+\lstdefinestyle{cppcode}{
+  language=C++,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=8pt,
+  backgroundcolor=\color{codebg}, frame=single, framesep=4pt,
+  rulecolor=\color{deitelblue!50}, breaklines=true,
+  showstringspaces=false, tabsize=4,
+  morekeywords={string, size_t, cin, cout, endl, inline, template, typename,
+                bool, true, false, nullptr, override, final, public, private,
+                protected, explicit, friend, virtual, this, static, operator,
+                dynamic_cast, typeid, unique_ptr, vector, reference_wrapper},
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+           {Ã}{{\~A}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Ê}{{\^E}}1 {Í}{{\'I}}1
+           {Ó}{{\'O}}1 {Ô}{{\^O}}1 {Õ}{{\~O}}1 {Ú}{{\'U}}1 {Ç}{{\c{C}}}1
+}
+
+\lstdefinestyle{terminal}{
+  basicstyle=\ttfamily\footnotesize\color{terminalfg},
+  backgroundcolor=\color{terminalbg},
+  frame=single, framesep=6pt, rulecolor=\color{deitelblue!50},
+  breaklines=true, showstringspaces=false,
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+}
+
+\hypersetup{colorlinks=true, linkcolor=deitelblue, urlcolor=deitelblue,
+  pdftitle={C: Como Programar - Cap. 21 - Exercicios}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Cap.~21}
+\fancyhead[R]{\small Exerc\'icios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+\newtcolorbox{boaprat}{enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Boa Pr\'atica de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{errocomum}{enhanced, breakable, colback=errocolor!8, colframe=errocolor,
+  fonttitle=\bfseries, title={\textbf{Erro Comum de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{obseng}{enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao de Engenharia de Software}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{enunciado}{enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{saidabox}{enhanced, breakable, colback=gray!8, colframe=gray!50,
+  boxrule=0.6pt, fonttitle=\bfseries\small,
+  title={\textbf{Sa\'ida da execu\c{c}\~ao}},
+  left=6pt, right=6pt, top=3pt, bottom=3pt}
+
+\tikzset{
+  uml/.style={rectangle, draw=deitelblue!70, very thick, fill=deitelblue!5,
+              text width=3.0cm, align=center, minimum height=0.9cm,
+              font=\small\bfseries},
+  umlSmall/.style={rectangle, draw=deitelblue!70, very thick, fill=deitelblue!5,
+              text width=1.7cm, align=center, minimum height=0.8cm,
+              font=\scriptsize\bfseries},
+  flecha/.style={-Triangle, draw=deitelblue!60, very thick}
+}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Cap\'itulo 21}\\[0.3em]
+  {\Large\bfseries Programa\c{c}\~ao Orientada a Objetos: Polimorfismo}\\[0.8em]
+  {\large\itshape Exerc\'icios --- Resolu\c{c}\~ao Did\'atica}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``Resolvemos os 14 exerc\'icios 21.3 a 21.16. Os primeiros oito s\~ao conceituais; o pr\'oprio livro deixa claro que os \'ultimos seis (21.12 a 21.16) s\~ao \emph{aplica\c{c}\~oes consolidadoras} das hierarquias dos cap\'itulos anteriores --- agora com \texttt{virtual}, \texttt{override} e \texttt{dynamic\_cast}, tornando o c\'odigo \emph{verdadeiramente polim\'orfico}. Todos os c\'odigos compilam com \texttt{g++ -Wall -Wextra -std=c++14} sem warnings.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+% ============================================================
+\section{Exerc\'icio 21.3 --- Programa\c{c}\~ao geral vs espec\'ifica}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Como o polimorfismo permite que voc\^e trabalhe uma programa\c{c}\~ao ``geral'' em vez de uma ``espec\'ifica''? Discuta as principais vantagens.
+\end{enunciado}
+
+\subsection*{O contraste}
+
+Programa\c{c}\~ao \emph{espec\'ifica} \'e a programa\c{c}\~ao em que cada tipo de objeto exige c\'odigo distinto:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+// Programacao especifica: cada tipo, um caminho de codigo
+for (Funcionario *f : folha) {
+    if (typeid(*f) == typeid(FuncionarioAssalariado))
+        pagamento = ((FuncionarioAssalariado*)f)->getSalario() * 4;
+    else if (typeid(*f) == typeid(FuncionarioHorista))
+        pagamento = calcularHorista((FuncionarioHorista*)f);
+    // ... mais cinco else-ifs ...
+}
+\end{lstlisting}
+
+Programa\c{c}\~ao \emph{geral} (\emph{polim\'orfica}) trata todos os tipos uniformemente, com uma s\'o linha:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+// Programacao geral: uma so linha trata todos os tipos
+for (Funcionario *f : folha) {
+    pagamento = f->earnings();   // virtual dispatch
+}
+\end{lstlisting}
+
+\subsection*{Tr\^es vantagens da programa\c{c}\~ao geral}
+
+\subsubsection*{1. C\'odigo cliente n\~ao precisa conhecer a hierarquia}
+
+O loop processador da folha de pagamento (no nosso 21.12) \emph{n\~ao menciona} \texttt{FuncionarioAssalariado}, \texttt{FuncionarioHorista}, etc. Trabalha exclusivamente atrav\'es da interface \texttt{Funcionario}. Adicionar um novo tipo de funcion\'ario (digamos, \texttt{FuncionarioPensionista}) n\~ao requer mudar uma \emph{linha sequer} do loop.
+
+\subsubsection*{2. Manuten\c{c}\~ao reduzida}
+
+Cada modifica\c{c}\~ao na f\'ormula de pagamento de um tipo fica \emph{em uma classe s\'o}, a classe daquele tipo. Em programa\c{c}\~ao espec\'ifica, mudar a f\'ormula de funcion\'arios horistas exigiria revisar todos os pontos onde aparecem \texttt{if (tipo == HORISTA)}.
+
+\subsubsection*{3. Convida o c\'odigo a ser correto por constru\c{c}\~ao}
+
+Programa\c{c}\~ao espec\'ifica com \texttt{switch} sobre tipos exige \emph{lembrar} de adicionar um \texttt{case} para cada novo tipo. Esquecer um \'e bug latente. Em programa\c{c}\~ao geral, esquecer-se de implementar uma virtual pura \'e \emph{erro de compila\c{c}\~ao}: a classe permaneceria abstrata.
+
+\begin{obseng}
+A programa\c{c}\~ao polim\'orfica \'e uma manifestacao do \emph{Princ\'ipio Aberto-Fechado} (Open-Closed Principle): m\'odulos devem ser \emph{abertos para extens\~ao} (acrescentar novos tipos) mas \emph{fechados para modifica\c{c}\~ao} (n\~ao tocar c\'odigo cliente j\'a testado). Polimorfismo viabiliza esse princ\'ipio: novos tipos s\~ao acomodados criando-se novas classes, sem alterar c\'odigo cliente preexistente.
+\end{obseng}
+
+% ============================================================
+\section{Exerc\'icio 21.4 --- Problemas do \texttt{switch}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Discuta os problemas de programa\c{c}\~ao com a l\'ogica de \texttt{switch}. Explique por que o polimorfismo pode ser uma alternativa eficaz.
+\end{enunciado}
+
+\subsection*{Quatro problemas com \texttt{switch} sobre tipos}
+
+\subsubsection*{1. Repeti\c{c}\~ao}
+
+Cada \texttt{switch} sobre tipo enumerado precisa cobrir \emph{todos} os casos. Se h\'a 10 tipos e 5 opera\c{c}\~oes diferentes que dependem do tipo, voc\^e ter\'a 5 \texttt{switch} de 10 ramos cada. Acrescentar um 11\textsuperscript{o} tipo significa atualizar todos os 5 \texttt{switch}.
+
+\subsubsection*{2. Esquecimento}
+
+O compilador C++ por padr\~ao \emph{n\~ao} alerta quando um \texttt{switch} sobre um \texttt{enum} omite um valor. Voc\^e adiciona o 11\textsuperscript{o} tipo, esquece de adicionar um \texttt{case} em um \texttt{switch}, e o c\'odigo silenciosamente trata o novo tipo como se fosse o caso \texttt{default}. (\texttt{-Wswitch-enum} ajuda, mas n\~ao \'e padr\~ao.)
+
+\subsubsection*{3. Dispers\~ao da l\'ogica}
+
+A l\'ogica espec\'ifica de cada tipo fica \emph{espalhada} por toda a base de c\'odigo, em todos os \texttt{switch} que mencionam o tipo. Em vez de ``o que faz o tipo X?'' ser resp\'ond\'ivel olhando uma classe, exige percorrer dezenas de fun\c{c}\~oes.
+
+\subsubsection*{4. Acoplamento ao conjunto fechado de tipos}
+
+O \texttt{switch} pressup\~oe que voc\^e \emph{sabe quais s\~ao todos os tipos}. Bibliotecas que querem permitir que \emph{clientes} adicionem novos tipos n\~ao podem usar \texttt{switch} --- precisam abstrair.
+
+\subsection*{O polimorfismo resolve os quatro}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Repeti\c{c}\~ao:} cada opera\c{c}\~ao \'e uma fun\c{c}\~ao virtual; nenhuma duplica\c{c}\~ao.
+  \item \textbf{Esquecimento:} fun\c{c}\~oes virtuais puras for\c{c}am implementa\c{c}\~ao; esquecer \'e erro de compila\c{c}\~ao.
+  \item \textbf{Dispers\~ao:} toda a l\'ogica do tipo X est\'a na classe X.
+  \item \textbf{Acoplamento:} bibliotecas exportam apenas a classe-base; clientes derivam novos tipos.
+\end{itemize}
+
+\begin{boaprat}
+\textbf{Heur\'istica:} se voc\^e se v\^e prestes a escrever um \texttt{switch} sobre um campo \texttt{tipo} de uma estrutura, pare. Provavelmente quer uma hierarquia de classes com fun\c{c}\~oes virtuais. Exce\c{c}\~oes leg\'itimas: \texttt{switch} sobre \texttt{enum} com casos pequenos e mutuamente exclusivos onde n\~ao h\'a comportamento ``geral'' a ser fatorado.
+\end{boaprat}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 21.5 --- Heran\c{c}a de interface vs implementa\c{c}\~ao}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Fa\c{c}a a distin\c{c}\~ao entre herdar interface e herdar implementa\c{c}\~ao. Como as hierarquias diferem entre os dois casos?
+\end{enunciado}
+
+\subsection*{Defini\c{c}\~oes}
+
+\textbf{Heran\c{c}a de interface:} a classe-base define \emph{somente o que} suas derivadas devem fazer --- s\'o virtuais puras, nenhuma implementa\c{c}\~ao. Cada derivada implementa por si pr\'opria.
+
+\textbf{Heran\c{c}a de implementa\c{c}\~ao:} a classe-base oferece c\'odigo concreto que as derivadas reutilizam. Pode haver virtuais que as derivadas refinam, mas h\'a substancia compartilhada.
+
+\subsection*{Caracter\'isticas de hierarquias de \emph{interface}}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Classes-base s\~ao \emph{puramente abstratas} (todas as fun\c{c}\~oes \texttt{= 0}).
+  \item Exemplo prot\'otipo: \texttt{EmissaoCarbono} (Ex.~21.17) --- nenhum dado, apenas o m\'etodo \texttt{retEmissaoCarbono() = 0}.
+  \item Em Java/C\#, isso seria \texttt{interface}, n\~ao \texttt{class}.
+  \item Derivadas n\~ao se beneficiam de nenhum c\'odigo reaproveitado --- apenas do contrato.
+\end{itemize}
+
+\subsection*{Caracter\'isticas de hierarquias de \emph{implementa\c{c}\~ao}}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Classes-base t\^em c\'odigo substancial (talvez fun\c{c}\~oes virtuais com corpos, dados-membro, fun\c{c}\~oes n\~ao-virtuais).
+  \item Exemplo prot\'otipo: \texttt{Pacote} $\to$ \texttt{PacoteDoisDias} (Ex.~21.15) --- a derivada herda os dados de remetente/destinatario, getters, e a vers\~ao base de \texttt{calculaCusto()} que \'e refinada.
+  \item Existe perigo de ``software fr\'agil'' (Ex.~20.5): mudan\c{c}as na base podem quebrar derivadas.
+\end{itemize}
+
+\subsection*{Exemplo comparativo da nossa cole\c{c}\~ao}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|p{6.5cm}|}
+\hline
+\textbf{Hierarquia} & \textbf{Tipo} & \textbf{Justificativa} \\
+\hline
+\texttt{EmissaoCarbono} (21.17) & Interface pura & Predio, Carro, Bicicleta n\~ao compartilham dados, s\'o o contrato \texttt{retEmissaoCarbono}. \\
+\hline
+\texttt{Forma} (21.13) & H\'ibrida & A camada raiz \texttt{Forma} s\'o oferece o nome (m\'inimo). As intermediarias acrescentam contratos. \\
+\hline
+\texttt{Funcionario} (21.12) & Implementa\c{c}\~ao parcial & Dados de identifica\c{c}\~ao (nome, CPF) s\~ao herdados; s\'o \texttt{earnings} \'e pura. \\
+\hline
+\texttt{Pacote} (21.15) & Implementa\c{c}\~ao & A base oferece valores default; as derivadas refinam. \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{obseng}
+A regra do dedo polegar: heran\c{c}a de interface escala melhor quando h\'a muitas implementa\c{c}\~oes muito diferentes (pense em \texttt{Iterator} em Java, sem c\'odigo, dezenas de classes a implementam). Heran\c{c}a de implementa\c{c}\~ao funciona melhor quando h\'a um ``template'' de comportamento que algumas derivadas ajustam levemente. C++ permite os dois; Java tem ambos como construtos separados (\texttt{interface} e \texttt{abstract class}).
+\end{obseng}
+
+% ============================================================
+\section{Exerc\'icio 21.6 --- O que s\~ao fun\c{c}\~oes virtuais?}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} O que s\~ao fun\c{c}\~oes virtuais? Descreva uma circunst\^ancia em que seriam apropriadas.
+\end{enunciado}
+
+\subsection*{Defini\c{c}\~ao}
+
+Uma \textbf{fun\c{c}\~ao virtual} \'e uma fun\c{c}\~ao-membro declarada na classe-base com a palavra-chave \texttt{virtual}, indicando que \emph{derivadas podem sobrescrev\^e-la} e que chamadas atrav\'es de ponteiros/refer\^encias \`a base ser\~ao \emph{despachadas dinamicamente} para a vers\~ao da derivada.
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+class Funcionario {
+public:
+    virtual double earnings() const = 0;   // pura (a base nao implementa)
+    virtual void print() const;            // com implementacao default
+    virtual ~Funcionario() {}              // destrutor virtual
+};
+\end{lstlisting}
+
+\subsection*{Circunst\^ancia apropriada}
+
+Sempre que houver:
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+  \item Uma \emph{hierarquia} de classes;
+  \item Um \emph{contrato} (uma fun\c{c}\~ao) que muitas das derivadas implementam de modos distintos;
+  \item C\'odigo cliente que vai chamar essa fun\c{c}\~ao atrav\'es de \emph{ponteiros ou refer\^encias \`a classe-base}.
+\end{enumerate}
+
+\subsection*{Exemplos da nossa cole\c{c}\~ao}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{Funcionario::earnings()} (21.12) --- cada tipo de funcion\'ario calcula pagamento de modo distinto, mas o loop da folha de pagamento usa s\'o \texttt{f.earnings()}.
+  \item \texttt{Forma::print()} (21.13) --- cada forma se apresenta de modo distinto, mas o gerenciador de tela chama s\'o \texttt{f->print()}.
+  \item \texttt{Pacote::calculaCusto()} (21.15) --- cada tipo de pacote tem sua f\'ormula, mas o sistema de remessa chama s\'o \texttt{p->calculaCusto()}.
+\end{itemize}
+
+% ============================================================
+\section{Exerc\'icio 21.7 --- Vincula\c{c}\~ao est\'atica vs din\^amica; \emph{vtable}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Fa\c{c}a a distin\c{c}\~ao entre vincula\c{c}\~ao est\'atica e vincula\c{c}\~ao din\^amica. Explique o uso de fun\c{c}\~oes virtuais e da \emph{vtable} na vincula\c{c}\~ao din\^amica.
+\end{enunciado}
+
+\subsection*{Vincula\c{c}\~ao est\'atica vs din\^amica}
+
+\textbf{Vincula\c{c}\~ao est\'atica} (\emph{early binding}): o compilador decide qual fun\c{c}\~ao chamar \emph{em tempo de compila\c{c}\~ao}, com base no tipo declarado da vari\'avel. \'E o que acontece com chamadas n\~ao-virtuais.
+
+\textbf{Vincula\c{c}\~ao din\^amica} (\emph{late binding}): o programa decide qual fun\c{c}\~ao chamar \emph{em tempo de execu\c{c}\~ao}, com base no tipo real do objeto. \'E o que acontece com chamadas virtuais via ponteiros/refer\^encias \`a base.
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+class Base {
+public:
+    void f() { cout << "Base::f"; }          // nao virtual
+    virtual void g() { cout << "Base::g"; }  // virtual
+};
+class Derivada : public Base {
+public:
+    void f() { cout << "Derivada::f"; }
+    void g() override { cout << "Derivada::g"; }
+};
+
+Derivada d;
+Base *p = &d;
+p->f();   // Base::f (estatica - tipo declarado de p eh Base)
+p->g();   // Derivada::g (dinamica - tipo real eh Derivada)
+\end{lstlisting}
+
+\subsection*{Como a vincula\c{c}\~ao din\^amica funciona internamente: a \emph{vtable}}
+
+Cada classe com fun\c{c}\~oes virtuais ganha, em tempo de compila\c{c}\~ao, uma \textbf{tabela virtual} (\emph{vtable}): uma tabela est\'atica de ponteiros para as implementa\c{c}\~oes das fun\c{c}\~oes virtuais daquela classe.
+
+Cada \emph{objeto} de uma classe com virtuais tem um ponteiro escondido (\emph{vptr}) que aponta para a vtable da sua classe.
+
+Quando o c\'odigo executa \texttt{p->g()}:
+
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+  \item Localiza o \emph{vptr} dentro do objeto apontado por \texttt{p}.
+  \item L\^e a vtable apontada.
+  \item Encontra a entrada da fun\c{c}\~ao \texttt{g} na vtable.
+  \item Salta para o c\'odigo apontado por essa entrada.
+\end{enumerate}
+
+\subsection*{Diagrama esquem\'atico}
+
+\begin{center}
+\begin{tikzpicture}[node distance=0.4cm and 1.0cm,
+  obj/.style={rectangle,draw=deitelblue!70,thick,fill=deitelblue!5,
+              minimum width=2.5cm,minimum height=0.6cm,font=\small},
+  vt/.style={rectangle,draw=desempcolor!70,thick,fill=desempcolor!5,
+              minimum width=2.5cm,minimum height=0.6cm,font=\small\ttfamily},
+  fn/.style={rectangle,draw=boapratcolor!70,thick,fill=boapratcolor!5,
+              minimum width=3cm,minimum height=0.6cm,font=\small}]
+
+  \node[obj] (objeto) {Objeto \texttt{Derivada}};
+  \node[obj, below=of objeto] (vptr) {\textbf{vptr}};
+  \node[obj, below=of vptr] (dados) {dados-membro};
+  \draw[deitelblue,thick] (objeto.south west) -- (objeto.south east);
+
+  \node[vt, right=of vptr] (vt0) {\&Derivada::g};
+  \node[vt, below=of vt0] (vt1) {\&Derivada::h};
+
+  \node[fn, right=of vt0] (cod0) {c\'odigo de g};
+  \node[fn, right=of vt1] (cod1) {c\'odigo de h};
+
+  \draw[flecha] (vptr.east) -- node[above,font=\scriptsize]{aponta para vtable} (vt0.west);
+  \draw[flecha] (vt0.east) -- (cod0.west);
+  \draw[flecha] (vt1.east) -- (cod1.west);
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Implica\c{c}\~oes pr\'aticas}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Custo de mem\'oria:} cada objeto polim\'orfico aumenta de tamanho em um ponteiro (geralmente 8 bytes).
+  \item \textbf{Custo de tempo:} cada chamada virtual exige uma ind\'ire\c{c}\~ao a mais (lookup na vtable). Em c\'odigo cr\'itico, isso pode importar.
+  \item \textbf{Inicializa\c{c}\~ao:} construtores e destrutores configuram o vptr corretamente para o tipo da classe atual --- \'e por isso que polimorfismo \emph{n\~ao funciona} dentro dos construtores.
+\end{itemize}
+
+\begin{dicadesemp}
+A sobrecarga do polimorfismo (vptr + ind\'ire\c{c}\~ao) \'e geralmente \emph{desprez\'ivel} na maioria das aplica\c{c}\~oes. O ganho em manutenibilidade compensa amplamente. Mas em loops apertados (jogos, simula\c{c}\~oes num\'ericas) onde cada nanossegundo conta, considere designs alternativos como \emph{static polymorphism} via templates (CRTP), ou \emph{type erasure} controlado.
+\end{dicadesemp}
+
+% ============================================================
+\section{Exerc\'icio 21.8 --- Virtuais vs virtuais puras}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Fa\c{c}a a distin\c{c}\~ao entre fun\c{c}\~oes virtuais e fun\c{c}\~oes virtuais puras.
+\end{enunciado}
+
+\subsection*{Sintaxe e sem\^antica}
+
+\textbf{Fun\c{c}\~ao virtual:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+virtual void f();                  // tem corpo (no .cpp)
+\end{lstlisting}
+
+\textbf{Fun\c{c}\~ao virtual pura:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+virtual void f() = 0;              // SEM corpo na base
+\end{lstlisting}
+
+\subsection*{Implica\c{c}\~oes}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\small
+\begin{tabular}{|p{4.0cm}|p{3.6cm}|p{5.6cm}|}
+\hline
+\textbf{Aspecto} & \textbf{Virtual} & \textbf{Virtual pura} \\
+\hline
+Sintaxe na base & \texttt{virtual void f();} & \texttt{virtual void f() = 0;} \\
+\hline
+Implementa\c{c}\~ao na base obrigat\'oria? & SIM (corpo no \texttt{.cpp}) & N\~AO (mas mesmo havendo, derivadas devem implementar) \\
+\hline
+Derivada precisa sobrescrever? & N\~AO (herda da base) & SIM (sen\~ao a derivada tamb\'em \'e abstrata) \\
+\hline
+Classe pode ser instanciada? & SIM & N\~AO (abstrata) \\
+\hline
+Despacho din\^amico? & SIM & SIM \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{Por que ambas existem?}
+
+\textbf{Virtual com implementa\c{c}\~ao}: \'util quando h\'a um comportamento \emph{default} sens\'ato que a maioria das derivadas pode herdar, e poucas precisam refinar.
+
+\textbf{Virtual pura}: \'util quando n\~ao h\'a um default razo\'avel; cada derivada \emph{tem} que pensar na sua pr\'opria vers\~ao.
+
+\subsection*{Exemplo}
+
+No nosso \texttt{Funcionario} (21.12), as duas conviv\^em:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{earnings()} \'e \textbf{pura}: n\~ao h\'a default razo\'avel; assalariados, horistas, comissionados t\^em formulas radicalmente diferentes.
+  \item \texttt{print()} \'e \textbf{virtual (com impl.)}: a base sabe imprimir nome+CPF+nascimento; as derivadas refinam para adicionar campos espec\'ificos --- mas se uma derivada esquecesse de sobrescrever, ainda imprimiria algo \'util.
+\end{itemize}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 21.9 --- Classes-base abstratas na hierarquia Forma}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Sugira um ou mais n\'iveis de classes-base abstratas para a hierarquia \texttt{Forma}.
+\end{enunciado}
+
+\subsection*{Sugest\~ao}
+
+\begin{center}
+\begin{tikzpicture}[node distance=0.8cm and 0.3cm]
+  \node[uml] (f) {Forma};
+  \node[uml, below=of f, xshift=-2.5cm] (b2) {Forma 2D};
+  \node[uml, below=of f, xshift= 2.5cm] (b3) {Forma 3D};
+
+  \node[umlSmall, below=of b2, xshift=-2.0cm] (c) {Circulo};
+  \node[umlSmall, below=of b2]                (q) {Quadrado};
+  \node[umlSmall, below=of b2, xshift= 2.0cm] (t) {Triangulo};
+
+  \node[umlSmall, below=of b3, xshift=-2.0cm] (e) {Esfera};
+  \node[umlSmall, below=of b3]                (cb) {Cubo};
+  \node[umlSmall, below=of b3, xshift= 2.0cm] (cl) {Cilindro};
+
+  \draw[flecha] (b2.north) -- (f.south west);
+  \draw[flecha] (b3.north) -- (f.south east);
+  \draw[flecha] (c.north) -- (b2.south);
+  \draw[flecha] (q.north) -- (b2.south);
+  \draw[flecha] (t.north) -- (b2.south);
+  \draw[flecha] (e.north) -- (b3.south);
+  \draw[flecha] (cb.north) -- (b3.south);
+  \draw[flecha] (cl.north) -- (b3.south);
+\end{tikzpicture}
+\end{center}
+
+\subsection*{N\'iveis de abstra\c{c}\~ao}
+
+\textbf{N\'ivel 1 --- \texttt{Forma}}: classe-base abstrata raiz. Funcionalidade comum a \emph{todas} as formas (2D ou 3D): nome, talvez cor, posi\c{c}\~ao no espa\c{c}o. Cont\'em \emph{pelo menos} uma virtual pura, como \texttt{print()}.
+
+\textbf{N\'ivel 2 --- \texttt{FormaBidimensional}}: classe-base abstrata para todas as formas planas. Acrescenta a virtual pura \texttt{retArea()}.
+
+\textbf{N\'ivel 2 (lado direito) --- \texttt{FormaTridimensional}}: classe-base abstrata para todos os s\'olidos. Acrescenta \texttt{retArea()} (\'area de superficie) e \texttt{retVolume()}.
+
+\textbf{N\'ivel 3 --- classes concretas}: \texttt{Circulo}, \texttt{Quadrado}, \texttt{Triangulo}, \texttt{Esfera}, \texttt{Cubo}, \texttt{Cilindro}.
+
+\subsection*{Esbo\c{c}o em C++}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+class Forma {
+public:
+    virtual ~Forma() {}
+    virtual std::string getNome() const = 0;
+    virtual void print() const = 0;
+};
+
+class FormaBidimensional : public Forma {
+public:
+    virtual double retArea() const = 0;
+};
+
+class FormaTridimensional : public Forma {
+public:
+    virtual double retArea() const = 0;
+    virtual double retVolume() const = 0;
+};
+
+class Circulo : public FormaBidimensional {
+    // implementa retArea, print
+};
+
+class Esfera : public FormaTridimensional {
+    // implementa retArea, retVolume, print
+};
+\end{lstlisting}
+
+\noindent Implementaremos isso completamente no Exerc\'icio~21.13.
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 21.10 --- Polimorfismo e extensibilidade}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Como o polimorfismo promove a extensibilidade?
+\end{enunciado}
+
+\subsection*{Mecanismo da extens\~ao}
+
+Para acrescentar um novo tipo a uma hierarquia polim\'orfica:
+
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+  \item Defina uma nova classe que deriva da classe-base apropriada.
+  \item Implemente as fun\c{c}\~oes virtuais puras.
+  \item \emph{Pronto}. Nenhum c\'odigo cliente existente precisa ser tocado.
+\end{enumerate}
+
+\subsection*{Exemplo concreto}
+
+Considere nosso sistema de folha de pagamento (21.12). Imagine que o RH agora quer um novo tipo: \texttt{FuncionarioEstagiario}, com sal\'ario fixo, mas s\'o se as horas trabalhadas excederem 30. Para acomodar:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+class FuncionarioEstagiario : public Funcionario {
+public:
+    FuncionarioEstagiario(const std::string &n, const std::string &s,
+                          const std::string &c, const Date &nasc,
+                          double bolsa, double horasMensais)
+        : Funcionario(n, s, c, nasc),
+          bolsa(bolsa), horas(horasMensais) {}
+
+    double earnings() const override {
+        return horas >= 30 ? bolsa : bolsa * (horas / 30.0);
+    }
+    void print() const override {
+        cout << "Estagiario: ";
+        Funcionario::print();
+        cout << "\n  Bolsa: R$ " << bolsa << ", horas: " << horas;
+    }
+private:
+    double bolsa;
+    double horas;
+};
+\end{lstlisting}
+
+Acrescentamos esse arquivo e \emph{nada mais muda}:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+folha.push_back(new FuncionarioEstagiario("Bia", "Lima", "555.555.555-55",
+    Date(2, 14, 2003), 1500, 25));
+// O loop processador da folha de pagamento (intocado!) ja' funciona.
+\end{lstlisting}
+
+Compare com o cen\'ario sem polimorfismo: ter\'iamos que adicionar um \texttt{case ESTAGIARIO} em todos os \texttt{switch} do c\'odigo cliente, e essa modifica\c{c}\~ao em c\'odigo testado \'e exatamente o que queremos evitar.
+
+% ============================================================
+\section{Exerc\'icio 21.11 --- Polimorfismo num simulador de voo}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Voc\^e foi escolhido para desenvolver um simulador de voo com sa\'idas gr\'aficas elaboradas. Explique por que a programa\c{c}\~ao polim\'orfica poderia ser especialmente eficaz.
+\end{enunciado}
+
+\subsection*{Tipos de objetos em um simulador de voo}
+
+Um simulador realista cont\'em dezenas de tipos de objetos:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \emph{Aeronaves:} bo\'is comerciais, helic\'opteros, planadores, ja\c{c}tos militares, drones.
+  \item \emph{Terreno:} pol\'igonos de relevo, edifica\c{c}\~oes, estradas, rios.
+  \item \emph{Vegeta\c{c}\~ao:} \'arvores, arbustos, ervas.
+  \item \emph{Atmosfera:} nuvens, neblina, precipita\c{c}\~ao, ventos.
+  \item \emph{Outros tr\'afegos:} outros avi\~oes simulados.
+\end{itemize}
+
+Cada um precisa, no m\'inimo, ser desenhado a cada \emph{frame}, e atualizado a cada passo de tempo. Sem polimorfismo, o c\'odigo central seria um \texttt{switch} gigantesco com centenas de casos.
+
+\subsection*{Hierarquia polim\'orfica}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+class ObjetoSimulado {
+public:
+    virtual ~ObjetoSimulado() {}
+    virtual void desenhar(Camera &cam) const = 0;
+    virtual void atualizar(double dt) = 0;
+    virtual BoundingBox limites() const = 0;
+};
+
+class Avi\~ao    : public ObjetoSimulado { /* ... */ };
+class Edif\'icio : public ObjetoSimulado { /* ... */ };
+class Nuvem    : public ObjetoSimulado { /* ... */ };
+\end{lstlisting}
+
+\subsection*{Loop principal do simulador}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+while (rodando) {
+    double dt = obterDeltaTempo();
+    for (auto &obj : mundo) {       // mundo eh vector<unique_ptr<ObjetoSimulado>>
+        obj->atualizar(dt);          // POLIMORFICO
+    }
+    limparTela();
+    for (auto &obj : mundo) {
+        obj->desenhar(camera);       // POLIMORFICO
+    }
+    apresentarFrame();
+}
+\end{lstlisting}
+
+\subsection*{Quatro vantagens espec\'ificas para o simulador}
+
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Extensibilidade:} adicionar bal\~ao de ar quente \'e uma nova classe; n\~ao requer mudar o motor.
+  \item \textbf{Modularidade:} cada tipo de objeto \'e seu pr\'oprio arquivo; modifica\c{c}\~oes ficam contidas.
+  \item \textbf{Cole\c{c}\~oes uniformes:} um s\'o \texttt{vector<ObjetoSimulado*>} cont\'em todos os tipos.
+  \item \textbf{C\'odigo de espa\c{c}o de desenho:} algoritmos como ``ordenar objetos por dist\^ancia \`a c\^amera para renderiza\c{c}\~ao transparente'' funcionam sobre qualquer objeto polim\'orfico, sem conhecer o tipo concreto.
+\end{enumerate}
+
+\begin{obseng}
+Engines de jogos profissionais (Unreal, Unity, Godot) usam polimorfismo extensivamente para exatamente este tipo de problema --- combinado com \emph{Entity-Component Systems} (ECS) quando a estrutura ``\'e-um'' n\~ao basta e ``tem-uns'' s\~ao mais expressivos.
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 21.12 --- Folha de pagamento com bonus de anivers\'ario}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Modifique o sistema de folha de pagamento (figs. 21.13--21.23) para incluir \texttt{dataNascimento} (do tipo \texttt{Date}) em \texttt{Funcionario}. Suponha que a folha seja processada uma vez por m\^es. Use \texttt{vector} de refer\^encias a \texttt{Funcionario}. No loop, adicione b\^onus de R\$\,100 se o m\^es atual for o de anivers\'ario.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A hierarquia polim\'orfica de funcion\'arios \'e composta por:
+
+\begin{center}
+\begin{tikzpicture}[node distance=0.8cm and 0.3cm]
+  \node[uml] (f) {Funcionario\\\textit{(abstrata)}};
+  \node[uml, below=of f, xshift=-4.5cm] (a) {Assalariado};
+  \node[uml, below=of f, xshift=-1.5cm] (h) {Horista};
+  \node[uml, below=of f, xshift= 1.5cm] (c) {Comissao};
+  \node[uml, below=of c]                (bc) {Base+Comissao};
+
+  \draw[flecha] (a.north) -- (f.south);
+  \draw[flecha] (h.north) -- (f.south);
+  \draw[flecha] (c.north) -- (f.south);
+  \draw[flecha] (bc.north) -- (c.south);
+\end{tikzpicture}
+\end{center}
+
+A classe \texttt{Funcionario} agora tem \texttt{dataNascimento} (tipo \texttt{Date}). O m\'etodo \texttt{earnings()} continua sendo \texttt{virtual} pura.
+
+\subsection*{Classe \texttt{Date} (reaproveitada do Cap.~18)}
+
+\lstinputlisting[style=cppcode]{codigos/Date.h}
+
+\subsection*{Classe-base \texttt{Funcionario}}
+
+\lstinputlisting[style=cppcode]{codigos/Funcionario.h}
+\lstinputlisting[style=cppcode]{codigos/Funcionario.cpp}
+
+\subsection*{Quatro derivadas concretas}
+
+\lstinputlisting[style=cppcode]{codigos/FuncionarioAssalariado.h}
+\lstinputlisting[style=cppcode]{codigos/FuncionarioAssalariado.cpp}
+
+\lstinputlisting[style=cppcode]{codigos/FuncionarioHorista.h}
+\lstinputlisting[style=cppcode]{codigos/FuncionarioHorista.cpp}
+
+\lstinputlisting[style=cppcode]{codigos/FuncionarioComissao.h}
+\lstinputlisting[style=cppcode]{codigos/FuncionarioComissao.cpp}
+
+\lstinputlisting[style=cppcode]{codigos/FuncionarioBaseMaisComissao.h}
+\lstinputlisting[style=cppcode]{codigos/FuncionarioBaseMaisComissao.cpp}
+
+\subsection*{Programa principal --- folha polim\'orfica com b\^onus}
+
+\lstinputlisting[style=cppcode]{codigos/main_Funcionario.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Folha de pagamento (mes atual: 5) ===
+
+Assalariado: Joao Silva
+  CPF: 111.111.111-11
+  Nascimento: 15/5/1985
+  Salario semanal: R$ 800.00
+  Pagamento bruto: R$ 3200.00
+  *** BONUS DE ANIVERSARIO: +R$ 100.00 ***
+  Pagamento final: R$ 3300.00
+
+Horista: Maria Santos
+  CPF: 222.222.222-22
+  Nascimento: 20/11/1990
+  Salario/hora: R$ 25.00, horas semanais: 45.00
+  Pagamento bruto: R$ 4750.00
+  Pagamento final: R$ 4750.00
+
+Comissionado: Pedro Lima
+  CPF: 333.333.333-33
+  Nascimento: 8/7/1980
+  Vendas: R$ 10000.00, taxa: 0.06
+  Pagamento bruto: R$ 600.00
+  Pagamento final: R$ 600.00
+
+Base+Comissao: Ana Costa
+  CPF: 444.444.444-44
+  Nascimento: 22/3/1992
+  Vendas: R$ 8000.00, taxa: 0.04
+  Salario base: R$ 500.00
+  Pagamento bruto: R$ 820.00
+  Pagamento final: R$ 820.00
+
+Total da folha de pagamento: R$ 9470.00
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Confer\^encia matem\'atica}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{Joao} (Assalariado, R\$\,800/sem, anivers\'ario maio): $800 \times 4 = 3200 + 100$ b\^onus $= 3300$. ✓
+  \item \texttt{Maria} (Horista, 45h/sem): $40 \times 25 + 5 \times 25 \times 1{,}5 = 1000 + 187{,}5 = 1187{,}5$/sem; mensal $= 4750$. ✓
+  \item \texttt{Pedro} (Comissionado, 6\%\ de R\$\,10000): $600$. ✓
+  \item \texttt{Ana} (Base+Comiss\~ao, 4\%\ de R\$\,8000 + R\$\,500): $320 + 500 = 820$. ✓
+  \item \textbf{Total}: $3300 + 4750 + 600 + 820 = 9470$. ✓
+\end{itemize}
+
+\subsection*{Discuss\~ao --- pontos t\'ecnicos importantes}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Vector de refer\^encias:} \texttt{vector} em C++ n\~ao aceita refer\^encias nativas como tipo de elemento. Usamos \texttt{std::reference\_wrapper<Funcionario>}, que envolve uma refer\^encia em um objeto copi\'avel. O \texttt{for (Funcionario \&f : folha)} faz \emph{unwrap} autom\'atico.
+  \item \textbf{Despacho din\^amico:} a chamada \texttt{f.earnings()} chama a vers\~ao correta de cada derivada via vtable. Sem \texttt{virtual} na base, seria chamada \texttt{Funcionario::earnings()} --- que n\~ao existe (pura)!
+  \item \textbf{Destrutor virtual:} mesmo n\~ao destruindo os objetos via ponteiro \`a base aqui (s\~ao locais), inclu\'i \texttt{virtual \~{}Funcionario()} por boa pr\'atica.
+\end{itemize}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 21.13 --- Hierarquia Forma com vector polim\'orfico}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Implemente a hierarquia \texttt{Forma}. Cada \texttt{FormaBidimensional} deve ter \texttt{retArea()}; cada \texttt{FormaTridimensional} deve ter \texttt{retArea()} e \texttt{retVolume()}. Use um vetor de ponteiros \texttt{Forma*} para objetos concretos. Para cada forma, descobrir se \'e 2D ou 3D e imprimir as medidas relevantes.
+\end{enunciado}
+
+\subsection*{Classes-base abstratas}
+
+\lstinputlisting[style=cppcode]{codigos/Forma.h}
+\lstinputlisting[style=cppcode]{codigos/Forma.cpp}
+
+\lstinputlisting[style=cppcode]{codigos/FormaBidimensional.h}
+
+\lstinputlisting[style=cppcode]{codigos/FormaTridimensional.h}
+
+\subsection*{Formas concretas bidimensionais}
+
+\lstinputlisting[style=cppcode]{codigos/Circulo.h}
+\lstinputlisting[style=cppcode]{codigos/Circulo.cpp}
+
+\lstinputlisting[style=cppcode]{codigos/Quadrado.h}
+\lstinputlisting[style=cppcode]{codigos/Quadrado.cpp}
+
+\lstinputlisting[style=cppcode]{codigos/Triangulo.h}
+\lstinputlisting[style=cppcode]{codigos/Triangulo.cpp}
+
+\subsection*{Formas concretas tridimensionais}
+
+\lstinputlisting[style=cppcode]{codigos/Esfera.h}
+\lstinputlisting[style=cppcode]{codigos/Esfera.cpp}
+
+\lstinputlisting[style=cppcode]{codigos/Cubo.h}
+\lstinputlisting[style=cppcode]{codigos/Cubo.cpp}
+
+\lstinputlisting[style=cppcode]{codigos/Cilindro.h}
+\lstinputlisting[style=cppcode]{codigos/Cilindro.cpp}
+
+\subsection*{Programa principal --- vetor polim\'orfico com \texttt{dynamic\_cast}}
+
+\lstinputlisting[style=cppcode]{codigos/main_Forma.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Processamento polimorfico de formas ===
+
+* Circulo de raio 5.00
+  [2D] Area = 78.54
+* Quadrado de lado 4.00
+  [2D] Area = 16.00
+* Triangulo base=6.00 altura=4.00
+  [2D] Area = 12.00
+* Esfera de raio 3.00
+  [3D] Area total da superficie = 113.10
+       Volume = 113.10
+* Cubo de lado 2.00
+  [3D] Area total da superficie = 24.00
+       Volume = 8.00
+* Cilindro raio=2.00 altura=5.00
+  [3D] Area total da superficie = 87.96
+       Volume = 62.83
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Confer\^encia matem\'atica}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item C\'irculo $r=5$: $\pi r^2 \approx 78{,}54$. ✓
+  \item Quadrado $l=4$: $l^2 = 16$. ✓
+  \item Tri\^angulo $b=6, h=4$: $\tfrac{1}{2}bh = 12$. ✓
+  \item Esfera $r=3$: superficie $= 4\pi r^2 \approx 113{,}10$; volume $= \tfrac{4}{3}\pi r^3 \approx 113{,}10$. ✓ (curiosamente, ambos coincidem para $r=3$).
+  \item Cubo $l=2$: superficie $= 6l^2 = 24$; volume $= l^3 = 8$. ✓
+  \item Cilindro $r=2, h=5$: superficie $= 2\pi r(r+h) = 28\pi \approx 87{,}96$; volume $= \pi r^2 h = 20\pi \approx 62{,}83$. ✓
+\end{itemize}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Uso de \texttt{dynamic\_cast}:} cada \texttt{Forma*} \'e testado contra \texttt{FormaBidimensional*} e \texttt{FormaTridimensional*}. Em sucesso, o ponteiro convertido \'e n\~ao-nulo. \'E o jeito C++ de implementar ``\emph{instanceof}'' do Java.
+  \item \textbf{\texttt{unique\_ptr}:} usamos \texttt{vector<unique\_ptr<Forma>>} em vez de \texttt{vector<Forma*>}. Garante destrui\c{c}\~ao autom\'atica (RAII), evitando vazamentos de mem\'oria.
+  \item \textbf{Destrutor virtual essencial:} sem \texttt{virtual \~{}Forma()}, deletar via ponteiro \`a base chamaria apenas o destrutor da base, vazando os recursos espec\'ificos da derivada.
+\end{itemize}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 21.14 --- Gerenciador de tela polim\'orfico}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Desenvolva um pacote gr\'afico b\'asico usando a hierarquia Forma. Limite-se a formas bidimensionais. Cada classe Forma tem sua pr\'opria \texttt{desenhar}. Escreva um gerenciador de tela polim\'orfico que percorra um array \texttt{Forma*}, enviando \texttt{desenhar} a cada objeto. Redesenhe a tela a cada nova forma adicionada.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+Esta \'e uma vers\~ao especializada e focada da hierarquia do 21.13. Aqui as formas s\~ao concebidas para serem \emph{desenhadas em uma tela ASCII} de tamanho fixo (20$\times$50). Cada forma tem posi\c{c}\~ao, tamanho e caractere de preenchimento.
+
+\subsection*{Classe-base abstrata}
+
+\lstinputlisting[style=cppcode]{codigos/FormaDesenhavel.h}
+\lstinputlisting[style=cppcode]{codigos/FormaDesenhavel.cpp}
+
+\subsection*{Quatro formas desenh\'aveis}
+
+\lstinputlisting[style=cppcode]{codigos/QuadradoDes.h}
+\lstinputlisting[style=cppcode]{codigos/QuadradoDes.cpp}
+
+\lstinputlisting[style=cppcode]{codigos/RetanguloDes.h}
+\lstinputlisting[style=cppcode]{codigos/RetanguloDes.cpp}
+
+\lstinputlisting[style=cppcode]{codigos/TrianguloDes.h}
+\lstinputlisting[style=cppcode]{codigos/TrianguloDes.cpp}
+
+\lstinputlisting[style=cppcode]{codigos/CirculoDes.h}
+\lstinputlisting[style=cppcode]{codigos/CirculoDes.cpp}
+
+\subsection*{Programa principal --- gerenciador de tela}
+
+\lstinputlisting[style=cppcode]{codigos/main_Tela.cpp}
+
+\subsection*{Execu\c{c}\~ao (sa\'ida final, ap\'os adicionar as 4 formas)}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+Apos adicionar Circulo centro=(15,14) raio=4 '@':
++--------------------------------------------------+
+|..................................................|
+|..................................................|
+|..#####...........................................|
+|..#####........************.......................|
+|..#####........************........+..............|
+|..#####........************........++.............|
+|..#####........************........+++............|
+|...............************........++++...........|
+|...............************........+++++..........|
+|...................................++++++.........|
+|...............@...................+++++++........|
+|.............@@@@@.................++++++++.......|
+|............@@@@@@@...............................|
+|............@@@@@@@...............................|
+|...........@@@@@@@@@..............................|
+|............@@@@@@@...............................|
+|............@@@@@@@...............................|
+|.............@@@@@................................|
+|...............@..................................|
+|..................................................|
++--------------------------------------------------+
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{O gerenciador \'e o ``cliente polim\'orfico'':} a fun\c{c}\~ao \texttt{redesenharTela} simplesmente itera sobre o vetor, chamando \texttt{f->desenhar(tela)} em cada um. N\~ao precisa saber \emph{qual} forma est\'a desenhando.
+  \item \textbf{Redesenho completo:} cada chamada a \texttt{redesenharTela} limpa a tela e redesenha todas as formas. \'E o padr\~ao usado por engines reais --- redesenhar \'e mais simples que rastrear mudan\c{c}as incrementais (e em \emph{frame rates} altos, n\~ao h\'a diferen\c{c}a percebida).
+  \item \textbf{Extens\~ao trivial:} para adicionar elipses, polig\^onos regulares ou estrelas, basta criar a classe respectiva derivada de \texttt{FormaDesenhavel} e implementar \texttt{desenhar}. O gerenciador \emph{n\~ao muda}.
+\end{itemize}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 21.15 --- Pacote polim\'orfico}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Use a hierarquia \texttt{Pacote} do Ex.~20.9 para criar um programa que processe um vector de \texttt{Pacote*} polimorficamente. Para cada \texttt{Pacote}, imprima a etiqueta de endere\c{c}o e chame \texttt{calculaCusto}. Acumule o custo total.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A hierarquia \texttt{Pacote} do Cap.~20 j\'a estava pronta, mas \texttt{calculaCusto} n\~ao era \texttt{virtual} --- a redefini\c{c}\~ao funcionava apenas estaticamente (com o tipo conhecido em tempo de compila\c{c}\~ao). Agora corrigimos isso.
+
+\subsection*{Classe-base \texttt{Pacote} com \texttt{virtual}}
+
+\lstinputlisting[style=cppcode]{codigos/Pacote.h}
+\lstinputlisting[style=cppcode]{codigos/Pacote.cpp}
+
+\subsection*{Derivadas com \texttt{override}}
+
+\lstinputlisting[style=cppcode]{codigos/PacoteDoisDias.h}
+\lstinputlisting[style=cppcode]{codigos/PacoteDoisDias.cpp}
+
+\lstinputlisting[style=cppcode]{codigos/PacoteNoturno.h}
+\lstinputlisting[style=cppcode]{codigos/PacoteNoturno.cpp}
+
+\subsection*{Programa principal}
+
+\lstinputlisting[style=cppcode]{codigos/main_Pacote.cpp}
+
+\subsection*{Execu\c{c}\~ao (sa\'ida parcial)}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+>>> REMESSA 1 <<<
++----------------------------------------+
+| DE:  Maria Souza
+|      Rua A, 100
+|      Sao Paulo-SP  01000-000
+|----------------------------------------|
+| PARA: Joao Silva
+|       Av. B, 250
+|       Rio de Janeiro-RJ  20000-000
++----------------------------------------+
+Custo de envio: R$ 30.00
+
+>>> REMESSA 2 <<<
+[... PacoteDoisDias: Ana Costa -> Pedro Lima ...]
+Custo de envio: R$ 65.00
+
+>>> REMESSA 3 <<<
+[... PacoteNoturno: Carlos Mendes -> Lucia Pereira ...]
+Custo de envio: R$ 20.00
+
+========================================
+TOTAL DE TODAS AS REMESSAS: R$ 115.00
+========================================
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Confer\^encia matem\'atica}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{Pacote}: $1500 \times 0{,}02 = 30{,}00$. ✓
+  \item \texttt{PacoteDoisDias}: $2000 \times 0{,}025 + 15{,}00 = 65{,}00$. ✓
+  \item \texttt{PacoteNoturno}: $500 \times (0{,}03 + 0{,}01) = 20{,}00$. ✓
+  \item \textbf{Total}: $30 + 65 + 20 = 115$. ✓
+\end{itemize}
+
+\subsection*{Discuss\~ao}
+
+A chamada \texttt{p->calculaCusto()} ilustra o coracao do polimorfismo: tr\^es \texttt{Pacote*} apontam para tipos concretos distintos (\texttt{Pacote}, \texttt{PacoteDoisDias}, \texttt{PacoteNoturno}), e a vtable de cada um direciona a chamada para a vers\~ao correta. O loop \emph{n\~ao precisa} distinguir os tipos --- a hierarquia faz isso.
+
+\begin{obseng}
+Compare este c\'odigo com o que escrev\'iamos no Cap.~20 (sem \texttt{virtual}): l\'a, era necess\'ario \emph{n\~ao} usar \texttt{Pacote*}, mas sim conhecer o tipo concreto. A inclus\~ao de \texttt{virtual} \'e a mudan\c{c}a m\'inima que separa um c\'odigo ``adoidado pelo \texttt{switch}'' de um c\'odigo elegante.
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 21.16 --- Banco polim\'orfico}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Use a hierarquia \texttt{Conta} do Ex.~20.10 para um programa banc\'ario polim\'orfico. Para cada \texttt{Conta}, permita debitar/creditar. Se for \texttt{ContaPoupanca}, calcular e creditar os juros via \texttt{calculaJuros} + \texttt{creditar}. Imprima saldo atualizado.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+Igual ao 21.15: a hierarquia do Cap.~20 ganha \texttt{virtual} nos m\'etodos sobreposiveis. Adicionalmente, usamos \texttt{dynamic\_cast} para descobrir contas-poupan\c{c}a entre as gen\'ericas.
+
+\subsection*{Classe-base \texttt{Conta} com \texttt{virtual}}
+
+\lstinputlisting[style=cppcode]{codigos/Conta.h}
+\lstinputlisting[style=cppcode]{codigos/Conta.cpp}
+
+\subsection*{\texttt{ContaPoupanca}}
+
+\lstinputlisting[style=cppcode]{codigos/ContaPoupanca.h}
+\lstinputlisting[style=cppcode]{codigos/ContaPoupanca.cpp}
+
+\subsection*{\texttt{ContaCorrente} com \texttt{override}}
+
+\lstinputlisting[style=cppcode]{codigos/ContaCorrente.h}
+\lstinputlisting[style=cppcode]{codigos/ContaCorrente.cpp}
+
+\subsection*{Programa principal}
+
+\lstinputlisting[style=cppcode]{codigos/main_Conta.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Processamento polimorfico de contas ===
+
+--- Conta 1 ---
+Saldo inicial: R$ 2000.00
+Apos depositar R$ 500.00: R$ 2500.00
+Apos sacar     R$ 100.00: R$ 2400.00
+Juros calculados: R$ 72.00
+Apos credito de juros: R$ 2472.00
+
+--- Conta 2 ---
+Saldo inicial: R$ 1000.00
+Apos depositar R$ 200.00: R$ 1198.00
+Apos sacar     R$ 300.00: R$ 896.00
+
+--- Conta 3 ---
+Saldo inicial: R$ 5000.00
+Apos depositar R$ 1000.00: R$ 6000.00
+Apos sacar     R$ 500.00: R$ 5500.00
+Juros calculados: R$ 275.00
+Apos credito de juros: R$ 5775.00
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Confer\^encia matem\'atica}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Conta 1} (poupan\c{c}a 3\%): $2000 + 500 - 100 = 2400$; juros $= 2400 \times 0{,}03 = 72$; saldo final $= 2472$. ✓
+  \item \textbf{Conta 2} (corrente, taxa R\$\,2): $1000 + 200 - 2 = 1198$; $1198 - 300 - 2 = 896$. ✓
+  \item \textbf{Conta 3} (poupan\c{c}a 5\%): $5000 + 1000 - 500 = 5500$; juros $= 5500 \times 0{,}05 = 275$; saldo final $= 5775$. ✓
+\end{itemize}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{\texttt{ContaCorrente::creditar}} \'e a vers\~ao polim\'orfica chamada para \texttt{Conta\&}, cobrando a taxa apropriadamente.
+  \item \textbf{\texttt{dynamic\_cast<ContaPoupanca*>}} retorna \texttt{nullptr} para contas correntes, n\~ao-nulo para poupanca. \'E o jeito C++ de fazer ``se for poupan\c{c}a, fa\c{c}a isso''.
+  \item \textbf{Conta corrente n\~ao recebe juros:} a estrutura \texttt{if (cp)} garante que apenas poupan\c{c}as t\^em juros somados. C\'odigo cliente n\~ao precisa de \texttt{switch} expl\'icito sobre tipo.
+\end{itemize}
+
+% ============================================================
+\section*{Encerramento}
+% ============================================================
+
+Os 14 exerc\'icios deste cap\'itulo cobriram todo o territ\'orio do polimorfismo:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Concei\-tos (21.3--21.11): por que polimorfismo, como funciona, vantagens sobre \texttt{switch}, vincula\c{c}\~ao din\^amica, \emph{vtable}.
+  \item Aplica\c{c}\~oes (21.12--21.16): folha de pagamento com 4 derivadas + b\^onus de anivers\'ario; hierarquia de formas geom\'etricas com despacho a \texttt{retArea}/\texttt{retVolume}; gerenciador de tela ASCII com formas auto-desenh\'aveis; entrega de pacotes; banco com poupan\c{c}as e correntes.
+\end{itemize}
+
+Cinco classes-base abstratas, 14 classes derivadas concretas, todas funcionando com \texttt{virtual}, \texttt{override} e \texttt{dynamic\_cast}. O Cap\'itulo 22 abordar\'a o \'ultimo grande t\'opico de OO em C++: \textbf{templates}, que oferecem \emph{polimorfismo est\'atico} (em tempo de compila\c{c}\~ao) como complemento ao din\^amico que acabamos de dominar.
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}

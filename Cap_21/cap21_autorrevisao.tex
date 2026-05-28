@@ -1,0 +1,270 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+\definecolor{portabcolor}{RGB}{102,46,145}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekeyword}{RGB}{0,0,180}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codecomment}{RGB}{0,128,0}
+
+\lstdefinestyle{cppcode}{
+  language=C++,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=8pt,
+  backgroundcolor=\color{codebg}, frame=single, framesep=4pt,
+  rulecolor=\color{deitelblue!50}, breaklines=true,
+  showstringspaces=false, tabsize=4,
+  morekeywords={string, size_t, cin, cout, endl, inline, template, typename,
+                bool, true, false, nullptr, override, final, public, private,
+                protected, explicit, friend, virtual, this, static, operator,
+                dynamic_cast, typeid},
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+}
+
+\hypersetup{colorlinks=true, linkcolor=deitelblue, urlcolor=deitelblue,
+  pdftitle={C: Como Programar - Cap. 21 - Autorrevisao}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Cap.~21}
+\fancyhead[R]{\small Exerc\'icios de Autorrevis\~ao}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+\newtcolorbox{boaprat}{enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Boa Pr\'atica de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{errocomum}{enhanced, breakable, colback=errocolor!8, colframe=errocolor,
+  fonttitle=\bfseries, title={\textbf{Erro Comum de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{obseng}{enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao de Engenharia de Software}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{resposta}{enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Cap\'itulo 21}\\[0.3em]
+  {\Large\bfseries Programa\c{c}\~ao Orientada a Objetos: Polimorfismo}\\[0.8em]
+  {\large\itshape Exerc\'icios de Autorrevis\~ao --- Resolu\c{c}\~ao Did\'atica}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``Polimorfismo \'e o coroamento da OO em C++. Significa, literalmente, ``muitas formas'': uma s\'o chamada \texttt{p->earnings()} executa c\'odigo \emph{diferente} dependendo do tipo concreto do objeto apontado por \texttt{p}. Este cap\'itulo introduz tr\^es novidades inseparavelmente ligadas: fun\c{c}\~oes \texttt{virtual}, classes abstratas com fun\c{c}\~oes \texttt{virtual = 0}, e o despacho din\^amico via \emph{vtable}. Juntos, eliminam o c\'odigo \texttt{switch} repetitivo que polui programas n\~ao-OO.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+% ============================================================
+\section{Exerc\'icio 21.1 --- Vocabul\'ario do Cap\'itulo 21}
+% ============================================================
+
+\textit{Preencha os espa\c{c}os em cada uma das senten\c{c}as (a)--(i).}
+
+\subsection*{(a) Tratar um objeto da classe-base como \_\_\_\_ pode causar erros}
+
+\begin{resposta}\textbf{Resposta:} objeto da \textbf{classe derivada}.\end{resposta}
+
+A dire\c{c}\~ao oposta da \emph{conversao implicita upcast} (derivada $\to$ base) \'e o \emph{downcast} (base $\to$ derivada), e ele \'e \emph{perigoso}: pode-se estar lidando com um objeto que n\~ao \'e realmente do tipo derivado, gerando comportamento indefinido. \texttt{dynamic\_cast} (Cap.~21.8) faz essa convers\~ao com seguran\c{c}a, retornando \texttt{nullptr} ou lan\c{c}ando exce\c{c}\~ao se o objeto n\~ao for compat\'ivel.
+
+\subsection*{(b) Polimorfismo ajuda a eliminar a l\'ogica de \_\_\_\_}
+
+\begin{resposta}\textbf{Resposta:} \texttt{switch}.\end{resposta}
+
+C\'odigo procedural cl\'assico discriminaria tipos com \texttt{switch}: ``se for funcion\'ario assalariado, fa\c{c}a A; se for horista, fa\c{c}a B''. Polimorfismo substitui esse \texttt{switch} por uma chamada \emph{virtual} \'unica.
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+// ESTILO PROCEDURAL (com switch):
+switch (f.tipo) {
+    case ASSALARIADO: pag = f.salario * 4; break;
+    case HORISTA:     pag = calcularHorista(f); break;
+    // ...
+}
+
+// ESTILO POLIMORFICO (sem switch):
+pag = f.earnings();   // virtual dispatch
+\end{lstlisting}
+
+\subsection*{(c) Se uma classe cont\'em pelo menos uma fun\c{c}\~ao virtual pura, ela \'e \_\_\_\_}
+
+\begin{resposta}\textbf{Resposta:} classe \textbf{abstrata}.\end{resposta}
+
+\texttt{virtual void f() = 0;} declara uma \emph{fun\c{c}\~ao virtual pura}. Uma classe com pelo menos uma dessas \'e abstrata: \emph{n\~ao pode ser instanciada diretamente}. S\'o serve como classe-base para outras classes que implementem todas as fun\c{c}\~oes virtuais puras.
+
+\subsection*{(d) Classes das quais objetos podem ser instanciados s\~ao \_\_\_\_}
+
+\begin{resposta}\textbf{Resposta:} classes \textbf{concretas}.\end{resposta}
+
+Uma classe \'e concreta se todas as suas fun\c{c}\~oes virtuais puras (herdadas das bases) foram implementadas.
+
+\subsection*{(e) Operador para downcast seguro}
+
+\begin{resposta}\textbf{Resposta:} \texttt{dynamic\_cast}.\end{resposta}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+Conta *p = obterConta();
+ContaPoupanca *cp = dynamic_cast<ContaPoupanca*>(p);
+if (cp) {
+    // sucesso: p apontava para ContaPoupanca; agora cp aponta para o mesmo
+    cp->calculaJuros();
+}
+// se p NAO apontava para uma ContaPoupanca: cp == nullptr
+\end{lstlisting}
+
+\texttt{dynamic\_cast} usa a informa\c{c}\~ao RTTI (\emph{Run-Time Type Information}) para checar se o objeto real \emph{\'e} do tipo desejado. Para ponteiros, retorna \texttt{nullptr} em caso de falha; para refer\^encias, lan\c{c}a \texttt{std::bad\_cast}.
+
+\subsection*{(f) \texttt{typeid} retorna refer\^encia a \_\_\_\_}
+
+\begin{resposta}\textbf{Resposta:} objeto \texttt{type\_info}.\end{resposta}
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+#include <typeinfo>
+Funcionario *f = obterFuncionario();
+const std::type_info &t = typeid(*f);
+cout << "Tipo real: " << t.name() << endl;
+\end{lstlisting}
+
+\texttt{type\_info::name()} retorna uma string com o nome do tipo (formato definido pela implementa\c{c}\~ao --- \texttt{g++} usa nome \emph{mangled}, \texttt{c++filt} pode demangle-lo).
+
+\subsection*{(g) \_\_\_\_ envolve usar ponteiro base ou refer\^encia para chamar virtuais}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Polimorfismo} (polimorfismo de subtipo / din\^amico).\end{resposta}
+
+A defini\c{c}\~ao operacional: \texttt{Base *p = new Derivada(); p->virt();} chama a vers\~ao de \emph{Derivada}, n\~ao a de \emph{Base}.
+
+\subsection*{(h) Fun\c{c}\~oes que podem ser sobrepostas usam a palavra-chave \_\_\_\_}
+
+\begin{resposta}\textbf{Resposta:} \texttt{virtual}.\end{resposta}
+
+A palavra-chave \texttt{virtual} na declara\c{c}\~ao da base ativa o despacho din\^amico. As derivadas s\~ao livres para sobrep\^or (com ou sem a anota\c{c}\~ao \texttt{override} do C++11, recomend\'avel).
+
+\subsection*{(i) Convers\~ao de ponteiro base $\to$ derivada \'e chamada de \_\_\_\_}
+
+\begin{resposta}\textbf{Resposta:} \textbf{downcasting}.\end{resposta}
+
+\textbf{Up} (subir na hierarquia: derivada $\to$ base) \'e sempre seguro e implicito. \textbf{Down} (descer: base $\to$ derivada) \'e arriscado e exige \texttt{dynamic\_cast} ou alternativa equivalente.
+
+\begin{errocomum}
+\textbf{Um downcast com \texttt{static\_cast} \'e sint\'aticamente v\'alido mas semanticamente perigoso:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+Conta *p = new ContaCorrente(1000, 2);
+// Programador acredita que p eh ContaPoupanca:
+ContaPoupanca *cp = static_cast<ContaPoupanca*>(p);  // COMPILA!
+cp->calculaJuros();   // COMPORTAMENTO INDEFINIDO
+\end{lstlisting}
+Use \texttt{dynamic\_cast} para qualquer downcast em hierarquias polim\'orficas.
+\end{errocomum}
+
+% ============================================================
+\section{Exerc\'icio 21.2 --- Verdadeiro ou Falso}
+% ============================================================
+
+\subsection*{(a) Todas as virtuais em classe-base abstrata devem ser puras}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Falso}.\end{resposta}
+
+\textbf{Corre\c{c}\~ao:} uma classe-base abstrata pode incluir fun\c{c}\~oes \texttt{virtual} \emph{com implementa\c{c}\~ao}, al\'em das puras. O que torna a classe abstrata \'e ter \emph{pelo menos uma} virtual pura, mas n\~ao \emph{todas} precisam s\^e-lo.
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+class Funcionario {
+public:
+    virtual double earnings() const = 0;   // PURA
+    virtual void print() const;            // VIRTUAL COM IMPLEMENTACAO
+};
+\end{lstlisting}
+
+Nossa implementa\c{c}\~ao do 21.12 segue exatamente esse padr\~ao: \texttt{print} \'e \texttt{virtual} mas tem corpo na base; \texttt{earnings} \'e \texttt{= 0}.
+
+\subsection*{(b) Referir-se a objeto da derivada com \emph{handle} da base \'e perigoso}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Falso}.\end{resposta}
+
+\textbf{Corre\c{c}\~ao:} \emph{o contr\'ario \'e perigoso}: referir-se a um objeto da \emph{base} com \emph{handle} da \emph{derivada}. Quando temos \texttt{Base *p = new Derivada()}, \'e seguro --- \'e o cen\'ario normal do polimorfismo. O perigoso seria \texttt{Derivada *p = static\_cast<Derivada*>(umaBaseDeVerdade)}.
+
+\subsection*{(c) Classe vira abstrata sendo declarada \texttt{virtual}}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Falso}.\end{resposta}
+
+\textbf{Corre\c{c}\~ao:} \emph{classes} n\~ao s\~ao declaradas \texttt{virtual}. A palavra-chave \texttt{virtual} se aplica a \emph{fun\c{c}\~oes-membro} e \texttt{base classes} (na heran\c{c}a virtual, Cap.~24). Uma classe se torna abstrata ao conter pelo menos uma \emph{fun\c{c}\~ao} virtual pura.
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+virtual class Forma { };  // ERRO de sintaxe
+
+class Forma {              // OK: classe abstrata por causa do = 0
+public:
+    virtual void desenhar() const = 0;
+};
+\end{lstlisting}
+
+\subsection*{(d) Se a base declara uma virtual, a derivada deve implementar para virar concreta}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Verdadeiro} (com nuance).\end{resposta}
+
+A nuance: a regra vale quando a virtual da base \'e \emph{pura}. Se for s\'o \texttt{virtual} (sem \texttt{= 0}), a derivada \emph{n\~ao precisa} sobrescrev\^e-la: herda a vers\~ao da base. Mas pelo enunciado, claramente a quest\~ao se refere a virtuais puras.
+
+\subsection*{(e) Programa\c{c}\~ao polim\'orfica pode eliminar a necessidade de \texttt{switch}}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Verdadeiro}.\end{resposta}
+
+Esse \'e o \emph{benef\'icio prim\'ario} do polimorfismo, conforme discutiremos em detalhes nos exerc\'icios 21.3 e 21.4: substituir \texttt{switch} por chamadas virtuais elimina a maior fonte de manuten\c{c}\~ao e bugs em sistemas com m\'ultiplos tipos de entidade.
+
+\begin{obseng}
+N\~ao \'e que \texttt{switch} seja sempre ruim: para casos pequenos, com tipos enumerados pr\'oximos uns dos outros, \texttt{switch} pode ser mais leg\'ivel que polimorfismo. Mas, quando o n\'umero de casos cresce e a l\'ogica espec\'ifica de cada tipo se torna substancial, polimorfismo ganha duas frentes: organiza\c{c}\~ao (cada caso vira a classe correspondente) e extensibilidade (adicionar um caso n\~ao requer tocar em c\'odigo cliente).
+\end{obseng}
+
+% ============================================================
+\section*{S\'intese conceitual}
+% ============================================================
+
+A autorrevisão estabeleceu os pilares do polimorfismo em C++:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Mecanismo:} fun\c{c}\~oes \texttt{virtual} permitem que uma chamada via ponteiro/refer\^encia da base execute c\'odigo da derivada.
+  \item \textbf{Abstratos vs concretos:} classes com pelo menos uma virtual pura s\~ao abstratas (n\~ao instanci\'aveis). Classes que implementam todas as virtuais puras s\~ao concretas.
+  \item \textbf{Convers\~oes:} upcast \'e impl\'icito e seguro; downcast requer \texttt{dynamic\_cast}.
+  \item \textbf{RTTI:} \texttt{typeid} e \texttt{type\_info} fornecem informa\c{c}\~oes de tipo em tempo de execu\c{c}\~ao.
+  \item \textbf{Benef\'icio prim\'ario:} eliminar \texttt{switch} sobre tipos --- t\'ema dos exerc\'icios 21.3 e 21.4.
+\end{itemize}
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}
