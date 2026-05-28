@@ -1,0 +1,287 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{deitelorange}{RGB}{198,89,17}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+\definecolor{portabcolor}{RGB}{102,46,145}
+\definecolor{diferencacolor}{RGB}{0,128,128}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekeyword}{RGB}{0,0,180}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codecomment}{RGB}{0,128,0}
+\definecolor{terminalbg}{RGB}{30,30,30}
+\definecolor{terminalfg}{RGB}{220,220,220}
+
+\lstdefinestyle{cppcode}{
+  language=C++,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=8pt,
+  backgroundcolor=\color{codebg}, frame=single, framesep=4pt,
+  rulecolor=\color{deitelblue!50}, breaklines=true,
+  showstringspaces=false, tabsize=4,
+  morekeywords={string, size_t, cin, cout, endl, inline, template, typename,
+                bool, true, false, nullptr, override, final, public, private, protected},
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+}
+
+\lstdefinestyle{terminal}{
+  basicstyle=\ttfamily\footnotesize\color{terminalfg},
+  backgroundcolor=\color{terminalbg},
+  frame=single, framesep=6pt, rulecolor=\color{deitelblue!50},
+  breaklines=true, showstringspaces=false,
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+}
+
+\hypersetup{colorlinks=true, linkcolor=deitelblue, urlcolor=deitelblue,
+  pdftitle={C: Como Programar - Cap. 16 - Fazendo a Diferenca}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Cap.~16}
+\fancyhead[R]{\small Fazendo a Diferen\c{c}a}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+\newtcolorbox{boaprat}{enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Boa Pr\'atica de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{errocomum}{enhanced, breakable, colback=errocolor!8, colframe=errocolor,
+  fonttitle=\bfseries, title={\textbf{Erro Comum de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{obseng}{enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao de Engenharia de Software}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{dicadesemp}{enhanced, breakable, colback=desempcolor!8, colframe=desempcolor,
+  fonttitle=\bfseries, title={\textbf{Dica de Desempenho}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{enunciado}{enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{saidabox}{enhanced, breakable, colback=gray!8, colframe=gray!50,
+  boxrule=0.6pt, fonttitle=\bfseries\small,
+  title={\textbf{Sa\'ida da execu\c{c}\~ao}},
+  left=6pt, right=6pt, top=3pt, bottom=3pt}
+\newtcolorbox{diferencabox}{enhanced, breakable, colback=diferencacolor!8, colframe=diferencacolor,
+  fonttitle=\bfseries, title={\textbf{Fazendo a Diferen\c{c}a}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Cap\'itulo 16}\\[0.3em]
+  {\Large\bfseries Introdu\c{c}\~ao a Classes e Objetos}\\[0.8em]
+  {\large\itshape Fazendo a Diferen\c{c}a --- Resolu\c{c}\~ao Did\'atica}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``Os exerc\'icios \emph{Fazendo a Diferen\c{c}a} do Cap\'itulo 16 nos pedem para aplicar nosso conhecimento rec\'em-adquirido de classes e objetos a problemas reais de sa\'ude p\'ublica: c\'alculo da frequ\^encia card\'iaca durante exerc\'icios e perfil de sa\'ude eletr\^onico de uma pessoa. Esses exerc\'icios consolidam, em escala mais ambiciosa, todos os conceitos de OO do cap\'itulo --- e v\~ao al\'em, exigindo c\'alculos derivados de atributos (idade, IMC, frequ\^encia card\'iaca m\'axima) que demonstram o poder da abordagem orientada a objetos.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+\begin{diferencabox}
+\textbf{Sobre estes exerc\'icios.} O 16.16 \'e baseado em uma f\'ormula da American Heart Association: \emph{frequ\^encia card\'iaca m\'axima} = 220 $-$ idade (em anos); \emph{faixa ideal durante exerc\'icios} = entre 50\% e 85\% da m\'axima. O 16.17 estende essa abordagem combinando o c\'alculo da frequ\^encia card\'iaca com o do \'indice de massa corporal (IMC), j\'a apresentado no Cap\'itulo~2. Atendendo \`a recomenda\c{c}\~ao explicita do livro: \textbf{essas f\'ormulas s\~ao estimativas estat\'isticas; um m\'edico ou profissional de sa\'ude qualificado deve ser sempre consultado antes de iniciar ou modificar um programa de exerc\'icios}.
+\end{diferencabox}
+
+% ============================================================
+\section{Exerc\'icio 16.16 --- Classe \texttt{FrequenciaCardiaca}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Crie a classe \texttt{FrequenciaCardiaca} com atributos: primeiro nome, sobrenome, e data de nascimento (atributos separados para dia, m\^es e ano). Construtor recebe todos esses dados. \emph{Set}/\emph{get} para cada. Inclua: \texttt{obterIdade} (calcula e retorna idade em anos --- pede a data atual ao usu\'ario, pois ainda n\~ao sabemos obt\^e-la do sistema); \texttt{obterFrequenciaMaxima} (220 $-$ idade); \texttt{obterFrequenciaIdeal} (50\%--85\% da m\'axima). Aplica\c{c}\~ao deve pedir os dados, instanciar o objeto e imprimir tudo.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A classe \texttt{FrequenciaCardiaca} \'e nosso primeiro exemplo de classe com \emph{computa\c{c}\~oes derivadas}: ela n\~ao apenas guarda atributos, mas tamb\'em calcula valores a partir deles. O ponto sutil \'e \emph{como} a fun\c{c}\~ao \texttt{obterIdade} obt\'em a data atual: como ainda n\~ao aprendemos a usar bibliotecas de data/hora do sistema (\texttt{<ctime>} ou \texttt{<chrono>}), o pr\'oprio livro orienta-nos a \emph{perguntar ao usu\'ario}.
+
+A f\'ormula da idade tem uma sutileza: se a pessoa ainda \emph{n\~ao} fez anivers\'ario neste ano (m\^es atual menor que m\^es de nascimento, ou m\^es igual mas dia ainda anterior), ent\~ao a idade \'e $\text{ano atual} - \text{ano de nascimento} - 1$, e n\~ao $\text{ano atual} - \text{ano de nascimento}$.
+
+\subsection*{Cabe\c{c}alho \texttt{FrequenciaCardiaca.h}}
+
+\lstinputlisting[style=cppcode]{codigos/FrequenciaCardiaca.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{FrequenciaCardiaca.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/FrequenciaCardiaca.cpp}
+
+\subsection*{Programa de teste \texttt{main\_FrequenciaCardiaca.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/main_FrequenciaCardiaca.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ ./test_FreqCardiaca
+=== Calculadora de Frequencia Cardiaca ===
+Primeiro nome: Maria
+Sobrenome: Silva
+Data de nascimento (dia mes ano): 15 5 1990
+
+--- Dados da pessoa ---
+Nome: Maria Silva
+Data de nascimento: 15/5/1990
+
+--- Frequencia ideal ---
+Digite a data atual (dia mes ano): 15 5 2026
+Frequencia cardiaca maxima: 184 bpm
+Faixa ideal (50%-85% da maxima): 92 - 156 bpm
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item Confer\^encia do c\'alculo: nascida em 15/5/1990, hoje \'e 15/5/2026. A pessoa \emph{exatamente hoje} completa 36 anos. Logo, FCM = 220 $-$ 36 = 184 bpm. Faixa ideal: $184 \times 0{,}50 = 92$ e $184 \times 0{,}85 = 156{,}4 \approx 156$. Tudo correto.
+  \item Observe que \texttt{obterIdade} \'e declarada \texttt{const}: ela n\~ao modifica os dados-membro do objeto. Mesmo que internamente fa\c{c}a \texttt{cin >> ...}, esse \texttt{cin} \emph{n\~ao} muda o objeto --- s\'o l\^e dados de fora.
+  \item A fun\c{c}\~ao \texttt{obterFrequenciaIdeal} \'e \texttt{void} porque, em vez de retornar valores, ela \emph{imprime} os dois limites. Alternativamente, poder\'iamos retornar um \texttt{pair<int,int>} ou usar par\^ametros de refer\^encia de sa\'ida --- escolhas mais sofisticadas que vir\~ao em cap\'itulos futuros.
+\end{itemize}
+
+\begin{errocomum}
+Observe que, na minha implementa\c{c}\~ao did\'atica, \texttt{obterFrequenciaIdeal} chama \texttt{obterFrequenciaMaxima}, que por sua vez chama \texttt{obterIdade} --- e \texttt{obterIdade} pede a data atual ao usu\'ario. Cada n\'ivel da pilha de chamada faz nova solicita\c{c}\~ao! Em c\'odigo de produ\c{c}\~ao, dever\'iamos receber a data atual uma s\'o vez no programa principal e passa-la como par\^ametro a essas fun\c{c}\~oes, ou armazenar a idade calculada em cache. Tratamos do tema de \emph{efeitos colaterais} em fun\c{c}\~oes-membro a partir do Cap.~18.
+\end{errocomum}
+
+\begin{obseng}
+Em um ambiente profissional, o c\'alculo da idade seria feito comparando a data de nascimento com a data atual obtida do sistema operacional, n\~ao da entrada do usu\'ario. C++ moderno oferece \texttt{<chrono>} com tipos como \texttt{system\_clock::now()} que dispensam intera\c{c}\~ao humana. O exerc\'icio adota a interatividade por raz\~oes did\'aticas pr\'oprias do est\'agio do livro.
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 16.17 --- Classe \texttt{PerfilSaude}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Projete uma classe \texttt{PerfilSaude} para uma pessoa, com atributos: nome, sobrenome, g\^enero, data de nascimento (atributos separados), altura (cm) e peso (kg). Construtor recebe todos. \emph{Set}/\emph{get} para cada. Inclua fun\c{c}\~oes que calculem e retornem: idade em anos, frequ\^encias card\'iacas m\'axima e ideal (do 16.16), e o IMC (do 2.32). Aplica\c{c}\~ao deve solicitar a informa\c{c}\~ao, instanciar o objeto, imprimir o perfil completo (incluindo IMC, frequ\^encia card\'iaca m\'axima e faixa ideal), e tamb\'em mostrar o gr\'afico de valores de IMC.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+Este exerc\'icio amplia o anterior: agora a classe combina \emph{dois} c\'alculos derivados (frequ\^encia card\'iaca e IMC). A f\'ormula do IMC \'e a vista no Cap\'itulo~2:
+
+\begin{equation*}
+\mathrm{IMC} \;=\; \frac{\text{peso (kg)}}{[\text{altura (m)}]^{2}}
+\end{equation*}
+
+Atenc\~ao: a altura est\'a em \emph{cent\'imetros}, ent\~ao precisamos dividir por 100 antes de elevar ao quadrado. A invers\~ao da ordem das opera\c{c}\~oes (elevar ao quadrado e \emph{depois} converter) seria poss\'ivel, mas a clareza did\'atica prefere a convers\~ao expl\'icita primeiro.
+
+\subsection*{Cabe\c{c}alho \texttt{PerfilSaude.h}}
+
+\lstinputlisting[style=cppcode]{codigos/PerfilSaude.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{PerfilSaude.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/PerfilSaude.cpp}
+
+\subsection*{Programa de teste \texttt{main\_PerfilSaude.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/main_PerfilSaude.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ ./test_PerfilSaude
+=== Perfil de Saude ===
+Primeiro nome: Joao
+Sobrenome: Silva
+Sexo (M/F): M
+Data de nascimento (dia mes ano): 10 3 1985
+Altura (em cm): 175
+Peso (em kg): 80
+
+--- Dados Pessoais ---
+Nome: Joao Silva
+Sexo: M
+Data de nascimento: 10/3/1985
+Altura: 175 cm
+Peso:   80 kg
+
+--- IMC ---
+IMC = 26.12 kg/m^2
+
+--- Tabela de classificacao do IMC (OMS) ---
+  Abaixo de 18.5   : Abaixo do peso
+  18.5 a 24.9      : Peso normal
+  25.0 a 29.9      : Sobrepeso
+  30.0 a 34.9      : Obesidade grau I
+  35.0 a 39.9      : Obesidade grau II
+  40.0 ou mais     : Obesidade grau III
+
+--- Frequencia Cardiaca ---
+Digite a data atual (dia mes ano): 15 5 2026
+Frequencia cardiaca maxima: 179 bpm
+Faixa ideal (50%-85% da maxima): 89 - 152 bpm
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item Confer\^encia do IMC: altura 175 cm = 1,75 m; peso 80 kg. IMC = $80 / (1{,}75 \times 1{,}75) = 80 / 3{,}0625 \approx 26{,}12$. Confere. Pelo gr\'afico da OMS, est\'a na faixa 25,0--29,9: \emph{sobrepeso}.
+  \item Confer\^encia da idade: nascido em 10/3/1985, hoje \'e 15/5/2026. M\^es atual (5) maior que m\^es de nascimento (3), portanto j\'a fez anivers\'ario neste ano. Idade = 2026 $-$ 1985 = 41 anos. FCM = 220 $-$ 41 = 179. Faixa ideal: 89 a 152. Tudo confere.
+  \item Note como a fun\c{c}\~ao \texttt{obterIMC} retorna \texttt{double}, n\~ao \texttt{int} --- precisamos da precis\~ao fracion\'aria. \texttt{setprecision(2)} (de \texttt{<iomanip>}) garante apresenta\c{c}\~ao com duas casas decimais.
+  \item A altura est\'a representada como \texttt{int} (cent\'imetros) por simplicidade did\'atica e seguindo o enunciado. Em c\'odigo real, prefer\'iramos \texttt{double} em metros, ou pelo menos uma documenta\c{c}\~ao expl\'icita das unidades.
+\end{itemize}
+
+\subsection*{Gr\'afico do IMC}
+
+O ``gr\'afico'' mencionado pelo enunciado \'e implementado como a tabela textual de classifica\c{c}\~ao que aparece na sa\'ida (fun\c{c}\~ao \texttt{exibirTabelaIMC}). Em uma vers\~ao mais sofisticada com biblioteca gr\'afica, poder\'iamos plotar barras coloridas e indicar visualmente em que faixa o usu\'ario se encontra; fora do escopo deste exerc\'icio puramente textual.
+
+\begin{obseng}
+\textbf{Sobre privacidade.} O enunciado do exerc\'icio menciona que a informatiza\c{c}\~ao de registros de sa\'ude levanta s\'erias quest\~oes de privacidade. Nosso \texttt{PerfilSaude} guarda dados extremamente sens\'iveis (nome completo, data de nascimento, peso) em mem\'oria sem criptografia, sem controle de acesso e sem auditoria. Em uma aplica\c{c}\~ao real, esses dados teriam de obedecer a legisla\c{c}\~oes como a LGPD (Lei Geral de Prote\c{c}\~ao de Dados, no Brasil), a HIPAA (\emph{Health Insurance Portability and Accountability Act}, nos EUA) ou GDPR (Europa) --- com requisitos rigorosos de criptografia, consentimento informado e direito ao esquecimento. Esses temas voltar\~ao em cap\'itulos futuros sobre persist\^encia e seguran\c{c}a.
+\end{obseng}
+
+\begin{boaprat}
+Os \emph{setters} desta classe n\~ao validam a maioria dos campos (nome, peso, altura). Em c\'odigo de produ\c{c}\~ao, valida\c{c}\~oes esperadas: nome n\~ao vazio, sexo $\in \{$``M'', ``F''$\}$ (ou outro modelo de g\^enero), data v\'alida (ver Exerc.~16.15), peso e altura positivos e em faixas plaus\'iveis. Implementar essas valida\c{c}\~oes \'e um excelente exerc\'icio adicional para o leitor.
+\end{boaprat}
+
+% ============================================================
+\section*{Encerramento}
+% ============================================================
+
+Os dois exerc\'icios \emph{Fazendo a Diferen\c{c}a} do Cap\'itulo~16 ilustram, em escala modesta mas leg\'itima, como a programa\c{c}\~ao orientada a objetos pode contribuir para projetos de impacto social --- aqui, na \'area de sa\'ude e bem-estar.
+
+A classe \texttt{FrequenciaCardiaca} encapsula a l\'ogica de c\'alculo de uma f\'ormula da American Heart Association de maneira que o c\'odigo cliente n\~ao precisa conhecer os detalhes (220 $-$ idade, percentuais 50\%--85\%). Se a AHA atualizar sua orienta\c{c}\~ao no futuro --- digamos, ajustando a constante ou a faixa percentual ---, basta editar a classe em um \'unico lugar e todos os programas que a usam ser\~ao automaticamente atualizados.
+
+A classe \texttt{PerfilSaude} d\'a um passo al\'em ao combinar dois c\'alculos derivados (IMC e frequ\^encia card\'iaca) em uma \'unica abstra\c{c}\~ao da pessoa-paciente. \'E exatamente o tipo de abstra\c{c}\~ao composta que sistemas reais de registros eletr\^onicos de sa\'ude precisar\~ao construir --- centenas de vezes, em centenas de \'areas cl\'inicas.
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}

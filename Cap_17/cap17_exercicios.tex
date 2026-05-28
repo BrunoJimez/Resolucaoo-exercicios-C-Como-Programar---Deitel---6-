@@ -1,0 +1,927 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{deitelorange}{RGB}{198,89,17}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+\definecolor{portabcolor}{RGB}{102,46,145}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekeyword}{RGB}{0,0,180}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codecomment}{RGB}{0,128,0}
+\definecolor{terminalbg}{RGB}{30,30,30}
+\definecolor{terminalfg}{RGB}{220,220,220}
+
+\lstdefinestyle{cppcode}{
+  language=C++,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=8pt,
+  backgroundcolor=\color{codebg}, frame=single, framesep=4pt,
+  rulecolor=\color{deitelblue!50}, breaklines=true,
+  showstringspaces=false, tabsize=4,
+  morekeywords={string, size_t, cin, cout, endl, inline, template, typename,
+                bool, true, false, nullptr, override, final, public, private,
+                protected, explicit, friend, virtual, this},
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+           {Ã}{{\~A}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Ê}{{\^E}}1 {Í}{{\'I}}1
+           {Ó}{{\'O}}1 {Ô}{{\^O}}1 {Õ}{{\~O}}1 {Ú}{{\'U}}1 {Ç}{{\c{C}}}1
+}
+
+\lstdefinestyle{terminal}{
+  basicstyle=\ttfamily\footnotesize\color{terminalfg},
+  backgroundcolor=\color{terminalbg},
+  frame=single, framesep=6pt, rulecolor=\color{deitelblue!50},
+  breaklines=true, showstringspaces=false,
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+}
+
+\hypersetup{colorlinks=true, linkcolor=deitelblue, urlcolor=deitelblue,
+  pdftitle={C: Como Programar - Cap. 17 - Exercicios}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Cap.~17}
+\fancyhead[R]{\small Exerc\'icios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+\newtcolorbox{boaprat}{enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Boa Pr\'atica de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{errocomum}{enhanced, breakable, colback=errocolor!8, colframe=errocolor,
+  fonttitle=\bfseries, title={\textbf{Erro Comum de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{obseng}{enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao de Engenharia de Software}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{dicadesemp}{enhanced, breakable, colback=desempcolor!8, colframe=desempcolor,
+  fonttitle=\bfseries, title={\textbf{Dica de Desempenho}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{enunciado}{enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{saidabox}{enhanced, breakable, colback=gray!8, colframe=gray!50,
+  boxrule=0.6pt, fonttitle=\bfseries\small,
+  title={\textbf{Sa\'ida da execu\c{c}\~ao}},
+  left=6pt, right=6pt, top=3pt, bottom=3pt}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Cap\'itulo 17}\\[0.3em]
+  {\Large\bfseries Classes: uma vis\~ao mais detalhada, parte 1}\\[0.8em]
+  {\large\itshape Exerc\'icios --- Resolu\c{c}\~ao Did\'atica com C\'odigo C++}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``Neste documento resolvemos os 11 exerc\'icios do Cap\'itulo 17, sendo o primeiro conceitual e os dez restantes de programa\c{c}\~ao. Os c\'odigos seguem o padr\~ao estabelecido no Cap\'itulo 16 --- um trio (\texttt{.h}, \texttt{.cpp}, \texttt{main}) por classe --- e exploram quatro temas centrais: enriquecimento de classes existentes (\texttt{Time}, \texttt{Date}), defini\c{c}\~ao de novas classes matem\'aticas (\texttt{Complex}, \texttt{Rational}, \texttt{HugeInteger}), abstra\c{c}\~ao de figuras geom\'etricas (\texttt{Retangulo} em tr\^es n\'iveis de sofistica\c{c}\~ao) e modelagem de um jogo completo (\texttt{JogoVelha}). Todos os c\'odigos compilam com \texttt{g++ -Wall -Wextra -std=c++14} sem warnings.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+% ============================================================
+\section{Exerc\'icio 17.3 --- Finalidade do operador de resolu\c{c}\~ao de escopo}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Qual \'e a finalidade do operador de resolu\c{c}\~ao de escopo?
+\end{enunciado}
+
+\subsection*{Resposta}
+
+O operador de resolu\c{c}\~ao de escopo \texttt{::} (l\^e-se ``dois-pontos-dois-pontos'' ou simplesmente ``escopo'') tem duas formas em C++, j\'a antecipadas no Cap\'itulo~15 (un\'aria) e introduzidas no Cap\'itulo~16 (bin\'aria):
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Forma un\'aria} (\texttt{::nome}): acessa um identificador no \emph{escopo global}, quando ele est\'a sendo ocultado por uma vari\'avel local de mesmo nome.
+  \item \textbf{Forma bin\'aria} (\texttt{Classe::membro} ou \texttt{Namespace::membro}): especifica explicitamente a qual \emph{escopo nomeado} o identificador pertence.
+\end{itemize}
+
+\subsection*{Tr\^es usos t\'ipicos da forma bin\'aria}
+
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Definir fun\c{c}\~oes-membro fora da classe.} Esta \'e a aplica\c{c}\~ao mais central deste cap\'itulo. No \texttt{.h} declaramos os prot\'otipos; no \texttt{.cpp} definimos os corpos, qualificando cada um:
+    \begin{lstlisting}[style=cppcode,numbers=none]
+// No Time.h:
+class Time {
+public:
+    void setHour(int h);
+private:
+    int hour;
+};
+
+// No Time.cpp:
+void Time::setHour(int h) { hour = h; }
+//   ~~~~~~ Sem este "Time::", a funcao seria considerada
+//          uma funcao livre, nao um metodo de Time.
+    \end{lstlisting}
+
+  \item \textbf{Acessar membros est\'aticos.} Membros declarados \texttt{static} pertencem \`a classe, n\~ao a um objeto espec\'ifico. Acessam-se assim: \texttt{Math::PI}, \texttt{Conta::numeroDeContas()}.
+
+  \item \textbf{Qualificar nomes em \emph{namespaces}.} Veremos cotidianamente: \texttt{std::cout}, \texttt{std::vector}, \texttt{std::string}. Aqui \texttt{std} \'e o \emph{namespace}, n\~ao uma classe.
+\end{enumerate}
+
+\subsection*{Por que essa sintaxe \'e essencial?}
+
+\begin{obseng}
+Sem o operador \texttt{::}, a separa\c{c}\~ao entre arquivo de cabe\c{c}alho e arquivo de implementa\c{c}\~ao seria impratic\'avel. O compilador precisa de algum jeito de \emph{amarrar} a defini\c{c}\~ao livre em \texttt{Time.cpp} \`a declara\c{c}\~ao dentro da classe em \texttt{Time.h}. Esse jeito \'e o prefixo \texttt{Time::}. Como subproduto, isso permite que voc\^e tenha duas classes diferentes com fun\c{c}\~oes-membro de mesmo nome --- \texttt{Conta::saldo()} e \texttt{Investimento::saldo()} convivem harmoniosamente.
+\end{obseng}
+
+\begin{boaprat}
+Procure sempre definir as fun\c{c}\~oes-membro fora da defini\c{c}\~ao da classe, no arquivo \texttt{.cpp}. A definiq\~ao \emph{dentro} da \texttt{class} torna o cabe\c{c}alho extenso, oculta a interface entre detalhes de implementa\c{c}\~ao e for\c{c}a a recompila\c{c}\~ao de todos os clientes quando voc\^e altera o corpo da fun\c{c}\~ao. A exce\c{c}\~ao s\~ao fun\c{c}\~oes muito pequenas que se beneficiam de \emph{inlining} expl\'icito (Cap.~15).
+\end{boaprat}
+
+% ============================================================
+\section{Exerc\'icio 17.4 --- \texttt{Time} com hora corrente do sistema}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Forne\c{c}a um construtor capaz de usar a hora atual das fun\c{c}\~oes \texttt{time} e \texttt{localtime} (declaradas em \texttt{<ctime>}) para inicializar um objeto \texttt{Time}.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A biblioteca C \texttt{<ctime>} (renomeada de \texttt{<time.h>} de C) oferece duas fun\c{c}\~oes-chave:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{time\_t time(time\_t *)}: retorna o tempo atual em segundos desde a \emph{epoch} (1/1/1970 UTC).
+  \item \texttt{struct tm *localtime(const time\_t *)}: converte esse n\'umero em uma estrutura com campos \texttt{tm\_hour}, \texttt{tm\_min}, \texttt{tm\_sec} (e mais campos para data, fuso, etc.) j\'a no fuso hor\'ario local.
+\end{itemize}
+
+Adotaremos um construtor com um par\^ametro booleano (\texttt{useCurrentTime}) que decide se usa a hora corrente ou os valores fornecidos.
+
+\subsection*{Cabe\c{c}alho \texttt{Time.h}}
+
+\lstinputlisting[style=cppcode]{codigos/Time.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{Time.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/Time.cpp}
+
+\subsection*{Programa de teste \texttt{main\_Time04.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/main_Time04.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ ./test_Time04
+Tempo especifico:
+  Universal: 14:30:25
+  Standard:  02:30:25 PM
+
+Hora corrente do sistema:
+  Universal: 05:41:21
+  Standard:  05:41:21 AM
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item Marcamos o construtor com \texttt{explicit} para impedir convers\~oes implicitas indesejadas. Por exemplo, \texttt{Time t = true;} (que seria estranho) \emph{n\~ao} compila com \texttt{explicit}; obriga o programador a escrever \texttt{Time t(true)}.
+  \item A fun\c{c}\~ao \texttt{localtime} retorna um ponteiro para uma \emph{estrutura est\'atica interna}, o que significa: chamadas concorrentes ou aninhadas podem corromper o resultado. Em c\'odigo de produ\c{c}\~ao multithread, prefira \texttt{localtime\_r} (POSIX) ou \texttt{localtime\_s} (Windows).
+  \item Note como reusamos \texttt{setTime} dentro do construtor --- esse \'e o padr\~ao de \emph{delega\c{c}\~ao a setters} que come\c{c}amos no Cap.~16: uma s\'o l\'ogica de valida\c{c}\~ao em um \'unico lugar.
+\end{itemize}
+
+\begin{dicadesemp}
+Para programas que pedem repetidas vezes a hora atual (loops de \emph{logging}, m\'etricas de desempenho), considere chamar \texttt{time()} uma s\'o vez por \emph{frame} e reutilizar o valor. Cada chamada a \texttt{time()} \'e uma chamada de sistema, com custo pequeno mas n\~ao desprez\'ivel quando feita milh\~oes de vezes.
+\end{dicadesemp}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 17.5 --- Classe \texttt{Complex}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Crie a classe \texttt{Complex} para aritm\'etica com n\'umeros complexos $a + bi$. Use \texttt{double} privados para parte real e imagin\'aria. Forne\c{c}a construtor com defaults e fun\c{c}\~oes p\'ublicas para: (a) somar; (b) subtrair; (c) imprimir no formato \texttt{(a, b)}.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+Um n\'umero complexo $z = a + bi$ \'e caracterizado por dois reais. As opera\c{c}\~oes a implementar s\~ao componente a componente:
+$(a_1 + b_1 i) + (a_2 + b_2 i) = (a_1 + a_2) + (b_1 + b_2) i$
+e similarmente para subtra\c{c}\~ao.
+
+\subsection*{Cabe\c{c}alho \texttt{Complex.h}}
+
+\lstinputlisting[style=cppcode]{codigos/Complex.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{Complex.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/Complex.cpp}
+
+\subsection*{Programa de teste}
+
+\lstinputlisting[style=cppcode]{codigos/main_Complex.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+c1 = (3.5, 7.2)
+c2 = (1.5, 2)
+c3 = (0, 0) (default)
+
+c1 + c2 = (5, 9.2)
+c1 - c2 = (2, 5.2)
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item As fun\c{c}\~oes \texttt{add} e \texttt{subtract} \emph{n\~ao} modificam o objeto que as chama; criam e retornam um \emph{novo} objeto \texttt{Complex}. Por isso est\~ao marcadas \texttt{const}.
+  \item O argumento \texttt{const Complex \&outro} \'e a forma idiomatica em C++: \emph{const} promete que n\~ao haver\'a modifica\c{c}\~ao do operando, e \emph{refer\^encia} evita c\'opia.
+  \item Em C++ \emph{de produ\c{c}\~ao}, dever\'iamos sobrecarregar os operadores \texttt{+} e \texttt{-} para escrever \texttt{c1 + c2} em vez de \texttt{c1.add(c2)}. Esse \'e tema do Cap\'itulo 18 (sobrecarga de operadores). A biblioteca padr\~ao \emph{j\'a} oferece a classe \texttt{std::complex<double>} pronta em \texttt{<complex>}.
+\end{itemize}
+
+\begin{obseng}
+\textbf{Sobre n\'umeros complexos.} O lembrete do enunciado de que $i = \sqrt{-1}$ \'e mais profundo do que parece. Antes do s\'eculo XVI, equa\c{c}\~oes como $x^2 + 1 = 0$ eram simplesmente declaradas ``sem solu\c{c}\~ao''. A inven\c{c}\~ao do n\'umero imagin\'ario expandiu o sistema num\'erico, revelando que o plano complexo \'e um \emph{tipo composto natural} --- exatamente como nossas classes! Da\'i a beleza did\'atica de modelar \texttt{Complex} como classe: o conceito matem\'atico e a abstra\c{c}\~ao de programa\c{c}\~ao coincidem.
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 17.6 --- Classe \texttt{Rational}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Crie a classe \texttt{Rational} para aritm\'etica com fra\c{c}\~oes. Use inteiros para numerador e denominador. Construtor com defaults; armazena sempre na forma reduzida. Operac\~oes: (a) somar; (b) subtrair; (c) multiplicar; (d) dividir; (e) imprimir como \texttt{a/b}; (f) imprimir como ponto flutuante.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A redu\c{c}\~ao da fra\c{c}\~ao requer o \textbf{m\'aximo divisor comum} (MDC). Usaremos o algoritmo de Euclides cl\'assico: repetidamente substitui-se $(a, b)$ por $(b, a \bmod b)$ at\'e que $b = 0$.
+
+As f\'ormulas s\~ao as elementares:
+$\frac{a}{b} + \frac{c}{d} = \frac{ad + bc}{bd}, \quad \frac{a}{b} \cdot \frac{c}{d} = \frac{ac}{bd}, \quad \frac{a}{b} \div \frac{c}{d} = \frac{ad}{bc}.$
+A divis\~ao requer \texttt{c} (numerador do divisor) n\~ao-nulo, sob pena de divis\~ao por zero.
+
+\subsection*{Cabe\c{c}alho \texttt{Rational.h}}
+
+\lstinputlisting[style=cppcode]{codigos/Rational.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{Rational.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/Rational.cpp}
+
+\subsection*{Programa de teste}
+
+\lstinputlisting[style=cppcode]{codigos/main_Rational.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Teste da classe Rational ===
+
+Construtores (verifica reducao automatica):
+2/4 reduzido = 1/2  (0.5)
+3/9 reduzido = 1/3  (0.333333)
+default      = 0/1  (0)
+
+Operacoes aritmeticas:
+r1 + r2 = 5/6  (0.833333)
+r1 - r2 = 1/6  (0.166667)
+r1 * r2 = 1/6  (0.166667)
+r1 / r2 = 3/2  (1.5)
+
+Com sinais negativos:
+-6/8  = -3/4  (-0.75)
+6/-8  = -3/4  (-0.75)
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+Confer\^encia matem\'atica: $\tfrac{1}{2}+\tfrac{1}{3} = \tfrac{3+2}{6} = \tfrac{5}{6}$ ✓; $\tfrac{1}{2}-\tfrac{1}{3} = \tfrac{1}{6}$ ✓; $\tfrac{1}{2}\cdot\tfrac{1}{3} = \tfrac{1}{6}$ ✓; $\tfrac{1}{2}\div\tfrac{1}{3} = \tfrac{1}{2}\cdot\tfrac{3}{1} = \tfrac{3}{2}$ ✓.
+
+\begin{itemize}[leftmargin=*]
+  \item Note o uso de \texttt{static} em \texttt{mdc}: \'e uma fun\c{c}\~ao auxiliar que n\~ao precisa de \texttt{this} (n\~ao opera sobre nenhum objeto espec\'ifico). Marc\'a-la como \texttt{static} \'e a forma C++ de torn\'a-la uma fun\c{c}\~ao auxiliar pertencente \`a classe.
+  \item Estrat\'egia de sinais: o sinal negativo, se houver, sempre fica no numerador. Isso simplifica compara\c{c}\~oes e impress\~ao. Observe a aritm\'etica: $\tfrac{-6}{8}$ e $\tfrac{6}{-8}$ s\~ao ambos $-\tfrac{3}{4}$.
+  \item A redu\c{c}\~ao \'e aplicada \emph{no construtor}, n\~ao apenas ap\'os as opera\c{c}\~oes: \texttt{add}, \texttt{subtract} etc. constroem um novo \texttt{Rational}, e o construtor reduz. Garantia: \emph{nenhum} objeto \texttt{Rational} jamais sai do construtor em forma n\~ao reduzida.
+\end{itemize}
+
+\begin{errocomum}
+Em C++ \emph{de produ\c{c}\~ao}, multiplicar inteiros pode causar \emph{overflow} sem aviso. \texttt{add} faz \texttt{num*o.den + o.num*den}: se \texttt{num}, \texttt{den} forem da ordem de $10^5$, o produto pode passar de $10^{10}$, que ultrapassa o \texttt{int} de 32 bits. C\'odigo robusto usaria \texttt{long long} ou inteiros de precis\~ao arbitr\'aria (ver Ex.~17.14).
+\end{errocomum}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 17.7 --- \texttt{Time::tick}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Modifique a classe \texttt{Time} (figs. 17.8/17.9) para incluir uma fun\c{c}\~ao-membro \texttt{tick} que incremente a hora armazenada em 1 segundo. O objeto deve permanecer sempre coerente. Teste em loop, mostrando: (a) transi\c{c}\~ao para o pr\'oximo minuto; (b) transi\c{c}\~ao para a pr\'oxima hora; (c) transi\c{c}\~ao de 23:59:59 para 00:00:00.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A l\'ogica do \texttt{tick} \'e uma cascata de propaga\c{c}\~oes: incrementa segundo; se chegou a 60, zera e incrementa minuto; se chegou a 60, zera e incrementa hora; se chegou a 24, zera (volta para o pr\'oximo dia). Em \texttt{tick}, n\~ao tratamos a transi\c{c}\~ao de dia para dia ainda --- isso virar\'a no Ex.~17.9 quando combinarmos com \texttt{Date}.
+
+\subsection*{Cabe\c{c}alho \texttt{TimeTick.h}}
+
+\lstinputlisting[style=cppcode]{codigos/TimeTick.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{TimeTick.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/TimeTick.cpp}
+
+\subsection*{Programa de teste}
+
+\lstinputlisting[style=cppcode]{codigos/main_TimeTick.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Transicao de minuto (11:30:58 -> 11:31:00) ===
+Inicio: 11:30:58
+ Tick #1: 11:30:59  (11:30:59 AM)
+ Tick #2: 11:31:00  (11:31:00 AM)
+ Tick #3: 11:31:01  (11:31:01 AM)
+
+=== Transicao de hora (08:59:58 -> 09:00:00) ===
+Inicio: 08:59:58
+ Tick #1: 08:59:59  (08:59:59 AM)
+ Tick #2: 09:00:00  (09:00:00 AM)
+ Tick #3: 09:00:01  (09:00:01 AM)
+
+=== Transicao de dia (23:59:58 -> 00:00:00) ===
+Inicio: 23:59:58
+ Tick #1: 23:59:59  (11:59:59 PM)
+ Tick #2: 00:00:00  (12:00:00 AM)
+ Tick #3: 00:00:01  (12:00:01 AM)
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+A cascata de \texttt{if} aninhados \'e \emph{n\~ao casual}: cada n\'ivel s\'o pode disparar se o n\'ivel anterior tamb\'em disparou. Para os tr\^es casos de transi\c{c}\~ao acima, observe:
+
+\begin{itemize}[leftmargin=*]
+  \item No primeiro tick de 11:30:58, \texttt{second} vira 59 --- nada propaga.
+  \item No segundo tick, \texttt{second} vira 60 $\to$ zera, \texttt{minute} sobe a 31 --- s\'o um n\'ivel propagou.
+  \item Em 23:59:59, todos os tr\^es n\'iveis propagam de uma vez: \texttt{second} 60$\to$0, \texttt{minute} 60$\to$0, \texttt{hour} 24$\to$0.
+\end{itemize}
+
+\begin{obseng}
+A invariante de classe que estamos preservando \'e: \texttt{0 <= hour < 24 \&\& 0 <= minute < 60 \&\& 0 <= second < 60}. Diz-se que o objeto est\'a em \textbf{estado coerente} quando essa invariante \'e v\'alida. Toda fun\c{c}\~ao-membro p\'ublica que possa modificar o estado tem a obriga\c{c}\~ao de receb\^e-lo coerente e devolv\^e-lo coerente. Esse \'e um dos princ\'ipios mais profundos da orienta\c{c}\~ao a objetos: classes encapsulam invariantes.
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 17.8 --- \texttt{Date::nextDay}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Modifique a classe \texttt{Date} (figs. 17.17/17.18) para fazer verifica\c{c}\~ao de erro nos inicializadores de \texttt{month}, \texttt{day} e \texttt{year}. Forne\c{c}a uma fun\c{c}\~ao-membro \texttt{nextDay} que incrementa o dia em um. Teste com transi\c{c}\~oes: (a) para o pr\'oximo m\^es; (b) para o pr\'oximo ano.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+Diferentemente do \texttt{tick} do tempo, o n\'umero de dias por m\^es \emph{varia}: 31, 30, 28 (29 em ano bissexto). Precisamos ent\~ao de uma fun\c{c}\~ao auxiliar \texttt{diasDoMes} que retorne o limite correto para o m\^es atual e detecte anos bissextos pela regra cl\'assica: divis\'ivel por 4, exceto se divis\'ivel por 100 e n\~ao por 400 (2000 \'e bissexto, 1900 n\~ao).
+
+\subsection*{Cabe\c{c}alho \texttt{DateNext.h}}
+
+\lstinputlisting[style=cppcode]{codigos/DateNext.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{DateNext.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/DateNext.cpp}
+
+\subsection*{Programa de teste}
+
+\lstinputlisting[style=cppcode]{codigos/main_DateNext.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Transicao de mes (30/3 -> 1/4) ===
+Inicio: 3/30/2026
+ nextDay #1: 3/31/2026
+ nextDay #2: 4/1/2026
+ nextDay #3: 4/2/2026
+
+=== Transicao de ano (30/12 -> 1/1/2027) ===
+Inicio: 12/30/2026
+ nextDay #1: 12/31/2026
+ nextDay #2: 1/1/2027
+ nextDay #3: 1/2/2027
+
+=== Fevereiro nao bissexto (27/2/2025 -> 1/3) ===
+Inicio: 2/27/2025
+ nextDay #1: 2/28/2025
+ nextDay #2: 3/1/2025
+ nextDay #3: 3/2/2025
+
+=== Fevereiro bissexto (28/2/2024 -> 29/2 -> 1/3) ===
+Inicio: 2/28/2024
+ nextDay #1: 2/29/2024
+ nextDay #2: 3/1/2024
+
+=== Testes de validacao ===
+Mes invalido (13). Definido como 1.
+Dia invalido (32) para mes 1/2025. Definido como 1.
+Apos validacao: 1/1/2025
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item A ordem de valida\c{c}\~ao no construtor \'e cr\'itica: \texttt{setYear} antes de \texttt{setDay}, e \texttt{setMonth} antes de \texttt{setDay}. Porque o limite m\'aximo do dia depende do m\^es e do ano. Se vali\c{c}\'assemos o dia primeiro, n\~ao saber\'iamos se 29/2 \'e v\'alido (depende do ano).
+  \item Bissexto pela regra do calend\'ario gregoriano: 2024 \'e bissexto (divis\'ivel por 4, n\~ao por 100), 2025 n\~ao \'e. A sa\'ida confirma: \texttt{nextDay} sobre 28/2/2024 entrega 29/2/2024, mas sobre 28/2/2025 j\'a salta para 1/3/2025.
+  \item A array est\'atica \texttt{static const int dias[]} dentro de \texttt{diasDoMes}: o modificador \texttt{static} aqui significa ``inicializada uma vez na primeira chamada e mantida entre chamadas''.
+\end{itemize}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 17.9 --- \texttt{DateAndTime}: combina\c{c}\~ao de \texttt{Time} e \texttt{Date}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Combine a classe \texttt{Time} (modificada no Ex.~17.7) e a classe \texttt{Date} (modificada no Ex.~17.8) em uma s\'o classe \texttt{DateAndTime}. Modifique \texttt{tick} para chamar \texttt{nextDay} quando a hora avan\c{c}ar para o dia seguinte. Modifique \texttt{printStandard} e \texttt{printUniversal} para mostrar data e hora. Teste especificamente a passagem de hora para o dia seguinte.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+O enunciado j\'a antecipa: ``No Cap.~20 discutiremos heran\c{c}a, que permite essa combina\c{c}\~ao rapidamente''. Como ainda n\~ao temos heran\c{c}a, copiamos os dados e fun\c{c}\~oes das duas classes para uma terceira. \'E uma abordagem manualmente repetitiva mas pedagogicamente \'util: deixa expl\'icita a duplica\c{c}\~ao que a heran\c{c}a vai \emph{eliminar} no futuro.
+
+A nova l\'ogica chave: ao \texttt{tick}, quando \texttt{hour} chega a 24, em vez de simplesmente zerar, chamamos \texttt{nextDay()}, que avan\c{c}a a data.
+
+\subsection*{Cabe\c{c}alho \texttt{DateAndTime.h}}
+
+\lstinputlisting[style=cppcode]{codigos/DateAndTime.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{DateAndTime.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/DateAndTime.cpp}
+
+\subsection*{Programa de teste}
+
+\lstinputlisting[style=cppcode]{codigos/main_DateAndTime.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Teste 1: transicao normal de hora ===
+Inicio: 5/15/2026 09:59:58
+ Tick #1: 5/15/2026 09:59:59
+ Tick #2: 5/15/2026 10:00:00
+ Tick #3: 5/15/2026 10:00:01
+
+=== Teste 2: transicao 23:59:59 -> dia seguinte ===
+Inicio: 5/15/2026 23:59:58
+ Tick #1: 5/15/2026 23:59:59
+ Tick #2: 5/16/2026 00:00:00
+ Tick #3: 5/16/2026 00:00:01
+ Tick #4: 5/16/2026 00:00:02
+
+=== Teste 3: transicao 31/12 23:59:58 -> 1/1/2027 ===
+Inicio: 12/31/2026 23:59:58
+ Tick #1: 12/31/2026 23:59:59  (12/31/2026 11:59:59 PM)
+ Tick #2: 1/1/2027 00:00:00  (1/1/2027 12:00:00 AM)
+ Tick #3: 1/1/2027 00:00:01  (1/1/2027 12:00:01 AM)
+ Tick #4: 1/1/2027 00:00:02  (1/1/2027 12:00:02 AM)
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+Observe o teste mais cr\'itico: \emph{trans\i\c{c}\~ao de ano} (31/12/2026 23:59:58). Em um \'unico tick, todas as casquinhas explodem em cascata: \texttt{second} 60$\to$0, \texttt{minute} 60$\to$0, \texttt{hour} 24$\to$0, \texttt{nextDay} dispara, \texttt{day} excede 31 (dezembro), \texttt{month} 13$\to$1, \texttt{year} avan\c{c}a. Todas as transi\c{c}\~oes acertaram --- a sa\'ida \'e \texttt{1/1/2027 00:00:00 (12:00:00 AM)}.
+
+\begin{obseng}
+\textbf{Por que copiamos em vez de herdar?} Heran\c{c}a, vista no Cap\'itulo~20, permite criar \texttt{DateAndTime} como ``filho'' de \texttt{Date} e \texttt{Time} (heran\c{c}a m\'ultipla), reaproveitando todos os m\'etodos. O fato de o enunciado escolher a abordagem manual aqui \emph{deliberadamente} faz o leitor \emph{sentir} a duplica\c{c}\~ao --- e essa sensa\c{c}\~ao motiva a aceita\c{c}\~ao posterior da heran\c{c}a como solu\c{c}\~ao. Toda boa abstra\c{c}\~ao em programa\c{c}\~ao surge da rejei\c{c}\~ao de uma duplica\c{c}\~ao previamente experimentada.
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 17.10 --- \texttt{Time} com \emph{setters} que retornam erro}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Modifique as fun\c{c}\~oes \emph{set} na classe \texttt{Time} para retornar valores de erro apropriados se for feita uma tentativa de definir um dado-membro para valor inv\'alido. Escreva um programa de teste que mostre mensagens de erro quando as fun\c{c}\~oes \emph{set} retornam valores de erro.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+At\'e agora, nossas valida\c{c}\~oes silenciosamente ajustavam o valor inv\'alido (a 0) e, no caso de classes como \texttt{Date}, imprimiam uma mensagem. Aqui o enunciado pede um padr\~ao diferente: cada \emph{setter} deve \emph{retornar} um c\'odigo de erro, permitindo ao \emph{chamador} reagir como desejar. \'E uma forma de tornar o c\'odigo cliente \emph{informado} dos erros, em vez de aceit\'a-los silenciosamente.
+
+Adotaremos uma \emph{enumera\c{c}\~ao} com bits independentes:
+\texttt{ERR\_HOUR = 1}, \texttt{ERR\_MINUTE = 2}, \texttt{ERR\_SECOND = 4}.
+A combina\c{c}\~ao via OR bit-a-bit (\texttt{|}) permite que \texttt{setTime} reporte simultaneamente \emph{todos} os erros que ocorreram.
+
+\subsection*{Cabe\c{c}alho \texttt{TimeWithErrors.h}}
+
+\lstinputlisting[style=cppcode]{codigos/TimeWithErrors.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{TimeWithErrors.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/TimeWithErrors.cpp}
+
+\subsection*{Programa de teste}
+
+\lstinputlisting[style=cppcode]{codigos/main_TimeWithErrors.cpp}
+
+\subsection*{Execu\c{c}\~ao (sa\'ida resumida)}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+t.setTime(10, 30, 45):
+  OK: valor aceito.
+  Estado: 10:30:45
+
+t.setTime(25, 30, 45)  [hora invalida]:
+  ERRO (codigo 1): hora invalida;
+  Estado: 00:30:45
+
+t.setTime(10, 75, 45)  [minuto invalido]:
+  ERRO (codigo 2): minuto invalido;
+  Estado: 10:00:45
+
+t.setTime(10, 30, 99)  [segundo invalido]:
+  ERRO (codigo 4): segundo invalido;
+  Estado: 10:30:00
+
+t.setTime(25, 75, 99)  [tudo invalido]:
+  ERRO (codigo 7): hora invalida; minuto invalido; segundo invalido;
+  Estado: 00:00:00
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item Os c\'odigos s\~ao pot\^encias de 2 (1, 2, 4) precisamente para que possam ser combinados sem perda: o c\'odigo final 7 = 1+2+4 mostra que \emph{os tr\^es} setters falharam. Esse padr\~ao \'e chamado de \emph{bit flags}.
+  \item O \texttt{enum} aninhado \texttt{ErrorCode} \'e declarado \emph{p\'ublico} dentro da classe, ent\~ao o c\'odigo cliente faz \texttt{TimeWithErrors::ERR\_HOUR}. \'E uma forma de \emph{namespacing} natural: o nome do erro fica vinculado \`a classe que o gera.
+  \item A combina\c{c}\~ao \texttt{setHour(h) | setMinute(m) | setSecond(s)} computa todos os tr\^es \emph{antes} de aplicar o OR --- o que \'e o que queremos (queremos chamar os tr\^es independentemente do resultado do primeiro). Se us\'assemos \texttt{||} (OR l\'ogico curto-circuito) em vez de \texttt{|} (OR bit-a-bit), a avalia\c{c}\~ao pararia ap\'os o primeiro c\'odigo n\~ao-zero.
+\end{itemize}
+
+\begin{obseng}
+Em C++ moderno (C++11+), exce\c{c}\~oes (\texttt{throw}/\texttt{try}/\texttt{catch}) substituem em muitos cen\'arios o padr\~ao de c\'odigo-de-erro. Mas \emph{nem sempre} exce\c{c}\~oes s\~ao apropriadas: em c\'odigo embarcado ou em \emph{hot paths}, c\'odigos de erro s\~ao mais previs\'iveis em desempenho. Ainda mais moderno: \texttt{std::optional<T>}, \texttt{std::expected<T,E>} (C++23). Tratamento de exce\c{c}\~oes \'e tema do Cap\'itulo~19.
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 17.11 --- Classe \texttt{Retangulo}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Crie uma classe \texttt{Retangulo} com atributos \texttt{comprimento} e \texttt{largura}, defaults = 1. Forne\c{c}a fun\c{c}\~oes-membro para per\'imetro e \'area, e \emph{set}/\emph{get} para os atributos. As fun\c{c}\~oes \emph{set} devem verificar que comprimento e largura s\~ao \texttt{double}s em $(0{,}0,~20{,}0)$.
+\end{enunciado}
+
+\subsection*{Cabe\c{c}alho \texttt{Retangulo.h}}
+
+\lstinputlisting[style=cppcode]{codigos/Retangulo.h}
+
+\subsection*{Implementa\c{c}\~ao}
+
+\lstinputlisting[style=cppcode]{codigos/Retangulo.cpp}
+
+\subsection*{Programa de teste}
+
+\lstinputlisting[style=cppcode]{codigos/main_Retangulo.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Construtores ===
+Default:      Comp=1.00  Larg=1.00  Perimetro=4.00  Area=1.00
+5x3:          Comp=5.00  Larg=3.00  Perimetro=16.00  Area=15.00
+
+=== Validacao ===
+Comprimento invalido (25.00). Definido como 1.0.
+(25,5):       Comp=1.00  Larg=5.00  Perimetro=12.00  Area=5.00
+Comprimento invalido (-1.00). Definido como 1.0.
+Largura invalida (-2.00). Definida como 1.0.
+(-1,-2):      Comp=1.00  Larg=1.00  Perimetro=4.00  Area=1.00
+
+=== Setter direto ===
+Comprimento invalido (100.00). Definido como 1.0.
+Apos sets:    Comp=1.00  Larg=7.50  Perimetro=17.00  Area=7.50
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+Conferindo: 5$\times$3 d\'a per\'imetro $2(5+3) = 16$ e \'area $15$. ✓
+
+\begin{itemize}[leftmargin=*]
+  \item A condi\c{c}\~ao de validade \'e \emph{aberta}: $c > 0{,}0$ \texttt{\&\&} $c < 20{,}0$. N\~ao se inclui o limite 20.0 ou o limite 0.0. \'E um detalhe que o enunciado pede textualmente.
+  \item Note como \texttt{setComprimento(100.0)} no \texttt{main} dispara a valida\c{c}\~ao e mant\'em \texttt{comprimento} em 1.0, enquanto a chamada subsequente \texttt{setLargura(7.5)} foi aceita. Cada \emph{setter} \'e independente.
+\end{itemize}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 17.12 --- \texttt{Retangulo} avan\c{c}ado com coordenadas cartesianas}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Crie uma classe \texttt{Retangulo} mais sofisticada que armazena as coordenadas cartesianas dos quatro cantos. O construtor chama uma fun\c{c}\~ao \emph{set} que aceita 4 conjuntos de coordenadas e verifica: (i) cada uma no primeiro quadrante; (ii) coordenadas $x$ ou $y$ n\~ao maiores que 20.0; (iii) realmente especificam um ret\^angulo. Forne\c{c}a fun\c{c}\~oes para comprimento, largura, per\'imetro, \'area. O comprimento \'e a maior das duas dimens\~oes. Inclua um predicado \texttt{quadrado}.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A representa\c{c}\~ao por coordenadas cartesianas \'e \emph{redundante} para um ret\^angulo alinhado aos eixos: 8 n\'umeros para guardar o que cabe em 4 (canto-base + tamanhos). Mas \'e exatamente essa redund\^ancia que torna o exerc\'icio interessante: \emph{a fun\c{c}\~ao \emph{set} precisa verificar que os 8 n\'umeros s\~ao consistentes entre si.}
+
+Conven\c{c}\~ao adotada: os cantos s\~ao fornecidos na ordem inferior-esquerdo, inferior-direito, superior-direito, superior-esquerdo. Para formar um ret\^angulo alinhado aos eixos: $y_1 = y_2$, $y_3 = y_4$, $x_1 = x_4$, $x_2 = x_3$, e $x_1 \neq x_2$, $y_1 \neq y_3$.
+
+\subsection*{Cabe\c{c}alho \texttt{RetanguloAvancado.h}}
+
+\lstinputlisting[style=cppcode]{codigos/RetanguloAvancado.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{RetanguloAvancado.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/RetanguloAvancado.cpp}
+
+\subsection*{Programa de teste}
+
+\lstinputlisting[style=cppcode]{codigos/main_RetanguloAvancado.cpp}
+
+\subsection*{Execu\c{c}\~ao (sa\'ida resumida)}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Retangulo 5x3, canto inferior em (1,2) ===
+5x3:
+  Cantos: (1.00,2.00), (6.00,2.00), (6.00,5.00), (1.00,5.00)
+  Comprimento=5.00  Largura=3.00
+  Perimetro=16.00  Area=15.00  Quadrado=NAO
+
+=== Quadrado 4x4 ===
+4x4:
+  Cantos: (0.00,0.00), (4.00,0.00), (4.00,4.00), (0.00,4.00)
+  Comprimento=4.00  Largura=4.00
+  Perimetro=16.00  Area=16.00  Quadrado=SIM
+
+=== Coordenada fora do 1o quadrante (-1, 0) ===
+Erro: alguma coordenada fora do 1o quadrante ou maior que 20.
+Usando default unitario.
+
+=== Nao forma retangulo (alterada) ===
+Erro: as 4 coordenadas nao formam um retangulo alinhado aos eixos.
+Usando default unitario.
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item \texttt{auto noPQ = [](double x, double y) {...}} dentro da fun\c{c}\~ao \texttt{set} \'e uma \textbf{express\~ao lambda} (C++11). Define uma fun\c{c}\~ao an\^onima local --- muito \'util para auxiliares locais. \'E equivalente a definir uma fun\c{c}\~ao auxiliar privada, mas evita poluir o cabe\c{c}alho da classe.
+  \item A compara\c{c}\~ao \texttt{a == g} entre \texttt{double}s pode parecer arriscada (raz\~oes de precis\~ao), mas neste exerc\'icio assumimos que o cliente fornece valores exatos. Para usu\'arios reais, considerar tolerancia: \texttt{fabs(a - g) < 1e-9}.
+  \item O predicado \texttt{quadrado()} usa precisamente essa tolerancia, comparando \texttt{fabs(comprimento() - largura()) < 1e-9}, para n\~ao falhar por arredondamentos sutis.
+\end{itemize}
+
+\begin{boaprat}
+Quando uma classe tem v\'arios construtores ou \emph{setters} que validam, fa\c{c}a que o \emph{construtor} delegue ao \emph{setter} principal (como nosso construtor delega a \texttt{set}). Assim, todo objeto criado passa pela mesma valida\c{c}\~ao --- nenhuma porta dos fundos. Esse \'e o princ\'ipio do \emph{construtor delegante} (C++11), que veremos formalizado em cap\'itulos posteriores.
+\end{boaprat}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 17.13 --- \texttt{Retangulo} com fun\c{c}\~ao \texttt{desenhar}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Modifique a classe do Ex.~17.12 para incluir uma fun\c{c}\~ao \texttt{desenhar} que mostre o ret\^angulo dentro de uma caixa $25\times 25$. Inclua \texttt{setFillCharacter} (caractere de preenchimento do miolo) e \texttt{setPerimeterCharacter} (caractere da borda).
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+O ret\^angulo desenhado em ASCII \'e uma grade de 25 colunas $\times$ 25 linhas. Convertendo as coordenadas cartesianas (reais) para \emph{int} (truncamento), iteramos cada c\'elula $(x, y)$ e decidimos:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{naBorda}: $x$ \'e $x_1$ ou $x_2$ \emph{e} $y$ est\'a entre $y_1$ e $y_3$, ou $y$ \'e $y_1$ ou $y_3$ \emph{e} $x$ entre $x_1$ e $x_2$.
+  \item \texttt{noMiolo}: $x_1 < x < x_2$ \emph{e} $y_1 < y < y_3$.
+  \item Caso contr\'ario: \texttt{.} (fundo do plano).
+\end{itemize}
+
+Como em matem\'atica $y$ cresce para cima mas o terminal imprime de cima para baixo, iteramos $y$ \emph{decrescentemente} de 24 a 0.
+
+\subsection*{Cabe\c{c}alho \texttt{RetanguloDesenhavel.h}}
+
+\lstinputlisting[style=cppcode]{codigos/RetanguloDesenhavel.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{RetanguloDesenhavel.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/RetanguloDesenhavel.cpp}
+
+\subsection*{Programa de teste}
+
+\lstinputlisting[style=cppcode]{codigos/main_RetanguloDesenhavel.cpp}
+
+\subsection*{Execu\c{c}\~ao (sa\'ida parcial)}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Retangulo 8x5 com borda default (*) e miolo vazio ===
+.........................
+.........................
+[... varias linhas de fundo ...]
+...*********.............
+...*       *.............
+...*       *.............
+...*       *.............
+...*       *.............
+...*********.............
+.........................
+.........................
+
+=== Mesmo retangulo, borda '#' e miolo '+' ===
+[... varias linhas de fundo ...]
+...#########.............
+...#+++++++#.............
+...#+++++++#.............
+...#+++++++#.............
+...#+++++++#.............
+...#########.............
+.........................
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item Os dois novos dados-membro --- \texttt{fillChar} e \texttt{perimeterChar} --- s\~ao inicializados na lista do construtor com defaults razoaveis (\texttt{' '} e \texttt{'*'}).
+  \item Apesar da pegada vis\^ual ser maior em modo terminal, n\~ao \'e ambicioso: cabe em pouco mais de 30 linhas de c\'odigo. O exerc\'icio sugere extens\~oes mais ambiciosas (redimensionar, girar, mover), que ficam como exerc\'icio adicional ao leitor.
+\end{itemize}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 17.14 --- Classe \texttt{HugeInteger}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Crie a classe \texttt{HugeInteger} que use um array de 40 elementos de d\'igitos para armazenar inteiros de at\'e 40 d\'igitos. Forne\c{c}a: \texttt{input}, \texttt{output}, \texttt{add}, \texttt{subtract}; fun\c{c}\~oes-predicado \texttt{isEqualTo}, \texttt{isNotEqualTo}, \texttt{isGreaterThan}, \texttt{isLessThan}, \texttt{isGreaterThanOrEqualTo}, \texttt{isLessThanOrEqualTo}; e o predicado \texttt{isZero}.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+O maior \texttt{int} de 64 bits \'e $\approx 9{,}2 \times 10^{18}$, ou seja, cerca de 19 d\'igitos. Para n\'umeros maiores, precisamos representar o inteiro como sequ\^encia de d\'igitos.
+
+Decis\~ao chave: armazenar os d\'igitos do \emph{menos significativo para o mais significativo} --- ou seja, \texttt{digitos[0]} cont\'em a unidade, \texttt{digitos[1]} a dezena, e assim por diante. Essa orienta\c{c}\~ao torna a soma trivial: itera-se posi\c{c}\~ao por posi\c{c}\~ao com propaga\c{c}\~ao de \emph{carry}.
+
+\subsection*{Cabe\c{c}alho \texttt{HugeInteger.h}}
+
+\lstinputlisting[style=cppcode]{codigos/HugeInteger.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{HugeInteger.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/HugeInteger.cpp}
+
+\subsection*{Programa de teste}
+
+\lstinputlisting[style=cppcode]{codigos/main_HugeInteger.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Inteiros gigantes ===
+a    = 12345678901234567890123456789012345
+b    = 11111111111111111111111111111111111
+c    = 99999999999999999999999999999999999
+zero = 0
+
+=== Operacoes aritmeticas ===
+a + b = 23456790012345679001234567900123456
+a - b = 1234567790123456779012345677901234
+c + 1 = 100000000000000000000000000000000000
+
+=== Comparacoes ===
+a == b ? NAO
+a != b ? SIM
+a >  b ? SIM
+a <  b ? NAO
+a >= b ? SIM
+a <= b ? NAO
+zero.isZero() ? SIM
+a.isZero()    ? NAO
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item \texttt{c + 1 = 1.0 $\times$ 10$^{35}$}: come\c{c}amos com 35 noves e somamos 1, obtendo 36 d\'igitos. Isso ainda cabe nos 40 d\'igitos do nosso array. Se o resultado ultrapassar 40 d\'igitos, o c\'odigo descarta o estouro --- comportamento aceit\'avel para este exerc\'icio mas digno de aten\c{c}\~ao.
+  \item Os predicados \texttt{isGreaterThan} comparam d\'igito a d\'igito, do mais significativo (posi\c{c}\~ao 39) para o menos (posi\c{c}\~ao 0). O primeiro d\'igito que difere decide.
+  \item Note como \texttt{isLessThan} \'e implementado simplesmente como \texttt{o.isGreaterThan(*this)} --- evitando duplica\c{c}\~ao de l\'ogica. Esse \'e um exemplo do princ\'ipio \emph{DRY}.
+  \item A subtra\c{c}\~ao assume \texttt{*this >= o}; se n\~ao for, o resultado fica errado (n\~ao h\'a sinais negativos). Em produ\c{c}\~ao, validar\'iamos antes.
+\end{itemize}
+
+\begin{obseng}
+Esta \'e essencialmente uma vers\~ao did\'atica de uma classe \emph{bignum} --- aritm\'etica de precis\~ao arbitr\'aria. Em produ\c{c}\~ao, recorre-se a bibliotecas como GMP (\emph{GNU Multiple Precision}) ou \texttt{boost::multiprecision}. Java oferece \texttt{BigInteger} pronto. Python tem precis\~ao arbitr\'aria nativa para inteiros. Em todos os casos, a id\'eia \'e a mesma do nosso exerc\'icio --- armazenar d\'igitos (ou ``palavras'' maiores) em um array.
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 17.15 --- Classe \texttt{JogoVelha}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Crie uma classe \texttt{Velha} que permita escrever um programa completo para o jogo da velha. A classe cont\'em como dado \texttt{private} um array bidimensional 3$\times$3 de inteiros. O construtor inicializa zerado. Permita duas pessoas: jogador 1 marca 1, jogador 2 marca 2. Cada movimento deve ser em casa vazia. Ap\'os cada movimento, determine se houve vit\'oria ou empate.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A modelagem natural: o tabuleiro \'e o dado-membro \texttt{int tabuleiro[3][3]}. As opera\c{c}\~oes que a classe deve oferecer s\~ao:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{jogar(jogador, linha, coluna)}: tenta colocar a marca; valida se est\'a no tabuleiro e se a casa est\'a vazia.
+  \item \texttt{ganhou(jogador)}: verifica se h\'a tr\^es marcas em alguma linha, coluna ou diagonal.
+  \item \texttt{empate()}: tabuleiro cheio sem vencedor.
+  \item \texttt{exibir()}: imprime o tabuleiro em ASCII bonito.
+  \item \texttt{executarPartida()}: la\c{c}o principal que alterna jogadores e termina com vit\'oria ou empate.
+\end{itemize}
+
+\subsection*{Cabe\c{c}alho \texttt{JogoVelha.h}}
+
+\lstinputlisting[style=cppcode]{codigos/JogoVelha.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{JogoVelha.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/JogoVelha.cpp}
+
+\subsection*{Programa principal}
+
+\lstinputlisting[style=cppcode]{codigos/main_JogoVelha.cpp}
+
+\subsection*{Execu\c{c}\~ao (partida em que o jogador 1 ganha pela diagonal secund\'aria)}
+
+Sequ\^encia de jogadas testada: \texttt{(1,1) (0,0) (0,1) (2,2) (2,0) (1,0) (0,2)}. O jogador 1 marca casas $(1,1)$, $(0,1)$, $(2,0)$, $(0,2)$ formando uma combina\c{c}\~ao vencedora.
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Estado final apos jogador 1 vencer ===
+     0   1   2
+  0  O | X | X
+     ----+---+----
+  1  O | X | .
+     ----+---+----
+  2  X | . | O
+
+>>> JOGADOR 1 VENCEU! <<<
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item A vit\'oria foi pela coluna do meio: posi\c{c}\~oes (0,1), (1,1), (2,?)... espera, conferindo o tabuleiro de cima: a \emph{coluna 1} tem X, X mas (2,1) est\'a vazio. A \emph{linha 0} tem O, X, X. Ent\~ao a vit\'oria deve ter sido por outra linha. De fato: olhando todas as posi\c{c}\~oes marcadas com X --- (0,1), (0,2), (1,1), (2,0) --- vemos que (0,1), (1,1), (2,1) seria coluna do meio mas (2,1) est\'a vazio. (2,0), (1,1), (0,2) \'e a \emph{diagonal secund\'aria}, e essas tr\^es est\~ao todas marcadas com X.
+  \item A fun\c{c}\~ao \texttt{ganhou} testa: 3 linhas + 3 colunas + 2 diagonais = 8 combina\c{c}\~oes vencedoras. Cada uma com tr\^es compara\c{c}\~oes. C\'odigo direto.
+  \item O loop principal usa \texttt{while (true)} com sa\'idas via \texttt{return} ao detectar vit\'oria ou empate. \'E uma forma idiomatica de implementar ``loops com m\'ultiplas condi\c{c}\~oes de t\'ermino''.
+\end{itemize}
+
+\begin{obseng}
+\textbf{Versao com IA.} O enunciado sugere uma vers\~ao ambiciosa em que o computador joga contra o usu\'ario. Para a velha 3$\times$3, o algoritmo \emph{minimax} (busca exaustiva) cabe em $9! = 362{.}880$ estados terminais e d\'a um agente \emph{perfeito} (que nunca perde). Para a velha 4$\times$4$\times$4 (tridimensional, sugerida no enunciado), o espa\c{c}o explode para $64!$ e exige t\'ecnicas de poda alfa-beta. Esses temas s\~ao tratados em cursos de Intelig\^encia Artificial.
+\end{obseng}
+
+% ============================================================
+\section*{Encerramento}
+% ============================================================
+
+Os onze exerc\'icios do Cap\'itulo 17 nos levaram bem al\'em do Cap\'itulo 16. Saimos de classes ``planas'' de 16 para classes que: usam recursos externos (sistema operacional em 17.4), modelam objetos matem\'aticos (\texttt{Complex}, \texttt{Rational}, \texttt{HugeInteger}), preservam invariantes complexas atrav\'es de propaga\c{c}\~oes em cascata (\texttt{tick}, \texttt{nextDay}), combinam classes (\texttt{DateAndTime}), reportam erros de forma estruturada (\texttt{TimeWithErrors}), abstraem progressivamente um conceito geom\'etrico (\texttt{Retangulo} em tr\^es n\'iveis), e modelam intera\c{c}\~ao com o usu\'ario (\texttt{JogoVelha}).
+
+Esses 12 trios de arquivos formam uma cole\c{c}\~ao representativa do que se pode fazer em C++ ainda \emph{antes} de aprender heran\c{c}a, polimorfismo, exce\c{c}\~oes ou templates de classe --- todos os recursos mais avan\c{c}ados que vir\~ao a partir do Cap\'itulo~18. \'E uma demonstra\c{c}\~ao da poten\c{c}ia do que aprendemos: a \emph{classe} sozinha \emph{j\'a} \'e um instrumento poderoso de abstra\c{c}\~ao.
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}

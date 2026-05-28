@@ -1,0 +1,489 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 12 -- Estruturas de Dados em C
+%  EXERCÍCIOS DE AUTORREVISÃO (12.1 -- 12.5)
+%  Abordagem incremental: Caps. 1 a 12
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},title={\small\color{white}Saída do programa},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 12 -- Autorrevisão}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 12}\\[0.3cm]
+  {\Large\color{deitelblue!80}Estruturas de Dados em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios de Autorrevisão (12.1--12.5)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, abordagem incremental\\
+    Capítulos 1 a 12}
+  \end{tcolorbox}
+\end{titlepage}
+
+\section*{Construindo sobre os Capítulos Anteriores}
+
+No Capítulo~12 chegamos ao auge da progressão Deitel: \textbf{estruturas de dados
+dinâmicas}. Tudo o que aprendemos até aqui converge:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Estruturas autorreferenciadas} -- \texttt{struct} contendo
+  ponteiro para o próprio tipo (Cap.~10 + Cap.~7)
+  \item \textbf{Alocação dinâmica} -- \texttt{malloc}, \texttt{calloc},
+  \texttt{realloc}, \texttt{free} de \texttt{<stdlib.h>}
+  \item \textbf{Listas encadeadas} -- coleções dinâmicas que crescem em tempo
+  de execução
+  \item \textbf{Pilhas} (LIFO) -- inserir/remover sempre no topo
+  \item \textbf{Filas} (FIFO) -- inserir na cauda, remover da cabeça
+  \item \textbf{Árvores binárias} -- estrutura não-linear com dois links por nó
+  \item \textbf{Travessias} -- in-order, pré-ordem, pós-ordem, nível
+\end{itemize}
+
+\begin{boaprática}
+  As estruturas de dados deste capítulo são fundação para tudo: bancos de dados,
+  compiladores, sistemas operacionais, gerenciadores de pacotes, sistemas de
+  arquivos. Toda linguagem moderna (Java, Python, C++) implementa essas mesmas
+  estruturas internamente. Quem aprende em C, aprende como elas funcionam por
+  dentro.
+\end{boaprática}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 12.1 -- Preenchimento de Lacunas (15 itens)}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item Uma estrutura \textbf{autorreferenciada} forma estruturas de dados dinâmicas.
+
+\item A função \textbf{\texttt{malloc}} aloca memória dinamicamente.
+
+\item Uma \textbf{pilha} é especialização de lista onde nós são inseridos/excluídos
+apenas do início (topo).
+
+\item Funções que examinam uma lista sem modificá-la são chamadas de \textbf{predicados}.
+
+\item Uma fila é estrutura de dados \textbf{FIFO} (\textit{first-in, first-out}).
+
+\item O ponteiro para o próximo nó é chamado de \textbf{link}.
+
+\item A função \textbf{\texttt{free}} libera memória alocada dinamicamente.
+
+\item Uma \textbf{fila} permite inserções no fim e exclusões no início.
+
+\item Uma \textbf{árvore} é estrutura não-linear, com nós tendo dois ou mais links.
+
+\item Uma pilha é estrutura \textbf{LIFO} (\textit{last-in, first-out}).
+
+\item Nós de uma árvore \textbf{binária} contêm dois membros de link.
+
+\item O primeiro nó de uma árvore é o nó \textbf{raiz}.
+
+\item Cada link em um nó de árvore aponta para um \textbf{filho} ou \textbf{subárvore}.
+
+\item Um nó sem filhos é chamado nó \textbf{folha}.
+
+\item Os três algoritmos de travessia são \textbf{in-order} (na ordem),
+\textbf{pré-ordem} e \textbf{pós-ordem}.
+
+\end{enumerate}
+
+\textbf{Resumo das estruturas:}
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l l l}
+\toprule
+\textbf{Estrutura} & \textbf{Padrão} & \textbf{Operações principais} \\ \midrule
+Lista encadeada & livre & inserir/remover em qualquer lugar \\
+Pilha & LIFO & push (topo) / pop (topo) \\
+Fila & FIFO & enqueue (cauda) / dequeue (cabeça) \\
+Árvore binária & não-linear & inserir / buscar / travessias \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 12.2 -- Lista Encadeada vs. Pilha}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Diferença principal:} flexibilidade de acesso.
+
+\textbf{Lista encadeada:}
+\begin{itemize}[noitemsep]
+  \item Inserção em \textit{qualquer} posição: início, meio, fim.
+  \item Remoção em \textit{qualquer} posição.
+  \item Suporta percurso e busca em qualquer direção (em listas duplamente
+  encadeadas).
+\end{itemize}
+
+\textbf{Pilha:}
+\begin{itemize}[noitemsep]
+  \item Inserção (\textit{push}) \textbf{apenas no topo}.
+  \item Remoção (\textit{pop}) \textbf{apenas do topo}.
+  \item Acesso restrito ao último elemento inserido.
+\end{itemize}
+
+\textbf{Por que limitar o acesso?} Disciplina LIFO é exatamente o que se precisa
+em vários contextos:
+\begin{itemize}[noitemsep]
+  \item \textbf{Chamadas de função:} parâmetros e variáveis locais são empilhados.
+  \item \textbf{Avaliação de expressões:} conversão infixo $\to$ pós-fixo.
+  \item \textbf{Desfazer (undo):} última ação $\to$ primeira a desfazer.
+  \item \textbf{Travessia em profundidade (DFS):} pilha implícita ou explícita.
+\end{itemize}
+
+Uma pilha pode ser \textit{implementada} usando uma lista encadeada (limitando os
+pontos de acesso), mas conceitualmente é uma estrutura mais restrita.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 12.3 -- Pilha vs. Fila}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Pilha (LIFO):}
+\begin{itemize}[noitemsep]
+  \item \textbf{Um único ponteiro:} para o \textit{topo}.
+  \item Push e pop acontecem no mesmo lugar.
+  \item Último inserido é o primeiro removido.
+\end{itemize}
+
+\textbf{Fila (FIFO):}
+\begin{itemize}[noitemsep]
+  \item \textbf{Dois ponteiros:} para a \textit{cabeça} (front) e para a
+  \textit{cauda} (tail).
+  \item Enqueue ocorre na cauda; dequeue na cabeça.
+  \item Primeiro inserido é o primeiro removido -- ordem natural ``chegou primeiro,
+  atendido primeiro''.
+\end{itemize}
+
+\textbf{Aplicações de fila:}
+\begin{itemize}[noitemsep]
+  \item Escalonamento de processos pelo SO (filas de prontos)
+  \item Buffers de E/S (impressora, teclado, rede)
+  \item Travessia em largura (BFS) de grafos
+  \item Simulações de filas de espera (banco, supermercado)
+\end{itemize}
+
+\textbf{Analogia visual:}
+\begin{itemize}[noitemsep]
+  \item Pilha: como uma pilha de pratos -- adiciona/retira só do topo.
+  \item Fila: como uma fila de pessoas -- entra atrás, sai na frente.
+\end{itemize}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 12.4 -- Manipulando GradeNode}
+% ============================================================
+
+\begin{respostabox}
+Considere:
+\begin{lstlisting}
+struct gradeNode {
+    char lastName[ 20 ];
+    double grade;
+    struct gradeNode *nextPtr;
+};
+typedef struct gradeNode GradeNode;
+typedef GradeNode *GradeNodePtr;
+\end{lstlisting}
+
+\textbf{(a) Criar ponteiro inicial (lista vazia):}
+\begin{lstlisting}
+GradeNodePtr startPtr = NULL;
+\end{lstlisting}
+A convenção \texttt{NULL} indica ``lista vazia'' -- nenhum nó alocado ainda.
+
+\textbf{(b) Criar novo nó com ``Jones'', 91.5:}
+\begin{lstlisting}
+GradeNodePtr newPtr;
+newPtr = malloc( sizeof( GradeNode ) );
+if ( newPtr != NULL ) {
+    strcpy( newPtr->lastName, "Jones" );
+    newPtr->grade = 91.5;
+    newPtr->nextPtr = NULL;
+}
+\end{lstlisting}
+
+\textbf{Sequência clássica:} (1) alocar memória, (2) verificar sucesso, (3)
+preencher dados, (4) inicializar ponteiro \texttt{next}.
+
+\textbf{(c) Inserir mantendo ordem alfabética:}
+
+Inicialmente a lista tem: \texttt{Jones} $\to$ \texttt{Smith}.
+
+\textbf{Inserir ``Adams'' 85.0:}
+``Adams'' precede ``Jones''. Como começa no início da lista,
+\texttt{previousPtr = NULL} e \texttt{currentPtr} aponta para o nó ``Jones''
+(primeiro elemento).
+\begin{lstlisting}
+newPtr->nextPtr = currentPtr;   /* newPtr -> Jones */
+startPtr = newPtr;              /* head -> Adams */
+\end{lstlisting}
+
+\textbf{Inserir ``Thompson'' 73.5:}
+``Thompson'' vem depois de ``Smith''. Após percorrer a lista,
+\texttt{previousPtr} aponta para ``Smith'' (último) e \texttt{currentPtr = NULL}.
+\begin{lstlisting}
+newPtr->nextPtr = currentPtr;     /* Thompson -> NULL */
+previousPtr->nextPtr = newPtr;    /* Smith -> Thompson */
+\end{lstlisting}
+
+\textbf{Inserir ``Pritchard'' 66.5:}
+``Pritchard'' fica entre ``Jones'' e ``Smith''. Após busca,
+\texttt{previousPtr} aponta para ``Jones'' e \texttt{currentPtr} para ``Smith''.
+\begin{lstlisting}
+newPtr->nextPtr = currentPtr;     /* Pritchard -> Smith */
+previousPtr->nextPtr = newPtr;    /* Jones -> Pritchard */
+\end{lstlisting}
+
+\textbf{Padrão geral de inserção ordenada:}
+\begin{lstlisting}
+/* Encontra posicao de insercao */
+previousPtr = NULL;
+currentPtr  = startPtr;
+while ( currentPtr != NULL &&
+        strcmp( newName, currentPtr->lastName ) > 0 ) {
+    previousPtr = currentPtr;
+    currentPtr  = currentPtr->nextPtr;
+}
+
+/* Insere */
+if ( previousPtr == NULL ) {           /* inicio */
+    newPtr->nextPtr = startPtr;
+    startPtr = newPtr;
+} else {                                /* meio ou fim */
+    newPtr->nextPtr      = currentPtr;
+    previousPtr->nextPtr = newPtr;
+}
+\end{lstlisting}
+
+\textbf{(d) Loop \texttt{while} para imprimir todos os nós:}
+\begin{lstlisting}
+currentPtr = startPtr;
+while ( currentPtr != NULL ) {
+    printf( "Lastname = %s\nGrade = %6.2f\n",
+            currentPtr->lastName, currentPtr->grade );
+    currentPtr = currentPtr->nextPtr;
+}
+\end{lstlisting}
+
+Este é o \textbf{padrão de travessia} de lista: começar no início, avançar pelo
+\texttt{nextPtr} até \texttt{NULL}.
+
+\textbf{(e) Loop para liberar todos os nós:}
+\begin{lstlisting}
+currentPtr = startPtr;
+while ( currentPtr != NULL ) {
+    tempPtr = currentPtr;
+    currentPtr = currentPtr->nextPtr;  /* avanca ANTES de liberar */
+    free( tempPtr );
+}
+startPtr = NULL;
+\end{lstlisting}
+
+\begin{erroco}
+  \textbf{Erro clássico:} \texttt{free(currentPtr); currentPtr = currentPtr->nextPtr;}
+  -- após \texttt{free}, o conteúdo apontado é inválido! Sempre salve o
+  \texttt{nextPtr} \textit{antes} de liberar.
+\end{erroco}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 12.5 -- Travessias da Árvore Binária}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Árvore dada (15 nós):}
+\begin{center}
+\begin{tabular}{c}
+\texttt{49} (raiz) \\
+$\swarrow$ \quad $\searrow$ \\
+\texttt{28} \quad \quad \quad \texttt{83} \\
+$\swarrow \searrow$ \quad \quad $\swarrow \searrow$ \\
+\texttt{18} \texttt{40} \quad \texttt{71} \texttt{97} \\
+\ldots e assim por diante
+\end{tabular}
+\end{center}
+
+A árvore completa, do livro:
+\begin{itemize}[noitemsep]
+  \item Raiz: 49
+  \item Subárvore esquerda da raiz: 28 (com filhos 18 e 40)
+  \begin{itemize}[noitemsep]
+    \item 18: filhos 11 e 19
+    \item 40: filhos 32 e 44
+  \end{itemize}
+  \item Subárvore direita da raiz: 83 (com filhos 71 e 97)
+  \begin{itemize}[noitemsep]
+    \item 71: filhos 69 e 72
+    \item 97: filhos 92 e 99
+  \end{itemize}
+\end{itemize}
+
+\textbf{Travessia in-order (esquerda, nó, direita) -- ordem crescente:}
+\begin{lstlisting}
+11  18  19  28  32  40  44  49  69  71  72  83  92  97  99
+\end{lstlisting}
+
+Esta é a propriedade \textbf{mágica} de árvores binárias de busca: a travessia
+in-order produz os elementos em ordem crescente -- por isso são usadas em
+buscas, indexação e ordenação.
+
+\textbf{Travessia pré-ordem (nó, esquerda, direita):}
+\begin{lstlisting}
+49  28  18  11  19  40  32  44  83  71  69  72  97  92  99
+\end{lstlisting}
+
+Cada nó é visitado \textit{antes} de seus filhos. Útil para clonar uma árvore
+ou serializar sua estrutura.
+
+\textbf{Travessia pós-ordem (esquerda, direita, nó):}
+\begin{lstlisting}
+11  19  18  32  44  40  28  69  72  71  92  99  97  83  49
+\end{lstlisting}
+
+Cada nó é visitado \textit{depois} de seus filhos. Útil para liberar memória
+(desalocar filhos antes do pai) ou avaliar expressões pós-fixadas.
+
+\bigskip
+
+\textbf{Algoritmos recursivos (essência):}
+\begin{lstlisting}
+void inOrder( const TreeNode *p ) {
+    if ( p == NULL ) return;
+    inOrder( p->left );
+    printf( "%d ", p->data );
+    inOrder( p->right );
+}
+
+void preOrder( const TreeNode *p ) {
+    if ( p == NULL ) return;
+    printf( "%d ", p->data );
+    preOrder( p->left );
+    preOrder( p->right );
+}
+
+void postOrder( const TreeNode *p ) {
+    if ( p == NULL ) return;
+    postOrder( p->left );
+    postOrder( p->right );
+    printf( "%d ", p->data );
+}
+\end{lstlisting}
+
+\textbf{A única diferença entre as três é a ordem das três linhas internas.} O
+nó é processado em uma de três posições -- antes, entre ou depois dos filhos.
+
+\begin{boaprática}
+  \textbf{Como decorar?} O nome diz o lugar do \textit{nó}:
+  \begin{itemize}[noitemsep]
+    \item \textbf{Pré}-ordem: nó \textbf{antes} (pré) dos filhos
+    \item \textbf{In}-ordem: nó \textbf{entre} (in) os filhos
+    \item \textbf{Pós}-ordem: nó \textbf{depois} (pós) dos filhos
+  \end{itemize}
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section*{Gabarito Rápido -- Capítulo 12: Autorrevisão}
+
+\begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,title={\bfseries\large Respostas Resumidas}]
+
+\textbf{12.1:}
+\begin{itemize}[noitemsep]
+  \item[a)] autorreferenciada \quad b) \texttt{malloc} \quad c) pilha \quad d) predicados
+  \item[e)] FIFO \quad f) link \quad g) \texttt{free} \quad h) fila \quad i) árvore
+  \item[j)] LIFO \quad k) binária \quad l) raiz \quad m) filho, subárvore
+  \item[n)] folha \quad o) in-order, pré-ordem, pós-ordem
+\end{itemize}
+
+\medskip\textbf{12.2:} Listas permitem inserção/remoção em qualquer ponto; pilhas
+restritas ao topo.
+
+\medskip\textbf{12.3:} Pilha tem 1 ponteiro (topo); fila tem 2 (cabeça e cauda).
+
+\medskip\textbf{12.4:} Padrões clássicos:
+\begin{itemize}[noitemsep]
+  \item[a)] \texttt{startPtr = NULL}
+  \item[b)] \texttt{malloc}, verificar, preencher, \texttt{nextPtr = NULL}
+  \item[c)] Inserção ordenada: previous e current rastreiam posição
+  \item[d)] Travessia: \texttt{while (cur != NULL) ... cur = cur->next}
+  \item[e)] Liberação: salvar \texttt{next} antes de \texttt{free}
+\end{itemize}
+
+\medskip\textbf{12.5 -- Travessias:}
+\begin{itemize}[noitemsep]
+  \item \textbf{In-order:} 11 18 19 28 32 40 44 49 69 71 72 83 92 97 99 (ordenado!)
+  \item \textbf{Pré-ordem:} 49 28 18 11 19 40 32 44 83 71 69 72 97 92 99
+  \item \textbf{Pós-ordem:} 11 19 18 32 44 40 28 69 72 71 92 99 97 83 49
+\end{itemize}
+
+\end{tcolorbox}
+
+\end{document}

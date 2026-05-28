@@ -1,0 +1,654 @@
+\documentclass[11pt,a4paper]{article}
+
+% ====== Pacotes ======
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+
+% ====== Cores ======
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{deitelorange}{RGB}{198,89,17}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+\definecolor{portabcolor}{RGB}{102,46,145}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekeyword}{RGB}{0,0,180}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codecomment}{RGB}{0,128,0}
+\definecolor{terminalbg}{RGB}{30,30,30}
+\definecolor{terminalfg}{RGB}{220,220,220}
+
+% ====== Listings ======
+\lstdefinestyle{ccode}{
+  language=C,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=8pt,
+  backgroundcolor=\color{codebg},
+  frame=single,
+  framesep=4pt,
+  rulecolor=\color{deitelblue!50},
+  breaklines=true,
+  showstringspaces=false,
+  tabsize=4,
+  morekeywords={size_t, FILE, va_list, ssize_t},
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+           {Ã}{{\~A}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Ê}{{\^E}}1 {Í}{{\'I}}1
+           {Ó}{{\'O}}1 {Ô}{{\^O}}1 {Õ}{{\~O}}1 {Ú}{{\'U}}1 {Ç}{{\c{C}}}1
+}
+
+\lstdefinestyle{terminal}{
+  basicstyle=\ttfamily\footnotesize\color{terminalfg},
+  backgroundcolor=\color{terminalbg},
+  frame=single,
+  framesep=6pt,
+  rulecolor=\color{deitelblue!50},
+  breaklines=true,
+  showstringspaces=false,
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+}
+
+% ====== Hyperref ======
+\hypersetup{
+  colorlinks=true,
+  linkcolor=deitelblue,
+  urlcolor=deitelblue,
+  citecolor=deitelblue,
+  pdftitle={C: Como Programar - Cap. 14 - Exercicios},
+  pdfauthor={Resolucao didatica no estilo Deitel}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Cap.~14}
+\fancyhead[R]{\small Exerc\'icios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+% ====== Caixas no estilo Deitel ======
+\newtcolorbox{boaprat}{
+  enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Boa Pr\'atica de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{errocomum}{
+  enhanced, breakable, colback=errocolor!8, colframe=errocolor,
+  fonttitle=\bfseries, title={\textbf{Erro Comum de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{obseng}{
+  enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao de Engenharia de Software}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{dicadesemp}{
+  enhanced, breakable, colback=desempcolor!8, colframe=desempcolor,
+  fonttitle=\bfseries, title={\textbf{Dica de Desempenho}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{dicaportab}{
+  enhanced, breakable, colback=portabcolor!8, colframe=portabcolor,
+  fonttitle=\bfseries, title={\textbf{Dica de Portabilidade}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{enunciado}{
+  enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{saidabox}{
+  enhanced, breakable, colback=gray!8, colframe=gray!50,
+  boxrule=0.6pt, fonttitle=\bfseries\small,
+  title={\textbf{Sa\'ida da execu\c{c}\~ao}},
+  left=6pt, right=6pt, top=3pt, bottom=3pt
+}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Cap\'itulo 14}\\[0.3em]
+  {\Large\bfseries Outros T\'opicos sobre C}\\[0.8em]
+  {\large\itshape Exerc\'icios --- Resolu\c{c}\~ao Did\'atica com C\'odigo C}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``Neste documento resolvemos passo a passo os oito exerc\'icios de programa\c{c}\~ao 14.2 a 14.9 do Cap\'itulo 14. Cada solu\c{c}\~ao apresenta o programa em C completo, comentado, seguido de an\'alise da arquitetura adotada, exemplos de execu\c{c}\~ao real e observa\c{c}\~oes did\'aticas sobre as armadilhas mais comuns. Todos os c\'odigos foram compilados com \texttt{gcc -Wall -Wextra -std=c99} e executados sem warnings.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+\section*{Conven\c{c}\~oes adotadas neste documento}
+\addcontentsline{toc}{section}{Convenções adotadas neste documento}
+
+\begin{itemize}[leftmargin=*]
+  \item Os c\'odigos est\~ao em caixa cinza-claro com numera\c{c}\~ao de linha; as sa\'idas de execu\c{c}\~ao, em terminal escuro.
+  \item Cada exerc\'icio segue a estrutura \textbf{(1)} enunciado, \textbf{(2)} an\'alise do problema, \textbf{(3)} c\'odigo em C, \textbf{(4)} execu\c{c}\~ao real, \textbf{(5)} discuss\~ao did\'atica.
+  \item As mensagens das interfaces de usu\'ario dos programas est\~ao em portugu\^es sem acentos, para evitar problemas de codifica\c{c}\~ao de terminais.
+\end{itemize}
+
+% ============================================================
+\section{Exerc\'icio 14.2 --- Lista de Argumentos de Tamanhos Vari\'aveis}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Escreva um programa que calcule o produto de uma s\'erie de inteiros passados \`a fun\c{c}\~ao \texttt{product} por uma lista de argumentos de tamanhos vari\'aveis. Teste sua fun\c{c}\~ao com v\'arias chamadas, cada uma com um n\'umero diferente de argumentos.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A fun\c{c}\~ao \texttt{product} precisa receber, al\'em dos n\'umeros a multiplicar, um par\^ametro que informe \emph{quantos} n\'umeros vir\~ao na sequ\^encia. Essa \'e a forma cl\'assica do protocolo de argumentos vari\'aveis em C: o primeiro par\^ametro nomeado serve como ``meta-informa\c{c}\~ao'' sobre o restante.
+
+A assinatura ser\'a, ent\~ao,
+\begin{quote}\texttt{int product(int count, ...);}\end{quote}
+\noindent e o corpo seguir\'a o protocolo \texttt{va\_start}~$\rightarrow$~\texttt{va\_arg} (em \emph{loop})~$\rightarrow$~\texttt{va\_end}.
+
+\subsection*{C\'odigo em C}
+
+\lstinputlisting[style=ccode]{codigos/ex14_02.c}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ gcc -Wall -Wextra -std=c99 ex14_02.c -o ex14_02
+$ ./ex14_02
+Produto de  3 inteiros: 24
+Produto de  5 inteiros: 120
+Produto de  7 inteiros: 128
+Produto de  1 inteiro : 42
+Produto de 10 inteiros: 3628800
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+Conferindo os resultados pela mente: $2 \cdot 3 \cdot 4 = 24$; $5! = 120$; $2^{7} = 128$; e $10! = 3{,}6$ milh\~oes. Tudo bate.
+
+Pontos arquiteturais a destacar:
+
+\begin{itemize}[leftmargin=*]
+  \item O cabe\c{c}alho \texttt{<stdarg.h>} \'e indispens\'avel para todo programa que use listas vari\'aveis. Sem ele, o trio \texttt{va\_list}, \texttt{va\_start}, \texttt{va\_arg}, \texttt{va\_end} fica indefinido.
+  \item \texttt{va\_start} recebe como segundo argumento o \emph{nome} do \'ultimo par\^ametro nomeado --- aqui, \texttt{count}. \'E essa refer\^encia que permite \`a macro localizar o in\'icio da regi\~ao vari\'avel na pilha.
+  \item No \emph{loop}, \texttt{va\_arg(args, int)} extrai o pr\'oximo argumento \emph{j\'a interpretando-o como \texttt{int}}. Como nosso protocolo s\'o passa inteiros, n\~ao h\'a risco --- mas se passassem \texttt{double}s, ter\'iamos de pedir \texttt{va\_arg(args, double)} e o protocolo seria diferente.
+  \item \texttt{va\_end} fecha a sequ\^encia. Em muitas plataformas, ele expande para nada; ainda assim, sua presen\c{c}a \'e exigida pelo padr\~ao.
+\end{itemize}
+
+\begin{errocomum}
+N\~ao podemos ``descobrir'' dentro da fun\c{c}\~ao quantos argumentos foram passados. \texttt{va\_arg} \emph{sempre} avan\c{c}a o ``ponteiro l\'ogico'' --- chamada extra equivale a ler lixo da pilha. O par\^ametro \texttt{count} \'e o \'unico mecanismo seguro. (Outra conven\c{c}\~ao comum, usada por \texttt{printf}, \'e codificar a contagem implicitamente em uma \emph{string} de formato.)
+\end{errocomum}
+
+\begin{obseng}
+Listas vari\'aveis transferem para o programador a obriga\c{c}\~ao de manter a consist\^encia de tipos --- algo que normalmente o compilador faria por n\'os. Por isso, fun\c{c}\~oes com lista vari\'avel s\~ao \emph{poderosas mas perigosas}. Use-as quando o ganho de expressividade for evidente; do contr\'ario, prefira fun\c{c}\~oes com listas fixas ou fun\c{c}\~oes que recebam arrays.
+\end{obseng}
+
+% ============================================================
+\section{Exerc\'icio 14.3 --- Impress\~ao de Argumentos da Linha de Comando}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Escreva um programa que imprima os argumentos da linha de comando do programa.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+O ponto-chave \'e a assinatura completa de \texttt{main}, na qual \texttt{argc} carrega a quantidade e \texttt{argv} as strings:
+\begin{quote}\texttt{int main(int argc, char *argv[])}\end{quote}
+\noindent Basta percorrer \texttt{argv} com um \emph{loop} de \texttt{0} a \texttt{argc - 1}.
+
+\subsection*{C\'odigo em C}
+
+\lstinputlisting[style=ccode]{codigos/ex14_03.c}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ ./ex14_03 alpha beta gamma 42
+O programa recebeu 5 argumento(s) da linha de comando:
+
+  argv[0] = "./ex14_03"
+  argv[1] = "alpha"
+  argv[2] = "beta"
+  argv[3] = "gamma"
+  argv[4] = "42"
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+Observe pontos sutis dignos de aten\c{c}\~ao:
+
+\begin{itemize}[leftmargin=*]
+  \item \texttt{argv[0]} cont\'em o nome com o qual o programa foi invocado --- \emph{n\~ao} o nome do arquivo execut\'avel necessariamente. Em UNIX, comandos como \texttt{exec} podem alterar esse valor; programas como \texttt{busybox} usam-no para distinguir entre m\'ultiplos modos de opera\c{c}\~ao.
+  \item O argumento \texttt{"42"} \'e uma \emph{string}, n\~ao um inteiro. Para converter, ter\'iamos de chamar \texttt{atoi(argv[i])} ou, melhor ainda, \texttt{strtol} (que reporta erros de convers\~ao).
+  \item Os argumentos s\~ao separados pela \emph{shell} por espa\c{c}os em branco --- a menos que estejam entre aspas: \texttt{./ex14\_03 "alpha beta"} produziria apenas 2 elementos.
+\end{itemize}
+
+\begin{boaprat}
+Sempre que escrever um programa que \emph{precisa} de argumentos da linha de comando, verifique \texttt{argc} \emph{antes} de acessar \texttt{argv[i]}, com $i \geq 1$. Acessar uma posi\c{c}\~ao inexistente do array \'e comportamento indefinido. Esta verifica\c{c}\~ao foi feita explicitamente no Exerc\'icio 14.4 a seguir.
+\end{boaprat}
+
+% ============================================================
+\section{Exerc\'icio 14.4 --- Classifica\c{c}\~ao com Op\c{c}\~ao na Linha de Comando}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Escreva um programa que classifique um array de inteiros em ordem crescente ou decrescente. O programa deve usar argumentos da linha de comando para passar \texttt{-c} (crescente) ou \texttt{-d} (decrescente). Nota do livro: este \'e o formato-padr\~ao para passar op\c{c}\~oes em UNIX.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A tarefa combina dois assuntos: (i)~ordena\c{c}\~ao de array (estudada no Cap\'itulo~6, t\'ipica do \emph{bubble sort}) e (ii)~processamento de \texttt{argv} (estudado neste cap\'itulo). A novidade \'e que a \emph{dire\c{c}\~ao da compara\c{c}\~ao} se torna param\'etrica: passamos uma \emph{flag} booleana para a fun\c{c}\~ao de ordena\c{c}\~ao.
+
+Vamos comparar a \emph{flag} com \texttt{strcmp}, da biblioteca de strings (Cap\'itulo~8). Se for inv\'alida, encerramos com mensagem em \texttt{stderr} --- \emph{boa prática UNIX}.
+
+\subsection*{C\'odigo em C}
+
+\lstinputlisting[style=ccode]{codigos/ex14_04.c}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ ./ex14_04 -c
+Array original:
+  37  12  89   4  56  23  71   8  45  99
+
+Array ordenado em ordem crescente:
+   4   8  12  23  37  45  56  71  89  99
+
+$ ./ex14_04 -d
+Array original:
+  37  12  89   4  56  23  71   8  45  99
+
+Array ordenado em ordem decrescente:
+  99  89  71  56  45  37  23  12   8   4
+
+$ ./ex14_04
+Uso: ./ex14_04 -c | -d
+  -c : ordena em ordem crescente
+  -d : ordena em ordem decrescente
+
+$ ./ex14_04 -x
+Opcao desconhecida: "-x"
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item Note que as mensagens de erro v\~ao para \texttt{stderr}, n\~ao para \texttt{stdout}. Isso permite ao usu\'ario redirecionar a sa\'ida ``\'util'' para um arquivo sem perder os di\'agnosticos: \texttt{./ex14\_04 -c > resultado.txt} continua mostrando os erros na tela.
+  \item O c\'odigo de sa\'ida \'e \texttt{EXIT\_FAILURE} (definido em \texttt{<stdlib.h>}) quando algo deu errado, e \texttt{EXIT\_SUCCESS} no caso normal. Essa \'e a conven\c{c}\~ao port\'avel para retornar c\'odigos a \emph{shell scripts} que verifiquem \texttt{\$?}.
+  \item Para evitar duplicar a fun\c{c}\~ao de ordena\c{c}\~ao (uma para crescente, outra para decrescente), parametriz\'a-la com uma \emph{flag} \'e mais elegante. Em projetos maiores, pode-se ir al\'em e passar um \emph{ponteiro para fun\c{c}\~ao de compara\c{c}\~ao} (Cap\'itulo~7) --- exatamente o que faz a fun\c{c}\~ao \texttt{qsort} da biblioteca-padr\~ao.
+\end{itemize}
+
+\begin{obseng}
+A conven\c{c}\~ao UNIX de \emph{flags} curtas (\texttt{-c}, \texttt{-d}) seguidas opcionalmente por argumentos teve tanto sucesso que se transformou em padr\~ao POSIX. A biblioteca \texttt{<unistd.h>} oferece a fun\c{c}\~ao \texttt{getopt}, que automatiza esse processamento para programas com muitas op\c{c}\~oes. Para casos simples como o nosso (uma s\'o \emph{flag}), \texttt{strcmp} direto \'e suficiente.
+\end{obseng}
+
+% ============================================================
+\section{Exerc\'icio 14.5 --- Arquivos Tempor\'arios}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Escreva um programa que coloque um espa\c{c}o entre cada caractere de um arquivo. Primeiro, o programa deve gravar o conte\'udo do arquivo em um arquivo tempor\'ario, com espa\c{c}os entre cada caractere; depois copia-o de volta ao arquivo original, sobrescrevendo o conte\'udo.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A grande pergunta arquitetural \'e: \emph{por que precisamos de um arquivo tempor\'ario?} Por que n\~ao l\^er e escrever no mesmo arquivo?
+
+A resposta \'e simples e instrutiva: se abr\'issemos o arquivo para leitura e escrita simultaneamente e fossemos modific\'a-lo \emph{enquanto lemos}, ter\'iamos uma corrida cl\'assica: ao escrever o espa\c{c}o ap\'os o caractere `\texttt{A}', a posi\c{c}\~ao do `\texttt{B}' que viria a seguir mudaria, e podemos acabar lendo o pr\'oprio espa\c{c}o que acabamos de escrever! O arquivo tempor\'ario \emph{quebra a depend\^encia c\'iclica}: lemos do original para o tempor\'ario; quando o original j\'a foi todo lido, abrimo-lo de novo (em modo \texttt{"w"}, que trunca), e copiamos do tempor\'ario de volta.
+
+A fun\c{c}\~ao-chave \'e \texttt{tmpfile()}, que entrega um \texttt{FILE *} de uso restrito ao programa em execu\c{c}\~ao --- e que ser\'a automaticamente removido ao fechar.
+
+\subsection*{C\'odigo em C}
+
+\lstinputlisting[style=ccode]{codigos/ex14_05.c}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ echo "Ola mundo, programar e divertido!" > teste_orig.txt
+$ cat teste_orig.txt
+Ola mundo, programar e divertido!
+
+$ ./ex14_05 teste_orig.txt
+Arquivo "teste_orig.txt" reescrito com espacos entre caracteres.
+
+$ cat teste_orig.txt
+O l a   m u n d o ,   p r o g r a m a r   e   d i v e r t i d o !
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item Optamos por \emph{n\~ao} adicionar espa\c{c}o ap\'os \texttt{`\textbackslash n'}, para manter a estrutura de linhas leg\'ivel. \'E uma decis\~ao did\'atica que ilustra a import\^ancia de tratar separadamente os caracteres de controle.
+  \item Ap\'os o \emph{loop} de leitura, n\~ao basta \texttt{rewind(temporario)}: tamb\'em precisamos \emph{fechar} o arquivo original e \emph{reabri-lo} em modo \texttt{"w"} para \emph{truncar} seu conte\'udo. Se abr\'issemos em \texttt{"r+"} apenas, o conte\'udo antigo permaneceria nas posi\c{c}\~oes que n\~ao fossem sobrescritas.
+  \item O arquivo tempor\'ario nunca aparece com nome no sistema de arquivos. Isso oferece duas vantagens: (i)~n\~ao polui o diret\'orio com arquivos com nomes esquisitos, e (ii)~se o programa for interrompido, o sistema operacional ainda assim limpa o tempor\'ario quando os \emph{file descriptors} forem fechados.
+\end{itemize}
+
+\begin{dicaportab}
+A implementa\c{c}\~ao de \texttt{tmpfile()} pode falhar em circunst\^ancias incomuns --- por exemplo, quando o disco est\'a cheio ou quando o sistema atinge o limite de arquivos abertos. Sempre verifique o retorno com \texttt{if (temporario == NULL)} e trate a falha. \emph{Programas robustos nunca confiam que aloca\c{c}\~oes de recursos do sistema operacional sempre tenham sucesso.}
+\end{dicaportab}
+
+\begin{errocomum}
+Se voc\^e esquecer o \texttt{fclose(original)} antes do reabrir, o \emph{sistema operacional} pode ainda enxergar duas refer\^encias ao arquivo, e a opera\c{c}\~ao subsequente pode produzir resultados imprevis\'iveis (especialmente em Windows). \emph{Feche, reabra, copie} \'e a sequ\^encia segura.
+\end{errocomum}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 14.6 --- Tratamento de Sinais}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Consulte a documenta\c{c}\~ao do compilador para descobrir os sinais aceitos por \texttt{<signal.h>}. Escreva um programa com tratadores para \texttt{SIGABRT} e \texttt{SIGINT}. O programa deve interceptar \texttt{SIGABRT} chamando \texttt{abort()} e \texttt{SIGINT} pela digita\c{c}\~ao de \texttt{<Ctrl>+<C>}.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+Os sinais padr\~ao definidos por \texttt{<signal.h>} s\~ao seis:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Sinal} & \textbf{Significado} \\
+\hline
+\texttt{SIGABRT} & Encerramento anormal solicitado (via \texttt{abort()}) \\
+\texttt{SIGFPE}  & Erro aritm\'etico (divis\~ao por zero, \emph{overflow}) \\
+\texttt{SIGILL}  & Instru\c{c}\~ao ilegal de m\'aquina \\
+\texttt{SIGINT}  & Interrup\c{c}\~ao interativa (geralmente \texttt{<Ctrl>+<C>}) \\
+\texttt{SIGSEGV} & Acesso inv\'alido \`a mem\'oria (\emph{segmentation fault}) \\
+\texttt{SIGTERM} & Pedido de t\'ermino enviado por outro processo \\
+\hline
+\end{tabular}
+\end{center}
+
+O nosso programa precisa: (1)~\emph{registrar} tratadores para \texttt{SIGABRT} e \texttt{SIGINT}; (2)~aguardar uma a\c{c}\~ao do usu\'ario; (3)~chamar \texttt{abort()} para demonstrar a intercepta\c{c}\~ao de \texttt{SIGABRT}, ou aceitar \texttt{<Ctrl>+<C>} para \texttt{SIGINT}.
+
+\subsection*{C\'odigo em C}
+
+\lstinputlisting[style=ccode]{codigos/ex14_06.c}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ ./ex14_06
+Programa iniciado.
+  - Pressione <Ctrl> + <C> para gerar SIGINT.
+  - Apos 5 segundos sem entrada, chamaremos abort()
+    para gerar SIGABRT.
+
+Pressione <Enter> para chamar abort() agora,
+ou <Ctrl>+<C> para gerar SIGINT: <Enter>
+
+Chamando abort()...
+
+>>> Sinal interceptado: SIGABRT (codigo 6)
+>>> O tratador esta encerrando o programa.
+
+$ echo $?
+1
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item \texttt{signal(SIGABRT, tratadorSinal)} substitui o comportamento padr\~ao do sistema (que seria gerar um \emph{core dump} e encerrar bruscamente) pela chamada da nossa fun\c{c}\~ao.
+  \item Note que \emph{o mesmo} tratador foi registrado para os dois sinais. Dentro dele, o par\^ametro \texttt{tipoSinal} identifica qual sinal de fato ocorreu --- usamos \texttt{switch} para diferenciar.
+  \item Em alguns sistemas, ao receber um sinal, o tratador volta automaticamente ao comportamento padr\~ao --- precisaria ser \emph{re-registrado} a cada chamada. Em sistemas POSIX modernos, a fun\c{c}\~ao mais robusta \'e \texttt{sigaction} (de \texttt{<signal.h>}), por\'em fora do padr\~ao C ANSI estrito.
+\end{itemize}
+
+\begin{errocomum}
+Tratadores de sinais executam em um contexto \emph{ass\'incrono} extremamente restrito. Em uma vis\~ao estrita do padr\~ao C, dentro de um tratador s\'o \'e seguro: (a)~atribuir a vari\'aveis \texttt{volatile sig\_atomic\_t}, (b)~chamar fun\c{c}\~oes ass\'incrono-seguras como \texttt{abort}, \texttt{\_Exit} e \texttt{signal} (re-registrar). Usar \texttt{printf} dentro de um tratador, como fizemos, \'e na pr\'atica universalmente aceito mas \emph{tecnicamente} indefinido. Para programas de produ\c{c}\~ao, manter o tratador m\'inimo (apenas atualizar uma \emph{flag}) \'e a regra de ouro.
+\end{errocomum}
+
+\begin{obseng}
+O qualificador \texttt{volatile} mencionado na Se\c{c}\~ao 14.7 do livro encontra exatamente aqui a sua utilidade canonica: vari\'aveis modificadas dentro de tratadores de sinal devem ser declaradas \texttt{volatile} para que o compilador n\~ao otimize sua leitura, preservando a sem\^antica de altera\c{c}\~ao ass\'incrona.
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 14.7 --- Aloca\c{c}\~ao Din\^amica e Realoca\c{c}\~ao}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Escreva um programa que aloque dinamicamente um array de inteiros cujo tamanho \'e fornecido pelo teclado. Os elementos s\~ao lidos do teclado. Imprima o array. Em seguida, realoque-o para metade do tamanho atual. Imprima o array restante para confirmar que corresponde \`a primeira metade do original.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A sequ\^encia operacional \'e linear: \texttt{malloc}~$\rightarrow$~leitura~$\rightarrow$~impress\~ao~$\rightarrow$~\texttt{realloc}~$\rightarrow$~impress\~ao~$\rightarrow$~\texttt{free}. O ponto pedagogicamente importante \'e o tratamento defensivo do retorno de \texttt{realloc}: lembre-se da regra de ouro discutida no Exerc\'icio~14.1(s): \emph{nunca atribua o retorno de \texttt{realloc} diretamente sobre o pr\'oprio ponteiro}.
+
+\subsection*{C\'odigo em C}
+
+\lstinputlisting[style=ccode]{codigos/ex14_07.c}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ echo "8
+10 20 30 40 50 60 70 80" | ./ex14_07
+Digite o tamanho do array (numero par >= 2): Digite 8 inteiros separados por espacos:
+
+Array original (8 elementos):
+  v[0] = 10
+  v[1] = 20
+  v[2] = 30
+  v[3] = 40
+  v[4] = 50
+  v[5] = 60
+  v[6] = 70
+  v[7] = 80
+
+Apos realloc para 4 elementos:
+  v[0] = 10
+  v[1] = 20
+  v[2] = 30
+  v[3] = 40
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item Confirmamos empiricamente: ap\'os \texttt{realloc} para tamanho menor, os \texttt{novoTamanho} primeiros elementos s\~ao preservados, e o restante \'e descartado.
+  \item A linha \texttt{int *novo = realloc(v, novoTamanho * sizeof(int));} usa um ponteiro auxiliar \texttt{novo}. Se \texttt{realloc} retornasse \texttt{NULL} (falha), \texttt{v} ainda apontaria para o bloco original v\'alido e poder\'iamos lib\'er\'a-lo com \texttt{free(v)}.
+  \item Para realoca\c{c}\~oes que \emph{aumentam} o tamanho, \texttt{realloc} pode mover o bloco para outro endere\c{c}o na \emph{heap}. Por isso \'e essencial \emph{nunca} guardar ponteiros para o interior de um bloco realoc\'avel: eles podem ficar inv\'alidos a qualquer chamada.
+\end{itemize}
+
+\begin{dicadesemp}
+Quando se sabe a priori que um array crescer\'a, \'e melhor estrat\'egia alocar uma capacidade inicial generosa e dobr\'a-la com \texttt{realloc} a cada estouro --- esse padr\~ao garante custo amortizado constante por inser\c{c}\~ao. \'E exatamente assim que os vetores din\^amicos (\texttt{std::vector} em C++, \texttt{ArrayList} em Java) s\~ao implementados.
+\end{dicadesemp}
+
+\begin{boaprat}
+Sempre libere a mem\'oria com \texttt{free} antes de retornar de \texttt{main} (como fizemos), mesmo sabendo que o sistema operacional o faria por voc\^e ao terminar o processo. Em programas que viram bibliotecas ou que executam em sistemas embarcados sem SO, esse h\'abito evita \emph{leaks} graves.
+\end{boaprat}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 14.8 --- Leitura em Ordem Reversa}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Escreva um programa que receba dois argumentos da linha de comando que sejam nomes de arquivos, leia os caracteres do primeiro arquivo um de cada vez, e escreva-os em ordem reversa no segundo arquivo.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A solu\c{c}\~ao natural usa \texttt{fseek} (Cap\'itulo~11) para deslocar a posi\c{c}\~ao de leitura at\'e o fim, descobrir o tamanho com \texttt{ftell}, e ent\~ao iterar de tr\'as para frente, lendo um caractere de cada vez. N\~ao precisamos carregar todo o arquivo para a mem\'oria.
+
+H\'a uma alternativa que \emph{caberia em mem\'oria}: \texttt{malloc} um buffer do tamanho do arquivo, ler tudo de uma vez com \texttt{fread}, e escrever de tr\'as para frente. Para arquivos grandes, por\'em, isso pode esgotar a RAM. Optamos pela vers\~ao com \texttt{fseek} por ser sempre segura, ainda que mais lenta no caso de arquivos enormes (uma vez que cada \texttt{fseek} \'e uma chamada ao sistema operacional).
+
+\subsection*{C\'odigo em C}
+
+\lstinputlisting[style=ccode]{codigos/ex14_08.c}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ printf "abcdefghij" > entrada.txt
+$ ./ex14_08 entrada.txt saida.txt
+Arquivo "saida.txt" gravado com 10 caracteres em ordem reversa de "entrada.txt".
+
+$ cat entrada.txt; echo
+abcdefghij
+
+$ cat saida.txt; echo
+jihgfedcba
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item Abrimos ambos os arquivos em modo bin\'ario (\texttt{"rb"} e \texttt{"wb"}). Em sistemas Windows, o modo texto faz convers\~oes autom\'aticas entre \texttt{\textbackslash n} e \texttt{\textbackslash r\textbackslash n} --- o que \emph{quebraria} o nosso c\'alculo posicional. Em Linux, isso n\~ao faz diferen\c{c}a, mas a portabilidade exige cuidado.
+  \item \texttt{ftell} retorna a posi\c{c}\~ao atual; ap\'os \texttt{fseek(\dots, 0L, SEEK\_END)}, esse valor \'e o tamanho do arquivo em bytes.
+  \item No \emph{loop}, \texttt{fseek(entrada, pos, SEEK\_SET)} posiciona-se em \texttt{pos}, e \texttt{fgetc} l\^e o caractere e avan\c{c}a para \texttt{pos+1}. Como decrementamos \texttt{pos} a cada itera\c{c}\~ao, lemos o arquivo de tr\'as para frente.
+\end{itemize}
+
+\begin{dicadesemp}
+O padr\~ao ``\texttt{fseek} + \texttt{fgetc}'' \'e simples e correto, mas faz duas chamadas ao sistema operacional por byte processado. Para arquivos grandes, a vers\~ao com buffer (\texttt{malloc} + \texttt{fread} + percorrer ao contr\'ario) \'e ordens de magnitude mais r\'apida. Em produ\c{c}\~ao, pode-se ainda usar mapeamento de mem\'oria (\texttt{mmap} em POSIX) para evitar a c\'opia entre o n\'ucleo e o programa.
+\end{dicadesemp}
+
+\begin{obseng}
+Generalize a ideia: este \'e um algoritmo de \emph{processamento sequencial reverso}, padr\~ao \'util sempre que precisamos analisar um log do mais recente ao mais antigo, ou avaliar uma express\~ao em ordem posfixa. A no\c{c}\~ao subjacente --- usar \texttt{fseek} para ``andar para tr\'as'' em um \emph{stream} --- ser\'a essencial em qualquer manipula\c{c}\~ao de arquivo de acesso aleat\'orio (Cap\'itulo~11).
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 14.9 --- \texttt{goto} para Imprimir um Quadrado}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Escreva um programa que use comandos \texttt{goto} para simular um par de \emph{loops} aninhados, imprimindo um quadrado $5 \times 5$ de asteriscos como abaixo. O programa deve usar \emph{apenas} as tr\^es instru\c{c}\~oes \texttt{printf} mostradas:
+
+\begin{quote}
+\texttt{printf("*");}\\
+\texttt{printf(" ");}\\
+\texttt{printf("\textbackslash n");}
+\end{quote}
+
+\noindent O quadrado a produzir \'e:
+\begin{verbatim}
+*****
+*   *
+*   *
+*   *
+*****
+\end{verbatim}
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A restri\c{c}\~ao did\'atica \'e clara: o exerc\'icio \emph{n\~ao} quer um \emph{loop} \texttt{for} aninhado --- ele quer que \emph{simulemos} esse aninhamento \emph{usando apenas \texttt{goto} e r\'otulos}. \'E uma forma de mostrar, em pequena escala, como o c\'odigo de m\'aquina (que \'e essencialmente \emph{goto}) implementa, de forma trabalhosa, o que linguagens estruturadas oferecem com elegancia.
+
+A nossa estrutura ser\'a:
+
+\begin{itemize}[leftmargin=*]
+  \item Vari\'aveis \texttt{linha} e \texttt{coluna}, iniciando em 1.
+  \item R\'otulos: \texttt{inicioLinha}, \texttt{inicioColuna}, \texttt{imprimeAsterisco}, \texttt{imprimeEspaco}, \texttt{avancaColuna}, \texttt{fimLinha}, \texttt{fim}.
+  \item Em cada (linha, coluna), decide-se se ali vai um asterisco (borda) ou espa\c{c}o (interior).
+\end{itemize}
+
+\subsection*{C\'odigo em C}
+
+\lstinputlisting[style=ccode]{codigos/ex14_09.c}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ ./ex14_09
+*****
+*   *
+*   *
+*   *
+*****
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item As tr\^es instru\c{c}\~oes \texttt{printf} permitidas s\~ao exatamente as utilizadas: \texttt{printf("*")} (impress\~ao de asterisco), \texttt{printf(" ")} (espa\c{c}o), \texttt{printf("\textbackslash n")} (nova linha).
+  \item A condi\c{c}\~ao de borda \'e: ``a c\'elula (linha, coluna) est\'a na borda se e somente se linha~=~1 ou linha~=~LADO ou coluna~=~1 ou coluna~=~LADO''. Isso preenche os quatro lados do quadrado --- borda superior, inferior, esquerda, direita ---, deixando vazio o miolo.
+  \item Por que duas vari\'aveis e n\~ao uma? Poder\'iamos colapsar (linha, coluna) em um \'unico contador de 1 a 25, mas a ideia \'e exibir, com clareza, como \emph{loops aninhados} se transformam em \texttt{goto}. Cada \texttt{goto inicioLinha} \'e an\'alogo a ``continue o \emph{loop} externo''; cada \texttt{goto inicioColuna}, ao ``continue o \emph{loop} interno''.
+\end{itemize}
+
+\begin{obseng}
+Edsger Dijkstra publicou em 1968 a famosa carta \emph{``Go To Statement Considered Harmful''} (em portugu\^es: ``O comando \texttt{goto} \'e prejudicial''), na qual argumenta que c\'odigo cheio de \texttt{goto} \'e dif\'icil de entender e de provar correto. Os autores deste livro concordam com Dijkstra: a programa\c{c}\~ao estruturada (com \texttt{if}, \texttt{while}, \texttt{for}, \texttt{switch}) torna o fluxo de execu\c{c}\~ao \emph{visualmente correspondente} \`a estrutura textual do c\'odigo. Compare a vers\~ao com \texttt{goto} acima com a vers\~ao estruturada equivalente:
+\end{obseng}
+
+\begin{lstlisting}[style=ccode]
+/* Versao estruturada equivalente, para comparacao */
+for (int linha = 1; linha <= LADO; ++linha) {
+    for (int coluna = 1; coluna <= LADO; ++coluna) {
+        if (linha == 1 || linha == LADO || coluna == 1 || coluna == LADO)
+            printf("*");
+        else
+            printf(" ");
+    }
+    printf("\n");
+}
+\end{lstlisting}
+
+A vers\~ao estruturada \'e mais curta, mais leg\'ivel e --- crucialmente --- expressa diretamente a inten\c{c}\~ao do programador (``para cada linha, para cada coluna, fa\c{c}a tal coisa''). A vers\~ao com \texttt{goto} obriga o leitor a reconstruir mentalmente o fluxo a partir dos r\'otulos. \'E por isso que, exceto em circunst\^ancias muito espec\'ificas (sa\'ida de \emph{loops} profundamente aninhados, tratamento de erros em c\'odigo de baixo n\'ivel), \texttt{goto} deve ser evitado.
+
+\begin{boaprat}
+Em c\'odigo de produ\c{c}\~ao moderno, \texttt{goto} ainda \emph{tem} um lugar leg\'itimo: padr\~ao de ``\emph{cleanup} em cascata'' em c\'odigo de baixo n\'ivel (\emph{kernels}, \emph{drivers}). Veja, por exemplo, o c\'odigo-fonte do n\'ucleo do Linux: \texttt{goto} \'e frequente, sempre para saltar para um r\'otulo de limpeza de recursos ao detectar um erro. Fora desse padr\~ao, prefira sempre as constru\c{c}\~oes estruturadas.
+\end{boaprat}
+
+% ============================================================
+\section*{Encerramento}
+\addcontentsline{toc}{section}{Encerramento}
+% ============================================================
+
+Encerramos com este Cap\'itulo 14 a parte procedural de C deste livro --- 14 cap\'itulos de viagem desde o primeiro \texttt{printf("Bem-vindo a C!")} (Cap.~2) at\'e os recursos mais sofisticados de intera\c{c}\~ao com o sistema operacional, tratamento de erros e gest\~ao de mem\'oria din\^amica.
+
+Os oito exerc\'icios resolvidos aqui ilustram, juntos, um princ\'ipio profundo: \emph{a viv\^encia plena da linguagem C n\~ao est\'a apenas na sintaxe, mas no di\'alogo com o sistema operacional --- atrav\'es de \emph{streams}, sinais, argumentos de invoca\c{c}\~ao, alocadores e o sistema de arquivos.} \'E essa fronteira que distingue a linguagem C de outras --- e que faz dela, ainda hoje, o ve\'iculo natural para a programa\c{c}\~ao de sistemas.
+
+A partir do Cap\'itulo 15, a obra muda de paradigma: passamos da programa\c{c}\~ao procedural \`a programa\c{c}\~ao orientada a objetos em C++.
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}

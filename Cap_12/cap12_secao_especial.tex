@@ -1,0 +1,458 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 12 -- Estruturas de Dados em C
+%  REFLEXÃO FINAL + SEÇÃO ESPECIAL DO COMPILADOR
+%  (Cap. 12 não tem seção "Fazendo a Diferença" tradicional)
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array,amsmath}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+\definecolor{ecogreen}{RGB}{0,120,50}
+\definecolor{ecolightgreen}{RGB}{210,240,220}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},
+  title={\small\color{white}Saída do programa},breakable,#1}
+\newtcolorbox{pesquisa}[1][]{colback=ecolightgreen,colframe=ecogreen,
+  fonttitle=\bfseries\small,title={Pesquisa externa realizada},breakable,#1}
+\newtcolorbox{atencao}[1][]{colback=yellow!10,colframe=deitellorange,
+  fonttitle=\bfseries\small,title={Atenção},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 12 -- Seção Especial}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue,urlcolor=ecogreen}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 12}\\[0.3cm]
+  {\Large\color{deitelblue!80}Estruturas de Dados em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=ecolightgreen,colframe=ecogreen,width=0.85\linewidth]
+    \centering{\large\bfseries\color{ecogreen}Seção Especial}\\[0.3cm]
+    {\normalsize Construindo seu próprio compilador\\
+    (Exercícios 12.26 -- 12.30)\\[0.2cm]
+    \textbf{Reflexão final do capítulo}}
+  \end{tcolorbox}
+  \vfill{\small Abordagem incremental Deitel}
+\end{titlepage}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section*{Nota Introdutória}
+
+\begin{atencao}
+O Capítulo~12 do livro \textbf{não tem seção ``Fazendo a Diferença''} tradicional.
+Em seu lugar, encontra-se a \textbf{Seção Especial sobre Construção de Compilador}
+(exercícios 12.26 a 12.30), que constitui um projeto de várias semanas integrando
+\textit{todos} os conceitos vistos até aqui.
+
+Este documento apresenta:
+\begin{itemize}[noitemsep]
+  \item Visão geral dos exercícios 12.26--12.30 (texto integral disponível em
+  PDF separado no site da Deitel).
+  \item Esqueletos de implementação dos componentes principais.
+  \item Reflexão final consolidando todo o conhecimento do livro até o Cap.~12.
+\end{itemize}
+\end{atencao}
+
+% ============================================================
+\section{Visão Geral do Projeto do Compilador}
+% ============================================================
+
+\begin{enunciadoBox}[Contexto integrado]
+O projeto integra três trabalhos anteriores:
+\begin{itemize}[noitemsep]
+  \item \textbf{Cap.~7}: simulador Simpletron e linguagem SML (exercícios 7.27--7.29).
+  \item \textbf{Cap.~11}: leitura/escrita de programas em arquivos (Ex.~11.17).
+  \item \textbf{Cap.~12}: estruturas de dados (pilhas, filas, listas, árvores) que
+  o compilador precisa para processar código.
+\end{itemize}
+
+\textbf{O objetivo:} criar um compilador que traduza programas escritos em uma
+linguagem de alto nível chamada \textbf{Simple} (variante didática de BASIC)
+para Simpletron Machine Language (SML), que então executa no simulador do Cap.~7.
+\end{enunciadoBox}
+
+\subsection*{A linguagem Simple}
+
+\begin{respostabox}
+\textbf{Comandos da linguagem Simple} (sintaxe estilo BASIC):
+
+\begin{lstlisting}
+10 rem este e um comentario
+20 input x          /* le inteiro do teclado e armazena em x */
+30 let y = x * 2    /* atribuicao com expressao */
+40 if y > 100 goto 60
+50 print y
+60 goto 20
+70 end
+\end{lstlisting}
+
+\textbf{Características:}
+\begin{itemize}[noitemsep]
+  \item Cada linha começa com um \textbf{número de linha} (rótulo).
+  \item Tipos: apenas inteiros (mapeados a palavras SML).
+  \item Variáveis: identificadores simples (\texttt{a}, \texttt{x}, \texttt{i}, \ldots).
+  \item Operadores: \texttt{+}, \texttt{-}, \texttt{*}, \texttt{/}, \texttt{\%},
+  comparadores \texttt{<}, \texttt{>}, \texttt{<=}, \texttt{>=}, \texttt{==},
+  \texttt{!=}.
+  \item Controle: \texttt{goto}, \texttt{if-goto}.
+\end{itemize}
+\end{respostabox}
+
+\subsection*{Exemplo de programa Simple}
+
+\begin{respostabox}
+Calcular a média de inteiros lidos (sentinela $= -1$):
+
+\begin{lstlisting}
+10  rem programa de media com sentinela
+20  rem total acumulado em t, contador em c
+30  let t = 0
+40  let c = 0
+50  input n
+60  if n == -1 goto 110
+70  let t = t + n
+80  let c = c + 1
+90  goto 50
+100 rem calcula e imprime a media
+110 if c == 0 goto 140
+120 let m = t / c
+130 print m
+140 end
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 12.26 -- Parser de Simple}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Etapas de um parser:}
+\begin{enumerate}[noitemsep]
+  \item \textbf{Análise léxica (\textit{tokenization})}: separar a entrada em
+  tokens (palavras-chave, identificadores, números, operadores).
+  \item \textbf{Análise sintática}: verificar se a sequência de tokens segue a
+  gramática da linguagem.
+  \item \textbf{Geração de tabela de símbolos}: mapear identificadores e rótulos
+  para posições em memória.
+\end{enumerate}
+
+\textbf{Esqueleto da tabela de símbolos (\texttt{struct} do Cap.~10):}
+\begin{lstlisting}
+typedef struct {
+    int  simbolo;     /* numero de linha ou ASCII de variavel */
+    char tipo;        /* 'C' = constante, 'L' = linha, 'V' = variavel */
+    int  posicao;     /* posicao em memoria SML (0-99) */
+} Simbolo;
+
+Simbolo tabela[ 100 ];
+int tamanhoTabela = 0;
+\end{lstlisting}
+
+\textbf{Parser principal (esqueleto):}
+\begin{lstlisting}
+typedef struct linhaSimple {
+    int   numeroLinha;
+    char  comando[ 100 ];
+    int   posicaoSML;          /* preenchido na primeira passada */
+    struct linhaSimple *prox;
+} LinhaSimple;
+
+LinhaSimple* parseArquivo( const char *nomeArq )
+{
+    FILE *fp = fopen( nomeArq, "r" );
+    LinhaSimple *lista = NULL, *ultimo = NULL;
+    char buf[ 200 ];
+
+    while ( fgets( buf, sizeof( buf ), fp ) != NULL ) {
+        LinhaSimple *l = malloc( sizeof( LinhaSimple ) );
+        sscanf( buf, "%d %[^\n]", &l->numeroLinha, l->comando );
+        l->posicaoSML = -1;
+        l->prox       = NULL;
+        if ( lista == NULL ) lista = l;
+        else                 ultimo->prox = l;
+        ultimo = l;
+    }
+    fclose( fp );
+    return lista;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 12.27 -- Geração de Código SML}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Estratégia de duas passadas:}
+
+\textbf{Primeira passada:} percorrer todas as linhas Simple e:
+\begin{itemize}[noitemsep]
+  \item Atribuir uma posição SML para cada \textit{linha} (rótulo).
+  \item Atribuir uma posição SML para cada \textit{variável} encontrada.
+  \item \textbf{Não} resolver ainda os \texttt{goto} (eles podem apontar
+  para frente).
+\end{itemize}
+
+\textbf{Segunda passada:} re-percorrer e gerar instruções SML reais, agora com
+todos os endereços conhecidos.
+
+\textbf{Mapeamento típico (Simple $\to$ SML):}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{l l}
+\toprule
+\textbf{Simple} & \textbf{SML gerado} \\ \midrule
+\texttt{rem ...}              & nada \\
+\texttt{input x}              & \texttt{READ x} \\
+\texttt{print x}              & \texttt{WRITE x} \\
+\texttt{let x = expr}         & avalia \texttt{expr}, \texttt{STORE x} \\
+\texttt{goto NL}              & \texttt{BRANCH posSML(NL)} \\
+\texttt{if a == b goto NL}    & \texttt{LOAD a, SUBTRACT b, BRANCHZERO NL} \\
+\texttt{if a < b goto NL}     & \texttt{LOAD a, SUBTRACT b, BRANCHNEG NL} \\
+\texttt{end}                  & \texttt{HALT} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Tradução de expressões com pilha (Ex.~12.12!):}
+
+A expressão \texttt{let z = (a + b) * 2} converte-se em pós-fixo
+(\texttt{a b + 2 *}) e gera SML:
+\begin{lstlisting}
+LOAD a
+ADD  b
+STORE temp1
+LOAD temp1
+MULTIPLY const2  /* const2 = posicao da constante 2 */
+STORE z
+\end{lstlisting}
+
+\textbf{Aqui está a beleza:} o Ex.~12.12 (conversão infixo $\to$ pós-fixo) e o
+Ex.~12.13 (avaliação pós-fixa) que pareciam exercícios isolados são, na verdade,
+\textbf{componentes essenciais} de um compilador real!
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercícios 12.28 a 12.30 -- Extensões}
+% ============================================================
+
+\begin{respostabox}
+\textbf{12.28 -- Melhoria do compilador:} otimizações comuns:
+\begin{itemize}[noitemsep]
+  \item \textbf{Constant folding:} avaliar expressões constantes em tempo de
+  compilação (\texttt{let x = 2 + 3} $\to$ \texttt{let x = 5}).
+  \item \textbf{Eliminação de código morto:} remover linhas inacessíveis.
+  \item \textbf{Compartilhamento de constantes:} se a constante 2 aparece várias
+  vezes, ela ocupa apenas uma posição SML.
+\end{itemize}
+
+\textbf{12.29 -- Recursos avançados:}
+\begin{itemize}[noitemsep]
+  \item Comandos compostos com chaves (\texttt{\{ ... \}}).
+  \item Estruturas \texttt{while-end} e \texttt{for-end}.
+  \item Tipos adicionais (ponto flutuante, strings curtas).
+  \item Funções definidas pelo usuário (precisaria expandir SML também).
+\end{itemize}
+
+\textbf{12.30 -- Testes integrados:}
+\begin{enumerate}[noitemsep]
+  \item Escrever programas Simple.
+  \item Compilá-los com o compilador.
+  \item Executá-los no Simpletron.
+  \item Verificar saídas esperadas.
+\end{enumerate}
+
+Este é o \textbf{ciclo completo} da computação: linguagem de alto nível $\to$
+compilação $\to$ código de máquina $\to$ execução. Compreender esse ciclo é o
+que separa um programador básico de um cientista da computação.
+\end{respostabox}
+
+\bigskip
+
+% ============================================================
+\section*{Reflexão Final -- O Encerramento do Núcleo de C}
+
+\begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,
+  title={\bfseries 12 capítulos, uma jornada completa}]
+
+Chegando ao Capítulo~12, você completou \textbf{o núcleo essencial de C}.
+Olhando para trás:
+
+\textbf{Capítulos 1--2 -- Fundamentos:}
+\begin{itemize}[noitemsep]
+  \item Computadores, hardware, software.
+  \item Primeiros programas: \texttt{printf}, \texttt{scanf}, \texttt{if}.
+\end{itemize}
+
+\textbf{Capítulos 3--5 -- Programação Estruturada:}
+\begin{itemize}[noitemsep]
+  \item \texttt{while}, \texttt{for}, \texttt{do-while}, \texttt{switch}.
+  \item Operadores lógicos, atribuição composta.
+  \item Funções, recursão, escopo, números aleatórios.
+\end{itemize}
+
+\textbf{Capítulos 6--8 -- Dados Compostos:}
+\begin{itemize}[noitemsep]
+  \item Arrays uni e bidimensionais.
+  \item Ponteiros: o coração de C.
+  \item Strings e manipulação de caracteres.
+\end{itemize}
+
+\textbf{Capítulo 9 -- E/S Refinada:}
+\begin{itemize}[noitemsep]
+  \item Domínio completo de \texttt{printf} e \texttt{scanf}.
+\end{itemize}
+
+\textbf{Capítulos 10--12 -- Estruturas e Persistência:}
+\begin{itemize}[noitemsep]
+  \item \texttt{struct}, \texttt{union}, manipulação de bits.
+  \item Arquivos sequenciais e de acesso aleatório.
+  \item Listas, pilhas, filas, árvores -- dinâmicas e poderosas.
+\end{itemize}
+
+\textbf{Você é agora capaz de:}
+\begin{itemize}[noitemsep]
+  \item Modelar problemas complexos com tipos próprios.
+  \item Implementar estruturas de dados clássicas do zero.
+  \item Persistir informações em arquivos.
+  \item Construir programas significativos: jogos, simulações, calculadoras,
+  analisadores de texto, e até compiladores.
+\end{itemize}
+
+\textbf{O que ainda falta?} Os capítulos 13--14 do livro abordam:
+\begin{itemize}[noitemsep]
+  \item \textbf{Cap.~13:} pré-processador (\texttt{\#define}, \texttt{\#ifdef},
+  macros).
+  \item \textbf{Cap.~14:} tópicos avançados (\texttt{va\_list}, manipulação de
+  sinais, alocação dinâmica avançada, processamento de linha de comando).
+\end{itemize}
+
+Mas, em essência, \textbf{você já domina C}. Está pronto para:
+\begin{itemize}[noitemsep]
+  \item Ler código-fonte do Linux, do Git, do Vim.
+  \item Contribuir com projetos open-source escritos em C.
+  \item Aprender outras linguagens (C++, Rust, Go) com facilidade -- elas
+  herdam grande parte da sintaxe e dos conceitos de C.
+  \item Trabalhar com sistemas embarcados, drivers de dispositivos, kernels.
+\end{itemize}
+
+\end{tcolorbox}
+
+\newpage
+
+\begin{tcolorbox}[colback=ecolightgreen,colframe=ecogreen,
+  title={\bfseries Estruturas de dados: o ponto de virada da carreira}]
+
+Os conceitos do Capítulo~12 não são apenas mais um tópico -- são um
+\textbf{ponto de virada} na sua maturidade técnica:
+
+\textbf{Antes:} ``como faço para resolver este problema específico?''
+
+\textbf{Depois:} ``qual estrutura de dados é mais adequada para esta família de
+problemas?''
+
+\textbf{Onde estruturas de dados aparecem na carreira:}
+\begin{itemize}[noitemsep]
+  \item \textbf{Entrevistas de emprego:} 80\% das perguntas em FAANG envolvem
+  listas, árvores, hashes, grafos.
+  \item \textbf{Code review:} ``por que você usou array aqui em vez de hash table?''
+  \item \textbf{Performance:} a diferença entre $O(n)$ e $O(\log n)$ pode ser
+  a diferença entre uma aplicação que funciona e outra que falha sob carga.
+  \item \textbf{Design de sistemas:} bancos de dados usam B-trees; caches usam
+  hash tables; redes usam filas; UNDO usa pilhas.
+\end{itemize}
+
+\textbf{Próximos níveis (autoestudo):}
+\begin{itemize}[noitemsep]
+  \item \textbf{Estruturas avançadas:} grafos, heaps, tries, segment trees.
+  \item \textbf{Análise de algoritmos:} notação Big-O, master theorem, amortização.
+  \item \textbf{Estruturas balanceadas:} AVL, Red-Black, B-trees.
+  \item \textbf{Persistência:} estruturas funcionais imutáveis.
+  \item \textbf{Concorrência:} estruturas lock-free, CAS, transactional memory.
+\end{itemize}
+
+\textbf{Livros recomendados:}
+\begin{itemize}[noitemsep]
+  \item Cormen et al., \textit{Introduction to Algorithms} (CLRS).
+  \item Sedgewick, \textit{Algorithms in C}.
+  \item Knuth, \textit{The Art of Computer Programming} (vol. 1, 3).
+\end{itemize}
+\end{tcolorbox}
+
+\bigskip
+
+\begin{boaprática}
+\textbf{Conselho final do Cap.~12:}
+
+A programação é, no fundo, sobre \textit{estruturar informação}. Tipos
+primitivos (\texttt{int}, \texttt{double}) representam fatos isolados;
+arrays representam coleções homogêneas; \texttt{struct} representa entidades
+do mundo real; listas e árvores representam relações entre essas entidades.
+
+Quando você domina essa hierarquia -- de bits a estruturas dinâmicas -- você
+pode modelar \textit{qualquer coisa}. Os 12 capítulos da progressão Deitel
+construíram essa hierarquia passo a passo, sem atalhos.
+
+\textbf{O segredo da Programação} (com P maiúsculo): não é decorar sintaxe.
+É treinar a mente para reconhecer padrões, dividir problemas, escolher
+representações adequadas, e expressar soluções em código limpo e correto.
+
+Você está pronto para o próximo nível. Bons estudos!
+\end{boaprática}
+
+\end{document}

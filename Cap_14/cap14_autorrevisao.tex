@@ -1,0 +1,417 @@
+\documentclass[11pt,a4paper]{article}
+
+% ====== Pacotes ======
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+
+% ====== Cores ======
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{deitelorange}{RGB}{198,89,17}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+\definecolor{portabcolor}{RGB}{102,46,145}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekeyword}{RGB}{0,0,180}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codecomment}{RGB}{0,128,0}
+
+% ====== Listings para C ======
+\lstdefinestyle{ccode}{
+  language=C,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=8pt,
+  backgroundcolor=\color{codebg},
+  frame=single,
+  framesep=4pt,
+  rulecolor=\color{deitelblue!50},
+  breaklines=true,
+  showstringspaces=false,
+  tabsize=4,
+  morekeywords={size_t, FILE, va_list},
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+           {Ã}{{\~A}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Ê}{{\^E}}1 {Í}{{\'I}}1
+           {Ó}{{\'O}}1 {Ô}{{\^O}}1 {Õ}{{\~O}}1 {Ú}{{\'U}}1 {Ç}{{\c{C}}}1
+}
+
+% ====== Hyperref ======
+\hypersetup{
+  colorlinks=true,
+  linkcolor=deitelblue,
+  urlcolor=deitelblue,
+  citecolor=deitelblue,
+  pdftitle={C: Como Programar - Cap. 14 - Exercicio de Autorrevisao},
+  pdfauthor={Resolucao didatica no estilo Deitel}
+}
+
+% ====== Cabeçalho ======
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Cap.~14}
+\fancyhead[R]{\small Exerc\'icio de Autorrevis\~ao}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+% ====== Caixas no estilo Deitel ======
+\newtcolorbox{boaprat}{
+  enhanced, breakable,
+  colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries,
+  title={\textbf{Boa Pr\'atica de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{errocomum}{
+  enhanced, breakable,
+  colback=errocolor!8, colframe=errocolor,
+  fonttitle=\bfseries,
+  title={\textbf{Erro Comum de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{obseng}{
+  enhanced, breakable,
+  colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries,
+  title={\textbf{Observa\c{c}\~ao de Engenharia de Software}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{dicadesemp}{
+  enhanced, breakable,
+  colback=desempcolor!8, colframe=desempcolor,
+  fonttitle=\bfseries,
+  title={\textbf{Dica de Desempenho}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{dicaportab}{
+  enhanced, breakable,
+  colback=portabcolor!8, colframe=portabcolor,
+  fonttitle=\bfseries,
+  title={\textbf{Dica de Portabilidade}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{resposta}{
+  enhanced, breakable,
+  colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt,
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+
+% ====== Título ======
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Cap\'itulo 14}\\[0.3em]
+  {\Large\bfseries Outros T\'opicos sobre C}\\[0.8em]
+  {\large\itshape Exerc\'icio de Autorrevis\~ao --- Resolu\c{c}\~ao Did\'atica}
+}
+\author{}
+\date{}
+
+% ====================================================
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``O Cap\'itulo 14 \'e o cap\'itulo da \emph{cole\c{c}\~ao de recursos avan\c{c}ados} da linguagem C: redirecionamento de entrada/sa\'ida, listas de argumentos vari\'aveis, argumentos da linha de comando, compila\c{c}\~ao de m\'ultiplos arquivos-fonte, t\'ermino de programas, qualificador \texttt{volatile}, sufixos de constantes, arquivos tempor\'arios, tratamento de sinais, \texttt{calloc}/\texttt{realloc} e o sempre pol\^emico \texttt{goto}. Este exerc\'icio testa, de uma s\'o vez, o vocabul\'ario t\'ecnico de todo o cap\'itulo.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+% ============================================================
+\section{Exerc\'icio 14.1 --- Vocabul\'ario do Cap\'itulo 14}
+% ============================================================
+
+\textit{Preencha os espa\c{c}os em cada uma das 19 senten\c{c}as (a)--(s).}
+
+\medskip
+
+Antes de iniciarmos item a item, conv\'em organizar o assunto em \emph{quatro blocos tem\'aticos} que correspondem \`as quatro grandes ideias do cap\'itulo:
+
+\begin{enumerate}[label=\textbf{Bloco \arabic*:}, leftmargin=*, itemsep=2pt]
+  \item \textbf{Conex\~ao do programa com o sistema operacional} --- redirecionamento de E/S, \emph{pipes}, argumentos da linha de comando, sinais e t\'ermino controlado de programas (itens \emph{a}--\emph{d}, \emph{i}--\emph{m}, \emph{p}, \emph{q}).
+  \item \textbf{Listas de argumentos vari\'aveis} --- como construir fun\c{c}\~oes que aceitam um n\'umero arbitr\'ario de argumentos (itens \emph{e}--\emph{h}).
+  \item \textbf{Constru\c{c}\~ao de programas em larga escala} --- \texttt{make} e \texttt{makefile} (item \emph{k}).
+  \item \textbf{Recursos finos de mem\'oria, arquivos e tipos} --- sufixos de constantes, arquivos tempor\'arios, \texttt{calloc} e \texttt{realloc} (itens \emph{n}, \emph{o}, \emph{r}, \emph{s}).
+\end{enumerate}
+
+Esses quatro blocos correspondem \`as Se\c{c}\~oes 14.2 a 14.12 do livro. Vamos percorrer as 19 senten\c{c}as nessa ordem tem\'atica.
+
+% ------------------------------------------------------------
+\subsection*{Bloco 1 --- Conex\~ao com o sistema operacional}
+% ------------------------------------------------------------
+
+\subsection*{(a) S\'imbolo para redirecionar dados de \emph{entrada} a partir de um arquivo}
+
+\begin{resposta}\textbf{Resposta:} redirecionamento de entrada (\texttt{<}).\end{resposta}
+
+Em UNIX, Linux e em janelas de comando do Windows, escrever
+\begin{quote}\texttt{./meuPrograma < dados.txt}\end{quote}
+faz com que o conte\'udo de \texttt{dados.txt} seja apresentado ao programa \emph{como se tivesse sido digitado no teclado}. O programa em si nada precisa saber sobre essa substitui\c{c}\~ao --- continua a ler de \texttt{stdin} normalmente. \'E uma das mais elegantes ideias do projeto UNIX: a \textbf{abstra\c{c}\~ao de \emph{stream}}, j\'a apresentada no Cap\'itulo~1, permite que a fonte real dos dados seja trocada ``por fora'' do programa.
+
+\begin{obseng}
+Note a economia conceitual: a fun\c{c}\~ao \texttt{scanf} que estudamos no Cap\'itulo~2 funciona identicamente em ambos os cen\'arios (teclado ou arquivo). Esse \'e um exemplo perfeito do princ\'ipio de \emph{ocultamento de informa\c{c}\~oes}: o programa n\~ao precisa saber \emph{de onde} v\^em os dados, apenas \emph{que} chegam por \texttt{stdin}.
+\end{obseng}
+
+\subsection*{(b) S\'imbolo para redirecionar a \emph{sa\'ida} da tela para um arquivo}
+
+\begin{resposta}\textbf{Resposta:} redirecionamento de sa\'ida (\texttt{>}).\end{resposta}
+
+Simetricamente ao item anterior, o comando
+\begin{quote}\texttt{./meuPrograma > resultado.txt}\end{quote}
+faz com que tudo o que o programa imprimiria com \texttt{printf} v\'a parar em \texttt{resultado.txt}, em vez de aparecer no terminal. Se o arquivo \emph{j\'a existia}, ele \'e \emph{truncado} (apagado) antes da escrita --- detalhe importante, que motiva o item seguinte.
+
+\begin{errocomum}
+Esquecer que \texttt{>} sobrescreve o arquivo \'e uma das maneiras mais comuns de \emph{perder dados acidentalmente} em uma sess\~ao de terminal. Para preservar o conte\'udo anterior, use \texttt{>>} (item~c) ou renomeie o arquivo de destino.
+\end{errocomum}
+
+\subsection*{(c) S\'imbolo para \emph{acrescentar} a sa\'ida ao final de um arquivo}
+
+\begin{resposta}\textbf{Resposta:} acr\'escimo de sa\'ida (\texttt{>>}).\end{resposta}
+
+O operador \texttt{>>} preserva o conte\'udo j\'a existente no arquivo e acrescenta a nova sa\'ida ao final. \'E o mecanismo natural para construir \emph{logs}, registros hist\'oricos ou arquivos de auditoria. Se o arquivo de destino n\~ao existir, ele \'e criado --- ent\~ao \texttt{>>} comporta-se exatamente como \texttt{>} \emph{na primeira invoca\c{c}\~ao} e como ``acrescentar'' nas seguintes.
+
+\subsection*{(d) Mecanismo que direciona a sa\'ida de um programa para a entrada de outro}
+
+\begin{resposta}\textbf{Resposta:} \emph{pipe} (s\'imbolo \texttt{|}).\end{resposta}
+
+Os \emph{pipes} s\~ao a contribui\c{c}\~ao mais influente do UNIX para a forma como pensamos a composi\c{c}\~ao de programas. Em vez de monolitizar tarefas dentro de um \'unico programa enorme, fabricamos pequenos utilit\'arios especializados e os encadeamos:
+\begin{quote}\texttt{./gerador | ./filtro | ./formatador > saida.txt}\end{quote}
+A sa\'ida padr\~ao de cada programa torna-se a entrada padr\~ao do programa seguinte. \'E como ligar tubos hidr\'aulicos --- da\'i o nome.
+
+\begin{obseng}
+A filosofia UNIX de ``\emph{escreva programas que fa\c{c}am uma coisa e a fa\c{c}am bem; escreva programas que cooperem}'' (Doug McIlroy) ganha vida atrav\'es dos \emph{pipes}. Boa parte da pot\^encia do ambiente de linha de comando vem dessa simples ideia.
+\end{obseng}
+
+% ------------------------------------------------------------
+\subsection*{Bloco 2 --- Listas de argumentos vari\'aveis}
+% ------------------------------------------------------------
+
+\subsection*{(e) Indicador de n\'umero vari\'avel de argumentos na lista de par\^ametros}
+
+\begin{resposta}\textbf{Resposta:} retic\^encias (\texttt{...}).\end{resposta}
+
+A declara\c{c}\~ao
+\begin{quote}\texttt{double media(int n, ...);}\end{quote}
+sinaliza ao compilador que, ap\'os o par\^ametro nomeado \texttt{n}, pode haver \emph{zero ou mais} argumentos adicionais, de tipos a princ\'ipio desconhecidos do compilador. A pr\'opria fun\c{c}\~ao \emph{precisa} ter pelo menos um par\^ametro nomeado antes das retic\^encias --- e \'e papel desse par\^ametro (\texttt{n}, no exemplo) informar ao corpo da fun\c{c}\~ao \emph{quantos} argumentos adicionais ele deve consumir.
+
+\subsection*{(f) Macro que deve ser chamada antes que os argumentos vari\'aveis possam ser acessados}
+
+\begin{resposta}\textbf{Resposta:} \texttt{va\_start}.\end{resposta}
+
+A macro \texttt{va\_start}, declarada em \texttt{<stdarg.h>}, inicializa uma vari\'avel do tipo \texttt{va\_list}, posicionando-a logo ap\'os o \'ultimo par\^ametro nomeado da fun\c{c}\~ao. Sintaxe:
+\begin{quote}\texttt{va\_start(args, ultimoParametroNomeado);}\end{quote}
+A partir desse ponto, \texttt{args} ``aponta'' para o primeiro dos argumentos vari\'aveis.
+
+\subsection*{(g) Macro que acessa cada argumento individual da lista vari\'avel}
+
+\begin{resposta}\textbf{Resposta:} \texttt{va\_arg}.\end{resposta}
+
+\texttt{va\_arg(args, tipo)} avalia para o pr\'oximo argumento da lista vari\'avel, interpretando-o como sendo do \texttt{tipo} especificado, e avan\c{c}a \texttt{args} para o pr\'oximo. \'E aqui que reside a \emph{responsabilidade do programador}: o compilador n\~ao tem como verificar se o tipo passado a \texttt{va\_arg} \emph{de fato} corresponde ao argumento real. Se houver discrep\^ancia, o comportamento \'e indefinido.
+
+\begin{errocomum}
+Solicitar \texttt{va\_arg(args, int)} quando o argumento real \'e um \texttt{double} \'e um erro frequente e \emph{cataclism\'atico} --- interpreta-se uma sequ\^encia de bits como n\'umero de tipo errado, e os valores extra\'idos passam a ser puro lixo. Documente cuidadosamente, em coment\'arios da fun\c{c}\~ao, o protocolo de tipos esperado.
+\end{errocomum}
+
+\subsection*{(h) Macro que finaliza o acesso \`a lista vari\'avel}
+
+\begin{resposta}\textbf{Resposta:} \texttt{va\_end}.\end{resposta}
+
+A macro \texttt{va\_end(args)} faz a ``limpeza'' interna do \texttt{va\_list}, permitindo que a fun\c{c}\~ao retorne normalmente. Por mais que em muitas implementa\c{c}\~oes \texttt{va\_end} expanda para nada ou quase nada, o padr\~ao ISO obriga seu uso para garantir portabilidade.
+
+\begin{boaprat}
+O tr\^io \texttt{va\_start} / \texttt{va\_arg} / \texttt{va\_end} aparece sempre na mesma ordem est\'avel: \emph{inicializar}, \emph{percorrer}, \emph{finalizar}. Trate-os como um padr\~ao indissoci\'avel --- na pr\'atica, \texttt{va\_end} \'e t\~ao essencial quanto fechar um arquivo com \texttt{fclose}.
+\end{boaprat}
+
+\subsection*{(i) Argumento de \texttt{main} que recebe a \emph{quantidade} de argumentos da linha de comando}
+
+\begin{resposta}\textbf{Resposta:} \texttt{argc} (\emph{argument count}).\end{resposta}
+
+\texttt{argc} \'e sempre $\geq 1$, porque o pr\'oprio \emph{nome de invoca\c{c}\~ao} do programa conta como o primeiro argumento. Se o usu\'ario digitar
+\begin{quote}\texttt{./meuPrograma arquivo.txt -v}\end{quote}
+\noindent ent\~ao \texttt{argc} valer\'a 3.
+
+\subsection*{(j) Argumento de \texttt{main} que armazena os argumentos como strings}
+
+\begin{resposta}\textbf{Resposta:} \texttt{argv} (\emph{argument vector}).\end{resposta}
+
+\texttt{argv} \'e um array de ponteiros para \texttt{char} --- ou seja, um array de strings. No exemplo acima, ter\'iamos:
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item \texttt{argv[0] == "./meuPrograma"}
+  \item \texttt{argv[1] == "arquivo.txt"}
+  \item \texttt{argv[2] == "-v"}
+  \item \texttt{argv[3] == NULL} (terminador convencional)
+\end{itemize}
+
+\begin{obseng}
+A escolha da assinatura \texttt{int main(int argc, char *argv[])} \'e um dos pequenos g\^enios do projeto de C. Ela permite que \emph{qualquer} programa receba dados externos \emph{antes mesmo de come\c{c}ar a executar}, sem nada al\'em do que o pr\'oprio sistema operacional sup\~oe. Voltaremos a essa assinatura em todos os exerc\'icios em que o programa precise de configura\c{c}\~ao externa.
+\end{obseng}
+
+\subsection*{(l) Fun\c{c}\~ao que for\c{c}a o programa a terminar}
+
+\begin{resposta}\textbf{Resposta:} \texttt{exit}.\end{resposta}
+
+\texttt{exit(status)}, declarada em \texttt{<stdlib.h>}, encerra a execu\c{c}\~ao do programa \emph{imediatamente} a partir do ponto em que for chamada --- mesmo que esteja no meio de uma fun\c{c}\~ao aninhada profundamente. Antes de devolver o controle ao sistema operacional, \texttt{exit} executa, em ordem:
+
+\begin{enumerate}[leftmargin=*, itemsep=0pt]
+  \item Todas as fun\c{c}\~oes registradas com \texttt{atexit} (item \emph{m}, na ordem inversa de registro).
+  \item O \emph{flush} de todos os \emph{streams} de E/S buferizados.
+  \item O fechamento de todos os arquivos abertos.
+  \item A remo\c{c}\~ao dos arquivos criados por \texttt{tmpfile} (item \emph{o}).
+\end{enumerate}
+
+O valor \texttt{status} \'e devolvido ao processo invocador (geralmente a \emph{shell}). Por conven\c{c}\~ao, \texttt{0} (ou \texttt{EXIT\_SUCCESS}) indica sucesso; qualquer valor diferente, fracasso.
+
+\subsection*{(m) Fun\c{c}\~ao que registra uma fun\c{c}\~ao a ser chamada no t\'ermino normal}
+
+\begin{resposta}\textbf{Resposta:} \texttt{atexit}.\end{resposta}
+
+\texttt{atexit(func)} adiciona \texttt{func} \`a lista de fun\c{c}\~oes que ser\~ao executadas quando o programa terminar normalmente (seja por retorno de \texttt{main}, seja por \texttt{exit}). At\'e 32 fun\c{c}\~oes podem ser registradas pelo padr\~ao --- mais que suficiente, na pr\'atica. Elas s\~ao executadas \emph{em ordem inversa de registro}, an\'aloga a uma pilha (LIFO), pois geralmente a \'ultima inicializa\c{c}\~ao a ser feita \'e a primeira a ser desfeita.
+
+\begin{boaprat}
+Use \texttt{atexit} para tarefas de \emph{limpeza global}: gravar logs finais, liberar recursos compartilhados, fechar conex\~oes. Mas evite l\'ogica complexa em tratadores \texttt{atexit} --- eles s\~ao executados em um contexto em que muitas estruturas j\'a podem estar parcialmente desmontadas.
+\end{boaprat}
+
+\subsection*{(p) Fun\c{c}\~ao usada para \emph{interceptar} eventos inesperados}
+
+\begin{resposta}\textbf{Resposta:} \texttt{signal}.\end{resposta}
+
+A fun\c{c}\~ao \texttt{signal(sinal, tratador)}, declarada em \texttt{<signal.h>}, associa uma fun\c{c}\~ao \texttt{tratador} a um determinado \texttt{sinal}. Quando o sinal ocorrer durante a execu\c{c}\~ao --- por causa externa (\texttt{<Ctrl>+<C>} do usu\'ario) ou interna (divis\~ao por zero, viola\c{c}\~ao de mem\'oria) ---, em vez do tratamento padr\~ao do sistema operacional, \emph{nosso} tratador ser\'a chamado. \'E o mecanismo pelo qual programas robustos lidam com situa\c{c}\~oes excepcionais sem ser destru\'idos por elas.
+
+\subsection*{(q) Fun\c{c}\~ao que \emph{gera} um sinal a partir do pr\'oprio programa}
+
+\begin{resposta}\textbf{Resposta:} \texttt{raise}.\end{resposta}
+
+\texttt{raise(sinal)} dispara, dentro do programa que a chama, o sinal especificado --- como se ele tivesse vindo de fora. \'E \'util para testar tratadores ou para sinalizar, a outras partes do pr\'oprio programa, condi\c{c}\~oes excepcionais sintetizadas internamente.
+
+% ------------------------------------------------------------
+\subsection*{Bloco 3 --- Constru\c{c}\~ao de programas em larga escala}
+% ------------------------------------------------------------
+
+\subsection*{(k) Utilit\'ario UNIX/Linux que processa um arquivo de regras de compila\c{c}\~ao}
+
+\begin{resposta}\textbf{Resposta:} \texttt{make}, que l\^e um arquivo chamado \texttt{Makefile} (ou \texttt{makefile}).\end{resposta}
+
+Quando um programa \'e composto por muitos arquivos-fonte (\texttt{.c} e \texttt{.h}), recompilar tudo manualmente a cada altera\c{c}\~ao \'e tedioso \emph{e} ineficiente. O utilit\'ario \texttt{make} l\^e o \texttt{Makefile}, que descreve:
+
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item Os \emph{alvos} (\emph{targets}) que se quer construir (executavel final, arquivos-objeto intermedi\'arios).
+  \item As \emph{depend\^encias} de cada alvo (quais arquivos precisam estar prontos antes).
+  \item Os \emph{comandos} a executar para construir cada alvo.
+\end{itemize}
+
+\texttt{make} ent\~ao recompila apenas o que mudou e o que depende do que mudou, na ordem correta. \'E uma ferramenta cl\'assica que se mant\'em essencial mais de quatro d\'ecadas ap\'os sua cria\c{c}\~ao.
+
+% ------------------------------------------------------------
+\subsection*{Bloco 4 --- Recursos finos de mem\'oria, arquivos e tipos}
+% ------------------------------------------------------------
+
+\subsection*{(n) Indicador de tipo exato anexado a uma constante num\'erica}
+
+\begin{resposta}\textbf{Resposta:} sufixo.\end{resposta}
+
+Em C, a constante literal \texttt{42} \'e, por padr\~ao, um \texttt{int}; \texttt{3.14} \'e um \texttt{double}. Mas \`as vezes precisamos for\c{c}ar um tipo espec\'ifico:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|l|}
+\hline
+\textbf{Sufixo} & \textbf{Tipo for\c{c}ado} \\
+\hline
+\texttt{L} ou \texttt{l}   & \texttt{long int} (em constantes inteiras) ou \texttt{long double} (em constantes reais) \\
+\texttt{U} ou \texttt{u}   & \texttt{unsigned int} \\
+\texttt{UL} ou \texttt{LU} & \texttt{unsigned long int} \\
+\texttt{F} ou \texttt{f}   & \texttt{float} \\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent Exemplos: \texttt{1000000L}, \texttt{3.14F}, \texttt{0xFFFFFFFFU}.
+
+\subsection*{(o) Fun\c{c}\~ao que cria um arquivo tempor\'ario}
+
+\begin{resposta}\textbf{Resposta:} \texttt{tmpfile}.\end{resposta}
+
+\texttt{tmpfile()}, declarada em \texttt{<stdio.h>}, abre um arquivo bin\'ario para leitura/escrita (\texttt{"wb+"}) que existe apenas durante a execu\c{c}\~ao do programa. Ele n\~ao tem nome vis\'ivel no sistema de arquivos e \'e automaticamente removido quando: (i)~o arquivo \'e fechado com \texttt{fclose}, ou (ii)~o programa termina. \'E ideal para scratch space tempor\'ario, como veremos no Exerc\'icio~14.5.
+
+\begin{dicaportab}
+Em alguns sistemas, \texttt{tmpfile()} pode falhar se o sistema operacional restringir o n\'umero de arquivos tempor\'arios simult\^aneos. Sempre verifique o retorno: \texttt{NULL} indica falha.
+\end{dicaportab}
+
+\subsection*{(r) Fun\c{c}\~ao que aloca um array zerando os elementos}
+
+\begin{resposta}\textbf{Resposta:} \texttt{calloc}.\end{resposta}
+
+\texttt{calloc(quantidade, tamanho)} aloca espa\c{c}o para \texttt{quantidade} elementos de \texttt{tamanho} bytes cada um e \emph{zera} toda a regi\~ao alocada. Comparada com \texttt{malloc(quantidade * tamanho)}, oferece duas vantagens:
+
+\begin{enumerate}[leftmargin=*, itemsep=0pt]
+  \item Inicializa\c{c}\~ao a zero garantida (com \texttt{malloc} o conte\'udo \'e lixo).
+  \item Multiplica\c{c}\~ao \texttt{quantidade * tamanho} feita pela biblioteca, com prote\c{c}\~ao contra \emph{overflow} em implementa\c{c}\~oes modernas.
+\end{enumerate}
+
+\subsection*{(s) Fun\c{c}\~ao que muda o tamanho de uma \'area dinamicamente alocada}
+
+\begin{resposta}\textbf{Resposta:} \texttt{realloc}.\end{resposta}
+
+\texttt{realloc(ptr, novoTamanho)} redimensiona o bloco previamente apontado por \texttt{ptr}. O algoritmo \'e o seguinte:
+
+\begin{enumerate}[leftmargin=*, itemsep=0pt]
+  \item Se houver espa\c{c}o cont\'iguo suficiente, o bloco \'e estendido (ou contra\'ido) no lugar.
+  \item Se n\~ao houver, um novo bloco \'e alocado em outra parte da \emph{heap}, o conte\'udo \'e copiado, e o bloco antigo \'e liberado.
+\end{enumerate}
+
+Em ambos os casos, o retorno \'e o endere\c{c}o do bloco resultante. Quando o novo tamanho \'e \emph{menor}, o conte\'udo que cabe \'e preservado e o restante \'e descartado --- exatamente o que faremos no Exerc\'icio~14.7.
+
+\begin{errocomum}
+N\~ao escreva \texttt{ptr = realloc(ptr, novoTamanho);} diretamente! Se a realoca\c{c}\~ao falhar, \texttt{realloc} retorna \texttt{NULL} e o bloco original permanece v\'alido --- mas voc\^e o ter\'a perdido por sobrescrever \texttt{ptr}. Use sempre um ponteiro auxiliar:
+\begin{quote}
+\texttt{int *novo = realloc(ptr, novoTamanho);}\\
+\texttt{if (novo != NULL) ptr = novo;}
+\end{quote}
+\end{errocomum}
+
+% ============================================================
+\section*{S\'intese conceitual}
+\addcontentsline{toc}{section}{Síntese conceitual}
+% ============================================================
+
+O Exerc\'icio 14.1 \'e essencialmente um \emph{check-list} de termos t\'ecnicos. Estrutur\'a-lo em quatro blocos, como fizemos, ajuda a memoriz\'a-los n\~ao como entradas isoladas de um glossario, mas como \emph{partes coerentes} de quatro grandes hist\'orias:
+
+\begin{itemize}[leftmargin=*]
+  \item Programa~$\leftrightarrow$~SO via E/S redirecionada, \emph{pipes}, \texttt{argc}/\texttt{argv}, \texttt{exit}/\texttt{atexit}, \texttt{signal}/\texttt{raise}.
+  \item Listas vari\'aveis com \texttt{...}, \texttt{va\_list}, \texttt{va\_start}, \texttt{va\_arg}, \texttt{va\_end}.
+  \item Constru\c{c}\~ao em larga escala com \texttt{make} e \texttt{Makefile}.
+  \item Recursos finos: sufixos, \texttt{tmpfile}, \texttt{calloc}, \texttt{realloc}.
+\end{itemize}
+
+No documento de \emph{Exerc\'icios} colocaremos esses conceitos \emph{em a\c{c}\~ao}: oito programas que exercitam, em diferentes combina\c{c}\~oes, todos os recursos catalogados aqui.
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}

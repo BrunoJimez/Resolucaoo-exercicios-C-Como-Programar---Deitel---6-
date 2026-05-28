@@ -1,0 +1,567 @@
+\documentclass[11pt,a4paper]{article}
+
+% ====== Pacotes ======
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+
+% ====== Cores ======
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{deitelorange}{RGB}{198,89,17}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+\definecolor{portabcolor}{RGB}{102,46,145}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekeyword}{RGB}{0,0,180}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codecomment}{RGB}{0,128,0}
+\definecolor{terminalbg}{RGB}{30,30,30}
+\definecolor{terminalfg}{RGB}{220,220,220}
+
+% ====== Listings ======
+\lstdefinestyle{cppcode}{
+  language=C++,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=8pt,
+  backgroundcolor=\color{codebg},
+  frame=single,
+  framesep=4pt,
+  rulecolor=\color{deitelblue!50},
+  breaklines=true,
+  showstringspaces=false,
+  tabsize=4,
+  morekeywords={string, size_t, cin, cout, endl, inline, template, typename,
+                bool, true, false, nullptr, override, final},
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+           {Ã}{{\~A}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Ê}{{\^E}}1 {Í}{{\'I}}1
+           {Ó}{{\'O}}1 {Ô}{{\^O}}1 {Õ}{{\~O}}1 {Ú}{{\'U}}1 {Ç}{{\c{c}}}1
+}
+\lstdefinestyle{terminal}{
+  basicstyle=\ttfamily\footnotesize\color{terminalfg},
+  backgroundcolor=\color{terminalbg},
+  frame=single,
+  framesep=6pt,
+  rulecolor=\color{deitelblue!50},
+  breaklines=true,
+  showstringspaces=false,
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=deitelblue,
+  urlcolor=deitelblue,
+  citecolor=deitelblue,
+  pdftitle={C: Como Programar - Cap. 15 - Exercicios},
+  pdfauthor={Resolucao didatica no estilo Deitel}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Cap.~15}
+\fancyhead[R]{\small Exerc\'icios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+\newtcolorbox{boaprat}{
+  enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Boa Pr\'atica de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{errocomum}{
+  enhanced, breakable, colback=errocolor!8, colframe=errocolor,
+  fonttitle=\bfseries, title={\textbf{Erro Comum de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{obseng}{
+  enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao de Engenharia de Software}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{dicadesemp}{
+  enhanced, breakable, colback=desempcolor!8, colframe=desempcolor,
+  fonttitle=\bfseries, title={\textbf{Dica de Desempenho}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{dicaportab}{
+  enhanced, breakable, colback=portabcolor!8, colframe=portabcolor,
+  fonttitle=\bfseries, title={\textbf{Dica de Portabilidade}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{enunciado}{
+  enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{saidabox}{
+  enhanced, breakable, colback=gray!8, colframe=gray!50,
+  boxrule=0.6pt, fonttitle=\bfseries\small,
+  title={\textbf{Sa\'ida da execu\c{c}\~ao}},
+  left=6pt, right=6pt, top=3pt, bottom=3pt
+}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Cap\'itulo 15}\\[0.3em]
+  {\Large\bfseries C++: um C melhor --- Introdu\c{c}\~ao \`a Tecnologia de Objeto}\\[0.8em]
+  {\large\itshape Exerc\'icios --- Resolu\c{c}\~ao Did\'atica com C\'odigo C++}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``Neste documento resolvemos os Exerc\'icios 15.5 a 15.10 do Cap\'itulo 15. Cada solu\c{c}\~ao apresenta o programa em C++ completo, comentado, seguido de an\'alise da arquitetura adotada, exemplos de execu\c{c}\~ao real e observa\c{c}\~oes did\'aticas. Todos os c\'odigos foram compilados com \texttt{g++ -Wall -Wextra -std=c++14} e executados sem warnings. Esta \'e a primeira incurs\~ao do leitor em c\'odigo C++ propriamente dito --- ainda na vertente \emph{procedural} da linguagem (refer\^encias, sobrecarga, argumentos default, templates, \texttt{inline}, escopo); as classes vir\~ao a partir do Cap\'itulo 16.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+% ============================================================
+\section{Exerc\'icio 15.5 --- \'Area de um C\'irculo com Fun\c{c}\~ao Inline}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Escreva um programa em C++ que pe\c{c}a o raio de um c\'irculo e chame a fun\c{c}\~ao \texttt{inline} \texttt{circleArea} para calcular sua \'area.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+\'E o irm\~ao bidimensional do Exerc\'icio 15.4. A f\'ormula da \'area do c\'irculo \'e $A = \pi r^{2}$. Como antes, declaramos \texttt{circleArea} como \texttt{inline}: como o corpo \'e uma f\'ormula de uma linha, a expans\~ao em linha (\emph{inlining}) tem alto potencial de elimina\c{c}\~ao do custo de chamada de fun\c{c}\~ao.
+
+\subsection*{C\'odigo em C++}
+
+\lstinputlisting[style=cppcode]{codigos/ex15_05.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ g++ -Wall -Wextra -std=c++14 ex15_05.cpp -o ex15_05
+$ ./ex15_05
+Digite o raio do circulo: 3
+A area do circulo com raio 3 e 28.2743
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+Conferindo: $A = \pi \cdot 3^{2} = 9\pi \approx 28{,}27$. Bate.
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item O par\^ametro \texttt{const double radius} indica que \texttt{circleArea} \emph{n\~ao} modificar\'a o raio recebido. Adicionar \texttt{const} a par\^ametros que voc\^e n\~ao pretende alterar \'e uma forma de documenta\c{c}\~ao executavel: o compilador valida que voc\^e n\~ao quebrou essa promessa.
+  \item Como o par\^ametro \'e passado \emph{por valor}, o \texttt{const} aqui \'e meramente uma autodisciplina interna \`a fun\c{c}\~ao --- o chamador n\~ao \'e afetado.
+  \item Outro ponto: \texttt{pow(radius, 2)} foi usado por simetria com 15.4, mas \texttt{radius * radius} seria mais r\'apido (uma multiplica\c{c}\~ao versus uma chamada de fun\c{c}\~ao gen\'erica).
+\end{itemize}
+
+\begin{dicadesemp}
+\texttt{pow(x, 2)} \'e um c\'alculo gen\'erico que aceita expoentes arbitr\'arios em ponto flutuante --- internamente usa \texttt{exp(2 * log(x))} ou um caso especial. Para pot\^encias inteiras pequenas e conhecidas em tempo de compila\c{c}\~ao, prefira a multiplica\c{c}\~ao expl\'icita. Em c\'odigo de alto desempenho, essa diferen\c{c}a pode somar \emph{ordens de magnitude}.
+\end{dicadesemp}
+
+% ============================================================
+\section{Exerc\'icio 15.6 --- \texttt{tripleByValue} vs \texttt{tripleByReference}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Escreva um programa em C++ com duas fun\c{c}\~oes alternativas, cada uma simplesmente triplicando a vari\'avel \texttt{count} definida em \texttt{main}, e compare-as:
+\begin{enumerate}[label=(\alph*)]
+  \item \texttt{tripleByValue}, que passa uma c\'opia de \texttt{count} por valor, triplica a c\'opia e retorna o novo valor;
+  \item \texttt{tripleByReference}, que passa \texttt{count} por refer\^encia e triplica o valor original atrav\'es de seu \emph{alias}.
+\end{enumerate}
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+Este \'e o exerc\'icio-chave para fixar a diferen\c{c}a entre os dois mecanismos. A pergunta n\~ao \'e ``qual triplica?'' (ambos triplicam o valor 10 e produzem 30); \'e ``qual modifica o original?''. Vamos verificar empiricamente, imprimindo o valor de \texttt{count} \emph{antes} e \emph{depois} de cada chamada.
+
+\subsection*{C\'odigo em C++}
+
+\lstinputlisting[style=cppcode]{codigos/ex15_06.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ ./ex15_06
+Antes de chamar tripleByValue:     count = 10
+Apos chamar tripleByValue:         count = 10  (retorno = 30)
+  --> Observe que count NAO mudou.
+
+Antes de chamar tripleByReference: count = 10
+Apos chamar tripleByReference:     count = 30
+  --> Observe que count FOI modificado.
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao --- Compara\c{c}\~ao das duas t\'ecnicas}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|p{4cm}|p{4.8cm}|p{4.8cm}|}
+\hline
+\textbf{Aspecto} & \textbf{Por valor (\texttt{tripleByValue})} & \textbf{Por refer\^encia (\texttt{tripleByReference})} \\
+\hline
+Declara\c{c}\~ao         & \texttt{int tripleByValue(int x)} & \texttt{void tripleByReference(int \&x)} \\
+Chamada                  & \texttt{r = tripleByValue(count);} & \texttt{tripleByReference(count);} \\
+A vari\'avel original muda? & N\~ao, \texttt{x} \'e c\'opia & Sim, \texttt{x} \'e \emph{alias} \\
+Necessita retornar valor? & Sim (sen\~ao perde-se o resultado) & N\~ao (modifica direto) \\
+Seguran\c{c}a            & Melhor (n\~ao h\'a \emph{aliasing}) & Exige cuidado \\
+Custo                    & Custo de c\'opia (irrelevante p/ \texttt{int}) & Sem c\'opia \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{obseng}
+A passagem por valor \emph{preserva} o argumento original, o que \'e desej\'avel sempre que poss\'ivel: o c\'odigo torna-se mais f\'acil de raciocinar, porque a chamada n\~ao tem \emph{efeitos colaterais} sobre as vari\'aveis do chamador. A passagem por refer\^encia ``ganha tempo'' (sem c\'opia) e ``ganha expressividade'' (n\~ao precisa retornar via \texttt{return}), mas em troca o leitor do c\'odigo precisa lembrar que, ap\'os a chamada, a vari\'avel pode ter mudado.
+\end{obseng}
+
+\begin{boaprat}
+Quando voc\^e \emph{l\^e} c\'odigo C++, o operador \texttt{\&} no prot\'otipo do par\^ametro \'e um \emph{sinal vis\'ivel} de que aquele argumento pode ser modificado. Costume-se a procurar esse sinal --- ele responde rapidamente \`a pergunta ``esta chamada vai mexer em alguma das minhas vari\'aveis?''.
+\end{boaprat}
+
+% ============================================================
+\section{Exerc\'icio 15.7 --- Finalidade do Operador Un\'ario \texttt{::}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Qual \'e a finalidade do operador un\'ario de resolu\c{c}\~ao de escopo?
+\end{enunciado}
+
+\subsection*{Resposta}
+
+\begin{enunciado}
+O \textbf{operador un\'ario de resolu\c{c}\~ao de escopo} (\texttt{::}) permite acessar uma vari\'avel \emph{global} mesmo quando ela est\'a sendo ``ocultada'' por uma vari\'avel \emph{local} de mesmo nome no escopo atual. Sem o operador, qualquer refer\^encia ao identificador resolveria para a vari\'avel local (a mais pr\'oxima); com o prefixo \texttt{::}, o compilador faz a busca a partir do escopo \emph{global}.
+\end{enunciado}
+
+\subsection*{Demonstra\c{c}\~ao}
+
+\begin{lstlisting}[style=cppcode]
+#include <iostream>
+using namespace std;
+
+int valor = 100;        // global
+
+int main() {
+    int valor = 7;      // local; oculta a global
+    cout << "Local:  " << valor   << endl;   // imprime 7
+    cout << "Global: " << ::valor << endl;   // imprime 100
+    return 0;
+}
+\end{lstlisting}
+
+\subsection*{Discuss\~ao adicional}
+
+H\'a ainda uma \emph{segunda} forma do operador \texttt{::}, n\~ao coberta por esta pergunta espec\'ifica mas onipresente em C++: o operador \textbf{bin\'ario} de resolu\c{c}\~ao de escopo, usado para qualificar nomes pertencentes a \emph{classes} ou \emph{\emph{namespaces}}. Por exemplo, \texttt{std::cout} significa ``o identificador \texttt{cout} dentro do \emph{namespace} \texttt{std}''. Ambas as formas usam o mesmo simbolo \texttt{::}, mas conceitualmente s\~ao distintas: a un\'aria sobe at\'e o escopo global; a bin\'aria desce at\'e um escopo nomeado.
+
+\begin{obseng}
+A exist\^encia do operador \texttt{::} un\'ario \'e um \emph{sintoma} de um problema, n\~ao a \emph{solu\c{c}\~ao} ideal. Boas pr\'aticas de engenharia de \emph{software} recomendam evitar nomes globais (use \emph{namespaces}, classes, ou par\^ametros) e, quando os globais s\~ao inevit\'aveis, dar-lhes nomes distintos dos locais. Em c\'odigo legado ou bibliotecas n\~ao-modulares, contudo, \texttt{::} ainda salva vidas.
+\end{obseng}
+
+% ============================================================
+\section{Exerc\'icio 15.8 --- Template de Fun\c{c}\~ao \texttt{min}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Escreva um programa que use um template de fun\c{c}\~ao chamado \texttt{min} para determinar o menor de dois argumentos. Teste com inteiros, caracteres e ponto flutuante.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A id\'eia da programa\c{c}\~ao gen\'erica: escrever \emph{uma s\'o} fun\c{c}\~ao que sirva para todos os tipos comparaveis. Para que isso seja poss\'ivel, o corpo da fun\c{c}\~ao s\'o pode usar opera\c{c}\~oes que existam para todos os tipos esperados. No nosso caso, basta o operador \texttt{<}, que est\'a definido para inteiros, ponto flutuante, caracteres e mesmo strings.
+
+\begin{obseng}
+Renomeamos a fun\c{c}\~ao para \texttt{minimo} no c\'odigo, evitando colis\~ao com a fun\c{c}\~ao \texttt{std::min} da biblioteca padr\~ao (que est\'a sempre dispon\'ivel quando se faz \texttt{using namespace std}). \'E uma quest\~ao puramente did\'atica --- em c\'odigo de produ\c{c}\~ao, simplesmente usar\'iamos \texttt{std::min}.
+\end{obseng}
+
+\subsection*{C\'odigo em C++}
+
+\lstinputlisting[style=cppcode]{codigos/ex15_08.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ ./ex15_08
+min(47, 23) = 23
+min(3.14, 2.71) = 2.71
+min('M', 'A') = 'A'
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Para cada chamada, o compilador examina os tipos dos argumentos e \emph{instancia} uma vers\~ao espec\'ifica do template. Internamente, gera-se algo equivalente a tr\^es fun\c{c}\~oes: \texttt{minimo<int>}, \texttt{minimo<double>}, \texttt{minimo<char>}.
+  \item A compara\c{c}\~ao de caracteres usa a ordem da tabela ASCII: \texttt{'A'} (65) \'e menor que \texttt{'M'} (77), por isso o resultado \'e \texttt{'A'}.
+  \item Os par\^ametros foram passados por valor. Se quis\'essemos evitar c\'opias para tipos grandes, escrever\'iamos \texttt{const T \&a, const T \&b}.
+\end{itemize}
+
+\begin{boaprat}
+A pr\'opria biblioteca padr\~ao oferece \texttt{std::min(a, b)} em \texttt{<algorithm>}. Em c\'odigo real, prefira-a. O exerc\'icio nos pede a \emph{implementa\c{c}\~ao} did\'atica, n\~ao a substitui\c{c}\~ao da biblioteca padr\~ao.
+\end{boaprat}
+
+\begin{errocomum}
+Aplicar templates a tipos que n\~ao suportam todas as opera\c{c}\~oes usadas no corpo gera \emph{mensagens de erro de compila\c{c}\~ao extensas e dif\'iceis de ler}. Por exemplo, \texttt{minimo(structA, structB)}, se \texttt{structA} n\~ao definir \texttt{operator<}, produzir\'a um erro com dezenas de linhas. C++20 oferece \emph{concepts} para tornar essas mensagens muito mais claras.
+\end{errocomum}
+
+% ============================================================
+\section{Exerc\'icio 15.9 --- Template de Fun\c{c}\~ao \texttt{max}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Escreva um programa que use um template de fun\c{c}\~ao chamado \texttt{max} para determinar o maior de dois argumentos. Teste com inteiros, caracteres e ponto flutuante.
+\end{enunciado}
+
+\subsection*{An\'alise do problema}
+
+A solu\c{c}\~ao \'e o ``espelho'' do exerc\'icio anterior: substitu\'imos o operador \texttt{<} por \texttt{>}.
+
+\subsection*{C\'odigo em C++}
+
+\lstinputlisting[style=cppcode]{codigos/ex15_09.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ ./ex15_09
+max(47, 23) = 47
+max(3.14, 2.71) = 3.14
+max('M', 'A') = 'M'
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+A simetria com 15.8 ilustra como templates removem a duplica\c{c}\~ao de c\'odigo no eixo do \emph{tipo}, mas ainda exigem c\'odigo separado quando muda a \emph{l\'ogica}. Se quis\'essemos parametrizar tamb\'em a opera\c{c}\~ao de compara\c{c}\~ao, ter\'iamos que passar uma fun\c{c}\~ao como argumento --- conceito visto em C com \emph{ponteiros para fun\c{c}\~ao} (Cap.~7), e que em C++ ganha forma elegante com \emph{functors} e express\~oes \emph{lambda} (Caps.~20 e seguintes).
+
+\begin{obseng}
+A pr\'opria biblioteca padr\~ao implementa \texttt{std::max} e \texttt{std::min} usando templates muito parecidos com os nossos --- s\'o que com sobrecargas adicionais para iterators, listas de inicializa\c{c}\~ao e fun\c{c}\~oes de compara\c{c}\~ao personalizadas. Isso \'e uma observa\c{c}\~ao consoladora: o que voc\^e escreveu aqui n\~ao \'e um esbo\c{c}o imaturo; \'e essencialmente o \emph{n\'ucleo} da implementa\c{c}\~ao real.
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 15.10 --- Caça aos Erros}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Determine se os segmentos de programa a seguir cont\^em erros. Explique como cada erro pode ser corrigido. Para um segmento em particular, \'e poss\'ivel que nenhum erro esteja presente.
+\end{enunciado}
+
+% ----- (a) -----
+\subsection*{(a) Template cujo par\^ametro de tipo n\~ao \'e usado}
+
+\textbf{Segmento original:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+template < class A >
+int sum( int num1, int num2, int num3 )
+{
+    return num1 + num2 + num3;
+}
+\end{lstlisting}
+
+\textbf{Diagn\'ostico.} O segmento \emph{compila}, mas cont\'em uma incoer\^encia conceitual: o par\^ametro de tipo \texttt{A} \'e declarado, por\'em \emph{nunca usado} no corpo da fun\c{c}\~ao --- todos os par\^ametros e o retorno s\~ao \texttt{int} fixos. Isso anula completamente a vantagem do template: a fun\c{c}\~ao \emph{n\~ao} \'e gen\'erica; ela aceita apenas tr\^es \texttt{int}s. Para invocar essa fun\c{c}\~ao, o programador ainda precisaria escrever \texttt{sum<algumTipo>(1,2,3)}, o que \'e in\'util.
+
+\textbf{Corre\c{c}\~ao.} H\'a duas op\c{c}\~oes:
+
+\textit{Op\c{c}\~ao 1 --- Tornar a fun\c{c}\~ao genuinamente gen\'erica:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename A>
+A sum(A num1, A num2, A num3) {
+    return num1 + num2 + num3;
+}
+\end{lstlisting}
+
+\textit{Op\c{c}\~ao 2 --- Remover o template:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+int sum(int num1, int num2, int num3) {
+    return num1 + num2 + num3;
+}
+\end{lstlisting}
+
+A op\c{c}\~ao 1 \'e prefer\'ivel se a inten\c{c}\~ao original era de fato uma soma gen\'erica.
+
+% ----- (b) -----
+\subsection*{(b) Fun\c{c}\~ao \texttt{void} que retorna valor}
+
+\textbf{Segmento original:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+void printResults( int x, int y )
+{
+    cout << "A soma e " << x + y << '\n';
+    return x + y;
+}
+\end{lstlisting}
+
+\textbf{Diagn\'ostico.} Erro de compila\c{c}\~ao. A fun\c{c}\~ao foi declarada como \texttt{void} (n\~ao retorna nada), mas o corpo cont\'em \texttt{return x + y;} --- tenta-se retornar um \texttt{int}. O compilador rejeita essa contradi\c{c}\~ao.
+
+\textbf{Corre\c{c}\~ao.} Decida o que a fun\c{c}\~ao deve fazer:
+
+\textit{Op\c{c}\~ao 1 --- Se for para retornar a soma, mude o tipo de retorno:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+int printResults(int x, int y) {
+    cout << "A soma e " << x + y << '\n';
+    return x + y;
+}
+\end{lstlisting}
+
+\textit{Op\c{c}\~ao 2 --- Se for s\'o para imprimir, remova o \texttt{return}:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+void printResults(int x, int y) {
+    cout << "A soma e " << x + y << '\n';
+}
+\end{lstlisting}
+
+% ----- (c) -----
+\subsection*{(c) Template sem \texttt{class} ou \texttt{typename}}
+
+\textbf{Segmento original:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+template < A >
+A product( A num1, A num2, A num3 )
+{
+    return num1 * num2 * num3;
+}
+\end{lstlisting}
+
+\textbf{Diagn\'ostico.} Erro de sintaxe. Na declara\c{c}\~ao de um par\^ametro de tipo de template, deve-se usar a palavra-chave \texttt{class} ou \texttt{typename} \emph{antes} do identificador. Sem ela, o compilador interpreta \texttt{A} como o nome de uma vari\'avel de algum tipo (e n\~ao acha esse tipo) e protesta.
+
+\textbf{Corre\c{c}\~ao.} Adicione \texttt{class} ou \texttt{typename}:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <class A>
+A product(A num1, A num2, A num3) {
+    return num1 * num2 * num3;
+}
+\end{lstlisting}
+
+\noindent ou, equivalentemente, com \texttt{typename}:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename A>
+A product(A num1, A num2, A num3) {
+    return num1 * num2 * num3;
+}
+\end{lstlisting}
+
+\begin{obseng}
+\texttt{class} e \texttt{typename}, no contexto de par\^ametros de template, s\~ao \emph{intercambiaveis}. Hist\'oricamente, o C++ original usava apenas \texttt{class} (o que era confuso porque o par\^ametro n\~ao precisa ser uma classe --- pode ser qualquer tipo, inclusive primitivos). \texttt{typename} foi adicionado posteriormente para tornar a inten\c{c}\~ao clara, e \'e hoje a forma preferida. Mas \texttt{class} continua v\'alida por raz\~oes de compatibilidade.
+\end{obseng}
+
+% ----- (d) -----
+\subsection*{(d) Sobrecarga apenas pelo tipo de retorno}
+
+\textbf{Segmento original:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+double cube( int );
+int    cube( int );
+\end{lstlisting}
+
+\textbf{Diagn\'ostico.} Erro de compila\c{c}\~ao. Estas duas declara\c{c}\~oes tentam \emph{sobrecarregar} \texttt{cube}, mas as duas vers\~oes diferem \emph{apenas no tipo de retorno}, mantendo id\^enticas as listas de par\^ametros (\texttt{int}). A regra de C++ \'e clara: a sobrecarga distingue fun\c{c}\~oes pelas \emph{assinaturas}, e a assinatura \'e composta pelo \emph{nome} e pelos \emph{tipos dos par\^ametros} --- \emph{n\~ao} pelo tipo de retorno. Logo, do ponto de vista do compilador, essas duas fun\c{c}\~oes s\~ao \emph{a mesma}, e ele rejeita a duplicidade.
+
+\textbf{Por que essa regra?} Imagine que o compilador encontre \texttt{int x = cube(5);}. Qual das duas escolher? A pelo tipo de retorno depende do contexto da \emph{chamada}, e isso introduz ambiguidade insol\'uvel em muitos cen\'arios. Para evitar, o C++ proibiu de sa\'ida.
+
+\textbf{Corre\c{c}\~ao.} Algumas op\c{c}\~oes:
+
+\textit{Op\c{c}\~ao 1 --- D\^e nomes distintos:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+double cubeD(int);   // versao em ponto flutuante
+int    cubeI(int);   // versao inteira
+\end{lstlisting}
+
+\textit{Op\c{c}\~ao 2 --- Diferencie pelos tipos de par\^ametros:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+double cube(double);   // recebe double, retorna double
+int    cube(int);      // recebe int,    retorna int
+\end{lstlisting}
+
+\textit{Op\c{c}\~ao 3 --- Use um template:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T>
+T cube(T x) { return x * x * x; }
+\end{lstlisting}
+
+\subsection*{Programa de verifica\c{c}\~ao}
+
+Compilamos um programa contendo as quatro vers\~oes corrigidas para confirmar que todas funcionam:
+
+\lstinputlisting[style=cppcode]{codigos/ex15_10.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ g++ -Wall -Wextra -std=c++14 ex15_10.cpp -o ex15_10
+$ ./ex15_10
+sum<int>(1,2,3)         = 6
+sum<double>(1.5,2.5,3.0)= 7
+A soma e 30
+printResults retornou: 30
+product<int>(2,3,4)     = 24
+product<double>(1.5,2,4)= 12
+cubeD(3) = 27  cubeI(4) = 64
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Resumo --- Tabela de diagn\'osticos}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|c|p{5cm}|p{6.5cm}|}
+\hline
+\textbf{Item} & \textbf{Erro} & \textbf{Corre\c{c}\~ao} \\
+\hline
+(a) & Par\^ametro de template n\~ao usado & Substituir \texttt{int} por \texttt{A}, ou remover \texttt{template} \\
+(b) & \texttt{void} com \texttt{return x+y} & Mudar retorno para \texttt{int}, ou remover \texttt{return} \\
+(c) & Falta \texttt{class}/\texttt{typename} & Inserir \texttt{class} ou \texttt{typename} antes de \texttt{A} \\
+(d) & Sobrecarga apenas pelo retorno & Diferenciar nomes ou tipos de par\^ametros \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{obseng}
+Caça-aos-erros como o (d) acima ensinam um princ\'ipio importante do projeto de linguagens: \emph{ambiguidade \'e o inimigo}. A escolha do C++ de \emph{n\~ao} permitir sobrecarga apenas pelo tipo de retorno preserva a regra de que toda chamada de fun\c{c}\~ao tem uma e somente uma resolu\c{c}\~ao --- regra que torna possi\'vel ao compilador (e ao leitor humano) entender o c\'odigo. Se esta regra fosse violada, todo \texttt{cube(5)} teria que ser examinado em seu contexto para decidir qual chamar.
+\end{obseng}
+
+% ============================================================
+\section*{Encerramento}
+\addcontentsline{toc}{section}{Encerramento}
+% ============================================================
+
+Os Exerc\'icios 15.5 a 15.10 oferecem o leitor um \emph{primeiro contato pr\'atico} com C++: usamos \texttt{cin}/\texttt{cout} no lugar de \texttt{scanf}/\texttt{printf}, conhecemos \texttt{inline}, refer\^encias e templates, e identificamos as armadilhas mais comuns na transi\c{c}\~ao a partir de C. Em todos os c\'odigos, contudo, permanecemos no paradigma \emph{procedural} --- fun\c{c}\~oes operando sobre dados.
+
+A partir do Cap\'itulo 16 daremos o passo conceitual fundamental: introduziremos a \textbf{classe} como mecanismo de encapsulamento de \emph{dados} e \emph{comportamento}. As fun\c{c}\~oes deixar\~ao de ser entidades soltas e tornar-se-\~ao \emph{m\'etodos} pertencentes a um tipo. O leitor que dominou tudo at\'e aqui est\'a perfeitamente preparado para isso.
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}

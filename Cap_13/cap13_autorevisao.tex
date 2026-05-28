@@ -1,0 +1,351 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 13 -- O Pré-processador em C
+%  EXERCÍCIOS DE AUTORREVISÃO (13.1 -- 13.3)
+%  Abordagem incremental: Caps. 1 a 13
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},title={\small\color{white}Saída do programa},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 13 -- Autorrevisão}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 13}\\[0.3cm]
+  {\Large\color{deitelblue!80}O Pré-processador em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios de Autorrevisão (13.1--13.3)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, abordagem incremental\\
+    Capítulos 1 a 13}
+  \end{tcolorbox}
+\end{titlepage}
+
+\section*{Construindo sobre os Capítulos Anteriores}
+
+No Capítulo~13, voltamos ao \texttt{\#include} e \texttt{\#define} que usamos
+desde o Cap.~2 -- agora com profundidade total. O \textbf{pré-processador} é um
+programa que roda \textit{antes} do compilador, modificando o código-fonte:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Diretivas} -- linhas que começam com \texttt{\#}, processadas
+  \textit{antes} da compilação
+  \item \textbf{Constantes simbólicas} -- \texttt{\#define} para nomes legíveis
+  no lugar de valores literais
+  \item \textbf{Macros} -- substituições com parâmetros, parecidas com funções
+  mas expandidas em linha
+  \item \textbf{Inclusão de arquivos} -- \texttt{\#include <\ldots>} (sistema) e
+  \texttt{\#include "\ldots"} (usuário)
+  \item \textbf{Compilação condicional} -- \texttt{\#if}, \texttt{\#ifdef},
+  \texttt{\#ifndef}, \texttt{\#elif}, \texttt{\#else}, \texttt{\#endif}
+  \item \textbf{Operadores de pré-processamento} -- \texttt{\#} (\textit{stringize})
+  e \texttt{\#\#} (\textit{token paste})
+  \item \textbf{Constantes predefinidas} -- \texttt{\_\_LINE\_\_}, \texttt{\_\_FILE\_\_},
+  \texttt{\_\_DATE\_\_}, \texttt{\_\_TIME\_\_}, \texttt{\_\_STDC\_\_}
+  \item \textbf{\texttt{assert}} -- macro de diagnóstico para depuração
+\end{itemize}
+
+\begin{boaprática}
+  Macros são poderosas mas perigosas. Sempre que possível, prefira:
+  \texttt{const} a \texttt{\#define} para constantes; \texttt{inline} (C99+) a
+  macros para pequenas funções. Reserve macros para o que só elas podem fazer:
+  compilação condicional, geração de código, debug.
+\end{boaprática}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 13.1 -- Preenchimento de Lacunas (13 itens)}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item Toda diretiva do pré-processador começa com \textbf{\texttt{\#}}.
+
+\item Compilação condicional estendida usa as diretivas \textbf{\texttt{\#elif}}
+e \textbf{\texttt{\#else}}.
+
+\item A diretiva \textbf{\texttt{\#define}} cria macros e constantes simbólicas.
+
+\item Apenas caracteres de \textbf{espaço em branco} podem aparecer antes de uma
+diretiva na mesma linha.
+
+\item A diretiva \textbf{\texttt{\#undef}} descarta nomes de constantes simbólicas e macros.
+
+\item As notações abreviadas para \texttt{\#if defined(nome)} e
+\texttt{\#if !defined(nome)} são \textbf{\texttt{\#ifdef}} e
+\textbf{\texttt{\#ifndef}}.
+
+\item A \textbf{compilação condicional} permite controlar a execução das diretivas
+e a compilação do código.
+
+\item A macro \textbf{\texttt{assert}} imprime mensagem e termina a execução se
+a expressão for 0.
+
+\item A diretiva \textbf{\texttt{\#include}} insere o conteúdo de um arquivo em outro.
+
+\item O operador \textbf{\texttt{\#\#}} (\textit{token paste}) concatena seus dois argumentos.
+
+\item O operador \textbf{\texttt{\#}} (\textit{stringize}) converte seu operando em string.
+
+\item O caractere \textbf{\texttt{\textbackslash}} (barra invertida) indica que o
+texto de substituição continua na próxima linha.
+
+\item A diretiva \textbf{\texttt{\#line}} faz com que as linhas sejam renumeradas
+a partir do valor indicado.
+
+\end{enumerate}
+
+\textbf{Resumo das diretivas:}
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l l}
+\toprule
+\textbf{Diretiva} & \textbf{Finalidade} \\ \midrule
+\texttt{\#include}   & inclui conteúdo de arquivo \\
+\texttt{\#define}    & define constante ou macro \\
+\texttt{\#undef}     & remove definição \\
+\texttt{\#ifdef} / \texttt{\#ifndef} & teste de definição \\
+\texttt{\#if} / \texttt{\#elif} / \texttt{\#else} / \texttt{\#endif} & compilação condicional \\
+\texttt{\#error}     & gera erro de compilação \\
+\texttt{\#pragma}    & instrução específica do compilador \\
+\texttt{\#line}      & renumera linhas \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 13.2 -- Constantes Predefinidas}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex13.2: macros_predefinidas.c
+   Imprime os valores das constantes simbolicas predefinidas */
+#include <stdio.h>
+
+int main( void )
+{
+    printf( "__LINE__ = %d\n", __LINE__ );
+    printf( "__FILE__ = %s\n", __FILE__ );
+    printf( "__DATE__ = %s\n", __DATE__ );
+    printf( "__TIME__ = %s\n", __TIME__ );
+    printf( "__STDC__ = %d\n", __STDC__ );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Saída típica:}
+\begin{saida}
+\_\_LINE\_\_ = 5\\
+\_\_FILE\_\_ = macros\_predefinidas.c\\
+\_\_DATE\_\_ = May 13 2026\\
+\_\_TIME\_\_ = 14:23:45\\
+\_\_STDC\_\_ = 1
+\end{saida}
+
+\textbf{Significado de cada constante:}
+\begin{itemize}[noitemsep]
+  \item \texttt{\_\_LINE\_\_} -- número da linha atual no código-fonte (inteiro).
+  \item \texttt{\_\_FILE\_\_} -- nome do arquivo-fonte atual (string).
+  \item \texttt{\_\_DATE\_\_} -- data da compilação (string, formato ``Mmm dd yyyy'').
+  \item \texttt{\_\_TIME\_\_} -- hora da compilação (string, formato ``hh:mm:ss'').
+  \item \texttt{\_\_STDC\_\_} -- vale 1 se compilador adere ao padrão ANSI/ISO C.
+\end{itemize}
+
+\textbf{Aplicações práticas:}
+\begin{itemize}[noitemsep]
+  \item \textbf{Logs com origem:} \texttt{printf("Erro em \%s:\%d", \_\_FILE\_\_, \_\_LINE\_\_)}.
+  \item \textbf{Identificação de build:} mostrar data/hora da compilação no
+  \texttt{--version} do programa.
+  \item \textbf{Portabilidade:} checar \texttt{\_\_STDC\_\_} antes de usar
+  recursos não-portáteis.
+\end{itemize}
+
+\begin{boaprática}
+  Essas macros são a base da macro \texttt{assert} e dos sistemas de log em C.
+  Sempre que precisar identificar onde algo ocorreu no código, lembre-se de
+  \texttt{\_\_FILE\_\_} e \texttt{\_\_LINE\_\_}.
+\end{boaprática}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 13.3 -- Diretivas do Pré-processador}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item \textbf{Definir \texttt{YES} como 1:}
+\begin{lstlisting}
+#define YES 1
+\end{lstlisting}
+
+\item \textbf{Definir \texttt{NO} como 0:}
+\begin{lstlisting}
+#define NO 0
+\end{lstlisting}
+
+\item \textbf{Incluir \texttt{common.h} (mesmo diretório):}
+\begin{lstlisting}
+#include "common.h"
+\end{lstlisting}
+Diferença crucial:
+\begin{itemize}[noitemsep]
+  \item \texttt{\#include "arquivo.h"} -- procura primeiro no diretório do
+  arquivo-fonte (cabeçalhos do projeto).
+  \item \texttt{\#include <arquivo.h>} -- procura nos diretórios do sistema
+  (cabeçalhos da biblioteca-padrão).
+\end{itemize}
+
+\item \textbf{Renumerar a partir de 3000:}
+\begin{lstlisting}
+#line 3000
+\end{lstlisting}
+Útil para geradores de código que produzem arquivos C, para que mensagens de
+erro do compilador apontem para o arquivo \textit{original} (não o gerado).
+
+\item \textbf{Redefinir \texttt{TRUE} se estiver definida (sem \texttt{\#ifdef}):}
+\begin{lstlisting}
+#if defined( TRUE )
+    #undef TRUE
+    #define TRUE 1
+#endif
+\end{lstlisting}
+
+\item \textbf{Redefinir \texttt{TRUE} se definida (com \texttt{\#ifdef}):}
+\begin{lstlisting}
+#ifdef TRUE
+    #undef TRUE
+    #define TRUE 1
+#endif
+\end{lstlisting}
+
+\item \textbf{Definir \texttt{FALSE} dependendo de \texttt{TRUE}:}
+\begin{lstlisting}
+#if TRUE
+    #define FALSE 0
+#else
+    #define FALSE 1
+#endif
+\end{lstlisting}
+
+\item \textbf{Macro \texttt{VOLUME\_CUBO}:}
+\begin{lstlisting}
+#define VOLUME_CUBO( x ) ( ( x ) * ( x ) * ( x ) )
+\end{lstlisting}
+
+\begin{erroco}
+  \textbf{Parênteses são essenciais em macros!} Sem eles:
+\begin{lstlisting}
+#define VOLUME_CUBO( x )  x * x * x  /* PERIGOSO */
+
+VOLUME_CUBO( 1 + 2 )  /* expande para: 1 + 2 * 1 + 2 * 1 + 2 = 7 */
+                      /* deveria ser:   3 * 3 * 3 = 27         */
+\end{lstlisting}
+Com parênteses corretos:
+\begin{lstlisting}
+VOLUME_CUBO( 1 + 2 )  /* expande para: (1+2)*(1+2)*(1+2) = 27 */
+\end{lstlisting}
+\textbf{Regra de ouro:} sempre envolver cada parâmetro e a expressão inteira
+em parênteses.
+\end{erroco}
+
+\end{enumerate}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section*{Gabarito Rápido -- Capítulo 13: Autorrevisão}
+
+\begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,title={\bfseries\large Respostas Resumidas}]
+
+\textbf{13.1:}
+\begin{itemize}[noitemsep]
+  \item[a)] \texttt{\#} \quad b) \texttt{\#elif}, \texttt{\#else} \quad c) \texttt{\#define}
+  \item[d)] espaço em branco \quad e) \texttt{\#undef} \quad f) \texttt{\#ifdef}, \texttt{\#ifndef}
+  \item[g)] compilação condicional \quad h) \texttt{assert} \quad i) \texttt{\#include}
+  \item[j)] \texttt{\#\#} \quad k) \texttt{\#} \quad l) \texttt{\textbackslash}
+  \quad m) \texttt{\#line}
+\end{itemize}
+
+\medskip\textbf{13.2:} Programa imprime \texttt{\_\_LINE\_\_}, \texttt{\_\_FILE\_\_},
+\texttt{\_\_DATE\_\_}, \texttt{\_\_TIME\_\_}, \texttt{\_\_STDC\_\_} -- todas as
+constantes predefinidas pelo padrão.
+
+\medskip\textbf{13.3 -- 8 diretivas:}
+\begin{itemize}[noitemsep]
+  \item[a)] \texttt{\#define YES 1}
+  \item[b)] \texttt{\#define NO 0}
+  \item[c)] \texttt{\#include "common.h"}
+  \item[d)] \texttt{\#line 3000}
+  \item[e)] \texttt{\#if defined(TRUE) ... \#undef ... \#define ... \#endif}
+  \item[f)] \texttt{\#ifdef TRUE ... \#undef ... \#define ... \#endif}
+  \item[g)] \texttt{\#if TRUE ... \#else ... \#endif}
+  \item[h)] \texttt{\#define VOLUME\_CUBO(x) ((x)*(x)*(x))}
+\end{itemize}
+
+\end{tcolorbox}
+
+\end{document}

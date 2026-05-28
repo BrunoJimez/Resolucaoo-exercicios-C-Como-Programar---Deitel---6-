@@ -1,0 +1,340 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{deitelorange}{RGB}{198,89,17}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+\definecolor{portabcolor}{RGB}{102,46,145}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekeyword}{RGB}{0,0,180}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codecomment}{RGB}{0,128,0}
+
+\lstdefinestyle{cppcode}{
+  language=C++,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=8pt,
+  backgroundcolor=\color{codebg}, frame=single, framesep=4pt,
+  rulecolor=\color{deitelblue!50}, breaklines=true,
+  showstringspaces=false, tabsize=4,
+  morekeywords={string, size_t, cin, cout, endl, inline, template, typename,
+                bool, true, false, nullptr, override, final, public, private, protected},
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+}
+
+\hypersetup{colorlinks=true, linkcolor=deitelblue, urlcolor=deitelblue,
+  pdftitle={C: Como Programar - Cap. 16 - Autorrevisao}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Cap.~16}
+\fancyhead[R]{\small Exerc\'icios de Autorrevis\~ao}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+\newtcolorbox{boaprat}{enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Boa Pr\'atica de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{errocomum}{enhanced, breakable, colback=errocolor!8, colframe=errocolor,
+  fonttitle=\bfseries, title={\textbf{Erro Comum de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{obseng}{enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao de Engenharia de Software}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{dicadesemp}{enhanced, breakable, colback=desempcolor!8, colframe=desempcolor,
+  fonttitle=\bfseries, title={\textbf{Dica de Desempenho}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{resposta}{enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Cap\'itulo 16}\\[0.3em]
+  {\Large\bfseries Introdu\c{c}\~ao a Classes e Objetos}\\[0.8em]
+  {\large\itshape Exerc\'icios de Autorrevis\~ao --- Resolu\c{c}\~ao Did\'atica}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``Eis o cap\'itulo do salto conceitual: deixamos de pensar em \emph{fun\c{c}\~oes que operam sobre dados} para passar a pensar em \emph{classes} --- tipos que encapsulam, em uma s\'o unidade, os dados (atributos) e o comportamento (fun\c{c}\~oes-membro) das entidades do nosso dom\'inio. \'E o passo decisivo da programa\c{c}\~ao procedural para a programa\c{c}\~ao orientada a objetos.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+% ============================================================
+\section{Exerc\'icio 16.1 --- Vocabul\'ario de classes}
+% ============================================================
+
+\textit{Preencha os espa\c{c}os em cada uma das senten\c{c}as (a)--(j).}
+
+\subsection*{(a) Uma casa est\'a para uma planta como ____ est\'a para uma classe}
+
+\begin{resposta}\textbf{Resposta:} um \textbf{objeto}.\end{resposta}
+
+A analogia \'e elucidativa: assim como muitas casas podem ser constru\'idas a partir de uma \'unica planta arquitet\^onica, muitos \emph{objetos} podem ser instanciados a partir de uma \'unica defini\c{c}\~ao de \emph{classe}. A planta \'e \emph{prescritiva} (descreve o que toda casa daquele tipo dever\'a ter); cada casa \'e \emph{concreta} (tem suas pr\'oprias dimens\~oes finais, sua localiza\c{c}\~ao, seus moradores). Do mesmo modo, a classe \texttt{Conta} estipula que toda conta tem um saldo e suporta dep\'ositos e saques; cada objeto \texttt{Conta} concreto possui o seu pr\'oprio saldo, sua pr\'opria hist\'oria.
+
+\begin{obseng}
+A separa\c{c}\~ao classe-versus-objeto \'e t\~ao fundamental que merece destaque vis\'ivel. Em UML, classes s\~ao retangulos com nome em negrito; objetos s\~ao retangulos com nome sublinhado e prefixado pelo nome do objeto: \texttt{conta1 : Conta}. \'E ao confundir os dois n\'iveis que o iniciante mais frequentemente se atrapalha.
+\end{obseng}
+
+\subsection*{(b) Toda defini\c{c}\~ao de classe cont\'em a palavra-chave ____}
+
+\begin{resposta}\textbf{Resposta:} \texttt{class}.\end{resposta}
+
+A sintaxe canonica \'e:
+\begin{lstlisting}[style=cppcode,numbers=none]
+class NomeDaClasse {
+public:
+    // funcoes-membro publicas (interface)
+private:
+    // dados-membro privados (implementacao)
+};      // nao esqueca o ponto e virgula!
+\end{lstlisting}
+
+\begin{errocomum}
+Esquecer o ponto-e-v\'irgula final ap\'os a chave de fechamento de uma \texttt{class} \'e um dos erros mais frequentes dos iniciantes em C++. Os erros de compila\c{c}\~ao decorrentes s\~ao crípticos e geralmente apontam para a \emph{pr\'oxima} declara\c{c}\~ao --- n\~ao para a classe em si. Lembre-se: \texttt{class}, \texttt{struct} e \texttt{union}, todas terminam em \texttt{\};}.
+\end{errocomum}
+
+\subsection*{(c) Extens\~ao do arquivo que cont\'em a defini\c{c}\~ao da classe}
+
+\begin{resposta}\textbf{Resposta:} \texttt{.h}.\end{resposta}
+
+A conven\c{c}\~ao em C++ \'e armazenar a \emph{declara\c{c}\~ao} da classe em um \textbf{arquivo de cabe\c{c}alho} (\emph{header}) com extens\~ao \texttt{.h} (ou, \`as vezes, \texttt{.hpp}) e a \emph{implementa\c{c}\~ao} de suas fun\c{c}\~oes-membro em um \textbf{arquivo de c\'odigo-fonte} com extens\~ao \texttt{.cpp}. Veremos essa divis\~ao em a\c{c}\~ao nos exerc\'icios 16.11 a 16.17, onde cada classe ter\'a o seu par \texttt{.h}/\texttt{.cpp}.
+
+\subsection*{(d) Cada par\^ametro deve especificar ____ e ____}
+
+\begin{resposta}\textbf{Resposta:} um \textbf{tipo} e um \textbf{nome}.\end{resposta}
+
+Em \texttt{void f(int x, double y)}, cada par\^ametro tem dois componentes obrigat\'orios: o tipo (\texttt{int}, \texttt{double}) e o nome (\texttt{x}, \texttt{y}). O tipo informa ao compilador como interpretar os bits recebidos; o nome \'e usado dentro do corpo da fun\c{c}\~ao para referir-se ao valor.
+
+\subsection*{(e) Quando cada objeto mant\'em sua pr\'opria c\'opia de um atributo, este \'e chamado ____}
+
+\begin{resposta}\textbf{Resposta:} um \textbf{dado-membro} (ou simplesmente \emph{membro de dado}).\end{resposta}
+
+Os dados-membro s\~ao as vari\'aveis declaradas \emph{dentro} da defini\c{c}\~ao da classe (mas \emph{fora} de qualquer fun\c{c}\~ao-membro). Cada objeto da classe carrega sua pr\'opria c\'opia de cada dado-membro. Por isso, dois objetos da mesma classe podem ter estados \emph{distintos}: \texttt{conta1} pode ter saldo 100 enquanto \texttt{conta2} tem saldo 500.
+
+\begin{obseng}
+H\'a uma exce\c{c}\~ao a essa regra: se um membro for declarado \texttt{static}, ele \'e \emph{compartilhado} por todos os objetos da classe --- existe uma s\'o c\'opia. Membros est\'aticos s\~ao tema do Cap\'itulo~17.
+\end{obseng}
+
+\subsection*{(f) A palavra-chave \texttt{public} \'e um ____}
+
+\begin{resposta}\textbf{Resposta:} \textbf{especificador de acesso}.\end{resposta}
+
+Os tr\^es especificadores de acesso em C++ s\~ao \texttt{public}, \texttt{private} e \texttt{protected}. Eles controlam quem pode ver e usar cada membro:
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{public}: acess\'ivel de \emph{qualquer lugar} (clientes da classe).
+  \item \texttt{private}: acess\'ivel \emph{apenas} a partir das fun\c{c}\~oes-membro da pr\'opria classe.
+  \item \texttt{protected}: como \texttt{private}, mas tamb\'em acess\'ivel a classes derivadas (heran\c{c}a; Cap.~18).
+\end{itemize}
+
+\subsection*{(g) Tipo de retorno que indica que a fun\c{c}\~ao n\~ao devolve informa\c{c}\~ao}
+
+\begin{resposta}\textbf{Resposta:} \texttt{void}.\end{resposta}
+
+Quando uma fun\c{c}\~ao executa uma tarefa mas n\~ao tem nada espec\'ifico a retornar (por exemplo, exibir uma mensagem na tela, ou modificar um dado-membro), declaramo-la com retorno \texttt{void}. \'E o mesmo \texttt{void} que j\'a us\'avamos em C; nada muda aqui.
+
+\subsection*{(h) Fun\c{c}\~ao de \texttt{<string>} que l\^e at\'e encontrar \emph{newline}}
+
+\begin{resposta}\textbf{Resposta:} \texttt{getline}.\end{resposta}
+
+O operador \texttt{>>} de \texttt{cin} l\^e at\'e o primeiro espa\c{c}o em branco. Para ler uma linha inteira (que pode conter espa\c{c}os), usa-se \texttt{getline(cin, minhaString)}, que l\^e at\'e o caractere de nova linha (\texttt{\textbackslash n}). \'E o an\'alogo C++ do \texttt{fgets} de C.
+
+\subsection*{(i) Operador que ``amarra'' a fun\c{c}\~ao-membro \`a classe}
+
+\begin{resposta}\textbf{Resposta:} \textbf{operador bin\'ario de resolu\c{c}\~ao de escopo} (\texttt{::}).\end{resposta}
+
+Lembre-se do Cap\'itulo~15: o \texttt{::} un\'ario acessa o escopo global. Aqui usamos a forma \emph{bin\'aria}: \texttt{NomeDaClasse::nomeDaFuncao} significa ``a fun\c{c}\~ao \texttt{nomeDaFuncao} \emph{pertencente} \`a classe \texttt{NomeDaClasse}''. \'E indispens\'avel quando definimos fora da classe:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+// No arquivo .h:
+class Conta {
+public: int getSaldo() const;
+private: int saldo;
+};
+
+// No arquivo .cpp:
+int Conta::getSaldo() const { return saldo; }
+//  ~~~~~~~ <-- operador binario de resolucao de escopo
+\end{lstlisting}
+
+\subsection*{(j) Diretiva de pr\'e-processador para incluir o cabe\c{c}alho}
+
+\begin{resposta}\textbf{Resposta:} \texttt{\#include}.\end{resposta}
+
+A mesma diretiva j\'a familiar de C. A diferen\c{c}a notavel: cabe\c{c}alhos da biblioteca-padr\~ao em C++ s\~ao escritos sem extens\~ao --- \texttt{<iostream>}, \texttt{<string>}, \texttt{<vector>} --- enquanto cabe\c{c}alhos do programador continuam com extens\~ao \texttt{.h} e entre aspas: \texttt{\#include "MinhaClasse.h"}.
+
+% ============================================================
+\section{Exerc\'icio 16.2 --- Verdadeiro ou falso}
+% ============================================================
+
+\subsection*{(a) Nomes de fun\c{c}\~ao come\c{c}am com mai\'uscula}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Falso}.\end{resposta}
+
+A conven\c{c}\~ao adotada pelos autores deste livro \'e \emph{camel case} (com primeira letra min\'uscula): a primeira palavra come\c{c}a min\'uscula, e as palavras subsequentes come\c{c}am mai\'usculas. Exemplos: \texttt{displayMessage}, \texttt{getCourseName}, \texttt{obterIdade}. Por outro lado, os \emph{nomes de classes} \emph{come\c{c}am} com mai\'uscula (\texttt{GradeBook}, \texttt{Account}, \texttt{Date}) --- conven\c{c}\~ao chamada \emph{PascalCase}.
+
+\subsection*{(b) Par\^enteses vazios indicam que a fun\c{c}\~ao n\~ao tem par\^ametros}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Verdadeiro}.\end{resposta}
+
+\texttt{void f();} declara uma fun\c{c}\~ao sem par\^ametros. Em C++, a lista vazia significa o que parece; em C antigo (n\~ao em C moderno), uma lista vazia significava ``n\'umero n\~ao especificado de par\^ametros''.
+
+\subsection*{(c) Membros \texttt{private} s\~ao acess\'iveis \`as fun\c{c}\~oes-membro da classe}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Verdadeiro}.\end{resposta}
+
+A regra do \texttt{private} \'e: \emph{fora} da classe, n\~ao se v\^e; \emph{dentro} da classe (em qualquer fun\c{c}\~ao-membro), v\^e-se livremente. \'E essa assimetria que viabiliza o \emph{encapsulamento}: os clientes da classe enxergam apenas a interface p\'ublica; os detalhes ficam isolados, podendo ser alterados sem afetar o c\'odigo cliente.
+
+\subsection*{(d) Vari\'aveis no corpo de uma fun\c{c}\~ao-membro s\~ao dados-membro}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Falso}.\end{resposta}
+
+Vari\'aveis declaradas no \emph{corpo} de uma fun\c{c}\~ao-membro s\~ao \textbf{vari\'aveis locais}: existem somente durante a execu\c{c}\~ao daquela fun\c{c}\~ao e s\~ao vis\'iveis apenas dentro dela. Para serem dados-membro, devem ser declaradas no n\'ivel da \emph{classe}, fora de qualquer fun\c{c}\~ao-membro.
+
+\subsection*{(e) O corpo de toda fun\c{c}\~ao \'e delimitado por chaves}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Verdadeiro}.\end{resposta}
+
+\texttt{\{} abre, \texttt{\}} fecha. \'E uma regra rig\'ida em C++. (As linguagens que dispensam chaves, como Python, usam indenta\c{c}\~ao significativa; n\~ao \'e o caso aqui.)
+
+\subsection*{(f) Qualquer arquivo com \texttt{int main()} pode executar como programa}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Verdadeiro}.\end{resposta}
+
+\texttt{main} \'e o \emph{ponto de entrada} de todo programa C++. Por defini\c{c}\~ao, deve existir exatamente uma fun\c{c}\~ao com esse nome em todo o programa, e \'e ela quem o sistema operacional invocar\'a primeiro.
+
+\subsection*{(g) Tipos dos argumentos devem ser coerentes com os par\^ametros}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Verdadeiro}.\end{resposta}
+
+Quando voc\^e chama \texttt{f(3.14)} e \texttt{f} foi declarada como \texttt{int f(int)}, o compilador realizar\'a uma \emph{convers\~ao impl\'icita} (com perda de informa\c{c}\~ao) de \texttt{double} para \texttt{int}. Para tipos incompat\'iveis (string para \texttt{int}, por exemplo), o compilador rejeitar\'a a chamada.
+
+% ============================================================
+\section{Exerc\'icio 16.3 --- Vari\'avel local versus dado-membro}
+% ============================================================
+
+\textit{Qual \'e a diferen\c{c}a entre uma vari\'avel local e um dado-membro?}
+
+\subsection*{Resposta did\'atica expandida}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|p{3.5cm}|p{5cm}|p{5cm}|}
+\hline
+\textbf{Aspecto} & \textbf{Vari\'avel local} & \textbf{Dado-membro} \\
+\hline
+\textbf{Onde \'e declarada} & No corpo de uma fun\c{c}\~ao & Dentro da classe, fora das fun\c{c}\~oes-membro \\
+\hline
+\textbf{Quanto tempo vive} & Da declara\c{c}\~ao at\'e o \texttt{\}} do bloco & Enquanto o objeto existir \\
+\hline
+\textbf{Quem v\^e} & S\'o a pr\'opria fun\c{c}\~ao & Todas as fun\c{c}\~oes-membro do objeto \\
+\hline
+\textbf{Por objeto} & N\~ao se aplica & Cada objeto tem sua c\'opia \\
+\hline
+\textbf{Inicializa\c{c}\~ao} & Lixo se n\~ao inicializada & Tratada pelo construtor \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{Exemplo concreto}
+
+\begin{lstlisting}[style=cppcode]
+class Conta {
+public:
+    void depositar(int valor) {
+        int novoSaldo = saldo + valor;  // <-- VARIAVEL LOCAL
+        saldo = novoSaldo;
+    }
+private:
+    int saldo;                          // <-- DADO-MEMBRO
+};
+\end{lstlisting}
+
+\noindent Na linha 3, \texttt{novoSaldo} \'e uma vari\'avel local: nasce no \texttt{int novoSaldo = \ldots}, morre no \texttt{\}} da fun\c{c}\~ao, n\~ao \'e vista por outras fun\c{c}\~oes. Na linha 7, \texttt{saldo} \'e um dado-membro: vive enquanto o objeto \texttt{Conta} existir, e \'e vis\'ivel a todas as fun\c{c}\~oes-membro.
+
+\begin{boaprat}
+Quando uma vari\'avel local tem nome igual ao de um dado-membro, a local \emph{oculta} o dado-membro --- e isso \'e fonte de bugs sutis. Adote uma conven\c{c}\~ao de nomenclatura que evite a colis\~ao: alguns programadores usam um sufixo `\texttt{\_}' nos dados-membro (\texttt{saldo\_}), outros prefixam com \texttt{m\_} (\texttt{m\_saldo}). Os autores deste livro evitam esses adornos e simplesmente cuidam para n\~ao reusar nomes.
+\end{boaprat}
+
+% ============================================================
+\section{Exerc\'icio 16.4 --- Par\^ametro versus argumento}
+% ============================================================
+
+\textit{Explique a finalidade de um par\^ametro de fun\c{c}\~ao. Qual \'e a diferen\c{c}a entre par\^ametro e argumento?}
+
+\subsection*{Resposta did\'atica expandida}
+
+\begin{resposta}
+\textbf{Par\^ametro} \'e o nome que aparece na \emph{declara\c{c}\~ao} ou \emph{defini\c{c}\~ao} da fun\c{c}\~ao --- \'e uma vari\'avel especial que receber\'a o valor passado pelo chamador. \textbf{Argumento} \'e o valor concreto fornecido na \emph{chamada} da fun\c{c}\~ao.
+\end{resposta}
+
+\subsection*{Exemplo}
+
+\begin{lstlisting}[style=cppcode]
+// PARAMETROS: count, radius (no cabecalho)
+double areaCirculo(double radius) {
+    return 3.14159 * radius * radius;
+}
+
+int main() {
+    double r = 5.0;
+    double a = areaCirculo(r);      // ARGUMENTO: r (valor 5.0)
+    double b = areaCirculo(10.0);   // ARGUMENTO: 10.0
+}
+\end{lstlisting}
+
+\noindent Na linha 2, \texttt{radius} \'e o \emph{par\^ametro} --- um placeholder que ainda n\~ao tem valor. Na linha 8, \texttt{r} \'e o \emph{argumento} --- um valor concreto que \emph{vai ser copiado} para \texttt{radius} no momento da chamada. Na linha 9, o argumento \'e o literal \texttt{10.0}.
+
+\subsection*{Por que essa distin\c{c}\~ao importa?}
+
+A diferencia\c{c}\~ao vem da terminologia matem\'atica formal. Em $f(x) = x^2$, $x$ \'e o \emph{par\^ametro formal} da fun\c{c}\~ao $f$; quando avaliamos $f(3) = 9$, o $3$ \'e o \emph{argumento atual}. Programadores experientes podem usar os dois termos intercambiavelmente em conversa\c{c}\~ao informal --- mas, em c\'odigo cuidadosamente documentado e em textos t\'ecnicos, preserva-se a diferen\c{c}a.
+
+\begin{obseng}
+A finalidade do par\^ametro \'e fornecer \`a fun\c{c}\~ao a \emph{informa\c{c}\~ao adicional} de que ela precisa para realizar sua tarefa. Sem par\^ametros, uma fun\c{c}\~ao s\'o pode operar sobre dados que estejam visiveis em seu escopo (vari\'aveis globais ou dados-membro). Par\^ametros tornam fun\c{c}\~oes \emph{reutiliz\'aveis}: a mesma fun\c{c}\~ao \texttt{areaCirculo} serve para qualquer raio.
+\end{obseng}
+
+% ============================================================
+\section*{S\'intese conceitual}
+% ============================================================
+
+Os quatro exerc\'icios de autorrevisão do Cap\'itulo~16 cobrem o \emph{vocabul\'ario b\'asico} da orienta\c{c}\~ao a objetos em C++ (16.1), as \emph{conven\c{c}\~oes sint\'aticas} (16.2), a distin\c{c}\~ao crucial entre \emph{vari\'avel local} e \emph{dado-membro} (16.3) e entre \emph{par\^ametro} e \emph{argumento} (16.4). Esse vocabul\'ario ser\'a aplicado, em escala pr\'atica, nos sete exerc\'icios de programa\c{c}\~ao do cap\'itulo --- onde escreveremos, pela primeira vez na obra, classes completas: \texttt{GradeBook}, \texttt{Account}, \texttt{Fatura}, \texttt{Empregado}, \texttt{Date}, \texttt{FrequenciaCardiaca} e \texttt{PerfilSaude}.
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}

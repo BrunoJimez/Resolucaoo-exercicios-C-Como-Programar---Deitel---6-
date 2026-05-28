@@ -1,0 +1,803 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 14 -- Outros Tópicos sobre C
+%  EXERCÍCIOS (14.2 -- 14.7)
+%  Abordagem incremental: Caps. 1 a 14
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array,amsmath}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},
+  title={\small\color{white}Saída do programa},breakable,#1}
+\newtcolorbox{atencao}[1][]{colback=yellow!10,colframe=deitellorange,
+  fonttitle=\bfseries\small,title={Atenção},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 14 -- Exercícios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 14}\\[0.3cm]
+  {\Large\color{deitelblue!80}Outros Tópicos sobre C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios (14.2--14.7)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, com código completo\\[0.2cm]
+    \textbf{O capítulo final do núcleo de C}}
+  \end{tcolorbox}
+\end{titlepage}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 14.2 -- Produto com Argumentos Variáveis}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 14.2]
+Escreva um programa que calcule o produto de uma série de inteiros passados à
+função \texttt{product} por uma lista de argumentos de tamanhos variáveis.
+Teste com várias chamadas, cada uma com um número diferente de argumentos.
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex14.2: produto_variadic.c
+   Demonstra uso de stdarg.h para funcao variadica */
+#include <stdio.h>
+#include <stdarg.h>
+
+/* O primeiro parametro fixo eh a quantidade de inteiros que segue */
+int product( int contagem, ... )
+{
+    va_list args;
+    int i, prod = 1;
+
+    va_start( args, contagem );
+
+    for ( i = 0; i < contagem; ++i ) {
+        prod *= va_arg( args, int );
+    }
+
+    va_end( args );  /* SEMPRE chamar antes do return! */
+    return prod;
+}
+
+int main( void )
+{
+    /* 2 argumentos */
+    printf( "Produto de 2 e 3:        %d\n",
+            product( 2, 2, 3 ) );
+
+    /* 3 argumentos */
+    printf( "Produto de 4, 5 e 6:     %d\n",
+            product( 3, 4, 5, 6 ) );
+
+    /* 5 argumentos */
+    printf( "Produto de 1, 2, 3, 4, 5: %d\n",
+            product( 5, 1, 2, 3, 4, 5 ) );
+
+    /* 1 argumento */
+    printf( "Produto de 7:            %d\n",
+            product( 1, 7 ) );
+
+    /* nenhum argumento variavel (so o contador) */
+    printf( "Produto vazio:           %d\n",
+            product( 0 ) );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Saída:}
+\begin{saida}
+Produto de 2 e 3:        6\\
+Produto de 4, 5 e 6:     120\\
+Produto de 1, 2, 3, 4, 5: 120\\
+Produto de 7:            7\\
+Produto vazio:           1
+\end{saida}
+\end{respostabox}
+
+\subsection*{Análise didática}
+
+\begin{boaprática}
+\textbf{Anatomia de uma função variádica:}
+
+\begin{enumerate}[noitemsep]
+  \item \textbf{Pelo menos um parâmetro nomeado} -- aqui \texttt{contagem}. As
+  reticências (\texttt{...}) sempre vêm \textit{depois} de pelo menos um parâmetro
+  fixo, que serve como ``âncora''.
+
+  \item \textbf{Declarar \texttt{va\_list}} -- tipo opaco que representa o estado
+  do percurso pelos argumentos.
+
+  \item \textbf{\texttt{va\_start}} -- inicializa, recebendo como segundo
+  argumento o \textit{último parâmetro nomeado} (não as reticências).
+
+  \item \textbf{Iterar com \texttt{va\_arg}} -- para cada argumento, especificamos
+  o tipo esperado. Aqui sempre \texttt{int}.
+
+  \item \textbf{\texttt{va\_end}} -- liberar recursos internos. Não chamar pode
+  causar comportamento indefinido.
+\end{enumerate}
+\end{boaprática}
+
+\bigskip
+
+\begin{erroco}
+\textbf{Armadilhas de funções variádicas:}
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Sem checagem de tipos:} \texttt{product(2, 3.14, 5)} compila mas
+  causa estrago -- \texttt{va\_arg(args, int)} interpreta os bytes do \texttt{double}
+  como \texttt{int}.
+
+  \item \textbf{Promoções automáticas:} \texttt{char} e \texttt{short} são promovidos
+  a \texttt{int}; \texttt{float} a \texttt{double}. Nunca use \texttt{va\_arg(args, char)}
+  ou \texttt{va\_arg(args, float)} -- comportamento indefinido.
+
+  \item \textbf{Precisa de sentinela ou contador:} a função não sabe quantos
+  argumentos foram passados. Por isso passamos \texttt{contagem} explicitamente.
+  \texttt{printf} sabe pelo número de \texttt{\%} no formato; outras funções
+  usam um valor sentinela como \texttt{NULL} ou \texttt{-1}.
+\end{itemize}
+\end{erroco}
+
+\newpage
+
+% ============================================================
+\section{Exercício 14.3 -- Argumentos da Linha de Comando}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 14.3]
+Escreva um programa que imprima os argumentos da linha de comando.
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex14.3: argumentos.c */
+#include <stdio.h>
+
+int main( int argc, char *argv[] )
+{
+    int i;
+
+    printf( "Numero de argumentos (argc): %d\n\n", argc );
+
+    printf( "Argumentos:\n" );
+    for ( i = 0; i < argc; ++i ) {
+        printf( "  argv[%d] = \"%s\"\n", i, argv[ i ] );
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Compilação e execução:}
+\begin{lstlisting}
+$ gcc -o argumentos argumentos.c
+$ ./argumentos ola mundo arquivo.txt 42
+\end{lstlisting}
+
+\textbf{Saída:}
+\begin{saida}
+Numero de argumentos (argc): 5\\
+\\
+Argumentos:\\
+\ \ argv[0] = "./argumentos"\\
+\ \ argv[1] = "ola"\\
+\ \ argv[2] = "mundo"\\
+\ \ argv[3] = "arquivo.txt"\\
+\ \ argv[4] = "42"
+\end{saida}
+\end{respostabox}
+
+\subsection*{Análise didática}
+
+\begin{atencao}
+\textbf{Pontos cruciais sobre \texttt{argc}/\texttt{argv}:}
+
+\begin{itemize}[noitemsep]
+  \item \textbf{\texttt{argv[0]} é o nome do programa} (geralmente, com o caminho).
+  Em alguns sistemas pode ser o caminho completo, em outros apenas o nome.
+
+  \item \textbf{\texttt{argc} inclui o nome do programa.} Por isso \texttt{argc \(\geq\) 1}
+  sempre (em sistemas conformes).
+
+  \item \textbf{\texttt{argv[argc]} é garantidamente \texttt{NULL}.} Você pode
+  iterar até encontrar \texttt{NULL} em vez de usar \texttt{argc}.
+
+  \item \textbf{Tudo é string.} Para usar \texttt{argv[1]} como número, converta
+  com \texttt{atoi}, \texttt{atof} ou \texttt{strtol}.
+
+  \item \textbf{O shell faz o ``split''.} \texttt{./prog "ola mundo"} resulta em
+  \texttt{argc = 2}, \texttt{argv[1] = "ola mundo"}. Sem aspas, seriam dois
+  argumentos separados.
+\end{itemize}
+
+\textbf{Forma alternativa equivalente:}
+\begin{lstlisting}
+int main( int argc, char **argv )  /* ponteiro para ponteiro */
+\end{lstlisting}
+As duas formas (\texttt{char *argv[]} e \texttt{char **argv}) são intercambiáveis
+para parâmetros de função.
+\end{atencao}
+
+\newpage
+
+% ============================================================
+\section{Exercício 14.4 -- Ordenar com -c ou -d}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 14.4]
+Escreva um programa que classifique um array de inteiros em ordem crescente
+ou decrescente. O programa deve usar argumentos da linha de comando para
+passar \texttt{-c} (crescente) ou \texttt{-d} (decrescente).
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex14.4: ordena_cli.c
+   Uso:
+     ./ordena -c 5 3 8 1 4    (crescente)
+     ./ordena -d 5 3 8 1 4    (decrescente) */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void bubbleSort( int *arr, int n, int crescente )
+{
+    int i, j, temp;
+    for ( i = 0; i < n - 1; ++i ) {
+        for ( j = 0; j < n - 1 - i; ++j ) {
+            int trocar = crescente ? ( arr[ j ] > arr[ j + 1 ] )
+                                    : ( arr[ j ] < arr[ j + 1 ] );
+            if ( trocar ) {
+                temp         = arr[ j ];
+                arr[ j ]     = arr[ j + 1 ];
+                arr[ j + 1 ] = temp;
+            }
+        }
+    }
+}
+
+int main( int argc, char *argv[] )
+{
+    int i, n, crescente;
+
+    if ( argc < 3 ) {
+        printf( "Uso: %s -c|-d num1 num2 ...\n", argv[ 0 ] );
+        return 1;
+    }
+
+    /* Determina ordem */
+    if ( strcmp( argv[ 1 ], "-c" ) == 0 ) {
+        crescente = 1;
+    } else if ( strcmp( argv[ 1 ], "-d" ) == 0 ) {
+        crescente = 0;
+    } else {
+        printf( "Opcao invalida: %s. Use -c ou -d.\n", argv[ 1 ] );
+        return 1;
+    }
+
+    /* Quantidade de numeros */
+    n = argc - 2;
+
+    /* Aloca array dinamicamente -- conceito do Cap. 12 */
+    int *arr = malloc( n * sizeof( int ) );
+    if ( arr == NULL ) {
+        printf( "Erro: falta de memoria.\n" );
+        return 1;
+    }
+
+    /* Converte strings em inteiros */
+    for ( i = 0; i < n; ++i ) {
+        arr[ i ] = atoi( argv[ i + 2 ] );
+    }
+
+    /* Ordena */
+    bubbleSort( arr, n, crescente );
+
+    /* Exibe resultado */
+    printf( "Resultado (%s):\n",
+            crescente ? "crescente" : "decrescente" );
+    for ( i = 0; i < n; ++i ) {
+        printf( "%d ", arr[ i ] );
+    }
+    printf( "\n" );
+
+    free( arr );
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Exemplos de uso:}
+\begin{saida}
+\$ ./ordena -c 5 3 8 1 4 9 2\\
+Resultado (crescente):\\
+1 2 3 4 5 8 9\\
+\\
+\$ ./ordena -d 5 3 8 1 4 9 2\\
+Resultado (decrescente):\\
+9 8 5 4 3 2 1
+\end{saida}
+\end{respostabox}
+
+\subsection*{Análise didática}
+
+\begin{boaprática}
+\textbf{Padrão Unix de opções:} flags começam com \texttt{-} seguidas de letra
+(\texttt{-c}, \texttt{-d}, \texttt{-v}, etc.). Para múltiplas opções, há
+convenções:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Forma curta:} \texttt{-c}, \texttt{-d}, \texttt{-v}.
+  \item \textbf{Forma longa:} \texttt{--crescente}, \texttt{--decrescente},
+  \texttt{--verbose} (GNU).
+  \item \textbf{Combináveis:} \texttt{-cvd} equivale a \texttt{-c -v -d}.
+  \item \textbf{Com valor:} \texttt{-o saida.txt} ou \texttt{--output=saida.txt}.
+\end{itemize}
+
+Para projetos sérios, use a biblioteca \texttt{<unistd.h>} com \texttt{getopt}
+(POSIX) ou \texttt{getopt\_long} (GNU). Aqui implementamos manualmente para
+mostrar o conceito.
+\end{boaprática}
+
+\newpage
+
+% ============================================================
+\section{Exercício 14.5 -- Arquivos Temporários}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 14.5]
+Escreva um programa que coloque um espaço entre cada caractere em um arquivo.
+Use um arquivo temporário para isso: primeiro grave o conteúdo modificado no
+temporário, depois copie de volta ao arquivo original.
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex14.5: espaca_chars.c
+   Insere espaco entre cada caractere de um arquivo */
+#include <stdio.h>
+#include <stdlib.h>
+
+int main( int argc, char *argv[] )
+{
+    FILE *original, *temp;
+    int c;
+
+    if ( argc != 2 ) {
+        printf( "Uso: %s arquivo.txt\n", argv[ 0 ] );
+        return 1;
+    }
+
+    /* Abre o original para leitura */
+    if ( ( original = fopen( argv[ 1 ], "r" ) ) == NULL ) {
+        printf( "Erro: nao foi possivel abrir %s\n", argv[ 1 ] );
+        return 1;
+    }
+
+    /* Cria arquivo temporario */
+    if ( ( temp = tmpfile() ) == NULL ) {
+        printf( "Erro: nao foi possivel criar arquivo temporario.\n" );
+        fclose( original );
+        return 1;
+    }
+
+    /* Etapa 1: copia do original para o temporario inserindo espacos */
+    while ( ( c = fgetc( original ) ) != EOF ) {
+        if ( c != '\n' && c != ' ' ) {
+            fputc( c, temp );
+            fputc( ' ', temp );  /* espaco apos cada caractere */
+        } else {
+            fputc( c, temp );    /* preserva quebras e espacos */
+        }
+    }
+    fclose( original );
+
+    /* Etapa 2: rebobina temporario e reabre original para escrita */
+    rewind( temp );
+    if ( ( original = fopen( argv[ 1 ], "w" ) ) == NULL ) {
+        printf( "Erro: nao foi possivel reescrever %s\n", argv[ 1 ] );
+        fclose( temp );
+        return 1;
+    }
+
+    /* Etapa 3: copia do temporario para o original */
+    while ( ( c = fgetc( temp ) ) != EOF ) {
+        fputc( c, original );
+    }
+
+    fclose( original );
+    fclose( temp );  /* tmpfile() eh deletado automaticamente */
+
+    printf( "Arquivo %s processado com sucesso.\n", argv[ 1 ] );
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Exemplo:}
+\begin{saida}
+\$ cat exemplo.txt\\
+Ola mundo\\
+\\
+\$ ./espaca\_chars exemplo.txt\\
+Arquivo exemplo.txt processado com sucesso.\\
+\\
+\$ cat exemplo.txt\\
+O l a  m u n d o
+\end{saida}
+
+\textbf{Vantagens de \texttt{tmpfile()}:}
+\begin{itemize}[noitemsep]
+  \item Nome único garantido pelo sistema.
+  \item \textbf{Arquivo deletado automaticamente} ao fechar ou ao terminar o programa.
+  \item Sem risco de colisão de nomes com outros processos.
+  \item Aberto em modo binário \texttt{"wb+"} (leitura e escrita).
+\end{itemize}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 14.6 -- Tratamento de Sinais}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 14.6]
+Escreva um programa com tratadores de sinal para \texttt{SIGABRT} e
+\texttt{SIGINT}. Teste chamando \texttt{abort} (gera SIGABRT) e digitando
+\texttt{Ctrl+C} (gera SIGINT).
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex14.6: sinais.c */
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+
+void tratadorSinal( int sinalRecebido )
+{
+    /* IMPORTANTE: re-registrar o handler porque alguns sistemas
+       resetam para SIG_DFL apos receber o sinal               */
+    signal( sinalRecebido, tratadorSinal );
+
+    printf( "\n*** Sinal capturado: " );
+
+    switch ( sinalRecebido ) {
+        case SIGABRT:
+            printf( "SIGABRT (abort) ***\n" );
+            printf( "    Programa solicitou aborto.\n" );
+            break;
+        case SIGINT:
+            printf( "SIGINT (Ctrl+C) ***\n" );
+            printf( "    Interrupcao do usuario detectada.\n" );
+            break;
+        default:
+            printf( "Sinal %d ***\n", sinalRecebido );
+    }
+
+    printf( "    Encerrando programa de forma controlada.\n" );
+    exit( EXIT_SUCCESS );
+}
+
+int main( void )
+{
+    int opcao;
+
+    /* Registra tratadores */
+    signal( SIGABRT, tratadorSinal );
+    signal( SIGINT,  tratadorSinal );
+
+    printf( "Programa de teste de sinais\n" );
+    printf( "  1 - gerar SIGABRT (via abort)\n" );
+    printf( "  2 - gerar SIGABRT (via raise)\n" );
+    printf( "  3 - gerar SIGINT (via raise)\n" );
+    printf( "  4 - loop infinito (use Ctrl+C para testar SIGINT)\n" );
+    printf( "Escolha: " );
+    scanf( "%d", &opcao );
+
+    switch ( opcao ) {
+        case 1: abort();              break;
+        case 2: raise( SIGABRT );     break;
+        case 3: raise( SIGINT );      break;
+        case 4:
+            printf( "Pressione Ctrl+C para interromper...\n" );
+            for ( ;; ) ;   /* loop infinito */
+            break;
+        default:
+            printf( "Opcao invalida.\n" );
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Exemplo de execução:}
+\begin{saida}
+\$ ./sinais\\
+Programa de teste de sinais\\
+\ \ 1 - gerar SIGABRT (via abort)\\
+\ \ 2 - gerar SIGABRT (via raise)\\
+\ \ 3 - gerar SIGINT (via raise)\\
+\ \ 4 - loop infinito\\
+Escolha: 4\\
+Pressione Ctrl+C para interromper...\\
+\^{}C\\
+*** Sinal capturado: SIGINT (Ctrl+C) ***\\
+\ \ \ \ Interrupcao do usuario detectada.\\
+\ \ \ \ Encerrando programa de forma controlada.
+\end{saida}
+\end{respostabox}
+
+\subsection*{Sinais comuns em sistemas Unix-like}
+
+\begin{respostabox}
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l l l}
+\toprule
+\textbf{Sinal} & \textbf{Significado} & \textbf{Causa típica} \\ \midrule
+\texttt{SIGABRT} & Aborto                & chamada a \texttt{abort()} \\
+\texttt{SIGFPE}  & Erro aritmético        & divisão por zero \\
+\texttt{SIGILL}  & Instrução ilegal       & corrupção de código \\
+\texttt{SIGINT}  & Interrupção            & Ctrl+C no terminal \\
+\texttt{SIGSEGV} & Violação de segmentação& ponteiro inválido \\
+\texttt{SIGTERM} & Término solicitado     & \texttt{kill <pid>} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{atencao}
+\textbf{Cuidados com tratadores de sinais:}
+\begin{itemize}[noitemsep]
+  \item Tratadores devem ser \textbf{curtos e simples}. Idealmente, apenas
+  setar uma flag global \texttt{volatile sig\_atomic\_t}.
+  \item \textbf{Nem todas as funções são seguras} em tratadores. \texttt{printf}
+  e \texttt{malloc} \textit{não são} async-signal-safe; podem deadlock.
+  \item \texttt{SIGKILL} e \texttt{SIGSTOP} \textbf{não podem ser interceptados}.
+  São o ``mecanismo de força bruta'' do SO.
+\end{itemize}
+\end{atencao}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 14.7 -- Alocação Dinâmica com \texttt{realloc}}
+% ============================================================
+
+\begin{enunciadoBox}[Enunciado 14.7]
+Escreva um programa que aloque um array de inteiros dinamicamente, com tamanho
+fornecido pelo teclado. Leia os elementos, imprima-os. Em seguida, redimensione
+para a metade do tamanho original e imprima os elementos restantes.
+\end{enunciadoBox}
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex14.7: realloc_demo.c
+   Demonstra malloc, realloc e free */
+#include <stdio.h>
+#include <stdlib.h>
+
+void imprimirArray( const int *arr, int n, const char *titulo )
+{
+    int i;
+    printf( "%s (%d elementos):\n  ", titulo, n );
+    for ( i = 0; i < n; ++i ) {
+        printf( "%d ", arr[ i ] );
+    }
+    printf( "\n" );
+}
+
+int main( void )
+{
+    int  tamanho, i;
+    int *arr;
+
+    printf( "Tamanho do array: " );
+    scanf( "%d", &tamanho );
+
+    if ( tamanho <= 0 ) {
+        printf( "Tamanho invalido.\n" );
+        return 1;
+    }
+
+    /* Aloca com calloc (zera tudo) */
+    arr = calloc( tamanho, sizeof( int ) );
+    if ( arr == NULL ) {
+        printf( "Erro: memoria insuficiente.\n" );
+        return 1;
+    }
+
+    /* Le valores */
+    printf( "Digite %d inteiros:\n", tamanho );
+    for ( i = 0; i < tamanho; ++i ) {
+        scanf( "%d", &arr[ i ] );
+    }
+
+    imprimirArray( arr, tamanho, "Array original" );
+
+    /* Realoca para metade do tamanho */
+    int novoTamanho = tamanho / 2;
+    int *temp = realloc( arr, novoTamanho * sizeof( int ) );
+
+    if ( temp == NULL ) {
+        printf( "Erro ao realocar.\n" );
+        free( arr );  /* libera bloco original */
+        return 1;
+    }
+    arr = temp;  /* atualiza ponteiro */
+
+    imprimirArray( arr, novoTamanho, "Array apos realloc (metade)" );
+
+    free( arr );
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Exemplo de execução:}
+\begin{saida}
+Tamanho do array: 6\\
+Digite 6 inteiros:\\
+10 20 30 40 50 60\\
+Array original (6 elementos):\\
+\ \ 10 20 30 40 50 60\\
+Array apos realloc (metade) (3 elementos):\\
+\ \ 10 20 30
+\end{saida}
+\end{respostabox}
+
+\subsection*{Anatomia de \texttt{realloc}}
+
+\begin{boaprática}
+\textbf{Como funciona \texttt{realloc}:}
+\begin{lstlisting}
+void *realloc( void *ptr, size_t novoTamanho );
+\end{lstlisting}
+
+\textbf{Casos possíveis:}
+\begin{enumerate}[noitemsep]
+  \item \textbf{Tamanho menor:} mantém os bytes iniciais, libera o resto.
+  Pode retornar o mesmo ponteiro.
+  \item \textbf{Tamanho maior, espaço contíguo disponível:} expande no lugar.
+  \item \textbf{Tamanho maior, sem espaço:} aloca novo bloco em outro lugar,
+  \textit{copia} os dados antigos, libera o original. \textbf{O ponteiro muda!}
+  \item \textbf{Falha:} retorna \texttt{NULL}, o ponteiro original \textbf{permanece válido}.
+\end{enumerate}
+
+\textbf{Por isso o idioma:}
+\begin{lstlisting}
+int *temp = realloc( arr, novoTam * sizeof( int ) );
+if ( temp != NULL ) {
+    arr = temp;          /* sucesso */
+} else {
+    /* falha: arr ainda eh valido, precisa de free dele */
+    free( arr );
+    return 1;
+}
+\end{lstlisting}
+
+\begin{erroco}
+\textbf{Erro classico:}
+\begin{lstlisting}
+arr = realloc( arr, novoTam );  /* PERIGOSO */
+\end{lstlisting}
+Se \texttt{realloc} falhar, \texttt{arr} vira \texttt{NULL} e perdemos
+\textit{permanentemente} o ponteiro para a memória original -- \textbf{memory leak}!
+\end{erroco}
+\end{boaprática}
+
+\newpage
+
+% ============================================================
+\section*{Reflexão Final -- Encerrando o Núcleo de C}
+
+\begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,
+  title={\bfseries 14 capítulos, uma jornada completa}]
+
+Chegamos ao fim do núcleo de C. Olhando para trás, completamos uma travessia
+notável:
+
+\textbf{Capítulos 1--2 -- Os primeiros passos:} de zero a programas funcionais.
+
+\textbf{Capítulos 3--5 -- Programação estruturada:} controle de fluxo, funções,
+recursão.
+
+\textbf{Capítulos 6--8 -- Dados compostos:} arrays, ponteiros (o coração de C!), strings.
+
+\textbf{Capítulo 9 -- E/S formatada:} domínio completo de \texttt{printf}/\texttt{scanf}.
+
+\textbf{Capítulos 10--12 -- Estruturas e persistência:} \texttt{struct},
+arquivos, listas, pilhas, filas, árvores.
+
+\textbf{Capítulo 13 -- O pré-processador:} a meta-linguagem do compilador.
+
+\textbf{Capítulo 14 -- Outros tópicos:} variádicas, linha de comando, sinais,
+\texttt{realloc}, \texttt{Makefile}.
+
+\bigskip
+
+\textbf{O que você ganhou:}
+\begin{itemize}[noitemsep]
+  \item Capacidade de escrever programas profissionais em C.
+  \item Compreensão de baixo nível: memória, ponteiros, bits, arquivos.
+  \item Vocabulário para entender qualquer código C existente.
+  \item Base sólida para qualquer linguagem moderna -- C++, Rust, Go, Java
+  herdam grande parte da sintaxe e semântica.
+  \item Pré-requisito para sistemas operacionais, compiladores, embarcados,
+  drivers, jogos, alta performance.
+\end{itemize}
+
+\textbf{Próximos passos sugeridos:}
+\begin{itemize}[noitemsep]
+  \item Leia código de projetos open-source escritos em C (kernel Linux, Git,
+  Redis, SQLite, FFmpeg).
+  \item Estude \textit{The C Programming Language} (K\&R) -- o livro original
+  de Kernighan e Ritchie.
+  \item Aprenda C++ ou Rust -- evoluções diretas de C com segurança e
+  abstração modernas.
+  \item Estude algoritmos avançados: \textit{Introduction to Algorithms}
+  (CLRS), Sedgewick.
+  \item Pratique em desafios: Project Euler, Advent of Code, sistemas de
+  competição de programação.
+\end{itemize}
+
+\textbf{Parabéns por chegar até aqui!} Os 14 capítulos de Deitel \& Deitel
+formam um currículo completo e rigoroso. Você está oficialmente pronto para
+o próximo nível.
+
+\end{tcolorbox}
+
+\end{document}

@@ -1,0 +1,343 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 14 -- Outros Tópicos sobre C
+%  EXERCÍCIO DE AUTORREVISÃO (14.1)
+%  Abordagem incremental: Caps. 1 a 14
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},title={\small\color{white}Saída do programa},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 14 -- Autorrevisão}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 14}\\[0.3cm]
+  {\Large\color{deitelblue!80}Outros Tópicos sobre C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercício de Autorrevisão (14.1)}\\[0.2cm]
+    {\normalsize 19 lacunas conceituais\\
+    Abordagem incremental: Capítulos 1 a 14\\[0.2cm]
+    \textbf{O capítulo final do núcleo de C}}
+  \end{tcolorbox}
+\end{titlepage}
+
+\section*{Construindo sobre os Capítulos Anteriores}
+
+O Capítulo~14 -- ``Outros Tópicos sobre C'' -- amarra os últimos fios da
+linguagem, completando seu conjunto de ferramentas para programas profissionais
+em C. Construindo sobre os Caps.~1--13, agora incorporamos:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Redirecionamento de E/S} -- \texttt{<}, \texttt{>}, \texttt{>>},
+  \texttt{|} (pipe) do shell
+  \item \textbf{Argumentos variádicos} -- funções como \texttt{printf} que aceitam
+  número variável de argumentos via \texttt{<stdarg.h>}: \texttt{va\_list},
+  \texttt{va\_start}, \texttt{va\_arg}, \texttt{va\_end}
+  \item \textbf{Argumentos de linha de comando} -- \texttt{int main(int argc, char *argv[])}
+  \item \textbf{Compilação multi-arquivo} -- \texttt{extern}, vinculação, ferramenta
+  \texttt{make} e \texttt{Makefile}
+  \item \textbf{Término de programa} -- \texttt{exit}, \texttt{atexit}, \texttt{abort}
+  \item \textbf{Sufixos numéricos} -- \texttt{L}, \texttt{U}, \texttt{F} para
+  controlar tipo de constantes
+  \item \textbf{Tratamento de sinais} -- \texttt{<signal.h>}, \texttt{signal},
+  \texttt{raise}, \texttt{SIGINT}, \texttt{SIGABRT}, \ldots
+  \item \textbf{Alocação dinâmica avançada} -- \texttt{calloc} (com zeros),
+  \texttt{realloc} (redimensiona)
+  \item \textbf{Arquivos temporários} -- \texttt{tmpfile}
+  \item \textbf{Qualificadores adicionais} -- \texttt{const}, \texttt{volatile}
+  \item \textbf{\texttt{goto}} -- desvio incondicional (uso restrito)
+\end{itemize}
+
+\begin{boaprática}
+  Este é o capítulo que separa programadores casuais de programadores
+  profissionais. Argumentos de linha de comando habilitam ferramentas Unix-style;
+  \texttt{Makefile} viabiliza projetos grandes; \texttt{calloc}/\texttt{realloc}
+  são essenciais para estruturas dinâmicas robustas; \texttt{signal} permite
+  programas resilientes.
+\end{boaprática}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 14.1 -- Preenchimento de Lacunas (19 itens)}
+% ============================================================
+
+\begin{respostabox}
+\begin{enumerate}[label=\textbf{\alph*)}]
+
+\item Símbolo que redireciona entrada de arquivo (em vez do teclado):
+\textbf{\texttt{<}} (redirecionamento de entrada).
+\begin{lstlisting}
+./meuprog < entrada.txt
+\end{lstlisting}
+
+\item Símbolo que redireciona saída para arquivo (em vez da tela):
+\textbf{\texttt{>}} (redirecionamento de saída).
+\begin{lstlisting}
+./meuprog > saida.txt
+\end{lstlisting}
+
+\item Símbolo que acrescenta saída ao final de um arquivo:
+\textbf{\texttt{>>}} (acréscimo de saída).
+\begin{lstlisting}
+./meuprog >> log.txt
+\end{lstlisting}
+Diferença crucial: \texttt{>} \textit{trunca} o arquivo; \texttt{>>}
+\textit{preserva} o conteúdo existente e acrescenta.
+
+\item Direciona saída de um programa para entrada de outro:
+\textbf{\texttt{|}} (pipe).
+\begin{lstlisting}
+ls | sort | uniq
+\end{lstlisting}
+A saída de \texttt{ls} torna-se entrada de \texttt{sort}, cuja saída
+torna-se entrada de \texttt{uniq}. Essa composição é a essência da
+filosofia Unix.
+
+\item Lista de parâmetros indicando número variável de argumentos:
+\textbf{\texttt{...}} (reticências).
+\begin{lstlisting}
+int media( int contagem, ... );
+\end{lstlisting}
+\texttt{printf} e \texttt{scanf} são variádicas.
+
+\item Macro chamada \textit{antes} de acessar argumentos variáveis:
+\textbf{\texttt{va\_start}}.
+\begin{lstlisting}
+va_list args;
+va_start( args, contagem );  /* contagem = ultimo arg nomeado */
+\end{lstlisting}
+
+\item Macro que acessa argumentos individuais da lista variável:
+\textbf{\texttt{va\_arg}}.
+\begin{lstlisting}
+int valor = va_arg( args, int );  /* le proximo argumento */
+\end{lstlisting}
+
+\item Macro que finaliza o processamento da lista variável:
+\textbf{\texttt{va\_end}}.
+\begin{lstlisting}
+va_end( args );  /* SEMPRE chamar antes do return! */
+\end{lstlisting}
+
+\item Argumento de \texttt{main} que recebe \textit{quantidade} de argumentos
+da linha de comando: \textbf{\texttt{argc}} (\textit{argument count}).
+
+\item Argumento de \texttt{main} que armazena os argumentos como strings:
+\textbf{\texttt{argv}} (\textit{argument vector}).
+\begin{lstlisting}
+int main( int argc, char *argv[] )
+{
+    /* argv[0] = nome do programa
+       argv[1], argv[2], ... = argumentos */
+}
+\end{lstlisting}
+
+\item Utilitário do Linux/Unix que processa arquivo de regras:
+\textbf{\texttt{make}}, que lê um \textbf{\texttt{Makefile}}.
+\begin{lstlisting}
+# Exemplo de Makefile
+programa: main.o util.o
+    gcc -o programa main.o util.o
+
+main.o: main.c util.h
+    gcc -c main.c
+\end{lstlisting}
+
+\item Função que força término da execução: \textbf{\texttt{exit}}.
+\begin{lstlisting}
+exit( 0 );           /* terminacao bem-sucedida */
+exit( EXIT_FAILURE ); /* terminacao com erro */
+\end{lstlisting}
+
+\item Função que registra rotina a ser chamada no término normal:
+\textbf{\texttt{atexit}}.
+\begin{lstlisting}
+void cleanup( void ) { printf( "Limpando...\n" ); }
+int main( void ) {
+    atexit( cleanup );  /* chamada automatica ao final */
+    return 0;
+}
+\end{lstlisting}
+
+\item Letra anexada a constantes para especificar tipo exato:
+\textbf{sufixo}.
+\begin{lstlisting}
+3.14F      /* float (sem F seria double) */
+100UL      /* unsigned long */
+9999999L   /* long int */
+1.5L       /* long double */
+\end{lstlisting}
+
+\item Função que abre arquivo temporário (existe até fechar ou fim do programa):
+\textbf{\texttt{tmpfile}}.
+\begin{lstlisting}
+FILE *fp = tmpfile();  /* arquivo binario, automaticamente removido */
+\end{lstlisting}
+
+\item Função para interceptar eventos inesperados: \textbf{\texttt{signal}}.
+\begin{lstlisting}
+void tratador( int sig ) { /* trata o sinal */ }
+signal( SIGINT, tratador );  /* registra handler para Ctrl+C */
+\end{lstlisting}
+
+\item Função que gera sinal de dentro do programa: \textbf{\texttt{raise}}.
+\begin{lstlisting}
+raise( SIGABRT );  /* gera SIGABRT explicitamente */
+\end{lstlisting}
+
+\item Função que aloca array e \textit{inicializa em zero}:
+\textbf{\texttt{calloc}}.
+\begin{lstlisting}
+int *arr = calloc( 100, sizeof( int ) );
+/* 100 inteiros, todos zero */
+\end{lstlisting}
+Diferença de \texttt{malloc}: \texttt{calloc} aceita 2 argumentos (n e
+tamanho) e \textit{garante zeros}; \texttt{malloc} deixa memória com lixo.
+
+\item Função que muda tamanho de bloco previamente alocado:
+\textbf{\texttt{realloc}}.
+\begin{lstlisting}
+arr = realloc( arr, 200 * sizeof( int ) );
+/* expande para 200 inteiros, preserva os 100 antigos */
+\end{lstlisting}
+
+\end{enumerate}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section*{Resumo Visual das Funções Novas do Cap. 14}
+
+\begin{tcolorbox}[colback=deitelgray,colframe=deitelblue,title={\bfseries Mapa de funções por categoria}]
+
+\textbf{Argumentos variádicos (\texttt{<stdarg.h>}):}
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{l l}
+\toprule
+\textbf{Macro} & \textbf{Função} \\ \midrule
+\texttt{va\_list}  & tipo para apontar para argumentos \\
+\texttt{va\_start} & inicializa va\_list \\
+\texttt{va\_arg}   & obtém próximo argumento \\
+\texttt{va\_end}   & finaliza (sempre chamar!) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Término de programa (\texttt{<stdlib.h>}):}
+\begin{center}
+\begin{tabular}{l l}
+\toprule
+\texttt{exit}    & encerra programa, retorna código \\
+\texttt{atexit}  & registra função para chamar no final \\
+\texttt{abort}   & término anormal (gera SIGABRT) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Alocação dinâmica (\texttt{<stdlib.h>}):}
+\begin{center}
+\begin{tabular}{l l}
+\toprule
+\texttt{malloc}  & aloca bloco, conteúdo indefinido \\
+\texttt{calloc}  & aloca array, inicializa zero \\
+\texttt{realloc} & redimensiona bloco \\
+\texttt{free}    & libera bloco \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Sinais (\texttt{<signal.h>}):}
+\begin{center}
+\begin{tabular}{l l}
+\toprule
+\texttt{signal} & registra tratador para sinal \\
+\texttt{raise}  & gera sinal de dentro do programa \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Arquivos:}
+\begin{center}
+\begin{tabular}{l l}
+\toprule
+\texttt{tmpfile}  & cria arquivo temporário \\
+\texttt{tmpnam}   & gera nome único para arquivo temporário \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{tcolorbox}
+
+% ============================================================
+\section*{Gabarito Rápido}
+
+\begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,
+  title={\bfseries\large Respostas Resumidas -- 14.1}]
+\begin{itemize}[noitemsep]
+  \item[a)] \texttt{<} \quad b) \texttt{>} \quad c) \texttt{>>} \quad d) pipe \texttt{|}
+  \item[e)] reticências \texttt{...} \quad f) \texttt{va\_start} \quad g) \texttt{va\_arg}
+  \item[h)] \texttt{va\_end} \quad i) \texttt{argc} \quad j) \texttt{argv}
+  \item[k)] \texttt{make}, \texttt{Makefile} \quad l) \texttt{exit} \quad m) \texttt{atexit}
+  \item[n)] sufixo \quad o) \texttt{tmpfile} \quad p) \texttt{signal}
+  \item[q)] \texttt{raise} \quad r) \texttt{calloc} \quad s) \texttt{realloc}
+\end{itemize}
+\end{tcolorbox}
+
+\end{document}

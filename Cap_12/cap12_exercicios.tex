@@ -1,0 +1,1135 @@
+% ============================================================
+%  C: Como Programar -- 6ª Edição | Deitel & Deitel
+%  Capítulo 12 -- Estruturas de Dados em C
+%  EXERCÍCIOS (12.6 -- 12.25)
+%  Abordagem incremental: Caps. 1 a 12
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{parskip}\setlength{\parskip}{6pt}\setlength{\parindent}{0pt}
+\usepackage{xcolor,tcolorbox,enumitem,listings,fancyhdr,titlesec,hyperref,booktabs,array,amsmath}
+\tcbuselibrary{skins,breakable}
+
+\definecolor{deitelblue}{RGB}{0,70,127}
+\definecolor{deitelgray}{RGB}{240,242,245}
+\definecolor{deitelgreen}{RGB}{0,110,60}
+\definecolor{deitellightblue}{RGB}{220,235,250}
+\definecolor{deitelred}{RGB}{160,20,20}
+\definecolor{deitellorange}{RGB}{200,90,0}
+
+\newtcolorbox{boaprática}[1][]{colback=deitellightblue,colframe=deitelblue,
+  fonttitle=\bfseries\small,title={Boa prática de programação},breakable,#1}
+\newtcolorbox{erroco}[1][]{colback=red!5,colframe=deitelred,
+  fonttitle=\bfseries\small,title={Erro comum de programação},breakable,#1}
+\newtcolorbox{respostabox}[1][]{colback=deitelgray,colframe=deitelblue!60,
+  fonttitle=\bfseries\small\color{deitelblue},title={Resposta detalhada},breakable,#1}
+\newtcolorbox{enunciadoBox}[1][]{colback=white,colframe=deitelblue,
+  fonttitle=\bfseries,title={#1},breakable}
+\newtcolorbox{saida}[1][]{colback=black!88,colframe=deitelblue,
+  fontupper=\ttfamily\small\color{green!70},
+  title={\small\color{white}Saída do programa},breakable,#1}
+
+\setlist[enumerate,1]{label=\textbf{\alph*)},leftmargin=2em}
+\setlist[itemize]{leftmargin=2em}
+
+\lstset{
+  basicstyle=\ttfamily\small,backgroundcolor=\color{deitelgray},
+  frame=single,framerule=0.4pt,rulecolor=\color{deitelblue!40},
+  breaklines=true,showstringspaces=false,
+  keywordstyle=\color{deitelblue}\bfseries,
+  commentstyle=\color{deitelgreen}\itshape,
+  stringstyle=\color{deitelred},
+  language=C,numbers=left,numberstyle=\tiny\color{gray},
+  xleftmargin=18pt,xrightmargin=5pt,stepnumber=1,
+}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{deitelblue}\textbf{C: Como Programar -- 6ª ed. | Deitel \& Deitel}}
+\fancyhead[R]{\small\color{deitelblue}Cap. 12 -- Exercícios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}[block]{\large\bfseries\color{deitelblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titleformat{\subsection}[block]{\normalsize\bfseries\color{deitelblue!80}}{}{}{}
+
+\hypersetup{colorlinks=true,linkcolor=deitelblue}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering\vspace*{2cm}
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[0.4cm]
+  {\huge\bfseries\color{deitelblue}C: Como Programar}\\[0.2cm]
+  {\large\color{deitelblue}6ª Edição $\cdot$ Paul Deitel \& Harvey Deitel}\\[0.2cm]
+  {\color{deitelblue}\rule{\linewidth}{2pt}}\\[1cm]
+  {\LARGE\bfseries Capítulo 12}\\[0.3cm]
+  {\Large\color{deitelblue!80}Estruturas de Dados em C}\\[0.8cm]
+  \begin{tcolorbox}[colback=deitellightblue,colframe=deitelblue,width=0.85\linewidth]
+    \centering{\large\bfseries Exercícios (12.6--12.25)}\\[0.2cm]
+    {\normalsize Resolvidos passo a passo, com código completo}
+  \end{tcolorbox}
+\end{titlepage}
+
+\tableofcontents\newpage
+
+% ============================================================
+\section{Exercício 12.6 -- Concatenação de Listas}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex12.6: concatenar_listas.c */
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct charNode {
+    char data;
+    struct charNode *nextPtr;
+} CharNode;
+
+void concatenate( CharNode **firstPtr, CharNode *secondPtr )
+{
+    if ( *firstPtr == NULL ) {
+        *firstPtr = secondPtr;
+        return;
+    }
+    /* Avanca ate o ultimo no da primeira lista */
+    CharNode *p = *firstPtr;
+    while ( p->nextPtr != NULL ) {
+        p = p->nextPtr;
+    }
+    p->nextPtr = secondPtr;  /* engata a segunda lista */
+}
+
+void inserir( CharNode **head, char c )
+{
+    CharNode *novo = malloc( sizeof( CharNode ) );
+    novo->data = c;
+    novo->nextPtr = NULL;
+
+    if ( *head == NULL ) {
+        *head = novo;
+    } else {
+        CharNode *p = *head;
+        while ( p->nextPtr != NULL ) p = p->nextPtr;
+        p->nextPtr = novo;
+    }
+}
+
+void imprimir( CharNode *head )
+{
+    while ( head != NULL ) {
+        printf( "%c ", head->data );
+        head = head->nextPtr;
+    }
+    printf( "\n" );
+}
+
+int main( void )
+{
+    CharNode *l1 = NULL, *l2 = NULL;
+    inserir( &l1, 'A' );  inserir( &l1, 'B' );  inserir( &l1, 'C' );
+    inserir( &l2, 'X' );  inserir( &l2, 'Y' );  inserir( &l2, 'Z' );
+
+    printf( "L1: " );  imprimir( l1 );
+    printf( "L2: " );  imprimir( l2 );
+
+    concatenate( &l1, l2 );
+
+    printf( "Concatenada: " );  imprimir( l1 );
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Conceito-chave:} concatenação em $O(n)$ -- precisamos percorrer a primeira
+lista até o fim para então engatar a segunda. Listas duplamente encadeadas com
+ponteiro para o último nó tornariam isso $O(1)$.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 12.7 -- Mescla de Listas Ordenadas}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex12.7: mesclar_ordenadas.c */
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct intNode {
+    int data;
+    struct intNode *nextPtr;
+} IntNode;
+
+IntNode* merge( IntNode *a, IntNode *b )
+{
+    IntNode dummy;        /* no sentinela para simplificar */
+    IntNode *tail = &dummy;
+    dummy.nextPtr = NULL;
+
+    while ( a != NULL && b != NULL ) {
+        if ( a->data <= b->data ) {
+            tail->nextPtr = a;
+            a = a->nextPtr;
+        } else {
+            tail->nextPtr = b;
+            b = b->nextPtr;
+        }
+        tail = tail->nextPtr;
+    }
+    /* Conecta o que sobrou */
+    tail->nextPtr = ( a != NULL ) ? a : b;
+
+    return dummy.nextPtr;
+}
+\end{lstlisting}
+
+\textbf{Algoritmo:} compare as cabeças, escolha a menor, avance. Quando uma lista
+acabar, conecte a outra. $O(n+m)$.
+
+Este é o ``merge'' do \textit{merge sort} -- uma das ideias mais elegantes da
+ciência da computação.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 12.8 -- Inserção Ordenada de 25 Inteiros}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex12.8: insercao_ordenada.c */
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+typedef struct node {
+    int data;
+    struct node *nextPtr;
+} Node;
+
+void inserirOrdenado( Node **head, int valor )
+{
+    Node *novo = malloc( sizeof( Node ) );
+    novo->data = valor;
+
+    Node *prev = NULL, *cur = *head;
+    while ( cur != NULL && cur->data < valor ) {
+        prev = cur;  cur = cur->nextPtr;
+    }
+    novo->nextPtr = cur;
+    if ( prev == NULL ) *head = novo;
+    else prev->nextPtr = novo;
+}
+
+int main( void )
+{
+    Node *lista = NULL;
+    int i, valor, soma = 0;
+
+    srand( time( NULL ) );
+
+    for ( i = 0; i < 25; ++i ) {
+        valor = rand() % 101;  /* 0 a 100 */
+        inserirOrdenado( &lista, valor );
+        soma += valor;
+    }
+
+    printf( "Lista ordenada:\n" );
+    Node *p = lista;
+    while ( p != NULL ) { printf( "%d ", p->data ); p = p->nextPtr; }
+    printf( "\nSoma:   %d\nMedia: %.2f\n", soma, soma / 25.0 );
+
+    return 0;
+}
+\end{lstlisting}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 12.9 -- Lista Invertida}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex12.9: inverter_lista.c
+   Cria lista de 10 chars e gera copia invertida */
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct cnode {
+    char data;
+    struct cnode *nextPtr;
+} CNode;
+
+void inserirFim( CNode **head, char c )
+{
+    CNode *novo = malloc( sizeof( CNode ) );
+    novo->data = c;  novo->nextPtr = NULL;
+    if ( *head == NULL ) { *head = novo; return; }
+    CNode *p = *head;
+    while ( p->nextPtr != NULL ) p = p->nextPtr;
+    p->nextPtr = novo;
+}
+
+/* Insere SEMPRE no inicio -> inverte naturalmente */
+void inserirInicio( CNode **head, char c )
+{
+    CNode *novo = malloc( sizeof( CNode ) );
+    novo->data = c;
+    novo->nextPtr = *head;
+    *head = novo;
+}
+
+int main( void )
+{
+    CNode *original = NULL, *inversa = NULL;
+    char chars[] = "ABCDEFGHIJ";
+    int i;
+
+    for ( i = 0; i < 10; ++i ) inserirFim( &original, chars[ i ] );
+
+    /* Percorre original e insere no inicio da inversa */
+    CNode *p = original;
+    while ( p != NULL ) {
+        inserirInicio( &inversa, p->data );
+        p = p->nextPtr;
+    }
+
+    printf( "Original: " );
+    p = original; while ( p != NULL ) { putchar( p->data ); p = p->nextPtr; }
+    printf( "\nInversa:  " );
+    p = inversa;  while ( p != NULL ) { putchar( p->data ); p = p->nextPtr; }
+    printf( "\n" );
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Truque elegante:} ao percorrer a original do início ao fim e \textit{inserir
+no início} da nova lista, obtemos a ordem invertida automaticamente.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 12.10 -- Inverter Linha de Texto}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex12.10: inverter_texto.c
+   Usa pilha para inverter caracteres de uma linha */
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct snode {
+    char data;
+    struct snode *nextPtr;
+} SNode;
+
+void push( SNode **top, char c )
+{
+    SNode *novo = malloc( sizeof( SNode ) );
+    novo->data = c;
+    novo->nextPtr = *top;
+    *top = novo;
+}
+
+char pop( SNode **top )
+{
+    SNode *temp = *top;
+    char c = temp->data;
+    *top = temp->nextPtr;
+    free( temp );
+    return c;
+}
+
+int main( void )
+{
+    SNode *pilha = NULL;
+    int c;
+
+    printf( "Digite uma linha: " );
+    while ( ( c = getchar() ) != '\n' && c != EOF ) {
+        push( &pilha, c );
+    }
+
+    printf( "Invertida:  " );
+    while ( pilha != NULL ) {
+        putchar( pop( &pilha ) );
+    }
+    putchar( '\n' );
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Por que pilha funciona aqui?} Empilhamos na ordem em que lemos e
+desempilhamos na ordem inversa -- exatamente o que precisamos. LIFO em ação.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 12.11 -- Testador de Palíndromos}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Estratégia:} usar uma pilha e uma fila simultaneamente. Cada caractere
+significativo (não-espaço, não-pontuação) é inserido em ambos. No fim,
+desempilhar e desenfileirar comparando -- se diferentes em algum ponto, não é
+palíndromo.
+
+\begin{lstlisting}
+/* Ex12.11: palindromo.c (esqueleto) */
+#include <stdio.h>
+#include <ctype.h>
+
+/* (defina pilha e fila para char) */
+
+int main( void )
+{
+    SNode *pilha = NULL;
+    QNode *frenteFila = NULL, *finalFila = NULL;
+    int c;
+
+    printf( "Digite uma frase: " );
+    while ( ( c = getchar() ) != '\n' && c != EOF ) {
+        if ( isalpha( c ) ) {
+            char ch = tolower( c );
+            push( &pilha, ch );
+            enqueue( &frenteFila, &finalFila, ch );
+        }
+    }
+
+    int palindromo = 1;
+    while ( pilha != NULL && frenteFila != NULL ) {
+        if ( pop( &pilha ) != dequeue( &frenteFila ) ) {
+            palindromo = 0;
+            break;
+        }
+    }
+
+    printf( palindromo ? "Eh palindromo!\n"
+                       : "Nao eh palindromo.\n" );
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Exemplos:} ``A man a plan a canal Panama'', ``A base seba'', ``Anotaram a
+data da maratona''. Espaços e pontuação são ignorados.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 12.12 -- Conversão Infixo $\to$ Pós-fixo}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Algoritmo Shunting Yard (Dijkstra), versão simplificada para dígitos
+únicos:}
+
+\begin{lstlisting}
+/* Ex12.12: infix_to_postfix.c -- estrutura central */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct stackNode {
+    char data;
+    struct stackNode *nextPtr;
+} StackNode;
+typedef StackNode *StackNodePtr;
+
+void push( StackNodePtr *topPtr, char value );
+char pop( StackNodePtr *topPtr );
+char stackTop( StackNodePtr topPtr );
+int  isEmpty( StackNodePtr topPtr );
+int  isOperator( char c );
+int  precedence( char op1, char op2 );
+
+void convertToPostfix( char infix[], char postfix[] )
+{
+    StackNodePtr stack = NULL;
+    int infixIndex = 0, postfixIndex = 0;
+    char c;
+
+    push( &stack, '(' );           /* etapa 1 */
+    strcat( infix, ")" );          /* etapa 2 */
+
+    while ( !isEmpty( stack ) ) {
+        c = infix[ infixIndex ];
+
+        if ( c >= '0' && c <= '9' ) {
+            postfix[ postfixIndex++ ] = c;
+        }
+        else if ( c == '(' ) {
+            push( &stack, c );
+        }
+        else if ( isOperator( c ) ) {
+            while ( !isEmpty( stack ) &&
+                    isOperator( stackTop( stack ) ) &&
+                    precedence( stackTop( stack ), c ) >= 0 ) {
+                postfix[ postfixIndex++ ] = pop( &stack );
+            }
+            push( &stack, c );
+        }
+        else if ( c == ')' ) {
+            while ( stackTop( stack ) != '(' ) {
+                postfix[ postfixIndex++ ] = pop( &stack );
+            }
+            pop( &stack );  /* descarta '(' */
+        }
+        ++infixIndex;
+    }
+    postfix[ postfixIndex ] = '\0';
+}
+
+int isOperator( char c )
+{
+    return c == '+' || c == '-' || c == '*' ||
+           c == '/' || c == '^' || c == '%';
+}
+
+int precedence( char op1, char op2 )
+{
+    /* Retorna 1 se prec(op1) > prec(op2)
+              0 se iguais
+             -1 se prec(op1) < prec(op2)  */
+    int p1, p2;
+    if ( op1 == '^' )                          p1 = 3;
+    else if ( op1 == '*' || op1 == '/' ||
+              op1 == '%' )                     p1 = 2;
+    else                                       p1 = 1;
+    if ( op2 == '^' )                          p2 = 3;
+    else if ( op2 == '*' || op2 == '/' ||
+              op2 == '%' )                     p2 = 2;
+    else                                       p2 = 1;
+    if ( p1 == p2 ) return 0;
+    return p1 > p2 ? 1 : -1;
+}
+\end{lstlisting}
+
+\textbf{Exemplo:} \texttt{(6 + 2) * 5 - 8 / 4} $\to$ \texttt{6 2 + 5 * 8 4 / -}
+
+\textbf{Por que pilha?} Operadores precisam ``esperar'' seus operandos. A pilha
+guarda operadores até que a expressão esteja pronta para emiti-los.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 12.13 -- Avaliador Pós-fixo}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex12.13: postfix_eval.c */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+typedef struct stackNode {
+    int data;
+    struct stackNode *nextPtr;
+} StackNode;
+typedef StackNode *StackNodePtr;
+
+void push( StackNodePtr *topPtr, int value );
+int  pop( StackNodePtr *topPtr );
+int  isEmpty( StackNodePtr topPtr );
+int  calculate( int op1, int op2, char op );
+
+int evaluatePostfixExpression( char *expr )
+{
+    StackNodePtr stack = NULL;
+    int i = 0;
+    char c;
+
+    strcat( expr, "\0" );  /* etapa 1 */
+
+    while ( ( c = expr[ i ] ) != '\0' ) {
+        if ( c >= '0' && c <= '9' ) {
+            push( &stack, c - '0' );  /* converte char -> int */
+        }
+        else if ( c == '+' || c == '-' || c == '*' ||
+                  c == '/' || c == '^' || c == '%' ) {
+            int x = pop( &stack );
+            int y = pop( &stack );
+            push( &stack, calculate( y, x, c ) );
+        }
+        ++i;
+    }
+
+    return pop( &stack );
+}
+
+int calculate( int op1, int op2, char op )
+{
+    switch ( op ) {
+        case '+': return op1 + op2;
+        case '-': return op1 - op2;
+        case '*': return op1 * op2;
+        case '/': return op1 / op2;
+        case '%': return op1 % op2;
+        case '^': return ( int )pow( op1, op2 );
+    }
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Trace de \texttt{6 2 + 5 * 8 4 / -}:}
+\begin{enumerate}[noitemsep]
+  \item \texttt{6} $\to$ pilha [6]
+  \item \texttt{2} $\to$ pilha [6,2]
+  \item \texttt{+}: pop 2, pop 6; push 6+2 $\to$ [8]
+  \item \texttt{5} $\to$ [8,5]
+  \item \texttt{*}: pop 5, pop 8; push 8*5 $\to$ [40]
+  \item \texttt{8} $\to$ [40,8]
+  \item \texttt{4} $\to$ [40,8,4]
+  \item \texttt{/}: pop 4, pop 8; push 8/4 $\to$ [40,2]
+  \item \texttt{-}: pop 2, pop 40; push 40-2 $\to$ [38]
+\end{enumerate}
+Resultado: \textbf{38}.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 12.14 -- Operandos com Múltiplos Dígitos}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Modificação:} agora os operandos podem ter vários dígitos. Como
+distinguir o fim de um número? Usar um \textit{delimitador}, normalmente espaço.
+
+\begin{lstlisting}
+/* Loop principal modificado */
+i = 0;
+while ( expr[ i ] != '\0' ) {
+    char c = expr[ i ];
+
+    if ( c >= '0' && c <= '9' ) {
+        int valor = 0;
+        /* Acumula digitos enquanto for digito */
+        while ( expr[ i ] >= '0' && expr[ i ] <= '9' ) {
+            valor = valor * 10 + ( expr[ i ] - '0' );
+            ++i;
+        }
+        push( &stack, valor );
+        continue;  /* nao incrementa i de novo */
+    }
+    /* ... resto igual ... */
+    ++i;
+}
+\end{lstlisting}
+
+\textbf{Princípio:} construir o número dígito a dígito multiplicando o acumulador
+por 10. Esta é a base de todos os parsers numéricos -- de \texttt{atoi} aos
+\textit{lexers} de compiladores.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 12.15 -- Simulação de Supermercado}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex12.15: supermercado.c -- esqueleto */
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+typedef struct cliente {
+    int chegada;          /* minuto em que chegou na fila */
+    struct cliente *next;
+} Cliente;
+
+Cliente *cabeca = NULL, *cauda = NULL;
+
+void enqueue( int t );
+int  dequeue( void );
+int  tamanhoFila( void );
+
+int main( void )
+{
+    srand( time( NULL ) );
+
+    int prox_chegada = 1 + rand() % 4;
+    int caixa_livre_em = 0;
+    int max_fila = 0, max_espera = 0;
+
+    int t;
+    for ( t = 1; t <= 720; ++t ) {
+        /* Chegada */
+        if ( t == prox_chegada ) {
+            enqueue( t );
+            int sz = tamanhoFila();
+            if ( sz > max_fila ) max_fila = sz;
+            prox_chegada = t + 1 + rand() % 4;
+        }
+        /* Caixa livre? */
+        if ( t >= caixa_livre_em && cabeca != NULL ) {
+            int chegou = dequeue();
+            int espera = t - chegou;
+            if ( espera > max_espera ) max_espera = espera;
+            caixa_livre_em = t + 1 + rand() % 4;
+        }
+    }
+
+    printf( "Maxima fila:  %d\n", max_fila );
+    printf( "Espera maxima: %d minutos\n", max_espera );
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Respostas típicas (variam por aleatoriedade):}
+\begin{itemize}[noitemsep]
+  \item \textbf{(a) Fila máxima:} tipicamente 2--5 clientes.
+  \item \textbf{(b) Espera máxima:} tipicamente 5--15 minutos.
+  \item \textbf{(c) Se chegada mudar para 1--3 min:} taxa de chegada ($\sim$2 min/cliente)
+  passa a ser menor que a de atendimento ($\sim$2.5 min/cliente), causando
+  \textbf{crescimento sem limites} da fila ao longo do dia.
+\end{itemize}
+
+\textbf{Lição:} este é um exemplo de \textit{teoria das filas} -- ramo da matemática
+aplicada à engenharia de tráfego, redes, call centers, etc.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 12.16 -- Permitir Duplicatas}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Modificação simples:} na função \texttt{insertNode}, alterar a condição
+de comparação para aceitar iguais em um dos lados:
+
+\begin{lstlisting}
+/* Original: descarta duplicatas
+   if ( valor < no->data ) ... esquerda
+   else if ( valor > no->data ) ... direita
+   else ; // duplicata -- ignora
+
+   Modificado: aceita duplicatas, vai para a direita: */
+if ( valor < no->data ) {
+    /* insere a esquerda */
+} else {  /* valor >= no->data */
+    /* insere a direita */
+}
+\end{lstlisting}
+
+\textbf{Consequência:} a travessia in-order ainda produz ordem crescente, mas com
+duplicatas adjacentes. Outras operações (busca, exclusão) funcionam normalmente.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 12.17 -- Árvore de Strings}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex12.17: arvore_strings.c -- esqueleto */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct treeNode {
+    char *str;
+    struct treeNode *left, *right;
+} TreeNode;
+
+void insert( TreeNode **root, char *palavra )
+{
+    if ( *root == NULL ) {
+        TreeNode *novo = malloc( sizeof( TreeNode ) );
+        novo->str = malloc( strlen( palavra ) + 1 );
+        strcpy( novo->str, palavra );
+        novo->left = novo->right = NULL;
+        *root = novo;
+        return;
+    }
+    int cmp = strcmp( palavra, (*root)->str );
+    if      ( cmp < 0 ) insert( &(*root)->left,  palavra );
+    else if ( cmp > 0 ) insert( &(*root)->right, palavra );
+    /* iguais: ignora (sem duplicatas) */
+}
+
+int main( void )
+{
+    TreeNode *raiz = NULL;
+    char texto[ 1000 ];
+    char *tok;
+
+    printf( "Digite uma linha de texto:\n" );
+    fgets( texto, 1000, stdin );
+
+    tok = strtok( texto, " \t\n.,;:!?" );
+    while ( tok != NULL ) {
+        insert( &raiz, tok );
+        tok = strtok( NULL, " \t\n.,;:!?" );
+    }
+
+    /* Chamar inOrder, preOrder, postOrder */
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Nota:} a travessia in-order da árvore produz as palavras em ordem
+alfabética -- excelente para criar índices de livros ou dicionários.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 12.18 -- Eliminação com Array vs Árvore}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Eliminação com array:}
+\begin{enumerate}[noitemsep]
+  \item Para cada novo valor, percorrer todo o array procurando duplicata.
+  \item Se não encontrar, inserir no final.
+  \item Complexidade: $O(n)$ por inserção; total $O(n^2)$ para $n$ valores.
+\end{enumerate}
+
+\textbf{Eliminação com árvore binária de busca:}
+\begin{enumerate}[noitemsep]
+  \item Para cada novo valor, descer pela árvore.
+  \item Se chegar a um nó vazio: inserir.
+  \item Se encontrar igual: ignorar.
+  \item Complexidade média: $O(\log n)$ por inserção; total $O(n \log n)$.
+  \item Pior caso (árvore desbalanceada, dados já ordenados): $O(n^2)$.
+\end{enumerate}
+
+\textbf{Comparação:}
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l c c}
+\toprule
+\textbf{Estrutura} & \textbf{Médio} & \textbf{Pior caso} \\ \midrule
+Array            & $O(n^2)$        & $O(n^2)$ \\
+Árvore BST       & $O(n \log n)$   & $O(n^2)$ \\
+Árvore balanceada (AVL, RB) & $O(n \log n)$ & $O(n \log n)$ \\
+Tabela hash      & $O(n)$          & $O(n^2)$ raro \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Para grandes conjuntos de dados, árvores balanceadas ou tabelas hash são as
+escolhas profissionais.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 12.19 -- Profundidade da Árvore}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex12.19: profundidade.c */
+int depth( const TreeNode *root )
+{
+    if ( root == NULL ) return 0;
+
+    int d_esq = depth( root->left );
+    int d_dir = depth( root->right );
+
+    return 1 + ( d_esq > d_dir ? d_esq : d_dir );
+}
+\end{lstlisting}
+
+\textbf{Análise:}
+\begin{itemize}[noitemsep]
+  \item Caso base: árvore vazia tem profundidade 0.
+  \item Recursão: profundidade = 1 (este nó) + máximo das profundidades das subárvores.
+\end{itemize}
+
+\textbf{Para a árvore do Ex.~12.5:} a profundidade é 4 níveis (raiz 49, depois
+28/83, depois 18/40/71/97, e por fim 11/19/32/44/69/72/92/99).
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 12.20 -- Impressão Recursiva Reversa}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex12.20: print_reverse.c */
+void printListBackwards( const Node *p )
+{
+    if ( p == NULL ) return;
+
+    printListBackwards( p->nextPtr );  /* chama primeiro */
+    printf( "%d ", p->data );           /* imprime depois */
+}
+\end{lstlisting}
+
+\textbf{Por que funciona?} Cada chamada recursiva mergulha mais fundo na lista
+\textit{antes} de imprimir. Quando chega ao fim, retorna -- e a impressão
+acontece na ordem reversa do empilhamento de chamadas. A pilha de chamadas
+faz o trabalho da pilha explícita do Ex.~12.10.
+
+\textbf{Cuidado:} para listas muito longas, isso pode estourar a pilha de
+chamadas (\textit{stack overflow}). Para essas, prefira a versão iterativa
+com pilha explícita.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 12.21 -- Busca Recursiva}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex12.21: search_recursive.c */
+Node* searchList( Node *head, int valor )
+{
+    if ( head == NULL )           return NULL;
+    if ( head->data == valor )    return head;
+    return searchList( head->nextPtr, valor );
+}
+\end{lstlisting}
+
+\textbf{Três casos:}
+\begin{enumerate}[noitemsep]
+  \item Lista vazia: retorna \texttt{NULL} (não achou).
+  \item Achou: retorna o ponteiro para o nó.
+  \item Senão: busca recursivamente no resto.
+\end{enumerate}
+
+\textbf{Padrão:} esta é uma busca em lista em $O(n)$ -- mesma complexidade da
+versão iterativa, mas usa pilha de chamadas. Tail-recursive: bons compiladores
+otimizam para um loop interno.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 12.22 -- Exclusão em Árvore Binária}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Três casos da exclusão:}
+
+\textbf{Caso 1 -- Nó folha:}
+Simplesmente remove o nó e ajusta o pai para \texttt{NULL}.
+
+\textbf{Caso 2 -- Nó com um filho:}
+Substitui o nó pelo seu único filho.
+
+\textbf{Caso 3 -- Nó com dois filhos:}
+Procura o \textit{substituto} (predecessor in-order: o maior valor da subárvore
+esquerda). Copia o valor do substituto para o nó atual e remove o substituto
+(que é caso 1 ou 2, mais simples).
+
+\begin{lstlisting}
+/* Ex12.22: delete_bst.c -- estrutura central */
+TreeNode* deleteNode( TreeNode *root, int valor )
+{
+    if ( root == NULL ) {
+        printf( "Valor %d nao encontrado.\n", valor );
+        return NULL;
+    }
+
+    if ( valor < root->data ) {
+        root->left = deleteNode( root->left, valor );
+    } else if ( valor > root->data ) {
+        root->right = deleteNode( root->right, valor );
+    } else {
+        /* Achou o no a remover */
+
+        if ( root->left == NULL && root->right == NULL ) {
+            /* Caso 1: folha */
+            free( root );
+            return NULL;
+        }
+        else if ( root->left == NULL ) {
+            /* Caso 2a: so filho direito */
+            TreeNode *temp = root->right;
+            free( root );
+            return temp;
+        }
+        else if ( root->right == NULL ) {
+            /* Caso 2b: so filho esquerdo */
+            TreeNode *temp = root->left;
+            free( root );
+            return temp;
+        }
+        else {
+            /* Caso 3: dois filhos. Procura substituto:
+               maior valor da subarvore esquerda */
+            TreeNode *sub = root->left;
+            while ( sub->right != NULL ) sub = sub->right;
+
+            root->data = sub->data;
+            root->left = deleteNode( root->left, sub->data );
+        }
+    }
+    return root;
+}
+\end{lstlisting}
+
+\textbf{Observação:} o uso de recursão e retorno de \texttt{TreeNode *} simplifica
+drasticamente o código -- evita rastreamento manual do nó pai. Padrão idiomático
+em todas as operações em árvores.
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 12.23 -- Busca em Árvore Binária}
+% ============================================================
+
+\begin{respostabox}
+\begin{lstlisting}
+/* Ex12.23: bst_search.c */
+TreeNode* binaryTreeSearch( TreeNode *root, int chave )
+{
+    if ( root == NULL )               return NULL;
+    if ( chave == root->data )        return root;
+    if ( chave  < root->data )
+        return binaryTreeSearch( root->left,  chave );
+    return     binaryTreeSearch( root->right, chave );
+}
+\end{lstlisting}
+
+\textbf{Por que árvores são eficientes para busca?} A cada passo, descartamos
+\textit{metade} da árvore restante: $O(\log n)$ em média. Para um milhão de
+elementos, isso significa $\sim 20$ comparações, em vez de $\sim 500\,000$ em
+uma lista.
+
+Esta é a base de \texttt{std::map} (C++), \texttt{TreeMap} (Java), índices
+B-tree em bancos de dados, etc.
+\end{respostabox}
+
+% ============================================================
+\section{Exercício 12.24 -- Travessia por Nível}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Algoritmo BFS (Breadth-First Search) com fila:}
+
+\begin{lstlisting}
+/* Ex12.24: level_order.c */
+void levelOrder( TreeNode *root )
+{
+    if ( root == NULL ) return;
+
+    /* Fila de ponteiros para no */
+    TreeNode *fila[ 1000 ];
+    int frente = 0, fim = 0;
+
+    fila[ fim++ ] = root;
+
+    while ( frente < fim ) {
+        TreeNode *atual = fila[ frente++ ];
+        printf( "%d ", atual->data );
+
+        if ( atual->left  != NULL ) fila[ fim++ ] = atual->left;
+        if ( atual->right != NULL ) fila[ fim++ ] = atual->right;
+    }
+}
+\end{lstlisting}
+
+\textbf{Para a árvore do Ex.~12.5, a travessia por nível é:}
+\begin{lstlisting}
+49  28 83  18 40 71 97  11 19 32 44 69 72 92 99
+\end{lstlisting}
+
+\textbf{Aplicações de BFS:}
+\begin{itemize}[noitemsep]
+  \item Encontrar caminho mais curto em grafos não-ponderados.
+  \item Web crawling em largura.
+  \item Renderização de árvores de UI.
+  \item Algoritmos de inteligência artificial (jogos, planejamento).
+\end{itemize}
+\end{respostabox}
+
+\newpage
+
+% ============================================================
+\section{Exercício 12.25 -- Impressão Visual da Árvore}
+% ============================================================
+
+\begin{respostabox}
+\textbf{Truque:} é uma travessia in-order \textit{modificada}: visite primeiro
+o filho \textbf{direito}, depois imprima o nó atual, depois visite o filho
+esquerdo. Como gira a árvore 90° à esquerda, a saída visual é a árvore deitada
+com a raiz à esquerda.
+
+\begin{lstlisting}
+/* Ex12.25: outputTree.c */
+void outputTree( const TreeNode *root, int totalSpaces )
+{
+    if ( root == NULL ) return;
+
+    /* Visita direita PRIMEIRO (vai para topo da saida) */
+    outputTree( root->right, totalSpaces + 5 );
+
+    /* Espacos antes do valor */
+    int i;
+    for ( i = 1; i <= totalSpaces; ++i ) putchar( ' ' );
+
+    /* Imprime o no */
+    printf( "%d\n", root->data );
+
+    /* Visita esquerda DEPOIS (vai para baixo da saida) */
+    outputTree( root->left, totalSpaces + 5 );
+}
+\end{lstlisting}
+
+\textbf{Para a árvore do Ex.~12.5, a saída seria:}
+\begin{saida}
+\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad 99\\
+\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad 97\\
+\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad 92\\
+\quad\quad\quad\quad\quad 83\\
+\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad 72\\
+\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad 71\\
+\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad 69\\
+49\\
+\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad 44\\
+\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad 40\\
+\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad 32\\
+\quad\quad\quad\quad\quad 28\\
+\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad 19\\
+\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad 18\\
+\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad 11
+\end{saida}
+
+\textbf{Por que isso funciona?} A travessia in-order produz a ordem crescente
+(esquerda $\to$ nó $\to$ direita). Trocando a ordem para direita $\to$ nó $\to$
+esquerda, produzimos ordem decrescente -- exatamente o que precisamos para
+exibir a árvore com os maiores no topo. O recuo (\texttt{totalSpaces}) cresce
+com a profundidade, dando o efeito 3D.
+
+\textbf{Aplicações:} esta técnica é a base de visualização de árvores em
+ferramentas de \textit{debugging}, editores de XML/JSON, e até no comando Unix
+\texttt{tree}.
+\end{respostabox}
+
+\subsection*{Exercícios 12.26 a 12.30}
+
+\begin{respostabox}
+Os exercícios 12.26 a 12.30 (construção de um compilador para a linguagem Simple,
+gerando código SML para o Simpletron) são projetos extensos disponibilizados em
+PDF separado pela Deitel \& Associates. Eles consolidam:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{12.26}: \textit{lexer} e \textit{parser} para a linguagem Simple
+  \item \textbf{12.27}: análise sintática e geração de código SML
+  \item \textbf{12.28-30}: otimizações, recursos avançados, testes
+\end{itemize}
+
+Sugerimos consultar o documento original no site da Deitel para os enunciados
+completos. Estes exercícios são \textit{projetos de final de curso} e exigem
+várias semanas de trabalho.
+\end{respostabox}
+
+\end{document}

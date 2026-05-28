@@ -1,0 +1,354 @@
+\documentclass[11pt,a4paper]{article}
+
+% ====== Pacotes ======
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+
+% ====== Cores ======
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{deitelorange}{RGB}{198,89,17}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+\definecolor{portabcolor}{RGB}{102,46,145}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekeyword}{RGB}{0,0,180}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codecomment}{RGB}{0,128,0}
+
+% ====== Listings para C++ ======
+\lstdefinestyle{cppcode}{
+  language=C++,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=8pt,
+  backgroundcolor=\color{codebg},
+  frame=single,
+  framesep=4pt,
+  rulecolor=\color{deitelblue!50},
+  breaklines=true,
+  showstringspaces=false,
+  tabsize=4,
+  morekeywords={string, size_t, cin, cout, endl, inline, template, typename,
+                bool, true, false, nullptr, override, final},
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+           {Ã}{{\~A}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Ê}{{\^E}}1 {Í}{{\'I}}1
+           {Ó}{{\'O}}1 {Ô}{{\^O}}1 {Õ}{{\~O}}1 {Ú}{{\'U}}1 {Ç}{{\c{C}}}1
+}
+
+% ====== Hyperref ======
+\hypersetup{
+  colorlinks=true,
+  linkcolor=deitelblue,
+  urlcolor=deitelblue,
+  citecolor=deitelblue,
+  pdftitle={C: Como Programar - Cap. 15 - Exercicios de Autorrevisao},
+  pdfauthor={Resolucao didatica no estilo Deitel}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Cap.~15}
+\fancyhead[R]{\small Exerc\'icios de Autorrevis\~ao}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+% ====== Caixas no estilo Deitel ======
+\newtcolorbox{boaprat}{
+  enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Boa Pr\'atica de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{errocomum}{
+  enhanced, breakable, colback=errocolor!8, colframe=errocolor,
+  fonttitle=\bfseries, title={\textbf{Erro Comum de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{obseng}{
+  enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao de Engenharia de Software}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{dicadesemp}{
+  enhanced, breakable, colback=desempcolor!8, colframe=desempcolor,
+  fonttitle=\bfseries, title={\textbf{Dica de Desempenho}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{dicaportab}{
+  enhanced, breakable, colback=portabcolor!8, colframe=portabcolor,
+  fonttitle=\bfseries, title={\textbf{Dica de Portabilidade}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{resposta}{
+  enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{saidabox}{
+  enhanced, breakable, colback=gray!8, colframe=gray!50,
+  boxrule=0.6pt, fonttitle=\bfseries\small,
+  title={\textbf{Sa\'ida da execu\c{c}\~ao}},
+  left=6pt, right=6pt, top=3pt, bottom=3pt
+}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Cap\'itulo 15}\\[0.3em]
+  {\Large\bfseries C++: um C melhor --- Introdu\c{c}\~ao \`a Tecnologia de Objeto}\\[0.8em]
+  {\large\itshape Exerc\'icios de Autorrevis\~ao --- Resolu\c{c}\~ao Did\'atica}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``Bem-vindo \`a segunda parte deste livro! Os Cap\'itulos 1 a 14 lhe deram dom\'inio sobre a linguagem C procedural; agora come\c{c}amos a transi\c{c}\~ao para C++ --- a linguagem que estende C com classes, sobrecarga, refer\^encias, templates e tratamento de exce\c{c}\~oes. Este cap\'itulo apresenta os recursos n\~ao-orientados-a-objeto de C++ (refer\^encias, sobrecarga de fun\c{c}\~oes, argumentos default, templates, \texttt{inline}, resolu\c{c}\~ao de escopo, \texttt{bool}) e oferece uma vis\~ao panor\^amica da modelagem OOAD com UML, que ser\'a aprofundada a partir do Cap\'itulo 16.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+% ============================================================
+\section{Exerc\'icio 15.1 --- Vocabul\'ario do Cap\'itulo 15}
+% ============================================================
+
+\textit{Preencha os espa\c{c}os em cada uma das senten\c{c}as (a)--(f).}
+
+\subsection*{(a) V\'arias fun\c{c}\~oes com o mesmo nome operando sobre tipos ou n\'umeros diferentes de argumentos}
+
+\begin{resposta}\textbf{Resposta:} sobrecarga (de fun\c{c}\~ao).\end{resposta}
+
+A \textbf{sobrecarga de fun\c{c}\~oes} (\emph{function overloading}) \'e um dos recursos mais imediatamente \'uteis ao programador que migra de C para C++. Em C, cada fun\c{c}\~ao deve ter um nome \emph{globalmente \'unico}; assim, se quis\'essemos somar dois inteiros e dois reais, ter\'iamos que escrever \texttt{soma\_int} e \texttt{soma\_double}. Em C++, podemos chamar ambas simplesmente de \texttt{soma}: o compilador decide qual chamar examinando os \emph{tipos} e a \emph{quantidade} dos argumentos da chamada --- o que se denomina \emph{assinatura} da fun\c{c}\~ao.
+
+\begin{obseng}
+A sobrecarga \'e implementada pelo compilador atrav\'es de um processo chamado \emph{decora\c{c}\~ao de nomes} (\emph{name mangling}) ou \emph{deforma\c{c}\~ao de nomes}: internamente, cada vers\~ao sobrecarregada recebe um nome \'unico que codifica os tipos dos par\^ametros. Por exemplo, \texttt{soma(int,int)} pode tornar-se \texttt{\_Z4somaii} e \texttt{soma(double,double)} pode tornar-se \texttt{\_Z4somadd}. O programador n\~ao precisa lidar com esses nomes; mas, ao examinar mensagens do \emph{linker}, eles aparecem.
+\end{obseng}
+
+\subsection*{(b) Habilita o acesso a uma vari\'avel global de mesmo nome que uma local}
+
+\begin{resposta}\textbf{Resposta:} operador un\'ario de resolu\c{c}\~ao de escopo (\texttt{::}).\end{resposta}
+
+Se o programador declara, no escopo de uma fun\c{c}\~ao, uma vari\'avel local com nome id\^entico ao de uma vari\'avel global, a vari\'avel global fica \emph{ocultada} (\emph{hidden}). Para acess\'a-la mesmo assim, basta prefix\'a-la com o operador \texttt{::}:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+int x = 100;        // global
+int main() {
+    int x = 7;      // local, oculta a global
+    cout << x      << endl;  // imprime 7
+    cout << ::x    << endl;  // imprime 100
+}
+\end{lstlisting}
+
+\begin{boaprat}
+Apesar de \texttt{::} resolver o conflito, \emph{a melhor prática \'e evit\'a-lo}: dar nomes distintos a vari\'aveis locais e globais elimina a ambiguidade na origem. O \texttt{::} un\'ario torna-se valioso quando se acessa nomes globais \emph{de bibliotecas} cujos identificadores n\~ao podemos renomear.
+\end{boaprat}
+
+\subsection*{(c) Permite definir uma \'unica fun\c{c}\~ao para muitos tipos de dados}
+
+\begin{resposta}\textbf{Resposta:} template (de fun\c{c}\~ao).\end{resposta}
+
+Os \textbf{templates de fun\c{c}\~ao} (\emph{function templates}) levam a sobrecarga a um pat\'amar superior: em vez de escrever uma vers\~ao de \texttt{max} para \texttt{int}, outra para \texttt{double} e outra para \texttt{char}, escrevemos \emph{uma s\'o} vers\~ao gen\'erica:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+template <typename T>
+T max(T a, T b) { return (a > b) ? a : b; }
+\end{lstlisting}
+
+\noindent O compilador, ao encontrar \texttt{max(3, 4)}, gera automaticamente a \emph{instancia\c{c}\~ao} apropriada (\texttt{max<int>}). Esse mecanismo \'e a base da \textbf{programa\c{c}\~ao gen\'erica} e da Standard Template Library (STL) que estudaremos no Cap\'itulo~21.
+
+\subsection*{(d) Esquema de representa\c{c}\~ao gr\'afica mais usado para modelagem OO}
+
+\begin{resposta}\textbf{Resposta:} a UML (\emph{Unified Modeling Language}).\end{resposta}
+
+A \textbf{UML} \'e uma linguagem gr\'afica de modelagem padronizada em 1997 pelos chamados \emph{UML Partners} e mantida pelo \emph{Object Management Group} (OMG). Ela oferece um conjunto de diagramas (de classes, de sequ\^encia, de atividade, de casos de uso, entre outros) para descrever a estrutura e o comportamento de sistemas orientados a objetos. Os autores deste livro adotam a UML em todos os exemplos de modelagem OO a partir do Cap\'itulo~16.
+
+\subsection*{(e) Modela componentes de software em termos de objetos do mundo real}
+
+\begin{resposta}\textbf{Resposta:} Projeto Orientado a Objeto (OOD, \emph{Object-Oriented Design}).\end{resposta}
+
+O \textbf{OOD} \'e a t\'ecnica de an\'alise e de projeto na qual identificamos, no \emph{dom\'inio do problema}, as entidades relevantes (``Cliente'', ``Conta'', ``Pedido'', ``Ve\'iculo''), descrevemos seus \emph{atributos} (dados que cada uma possui) e suas \emph{opera\c{c}\~oes} (comportamentos que cada uma realiza), e mapeamos esse modelo conceitual para um conjunto de \emph{classes} de uma linguagem OO. Quando esse trabalho \'e bem feito, o c\'odigo resultante exibe uma correspond\^encia natural com o problema de origem, o que aumenta a manutenibilidade e a reutiliza\c{c}\~ao.
+
+\begin{obseng}
+OOD complementa, mas n\~ao substitui, a \emph{an\'alise de requisitos}, que \'e a fase pr\'evia em que se descobre o que o sistema deve fazer. A sequ\^encia t\'ipica \'e: an\'alise de requisitos $\rightarrow$ OOAD (\emph{Object-Oriented Analysis and Design}) $\rightarrow$ implementa\c{c}\~ao em uma linguagem OO $\rightarrow$ teste $\rightarrow$ manuten\c{c}\~ao.
+\end{obseng}
+
+\subsection*{(f) Tipos definidos pelo programador em C++}
+
+\begin{resposta}\textbf{Resposta:} classes.\end{resposta}
+
+A \textbf{classe} \'e o conceito central de C++. Uma classe \'e, ao mesmo tempo, um \emph{tipo} (no sentido em que \texttt{int} \'e um tipo) e um \emph{molde} (a partir do qual se criam objetos individuais). Ela encapsula \textbf{dados-membro} (atributos) e \textbf{fun\c{c}\~oes-membro} (m\'etodos, opera\c{c}\~oes) em uma \'unica unidade. Esse \'e o ve\'iculo pelo qual C++ implementa o \emph{encapsulamento} e o \emph{ocultamento de informa\c{c}\~oes} mencionados na Se\c{c}\~ao 15.10.
+
+\begin{obseng}
+A pr\'opria linguagem C++ \'e considerada \emph{extens\'ivel} precisamente porque ela permite ao programador criar tipos definidos pelo usu\'ario que ``s\~ao tratados como cidad\~aos de primeira classe'' --- recebem operadores sobrecarregados, podem ser passados por valor ou por refer\^encia, podem ser usados em templates etc. Em C puro, n\~ao h\'a esse n\'ivel de integra\c{c}\~ao. Veremos no Cap\'itulo~16 como criar nossa primeira classe.
+\end{obseng}
+
+% ============================================================
+\section{Exerc\'icio 15.2 --- Significado de \texttt{double \&} num prot\'otipo}
+% ============================================================
+
+\textit{Por que um prot\'otipo de fun\c{c}\~ao cont\'em uma declara\c{c}\~ao de par\^ametro do tipo \texttt{double \&}?}
+
+\begin{resposta}\textbf{Resposta oficial:} o tipo \texttt{double \&} cria um \textbf{par\^ametro de refer\^encia} para \texttt{double}, permitindo que a fun\c{c}\~ao modifique a vari\'avel original na fun\c{c}\~ao que a chamou.\end{resposta}
+
+\subsection*{Coment\'ario did\'atico}
+
+Em C puro, a \'unica forma de uma fun\c{c}\~ao modificar uma vari\'avel do chamador \'e receber um \textbf{ponteiro}: o chamador passa o endere\c{c}o (\texttt{\&x}), a fun\c{c}\~ao desreferencia (\texttt{*p}). Funciona, mas a sintaxe \'e desajeitada:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+/* C: estilo com ponteiro */
+void dobra(int *p) { *p *= 2; }
+int main() { int x = 5; dobra(&x); }   /* x agora vale 10 */
+\end{lstlisting}
+
+C++ oferece uma alternativa mais elegante: o \textbf{par\^ametro de refer\^encia}. Declarado com \texttt{\&} no tipo do par\^ametro, ele cria um \emph{alias} (segundo nome) para o argumento real do chamador:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+// C++: estilo com referencia
+void dobra(int &r) { r *= 2; }
+int main() { int x = 5; dobra(x); }    // x agora vale 10
+\end{lstlisting}
+
+Compare lado a lado:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Aspecto} & \textbf{Ponteiro (C/C++)} & \textbf{Refer\^encia (C++)} \\
+\hline
+Declara\c{c}\~ao        & \texttt{int *p}      & \texttt{int \&r} \\
+Chamada                 & \texttt{f(\&x)}      & \texttt{f(x)} \\
+Uso dentro da fun\c{c}\~ao & \texttt{*p = 10}  & \texttt{r = 10} \\
+Pode ser \texttt{NULL}? & Sim                  & N\~ao \\
+Pode ser reatribu\'ido? & Sim                  & N\~ao (\emph{aliasing} fixo) \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{boaprat}
+Use \textbf{refer\^encias} quando o argumento sempre existir e n\~ao precisar ser reatribu\'ido durante a fun\c{c}\~ao --- isto \'e, no caso t\'ipico de ``modificar este objeto que recebi''. Use \textbf{ponteiros} quando o argumento puder ser opcional (\texttt{nullptr} v\'alido), ou quando voc\^e precisar percorrer arrays, ou quando o objeto apontado puder mudar durante a fun\c{c}\~ao.
+\end{boaprat}
+
+\begin{errocomum}
+Refer\^encias \emph{pendentes} (\emph{dangling references}) s\~ao um perigo sutil: ocorrem quando se retorna uma refer\^encia para uma vari\'avel local --- a refer\^encia continua sintaticamente v\'alida mas aponta para mem\'oria que foi liberada. O resultado \'e comportamento indefinido.
+\begin{lstlisting}[style=cppcode,numbers=none]
+int &perigo() {
+    int x = 42;
+    return x;      // ERRO: x sera destruido ao sair desta funcao
+}
+\end{lstlisting}
+Bons compiladores avisam (com a flag \texttt{-Wreturn-local-addr}). Trate esse aviso como erro fatal.
+\end{errocomum}
+
+% ============================================================
+\section{Exerc\'icio 15.3 --- Verdadeiro ou Falso}
+% ============================================================
+
+\textit{(V/F) Todos os argumentos de chamadas de fun\c{c}\~ao em C++ s\~ao passados por valor.}
+
+\begin{resposta}\textbf{Resposta:} \textbf{Falso}.\end{resposta}
+
+\subsection*{Coment\'ario did\'atico}
+
+Em C, a senten\c{c}a seria \emph{verdadeira}: a linguagem oferece somente passagem por valor. Para simular passagem por refer\^encia, o programador C deve passar um ponteiro --- mas o \emph{ponteiro em si \'e passado por valor}.
+
+C++, ao contr\'ario, adicionou a \textbf{passagem por refer\^encia} como um mecanismo de primeira classe. Voc\^e pode escolher, par\^ametro a par\^ametro, qual modo usar:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Por valor}: \texttt{void f(int x)} --- a fun\c{c}\~ao recebe uma c\'opia.
+  \item \textbf{Por refer\^encia}: \texttt{void f(int \&x)} --- a fun\c{c}\~ao opera sobre a vari\'avel original.
+  \item \textbf{Por refer\^encia constante}: \texttt{void f(const int \&x)} --- a fun\c{c}\~ao l\^e o original sem c\'opia, mas n\~ao pode modific\'a-lo.
+\end{itemize}
+
+\begin{dicadesemp}
+A passagem por valor de objetos \emph{grandes} (estruturas com muitos campos, strings, vetores) tem custo proporcional ao tamanho. Para objetos grandes que a fun\c{c}\~ao \emph{n\~ao} ir\'a modificar, a passagem por \texttt{const} refer\^encia (\texttt{const T \&}) \'e o idioma C++ canônico: evita a c\'opia \emph{e} garante imutabilidade.
+\end{dicadesemp}
+
+\begin{obseng}
+Esta diferen\c{c}a em rela\c{c}\~ao a C \'e t\~ao significativa que justifica o subt\'itulo deste cap\'itulo --- ``\emph{um C melhor}'': mesmo antes de usarmos objetos, j\'a temos em C++ um arsenal de melhorias procedurais (refer\^encias, sobrecarga, argumentos default, templates) que tornam o c\'odigo mais leg\'ivel e seguro.
+\end{obseng}
+
+% ============================================================
+\section{Exerc\'icio 15.4 --- Volume da Esfera com Fun\c{c}\~ao Inline}
+% ============================================================
+
+\textit{Escreva um programa completo que pe\c{c}a o raio de uma esfera e calcule e imprima seu volume. Use uma fun\c{c}\~ao \texttt{inline} \texttt{sphereVolume} que retorna $(4{,}0/3{,}0) \cdot 3{,}14159 \cdot \texttt{pow}(\text{radius}, 3)$.}
+
+\subsection*{An\'alise do problema}
+
+A f\'ormula do volume da esfera \'e $V = \tfrac{4}{3}\pi r^{3}$. A presen\c{c}a do qualificador \texttt{inline} indica que queremos sugerir ao compilador que \emph{expanda} o c\'odigo da fun\c{c}\~ao no local da chamada, em vez de gerar uma chamada de fun\c{c}\~ao convencional --- evitando o custo do salto, salvamento de registradores e retorno. Para fun\c{c}\~oes muito pequenas (como uma f\'ormula de uma linha), \texttt{inline} pode ser vantajoso. Para fun\c{c}\~oes grandes, \'e contraproducente, pois infla o c\'odigo execut\'avel.
+
+\subsection*{C\'odigo em C++}
+
+\lstinputlisting[style=cppcode]{codigos/ex15_04.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{verbatim}
+$ ./ex15_04
+Digite o raio da esfera: 2
+Volume da esfera com raio 2 e 33.5103
+\end{verbatim}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+Conferindo: $V = \tfrac{4}{3} \cdot 3{,}14159 \cdot 2^3 = \tfrac{4}{3} \cdot 3{,}14159 \cdot 8 \approx 33{,}5103$. Bate exatamente.
+
+Aspectos a observar:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \texttt{const double PI} declara uma constante global. Em C++, \texttt{const} \'e prefer\'ivel ao \texttt{\#define} do pr\'e-processador, por respeitar tipos e escopos.
+  \item \texttt{cin >> radiusValue} l\^e da entrada padr\~ao usando o \textbf{operador de extra\c{c}\~ao de \emph{stream}} \texttt{>>}. \'E o an\'alogo C++ do \texttt{scanf} de C, por\'em segura quanto a tipos: o compilador escolhe a vers\~ao apropriada de \texttt{>>} para \texttt{double}.
+  \item \texttt{cout << \ldots << endl} usa o \textbf{operador de inser\c{c}\~ao} \texttt{<<} \emph{encadeado} (em cascata). O \texttt{endl} \'e um \emph{manipulador de \emph{stream}} que insere uma quebra de linha e descarrega o \emph{buffer}.
+\end{itemize}
+
+\begin{obseng}
+A palavra-chave \texttt{inline} \'e uma \emph{sugest\~ao} ao compilador, n\~ao uma ordem. Compiladores modernos j\'a inserem em linha automaticamente fun\c{c}\~oes pequenas, mesmo sem o qualificador. O verdadeiro papel atual de \texttt{inline} \'e permitir que uma fun\c{c}\~ao seja definida em um \emph{arquivo de cabe\c{c}alho} sem violar a regra de defini\c{c}\~ao \'unica (\emph{One Definition Rule}). Os autores apresentam \texttt{inline} aqui por raz\~oes hist\'oricas: a inten\c{c}\~ao original em C++ era exatamente a otimiza\c{c}\~ao manual.
+\end{obseng}
+
+\begin{boaprat}
+Para constantes matem\'aticas como $\pi$, prefira \texttt{<cmath>} junto com o macro \texttt{M\_PI} (POSIX) ou, em C++20, \texttt{std::numbers::pi}. Em qualquer caso, declarar \texttt{const double PI = 3.14159;} \'e perfeitamente adequado para fins did\'aticos e para programas pequenos.
+\end{boaprat}
+
+% ============================================================
+\section*{S\'intese conceitual}
+\addcontentsline{toc}{section}{Síntese conceitual}
+% ============================================================
+
+Os quatro exerc\'icios de autorrevisão do Cap\'itulo 15 cumprem juntos um papel introdut\'orio panor\^amico: \textbf{15.1} apresenta o vocabul\'ario b\'asico (sobrecarga, \texttt{::}, templates, UML, OOD, classes); \textbf{15.2} introduz refer\^encias; \textbf{15.3} contrasta C e C++ na quest\~ao da passagem de argumentos; e \textbf{15.4} prov\^e o primeiro programa-completo em C++ deste livro --- mais especificamente, um programa C++ que ainda n\~ao usa classes, mas j\'a usa \texttt{cin}, \texttt{cout}, \texttt{inline}, e \texttt{const}.
+
+\'E uma transi\c{c}\~ao calculada: o leitor que dominou os Cap\'itulos 1 a 14 sente-se imediatamente em casa, mas come\c{c}a a perceber as melhorias sint\'aticas. O verdadeiro salto conceitual --- a defini\c{c}\~ao da primeira classe --- vir\'a no Cap\'itulo~16. Os exerc\'icios principais (15.5 a 15.10) consolidam, agora em c\'odigo, os mesmos temas.
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}

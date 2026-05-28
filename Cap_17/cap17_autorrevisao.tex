@@ -1,0 +1,285 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{deitelorange}{RGB}{198,89,17}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+\definecolor{portabcolor}{RGB}{102,46,145}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekeyword}{RGB}{0,0,180}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codecomment}{RGB}{0,128,0}
+
+\lstdefinestyle{cppcode}{
+  language=C++,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=8pt,
+  backgroundcolor=\color{codebg}, frame=single, framesep=4pt,
+  rulecolor=\color{deitelblue!50}, breaklines=true,
+  showstringspaces=false, tabsize=4,
+  morekeywords={string, size_t, cin, cout, endl, inline, template, typename,
+                bool, true, false, nullptr, override, final, public, private,
+                protected, explicit, friend, virtual, this},
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+}
+
+\hypersetup{colorlinks=true, linkcolor=deitelblue, urlcolor=deitelblue,
+  pdftitle={C: Como Programar - Cap. 17 - Autorrevisao}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Cap.~17}
+\fancyhead[R]{\small Exerc\'icios de Autorrevis\~ao}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+\newtcolorbox{boaprat}{enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Boa Pr\'atica de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{errocomum}{enhanced, breakable, colback=errocolor!8, colframe=errocolor,
+  fonttitle=\bfseries, title={\textbf{Erro Comum de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{obseng}{enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao de Engenharia de Software}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{dicadesemp}{enhanced, breakable, colback=desempcolor!8, colframe=desempcolor,
+  fonttitle=\bfseries, title={\textbf{Dica de Desempenho}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{resposta}{enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Cap\'itulo 17}\\[0.3em]
+  {\Large\bfseries Classes: uma vis\~ao mais detalhada, parte 1}\\[0.8em]
+  {\large\itshape Exerc\'icios de Autorrevis\~ao --- Resolu\c{c}\~ao Did\'atica}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``No Cap\'itulo 16 dimos o passo do procedural para o orientado a objetos. Agora aprofundamos: separa\c{c}\~ao expl\'icita entre interface (\texttt{.h}) e implementa\c{c}\~ao (\texttt{.cpp}), construtores e destrutores, atribui\c{c}\~ao default de objetos, e o operador bin\'ario \texttt{::} em todo o seu vigor. Os exerc\'icios de autorrevisão deste cap\'itulo s\~ao curtos --- apenas dois ---, mas concentrados em pontos sutis que costumam confundir o iniciante.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+% ============================================================
+\section{Exerc\'icio 17.1 --- Operadores de acesso e visibilidade}
+% ============================================================
+
+\textit{Preencha os espa\c{c}os em cada uma das senten\c{c}as (a)--(d).}
+
+\subsection*{(a) Operadores que acessam membros de classe}
+
+\begin{resposta}\textbf{Resposta:} operador \textbf{ponto} (\texttt{.}) em conjunto com o nome de um objeto ou refer\^encia; operador \textbf{seta} (\texttt{->}) em conjunto com um ponteiro para um objeto.\end{resposta}
+
+H\'a duas situa\c{c}\~oes distintas em que precisamos acessar um membro de uma classe a partir de um objeto:
+
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Quando temos o objeto diretamente (ou uma refer\^encia a ele):} usa-se o operador ponto.
+    \begin{lstlisting}[style=cppcode,numbers=none]
+Conta c(100);          // c e um objeto
+c.credit(50);          // acesso via "."
+Conta &r = c;          // r e uma referencia
+r.credit(20);          // tambem "." (referencia e como apelido)
+    \end{lstlisting}
+  \item \textbf{Quando temos um ponteiro para o objeto:} usa-se o operador seta.
+    \begin{lstlisting}[style=cppcode,numbers=none]
+Conta *p = &c;         // p e ponteiro
+p->credit(50);         // acesso via "->"
+// equivalente a (*p).credit(50)
+    \end{lstlisting}
+\end{enumerate}
+
+\begin{obseng}
+O operador \texttt{->} \'e uma abrevia\c{c}\~ao did\'atica e sint\'aticamente conveniente para \texttt{(*p).}~. Os par\^enteses em \texttt{(*p).credit(50)} s\~ao indispens\'aveis em raz\~ao das precedencias: sem eles, \texttt{*p.credit(50)} seria interpretado como \texttt{*(p.credit(50))}, que n\~ao tem sentido (\texttt{p} \'e ponteiro, n\~ao tem membros diretamente). Por isso o operador \texttt{->} foi criado: torna o c\'odigo leg\'ivel e elimina o risco de erro de prec\^edencia.
+\end{obseng}
+
+\subsection*{(b) Membros vis\'iveis somente dentro da classe}
+
+\begin{resposta}\textbf{Resposta:} \texttt{private}.\end{resposta}
+
+Os membros \texttt{private} formam a \emph{implementa\c{c}\~ao} oculta da classe. Apenas as fun\c{c}\~oes-membro da pr\'opria classe e suas \emph{amigas} (\emph{friends}) podem acess\'a-los. Tipicamente, os dados-membro v\~ao para a se\c{c}\~ao \texttt{private}, e qualquer fun\c{c}\~ao auxiliar que n\~ao deve ser exposta aos clientes tamb\'em vai para l\'a.
+
+\subsection*{(c) Membros acess\'iveis onde quer que o objeto esteja no escopo}
+
+\begin{resposta}\textbf{Resposta:} \texttt{public}.\end{resposta}
+
+Os membros \texttt{public} formam a \emph{interface} da classe --- aquilo que os clientes podem usar. Tipicamente, contem os construtores, o destrutor, e as fun\c{c}\~oes-membro que oferecem servi\c{c}os aos clientes.
+
+\begin{boaprat}
+A regra de ouro do encapsulamento: \emph{dados-membro em \texttt{private}, fun\c{c}\~oes-membro que oferecem servi\c{c}os em \texttt{public}}. Exce\c{c}\~oes existem (constantes p\'ublicas, classes de pol\'iticas), mas s\~ao excecionais. Quando um dado-membro precisa ser exposto, fa\c{c}a-o atrav\'es de \emph{getters}/\emph{setters} ---  como vimos no Cap\'itulo 16.
+\end{boaprat}
+
+\subsection*{(d) Forma de atribuir um objeto a outro da mesma classe}
+
+\begin{resposta}\textbf{Resposta:} a \textbf{atribui\c{c}\~ao de membros default} (\emph{default memberwise assignment}), realizada pelo operador de atribui\c{c}\~ao \texttt{=}.\end{resposta}
+
+C++ gera, automaticamente, um operador de atribui\c{c}\~ao para cada classe que voc\^e define. Esse operador padr\~ao copia, um a um, todos os dados-membro do objeto da direita para o objeto da esquerda:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+Conta c1(100);
+Conta c2;
+c2 = c1;       // atribui c1 a c2: copia cada dado-membro
+\end{lstlisting}
+
+\begin{errocomum}
+A atribui\c{c}\~ao default funciona maravilhosamente para classes simples (cujos dados-membro s\~ao todos primitivos ou s\~ao tipos com semantica adequada de c\'opia). Mas, para classes que gerenciam recursos --- ponteiros para mem\'oria din\^amica, descritores de arquivo, conex\~oes de rede ---, a atribui\c{c}\~ao default \'e \emph{tipicamente perigosa}: dois objetos passam a apontar para o mesmo recurso, e o primeiro a ser destru\'ido o libera, deixando o outro com um ponteiro pendente. Para essas classes \'e preciso definir \emph{operador de atribui\c{c}\~ao personalizado}; tema do Cap\'itulo~19 (\emph{Big Three} ou, em C++ moderno, \emph{Rule of Five}).
+\end{errocomum}
+
+% ============================================================
+\section{Exerc\'icio 17.2 --- Ca\c{c}a aos erros}
+% ============================================================
+
+\textit{Encontre o(s) erro(s) em cada item e explique como corrigir.}
+
+\subsection*{(a) Destrutor com tipo de retorno e par\^ametro}
+
+\textbf{Segmento original:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+void ~Time( int );
+\end{lstlisting}
+
+\begin{resposta}
+\textbf{Resposta oficial:} destrutores n\~ao podem retornar valores nem ter par\^ametros. \textbf{Corre\c{c}\~ao:} remover o tipo de retorno \texttt{void} e o par\^ametro \texttt{int}.
+\end{resposta}
+
+\textbf{Vers\~ao correta:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+~Time();
+\end{lstlisting}
+
+\subsection*{Coment\'ario did\'atico}
+
+A regra \'e mais r\'igida e abrange tamb\'em construtores. Em C++:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Construtor:} pode ter par\^ametros (e sobrecargas), \emph{n\~ao} pode ter tipo de retorno (nem \texttt{void}); seu nome \'e o nome da classe.
+  \item \textbf{Destrutor:} \emph{n\~ao} pode ter par\^ametros, \emph{n\~ao} pode ter tipo de retorno; seu nome \'e til (\texttt{\~{}}) seguido do nome da classe; toda classe pode ter no m\'aximo \emph{um} destrutor (n\~ao h\'a sobrecarga de destrutor).
+\end{itemize}
+
+\begin{obseng}
+A justificativa para essas restri\c{c}\~oes \'e profunda: construtores e destrutores n\~ao s\~ao ``chamados'' como fun\c{c}\~oes comuns; eles s\~ao \emph{invocados implicitamente} pelo compilador em momentos espec\'ificos (cria\c{c}\~ao e destrui\c{c}\~ao do objeto). O compilador n\~ao tem nenhum lugar onde colocar o valor de retorno do destrutor --- a quem ele entregaria? Nem por que escolheria um par\^ametro espec\'ifico no momento de destruir um objeto. Da\'i a proibi\c{c}\~ao.
+\end{obseng}
+
+\subsection*{(b) Inicializa\c{c}\~ao expl\'icita na defini\c{c}\~ao da classe}
+
+\textbf{Segmento original:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+class Time
+{
+public:
+    // prototipos de funcao
+private:
+    int hour = 0;
+    int minute = 0;
+    int second = 0;
+};
+\end{lstlisting}
+
+\begin{resposta}
+\textbf{Resposta oficial:} os membros n\~ao podem ser inicializados explicitamente na defini\c{c}\~ao da classe. \textbf{Corre\c{c}\~ao:} remover a inicializa\c{c}\~ao expl\'icita; inicializar os dados-membro em um construtor.
+\end{resposta}
+
+\textbf{Vers\~ao correta:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+class Time {
+public:
+    Time();              // construtor que zera tudo
+private:
+    int hour;
+    int minute;
+    int second;
+};
+
+Time::Time() : hour(0), minute(0), second(0) {}
+\end{lstlisting}
+
+\subsection*{Coment\'ario importante sobre vers\~oes do C++}
+
+\begin{obseng}
+\textbf{Nota hist\'orica importante:} a resposta oficial reflete o padr\~ao C++ at\'e a vers\~ao C++03 (e o livro foi escrito em 2011). A partir do \textbf{C++11}, a linguagem incorporou um recurso chamado \emph{default member initializer} (inicializador de membro padr\~ao) que permite, sim, escrever \texttt{int hour = 0;} dentro da defini\c{c}\~ao da classe! Em C++11 e posteriores, o segmento original \emph{\'e v\'alido}. Mas, no contexto pedag\'ogico do livro (que adota C++03 nas primeiras edi\c{c}\~oes), a resposta oficial estava correta. Adote o seguinte: \emph{na vers\~ao did\'atica do livro, inicialize em construtor}.
+\end{obseng}
+
+\subsection*{(c) Construtor com tipo de retorno}
+
+\textbf{Segmento original:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+int Employee( string, string );
+\end{lstlisting}
+
+\begin{resposta}
+\textbf{Resposta oficial:} construtores n\~ao podem retornar valores. \textbf{Corre\c{c}\~ao:} remover o tipo de retorno \texttt{int}.
+\end{resposta}
+
+\textbf{Vers\~ao correta:}
+\begin{lstlisting}[style=cppcode,numbers=none]
+Employee( string, string );
+\end{lstlisting}
+
+\subsection*{Por que essa regra?}
+
+Imagine que constru\c{c}\~oes pudessem retornar valor:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+Employee e("Maria", "Silva");   // o que faria com o "valor de retorno"?
+\end{lstlisting}
+
+\noindent A express\~ao \texttt{Employee e("Maria", "Silva")} \emph{\'e} a inicializa\c{c}\~ao de \texttt{e} --- ela n\~ao \'e uma express\~ao que produza um valor consumivel separadamente. O compilador n\~ao teria onde colocar um eventual valor retornado.
+
+\begin{errocomum}
+N\~ao confunda ``construtor retorna o objeto'' com ``construtor tem tipo de retorno''. Construtores efetivamente \emph{produzem} um objeto novo --- mas esse objeto \'e o que est\'a sendo declarado, n\~ao um valor de retorno separado. Em C++ moderno, fun\c{c}\~oes \emph{de f\'abrica} (\emph{factory functions}) podem retornar objetos por valor; mas elas n\~ao s\~ao construtores --- s\~ao fun\c{c}\~oes comuns que internamente chamam um construtor.
+\end{errocomum}
+
+% ============================================================
+\section*{S\'intese conceitual}
+% ============================================================
+
+Os dois exerc\'icios de autorrevisão do Cap\'itulo 17 testam, em conjunto, quatro pontos essenciais:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Acesso a membros:} \texttt{.} para objeto/refer\^encia, \texttt{->} para ponteiro.
+  \item \textbf{Visibilidade:} \texttt{private} encapsula, \texttt{public} exp\~oe a interface.
+  \item \textbf{Atribui\c{c}\~ao default:} copia membros um a um; suficiente para tipos simples, perigosa para gerenciamento de recursos.
+  \item \textbf{Regras sint\'aticas de construtor e destrutor:} sem tipo de retorno; destrutor sem par\^ametros e \'unico.
+\end{itemize}
+
+Esses quatro pontos s\~ao a base sobre a qual o cap\'itulo constr\'oi as t\'ecnicas mais avan\c{c}adas: separa\c{c}\~ao interface/implementa\c{c}\~ao em arquivos distintos, construtores com listas de inicializa\c{c}\~ao, valida\c{c}\~ao centralizada e classes que mant\^em \emph{estado coerente} mesmo diante de mudan\c{c}as adversas. Aplicaremos tudo isso nos exerc\'icios de programa\c{c}\~ao 17.4 a 17.15.
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}

@@ -1,0 +1,642 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\definecolor{deitelblue}{RGB}{31,73,125}
+\definecolor{deitelorange}{RGB}{198,89,17}
+\definecolor{boapratcolor}{RGB}{0,112,60}
+\definecolor{errocolor}{RGB}{178,34,34}
+\definecolor{engcolor}{RGB}{31,73,125}
+\definecolor{desempcolor}{RGB}{198,89,17}
+\definecolor{portabcolor}{RGB}{102,46,145}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekeyword}{RGB}{0,0,180}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codecomment}{RGB}{0,128,0}
+\definecolor{terminalbg}{RGB}{30,30,30}
+\definecolor{terminalfg}{RGB}{220,220,220}
+
+\lstdefinestyle{cppcode}{
+  language=C++,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekeyword}\bfseries,
+  stringstyle=\color{codestring},
+  commentstyle=\color{codecomment}\itshape,
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=8pt,
+  backgroundcolor=\color{codebg}, frame=single, framesep=4pt,
+  rulecolor=\color{deitelblue!50}, breaklines=true,
+  showstringspaces=false, tabsize=4,
+  morekeywords={string, size_t, cin, cout, endl, inline, template, typename,
+                bool, true, false, nullptr, override, final, public, private, protected},
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+           {Ã}{{\~A}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Ê}{{\^E}}1 {Í}{{\'I}}1
+           {Ó}{{\'O}}1 {Ô}{{\^O}}1 {Õ}{{\~O}}1 {Ú}{{\'U}}1 {Ç}{{\c{C}}}1
+}
+
+\lstdefinestyle{terminal}{
+  basicstyle=\ttfamily\footnotesize\color{terminalfg},
+  backgroundcolor=\color{terminalbg},
+  frame=single, framesep=6pt, rulecolor=\color{deitelblue!50},
+  breaklines=true, showstringspaces=false,
+  literate={ã}{{\~a}}1 {á}{{\'a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+           {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ç}{{\c{c}}}1
+}
+
+\hypersetup{colorlinks=true, linkcolor=deitelblue, urlcolor=deitelblue,
+  pdftitle={C: Como Programar - Cap. 16 - Exercicios}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{C: Como Programar} --- Cap.~16}
+\fancyhead[R]{\small Exerc\'icios}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\section}{\Large\bfseries\color{deitelblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{deitelblue}}{\thesubsection}{1em}{}
+
+\newtcolorbox{boaprat}{enhanced, breakable, colback=boapratcolor!8, colframe=boapratcolor,
+  fonttitle=\bfseries, title={\textbf{Boa Pr\'atica de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{errocomum}{enhanced, breakable, colback=errocolor!8, colframe=errocolor,
+  fonttitle=\bfseries, title={\textbf{Erro Comum de Programa\c{c}\~ao}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{obseng}{enhanced, breakable, colback=engcolor!8, colframe=engcolor,
+  fonttitle=\bfseries, title={\textbf{Observa\c{c}\~ao de Engenharia de Software}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{dicadesemp}{enhanced, breakable, colback=desempcolor!8, colframe=desempcolor,
+  fonttitle=\bfseries, title={\textbf{Dica de Desempenho}},
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{enunciado}{enhanced, breakable, colback=deitelblue!5, colframe=deitelblue!70,
+  boxrule=0.6pt, left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{saidabox}{enhanced, breakable, colback=gray!8, colframe=gray!50,
+  boxrule=0.6pt, fonttitle=\bfseries\small,
+  title={\textbf{Sa\'ida da execu\c{c}\~ao}},
+  left=6pt, right=6pt, top=3pt, bottom=3pt}
+
+\title{
+  \vspace{-1cm}
+  {\Huge\bfseries\color{deitelblue} Cap\'itulo 16}\\[0.3em]
+  {\Large\bfseries Introdu\c{c}\~ao a Classes e Objetos}\\[0.8em]
+  {\large\itshape Exerc\'icios --- Resolu\c{c}\~ao Did\'atica com C\'odigo C++}
+}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace{-2em}
+
+\begin{center}
+\rule{0.85\textwidth}{0.5pt}\\[0.4em]
+\textit{``Neste documento resolvemos os Exerc\'icios 16.5 a 16.15 do Cap\'itulo 16. As cinco primeiras quest\~oes (16.5 a 16.10) s\~ao conceituais; as cinco \'ultimas (16.11 a 16.15) introduzem nossas primeiras classes completas em C++, cada uma com a estrutura cl\'assica de tr\^es arquivos: \texttt{<Classe>.h} (declara\c{c}\~ao), \texttt{<Classe>.cpp} (implementa\c{c}\~ao) e \texttt{main\_<Classe>.cpp} (programa de teste). Todos os c\'odigos foram compilados com \texttt{g++ -Wall -Wextra -std=c++14} sem warnings.''}\\[0.4em]
+\rule{0.85\textwidth}{0.5pt}
+\end{center}
+
+\vspace{1em}
+
+% ============================================================
+\section{Exerc\'icio 16.5 --- Prot\'otipo versus defini\c{c}\~ao}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Explique a diferen\c{c}a entre um prot\'otipo de fun\c{c}\~ao e uma defini\c{c}\~ao de fun\c{c}\~ao.
+\end{enunciado}
+
+\subsection*{Resposta}
+
+Um \textbf{prot\'otipo} (\emph{function prototype}) \'e a \emph{declara\c{c}\~ao} da fun\c{c}\~ao: anuncia ao compilador o nome da fun\c{c}\~ao, o tipo de retorno e os tipos (e opcionalmente os nomes) de seus par\^ametros. N\~ao cont\'em corpo --- apenas a assinatura, encerrada por ponto-e-v\'irgula.
+
+Uma \textbf{defini\c{c}\~ao} (\emph{function definition}) \'e a forma completa da fun\c{c}\~ao: inclui o cabe\c{c}alho (mesmo do prot\'otipo, mas sem ponto-e-v\'irgula) e o \emph{corpo} entre chaves --- isto \'e, o c\'odigo que efetivamente realiza a tarefa.
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+// Prototipo (geralmente em arquivo .h):
+double areaCirculo(double radius);
+
+// Definicao (geralmente em arquivo .cpp):
+double areaCirculo(double radius) {
+    return 3.14159 * radius * radius;
+}
+\end{lstlisting}
+
+\subsection*{Por que essa separa\c{c}\~ao?}
+
+A separa\c{c}\~ao prot\'otipo/defini\c{c}\~ao serve a tr\^es prop\'ositos:
+
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Compila\c{c}\~ao incremental.} O compilador precisa apenas do prot\'otipo para gerar o c\'odigo de uma \emph{chamada} \`a fun\c{c}\~ao --- sabe o tipo de cada argumento, sabe o tipo do retorno. Pode-se compilar quem \emph{chama} sem ter o c\'odigo de quem \'e \emph{chamado}.
+  \item \textbf{Verifica\c{c}\~ao de tipos.} Antes da exist\^encia dos prot\'otipos (em C antigo, K\&R), o compilador n\~ao podia checar se voc\^e estava passando um \texttt{double} quando a fun\c{c}\~ao esperava \texttt{int}; o erro s\'o aparecia em tempo de execu\c{c}\~ao. Os prot\'otipos eliminaram essa classe inteira de bugs.
+  \item \textbf{Encapsulamento.} O prot\'otipo (interface) pode ficar p\'ublico no \texttt{.h}; a defini\c{c}\~ao (implementa\c{c}\~ao) fica privada no \texttt{.cpp}. Clientes da fun\c{c}\~ao s\'o precisam ver o \texttt{.h}.
+\end{enumerate}
+
+\begin{boaprat}
+Em c\'odigo bem organizado, escreva todos os prot\'otipos no in\'icio do arquivo (ou em um \texttt{.h}) e todas as defini\c{c}\~oes depois. Para classes, esse modelo \'e ainda mais r\'igido: a declara\c{c}\~ao da classe (com prot\'otipos das fun\c{c}\~oes-membro) vai no \texttt{.h}; as defini\c{c}\~oes v\~ao no \texttt{.cpp}.
+\end{boaprat}
+
+% ============================================================
+\section{Exerc\'icio 16.6 --- Construtor default}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} O que \'e um construtor default? Como os dados-membro de um objeto s\~ao inicializados se a classe tiver apenas um construtor default definido implicitamente?
+\end{enunciado}
+
+\subsection*{Resposta}
+
+Um \textbf{construtor default} \'e um construtor que pode ser chamado \emph{sem argumentos}. Ele \'e usado, por exemplo, quando se cria um objeto assim: \texttt{Conta minhaConta;} (sem par\^enteses, sem argumentos).
+
+H\'a duas formas de obt\^e-lo:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Definido explicitamente pelo programador:}
+    \begin{lstlisting}[style=cppcode,numbers=none]
+class Conta {
+public:
+    Conta() { saldo = 0; }   // construtor default explicito
+private:
+    int saldo;
+};
+    \end{lstlisting}
+  \item \textbf{Gerado implicitamente pelo compilador:} se a classe \emph{n\~ao} declara nenhum construtor, o compilador gera automaticamente um construtor default sem par\^ametros e sem corpo.
+\end{itemize}
+
+\subsection*{O que acontece com os dados-membro nesse caso?}
+
+Se a classe tem apenas o construtor default \emph{implicitamente gerado pelo compilador}, os dados-membro s\~ao inicializados como segue:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Dados-membro de tipos fundamentais} (como \texttt{int}, \texttt{double}, ponteiros): \emph{n\~ao s\~ao inicializados} --- cont\'em valor indefinido (lixo de mem\'oria).
+  \item \textbf{Dados-membro de tipos de classe} (como \texttt{string}): s\~ao inicializados chamando o construtor default \emph{daquele tipo}. Por exemplo, uma \texttt{string} \'e inicializada como string vazia.
+\end{itemize}
+
+\begin{errocomum}
+Confiar no construtor default implicit\'amente gerado para inicializar \texttt{int}s e \texttt{double}s \'e fonte de bugs cl\'assica. Quando voc\^e escreve \texttt{Conta c;}, se \texttt{Conta} n\~ao tiver construtor pr\'oprio que inicialize \texttt{saldo}, ent\~ao \texttt{c.saldo} cont\'em lixo. O primeiro \texttt{c.credit(100)} pode resultar em valor caotico.
+\end{errocomum}
+
+\begin{boaprat}
+Sempre forne\c{c}a um construtor expl\'icito que inicialize todos os dados-membro com valores conhecidos. Para classes com m\'ultiplos construtores, garanta que \emph{todos} cubram completamente a inicializa\c{c}\~ao. Em C++11 e posteriores, voc\^e tamb\'em pode inicializar dados-membro diretamente na declara\c{c}\~ao: \texttt{int saldo = 0;}
+\end{boaprat}
+
+% ============================================================
+\section{Exerc\'icio 16.7 --- Finalidade de um dado-membro}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Explique a finalidade de um dado-membro.
+\end{enunciado}
+
+\subsection*{Resposta}
+
+Um \textbf{dado-membro} \'e uma vari\'avel declarada como parte de uma classe. Sua finalidade \'e \emph{armazenar o estado} dos objetos dessa classe.
+
+\subsection*{Discuss\~ao expandida}
+
+Os dados-membro:
+
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Representam atributos do objeto.} S\~ao a contraparte computacional dos ``substantivos'' do dom\'inio: o \emph{saldo} de uma conta, o \emph{nome} de um aluno, a \emph{data de nascimento} de uma pessoa.
+  \item \textbf{Persistem durante toda a vida do objeto.} Diferentemente de vari\'aveis locais (que vivem apenas durante uma chamada de fun\c{c}\~ao), os dados-membro existem desde a constru\c{c}\~ao do objeto at\'e sua destrui\c{c}\~ao.
+  \item \textbf{S\~ao individuais por objeto.} Cada objeto tem sua pr\'opria c\'opia de cada dado-membro. \texttt{conta1.saldo} e \texttt{conta2.saldo} s\~ao vari\'aveis distintas.
+  \item \textbf{S\~ao compartilhados entre as fun\c{c}\~oes-membro.} Todas as fun\c{c}\~oes-membro de um objeto acessam os mesmos dados-membro daquele objeto, o que permite que diferentes opera\c{c}\~oes cooperem coerentemente sobre o estado interno.
+  \item \textbf{S\~ao tipicamente \texttt{private}.} Bons projetos OO ocultam os dados-membro --- o acesso externo se d\'a via fun\c{c}\~oes-membro p\'ublicas (\emph{getters} e \emph{setters}), o que preserva o \emph{encapsulamento}.
+\end{enumerate}
+
+\begin{obseng}
+A oposi\c{c}\~ao entre \emph{dados-membro} (estado) e \emph{fun\c{c}\~oes-membro} (comportamento) \'e o esqueleto do paradigma orientado a objetos. Outras linguagens chamam isso de \emph{atributos} versus \emph{m\'etodos}, ou \emph{campos} versus \emph{opera\c{c}\~oes}. Os tr\^es pares de termos s\~ao sin\^onimos em diferentes tradi\c{c}\~oes; o que importa \'e a id\'eia subjacente.
+\end{obseng}
+
+% ============================================================
+\section{Exerc\'icio 16.8 --- Arquivos de cabe\c{c}alho e de c\'odigo-fonte}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} O que \'e um arquivo de cabe\c{c}alho? O que \'e um arquivo de c\'odigo-fonte? Discuta a finalidade de cada um.
+\end{enunciado}
+
+\subsection*{Resposta}
+
+\textbf{Arquivo de cabe\c{c}alho} (\emph{header file}, extens\~ao \texttt{.h}): cont\'em \emph{declara\c{c}\~oes} --- prot\'otipos de fun\c{c}\~oes, defini\c{c}\~oes de classes (com seus dados-membro e prot\'otipos das fun\c{c}\~oes-membro), constantes, defini\c{c}\~oes de tipos. \textbf{N\~ao} cont\'em c\'odigo execut\'avel.
+
+\textbf{Arquivo de c\'odigo-fonte} (\emph{source file}, extens\~ao \texttt{.cpp}): cont\'em \emph{defini\c{c}\~oes} --- corpos das fun\c{c}\~oes, incluindo as fun\c{c}\~oes-membro das classes. \'E o c\'odigo que ser\'a efetivamente compilado em c\'odigo-objeto.
+
+\subsection*{Modelo de divis\~ao t\'ipico em C++}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|p{3cm}|p{5cm}|p{5.5cm}|}
+\hline
+\textbf{Arquivo} & \textbf{Cont\'em} & \textbf{Quem o inclui} \\
+\hline
+\texttt{Conta.h}        & Declara\c{c}\~ao da classe \texttt{Conta} & Todos os arquivos que usam \texttt{Conta} \\
+\texttt{Conta.cpp}      & Defini\c{c}\~oes das fun\c{c}\~oes-membro & Compilado uma s\'o vez \\
+\texttt{main.cpp}       & Fun\c{c}\~ao \texttt{main()}, programa cliente & \texttt{\#include "Conta.h"} \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{Por que essa divis\~ao?}
+
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Reutiliza\c{c}\~ao.} O \texttt{.h} pode ser inclu\'ido em quantos arquivos cliente quisermos; a defini\c{c}\~ao \texttt{.cpp} \'e compilada apenas uma vez.
+  \item \textbf{Tempo de compila\c{c}\~ao.} Se voc\^e altera o \texttt{.cpp} sem mexer no \texttt{.h}, apenas o \texttt{.cpp} precisa ser recompilado --- os clientes ficam intactos.
+  \item \textbf{Encapsulamento.} Para distribuir uma biblioteca, voc\^e fornece o \texttt{.h} e um arquivo-objeto compilado (\texttt{.o} ou \texttt{.lib}). O cliente n\~ao precisa ver o c\'odigo-fonte da implementa\c{c}\~ao.
+\end{enumerate}
+
+\begin{boaprat}
+Todo arquivo \texttt{.h} deve come\c{c}ar com guardas de inclus\~ao para evitar inclus\~oes m\'ultiplas:
+\begin{lstlisting}[style=cppcode,numbers=none]
+#ifndef CONTA_H
+#define CONTA_H
+// ... declaracao da classe ...
+#endif
+\end{lstlisting}
+Sem isso, se dois arquivos diferentes inclu\'irem \texttt{Conta.h} no mesmo arquivo cliente, a defini\c{c}\~ao da classe ser\'a duplicada e o compilador acusar\'a erro.
+\end{boaprat}
+
+% ============================================================
+\section{Exerc\'icio 16.9 --- Usar \texttt{string} sem \texttt{using}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Explique como um programa poderia usar a classe \texttt{string} sem inserir uma declara\c{c}\~ao \texttt{using}.
+\end{enunciado}
+
+\subsection*{Resposta}
+
+A classe \texttt{string} reside no \emph{namespace} \texttt{std}. Por padr\~ao, para refer\^encia, voc\^e precisa \emph{qualific\'a-la} com o nome do \emph{namespace} usando o operador bin\'ario de resolu\c{c}\~ao de escopo:
+
+\begin{lstlisting}[style=cppcode,numbers=none]
+#include <iostream>
+#include <string>
+
+int main() {
+    std::string nome;                    // qualificacao completa
+    std::cout << "Digite seu nome: ";
+    std::cin  >> nome;
+    std::cout << "Ola, " << nome << std::endl;
+    return 0;
+}
+\end{lstlisting}
+
+\subsection*{As tr\^es alternativas}
+
+\begin{enumerate}[leftmargin=*,itemsep=0pt]
+  \item \textbf{Qualifica\c{c}\~ao completa} (como acima): \texttt{std::string}. Verbosa, mas inequivoca; nunca causa problema.
+  \item \textbf{Declara\c{c}\~ao \texttt{using} espec\'ifica:} \texttt{using std::string;} no in\'icio do arquivo. A partir da\'i, \texttt{string} sozinho referencia \texttt{std::string}.
+  \item \textbf{Diretiva \texttt{using namespace}:} \texttt{using namespace std;}. Disponibiliza \emph{todos} os nomes de \texttt{std} sem qualifica\c{c}\~ao. Conveniente em programas pequenos, mas problem\'atica em programas grandes (pode introduzir colis\~oes de nomes).
+\end{enumerate}
+
+\begin{boaprat}
+Em arquivos \texttt{.h}, \textbf{nunca} use \texttt{using namespace std} no escopo global --- isso polui o \emph{namespace} de todo arquivo que inclua o \texttt{.h}. Use sempre a qualifica\c{c}\~ao completa \texttt{std::string} em cabe\c{c}alhos. Em arquivos \texttt{.cpp}, \texttt{using namespace std} \'e tolerado mas n\~ao recomendado em c\'odigo de produ\c{c}\~ao.
+\end{boaprat}
+
+% ============================================================
+\section{Exerc\'icio 16.10 --- Por que oferecer \emph{set} e \emph{get}?}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Explique por que uma classe poderia oferecer uma fun\c{c}\~ao \emph{set} e uma fun\c{c}\~ao \emph{get} para um dado-membro.
+\end{enunciado}
+
+\subsection*{Resposta}
+
+A pr\'atica \emph{getter}/\emph{setter} \'e o caminho can\^onico para que clientes acessem dados-membro \texttt{private} de modo controlado. Vejamos as quatro raz\~oes principais:
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Encapsulamento.} Os dados-membro permanecem \texttt{private}; a representa\c{c}\~ao interna pode ser alterada (mudar tipo, mudar formato, particionar em v\'arios campos) sem afetar os clientes, contanto que a interface (\emph{getter}/\emph{setter}) permane\c{c}a est\'avel.
+  \item \textbf{Valida\c{c}\~ao no \emph{setter}.} O \emph{setter} pode rejeitar valores inv\'alidos. Ex.: \texttt{setSalario(-1000)} pode silenciosamente armazenar 0 (como faremos no Exerc\'icio 16.14), ou pode lan\c{c}ar exce\c{c}\~ao, ou pode reportar erro. O cliente nunca consegue introduzir um estado invalid\'o.
+  \item \textbf{Logging e instrumenta\c{c}\~ao.} O \emph{setter} pode registrar cada modifica\c{c}\~ao para auditoria; o \emph{getter} pode contar acessos para fins estat\'isticos. Tudo isso ficaria imposs\'ivel se o cliente acessasse o membro diretamente.
+  \item \textbf{Acesso assim\'etrico.} \`As vezes queremos que um membro seja \emph{leg\'ivel} mas n\~ao \emph{escrev\'ivel} de fora. Basta oferecer o \emph{getter} e omitir o \emph{setter}. Em alguns casos, queremos o oposto. Os dados-membro p\'ublicos n\~ao permitem essa assimetria.
+\end{enumerate}
+
+\begin{obseng}
+Cuidado com o uso indiscriminado de \emph{getters} e \emph{setters}: oferecer um \emph{getter} e um \emph{setter} para \emph{cada} dado-membro \'e, na pr\'atica, equivalente a deixar todos os membros p\'ublicos --- s\'o que mais verboso. O bom projeto OO \'e \emph{minimalista} na interface p\'ublica: exp\~oe apenas os \emph{servi\c{c}os} que a classe precisa oferecer ao mundo externo, e n\~ao seu estado interno bruto.
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 16.11 --- Modificando a classe \texttt{GradeBook}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Modifique a classe \texttt{GradeBook} (figuras 16.11 e 16.12) para: (a) incluir um segundo dado-membro \texttt{string} representando o nome do instrutor; (b) fornecer \emph{set}/\emph{get} para esse nome; (c) modificar o construtor para receber ambos os nomes; (d) modificar \texttt{displayMessage} para mostrar uma mensagem de boas-vindas, o nome do curso e o nome do instrutor.
+\end{enunciado}
+
+\subsection*{Cabe\c{c}alho \texttt{GradeBook.h}}
+
+\lstinputlisting[style=cppcode]{codigos/GradeBook.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{GradeBook.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/GradeBook.cpp}
+
+\subsection*{Programa de teste \texttt{main\_GradeBook.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/main_GradeBook.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+$ g++ -Wall -Wextra -std=c++14 GradeBook.cpp main_GradeBook.cpp -o test
+$ ./test
+==== Livro 1 ====
+Bem-vindo ao livro de notas para
+CS101 - Introducao a Programacao em C++!
+Esse curso e apresentado por: Prof. Paulo Souza
+
+==== Livro 2 ====
+Bem-vindo ao livro de notas para
+CS201 - Estruturas de Dados!
+Esse curso e apresentado por: Profa. Maria Santos
+
+>>> Atualizando o instrutor do Livro 1...
+
+==== Livro 1 (apos atualizacao) ====
+Bem-vindo ao livro de notas para
+CS101 - Introducao a Programacao em C++!
+Esse curso e apresentado por: Prof. Roberto Almeida
+
+>>> Recuperando via get:
+Curso  do Livro 2: CS201 - Estruturas de Dados
+Instr. do Livro 2: Profa. Maria Santos
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item Usamos uma \textbf{lista de inicializa\c{c}\~ao de membros} no construtor: \texttt{: courseName(nomeDoCurso), instructorName(nomeDoInstrutor)}. Essa \'e a maneira preferida em C++ moderno para inicializar dados-membro --- \'e mais eficiente que atribuir dentro do corpo do construtor (que requer inicializa\c{c}\~ao default seguida de atribui\c{c}\~ao).
+  \item As fun\c{c}\~oes \emph{getter} foram marcadas como \texttt{const}, indicando que n\~ao modificam o estado do objeto. \'E uma promessa que o compilador faz cumprir.
+  \item Note como \texttt{displayMessage} acessa diretamente \texttt{courseName} e \texttt{instructorName} --- esses dados s\~ao privados, mas est\~ao no escopo de uma fun\c{c}\~ao-membro da pr\'opria classe, ent\~ao s\~ao vis\'iveis.
+\end{itemize}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 16.12 --- Classe \texttt{Account}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Crie a classe \texttt{Account} com saldo \texttt{int}, construtor que valida saldo inicial (rejeitando negativo), e tr\^es fun\c{c}\~oes-membro: \texttt{credit} (soma), \texttt{debit} (subtrai validando), \texttt{getBalance} (retorna o saldo).
+\end{enunciado}
+
+\subsection*{Cabe\c{c}alho \texttt{Account.h}}
+
+\lstinputlisting[style=cppcode]{codigos/Account.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{Account.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/Account.cpp}
+
+\subsection*{Programa de teste \texttt{main\_Account.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/main_Account.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+Criando conta1 com saldo inicial 100...
+
+Criando conta2 com saldo inicial -50 (invalido)...
+Erro: saldo inicial invalido (-50). Saldo definido como 0.
+
+Saldos iniciais:
+  conta1.getBalance() = 100
+  conta2.getBalance() = 0
+
+>>> conta1.credit(50)
+Saldo da conta1: 150
+
+>>> conta2.credit(200)
+Saldo da conta2: 200
+
+>>> conta1.debit(30)
+Saldo da conta1: 120
+
+>>> conta1.debit(500)  (excede o saldo!)
+Valor do debito superior ao saldo da conta
+Saldo da conta1: 120
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item O construtor faz \textbf{valida\c{c}\~ao}: se o saldo inicial \'e negativo, exibe uma mensagem de erro e adota o valor 0. Essa \'e a primeira aplica\c{c}\~ao em c\'odigo do princ\'ipio que estabelecemos no Exerc\'icio 16.10: o \emph{setter} (aqui no construtor) garante que o objeto nunca entre em estado inv\'alido.
+  \item A fun\c{c}\~ao \texttt{debit} demonstra valida\c{c}\~ao adicional: se o valor a debitar excede o saldo dispon\'ivel, a fun\c{c}\~ao recusa a opera\c{c}\~ao (mant\'em o saldo inalterado) e reporta o problema. Sem essa verifica\c{c}\~ao, ter\'iamos saldos negativos --- estado inconsistente.
+\end{itemize}
+
+\begin{obseng}
+Em c\'odigo de produ\c{c}\~ao, valores monet\'arios s\~ao \emph{nunca} representados como \texttt{int} simples (n\~ao h\'a centavos) nem como \texttt{double} (impreciso por arredondamento bin\'ario). A pr\'atica recomendada \'e armazenar em centavos como \texttt{long long}, ou usar uma classe especializada de \emph{decimal} de ponto fixo. O exerc\'icio usa \texttt{int} por simplicidade did\'atica.
+\end{obseng}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 16.13 --- Classe \texttt{Fatura}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Crie a classe \texttt{Fatura} com quatro dados-membro: \texttt{numeroPeca} (\texttt{string}), \texttt{descricao} (\texttt{string}), \texttt{quantidade} (\texttt{int}) e \texttt{precoPorItem} (\texttt{int}). Construtor inicializa todos. \emph{Set}/\emph{get} para cada. \texttt{obterValorFatura()} calcula o total. Quantidade ou pre\c{c}o n\~ao-positivos s\~ao ajustados para 0.
+\end{enunciado}
+
+\subsection*{Cabe\c{c}alho \texttt{Fatura.h}}
+
+\lstinputlisting[style=cppcode]{codigos/Fatura.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{Fatura.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/Fatura.cpp}
+
+\subsection*{Programa de teste \texttt{main\_Fatura.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/main_Fatura.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Fatura 1 (valores normais) ===
+  Peca: P-1001  Descr: Martelo de aco
+  Qtd: 3  Preco unit: 25  Total: 75
+
+=== Fatura 2 (quantidade negativa: deve virar 0) ===
+  Peca: P-1002  Descr: Chave de fenda
+  Qtd: 0  Preco unit: 12  Total: 0
+
+=== Fatura 3 (preco negativo: deve virar 0) ===
+  Peca: P-1003  Descr: Furadeira
+  Qtd: 2  Preco unit: 0  Total: 0
+
+>>> Atualizando f1 com novos valores...
+  Peca: P-1001  Descr: Martelo de aco
+  Qtd: 10  Preco unit: 15  Total: 150
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item Observe um padr\~ao importante: o construtor \emph{chama os setters} (\texttt{setQuantidade}, \texttt{setPrecoPorItem}) em vez de atribuir diretamente. Isso garante que a valida\c{c}\~ao seja aplicada \emph{uma s\'o vez} no \emph{setter} --- princ\'ipio DRY (\emph{Don't Repeat Yourself}). Se a regra de valida\c{c}\~ao mudar no futuro, basta alter\'a-la em um lugar.
+  \item A fun\c{c}\~ao \texttt{imprimirFatura} \'e externa \`a classe e recebe uma refer\^encia constante (\texttt{const Fatura \&f}). Por que? Evita c\'opia desnecess\'aria \emph{e} promete n\~ao modificar o objeto.
+\end{itemize}
+
+\begin{boaprat}
+Sempre que um construtor precisa validar dados, \emph{delegue} a valida\c{c}\~ao aos \emph{setters} chamando-os a partir do corpo do construtor. \'E mais limpo, mais conciso e mais f\'acil de manter do que duplicar a l\'ogica de valida\c{c}\~ao.
+\end{boaprat}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 16.14 --- Classe \texttt{Empregado}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Crie a classe \texttt{Empregado} com primeiro nome (\texttt{string}), sobrenome (\texttt{string}) e sal\'ario mensal (\texttt{int}). Construtor inicializa os tr\^es. \emph{Set}/\emph{get} para cada. Sal\'ario n\~ao-positivo deve virar 0. Crie dois \texttt{Empregado}s, mostre o sal\'ario anual de cada um, d\^e um aumento de 10\% e mostre os sal\'arios anuais novamente.
+\end{enunciado}
+
+\subsection*{Cabe\c{c}alho \texttt{Empregado.h}}
+
+\lstinputlisting[style=cppcode]{codigos/Empregado.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{Empregado.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/Empregado.cpp}
+
+\subsection*{Programa de teste \texttt{main\_Empregado.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/main_Empregado.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Antes do aumento ===
+
+-- Empregado 1 --
+  Nome:    Ana Silva
+  Salario mensal: 3500
+  Salario anual:  42000
+
+-- Empregado 2 --
+  Nome:    Carlos Pereira
+  Salario mensal: 4200
+  Salario anual:  50400
+
+=== Apos aumento de 10% ===
+
+-- Empregado 1 --
+  Nome:    Ana Silva
+  Salario mensal: 3850
+  Salario anual:  46200
+
+-- Empregado 2 --
+  Nome:    Carlos Pereira
+  Salario mensal: 4620
+  Salario anual:  55440
+
+>>> Tentando definir salario negativo em emp1...
+Salario apos tentativa invalida: 0
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item O aumento de 10\% \'e implementado como \texttt{salario * 110 / 100}. Por que essa ordem? \texttt{salario * 110} primeiro \emph{aumenta} o valor (evitando perda de precis\~ao na divis\~ao por aritm\'etica inteira); depois divide por 100. Se f\^ossemos calcular como \texttt{salario * (110 / 100)}, ter\'iamos \texttt{salario * 1} (pois 110/100 = 1 em aritm\'etica inteira). Erro cl\'assico em iniciantes.
+  \item Para Ana: $3500 \times 110 \div 100 = 385000 \div 100 = 3850$. Sal\'ario anual: $3850 \times 12 = 46200$. Confere com a sa\'ida.
+  \item A demonstra\c{c}\~ao final do \emph{setter} validador mostra o princ\'ipio em a\c{c}\~ao: tentamos definir um sal\'ario negativo e o sistema corrige automaticamente para 0.
+\end{itemize}
+
+\begin{errocomum}
+Misturar tipos em express\~oes aritm\'eticas pode produzir resultados surpreendentes. \texttt{3500 * 1.1} retornaria \texttt{double} (3850.0); \texttt{3500 * 1.1 + 0.5} arredondaria para 3850; usar essas opera\c{c}\~oes em fluxos monet\'arios reais demanda escolhas conscientes sobre arredondamento. Em produ\c{c}\~ao, use bibliotecas de \emph{decimal} de ponto fixo.
+\end{errocomum}
+
+\newpage
+% ============================================================
+\section{Exerc\'icio 16.15 --- Classe \texttt{Date}}
+% ============================================================
+
+\begin{enunciado}
+\textbf{Enunciado.} Crie a classe \texttt{Date} com m\^es, dia e ano (todos \texttt{int}). Construtor inicializa os tr\^es. Suponha ano e dia corretos, mas valide o m\^es: deve estar em 1--12; sen\~ao, define como 1. \emph{Set}/\emph{get} para cada. Fun\c{c}\~ao \texttt{mostraData} imprime no formato \texttt{mes/dia/ano}.
+\end{enunciado}
+
+\subsection*{Cabe\c{c}alho \texttt{Date.h}}
+
+\lstinputlisting[style=cppcode]{codigos/Date.h}
+
+\subsection*{Implementa\c{c}\~ao \texttt{Date.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/Date.cpp}
+
+\subsection*{Programa de teste \texttt{main\_Date.cpp}}
+
+\lstinputlisting[style=cppcode]{codigos/main_Date.cpp}
+
+\subsection*{Execu\c{c}\~ao}
+
+\begin{saidabox}
+\begin{lstlisting}[style=terminal]
+=== Data 1 (valida) ===
+Data: 5/15/2026
+
+=== Data 2 (mes invalido = 13) ===
+Mes invalido (13). Definido como 1.
+Data: 1/25/2025
+
+=== Data 3 (mes invalido = 0) ===
+Mes invalido (0). Definido como 1.
+Data: 1/1/2024
+
+>>> Atualizando d1 com setMes(7), setDia(4), setAno(2030)...
+Data: 7/4/2030
+
+>>> Tentando setMes(15) em d1 (invalido)...
+Mes invalido (15). Definido como 1.
+Data: 1/4/2030
+\end{lstlisting}
+\end{saidabox}
+
+\subsection*{Discuss\~ao}
+
+\begin{itemize}[leftmargin=*]
+  \item Note que a valida\c{c}\~ao do m\^es \'e id\^entica em duas situa\c{c}\~oes: no construtor (atrav\'es da chamada a \texttt{setMes}) e em chamadas diretas de \texttt{setMes(15)} pelo cliente. Em ambos os casos, m\^es 15 vira 1 e a mensagem de erro \'e impressa. \textbf{Uma s\'o l\'ogica de valida\c{c}\~ao}, executada em qualquer caminho de acesso.
+  \item O construtor usa a lista de inicializa\c{c}\~ao para \texttt{dia} e \texttt{ano} (que n\~ao precisam de valida\c{c}\~ao), mas \emph{chama} \texttt{setMes(m)} no corpo --- a maneira correta de delegar a valida\c{c}\~ao a um \emph{setter}.
+\end{itemize}
+
+\begin{obseng}
+Esta \texttt{Date} \'e propositadamente simples para fins did\'aticos. Uma classe \texttt{Date} de produ\c{c}\~ao deveria validar o dia em fun\c{c}\~ao do m\^es (fevereiro tem 28 ou 29; abril, junho, setembro e novembro t\^em 30; os demais 31), tratar anos bissextos, calcular dias entre datas, conhecer fusos hor\'arios etc. Em C++ moderno, recorre-se ao cabe\c{c}alho \texttt{<chrono>} da biblioteca padr\~ao para tudo isso.
+\end{obseng}
+
+\begin{boaprat}
+Padr\~oes de formata\c{c}\~ao de data variam globalmente: \texttt{mm/dd/yyyy} (EUA), \texttt{dd/mm/yyyy} (Brasil, Europa), \texttt{yyyy-mm-dd} (ISO 8601, padr\~ao internacional recomendado). O formato ISO \'e prefer\'ivel em logs, arquivos e APIs --- ordena alfabeticamente e elimina ambiguidade. O exerc\'icio segue a conven\c{c}\~ao do livro original (EUA, com barras).
+\end{boaprat}
+
+% ============================================================
+\section*{Encerramento}
+% ============================================================
+
+Resolvemos onze exerc\'icios do Cap\'itulo~16. Os cinco conceituais (16.5--16.10) consolidaram a terminologia: prot\'otipo versus defini\c{c}\~ao, construtor default, dado-membro, arquivos \texttt{.h}/\texttt{.cpp}, \emph{namespace} \texttt{std}, \emph{getters}/\emph{setters}. Os cinco \emph{de programa\c{c}\~ao} (16.11--16.15) introduziram nossas primeiras classes completas, exercitando o padr\~ao de tr\^es arquivos (\texttt{.h}, \texttt{.cpp}, \texttt{main}) e o princ\'ipio de valida\c{c}\~ao centralizada em \emph{setters}.
+
+O Cap\'itulo~17, seguindo a metodologia incremental dos autores, aprofundar\'a o tratamento de classes: separa\c{c}\~ao mais cuidadosa entre interface e implementa\c{c}\~ao, construtores sobrecarregados, membros constantes, classes amigas, ponteiro \texttt{this} e composi\c{c}\~ao --- todos os ingredientes que faltam para escrever c\'odigo OO de qualidade profissional.
+
+\vspace{1em}
+\begin{center}\rule{0.5\textwidth}{0.4pt}\end{center}
+
+\end{document}
